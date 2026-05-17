@@ -20,16 +20,19 @@ class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["twbv", "sheet", "actor", "personagem"],
-      template: "systems/world-behind-the-veil/templates/actor/personagem-sheet.hbs",
       width: 960,
       height: 800,
       tabs: [{ navSelector: ".twbv-tabs", contentSelector: ".twbv-tab-content", initial: "principal" }]
     });
   }
 
+  get template() {
+    return `systems/${game.system.id}/templates/actor/personagem-sheet.hbs`;
+  }
+
   getData(options = {}) {
     const context = super.getData(options);
-    context.system = context.actor.system;
+    context.system = this.actor?.system ?? context.system ?? {};
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -76,7 +79,6 @@ Hooks.once("init", () => {
 
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
-    types: ["despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
 });

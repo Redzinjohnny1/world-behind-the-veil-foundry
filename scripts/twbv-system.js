@@ -23,7 +23,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       template: "systems/world-behind-the-veil/templates/actor/personagem-sheet.hbs",
       width: 960,
       height: 800,
-      tabs: [{ navSelector: ".twbv-tabs", contentSelector: ".twbv-tab-content", initial: "inicial" }]
+      tabs: [{ navSelector: ".twbv-tabs", contentSelector: ".twbv-tab-content", initial: "principal" }]
     });
   }
 
@@ -59,6 +59,13 @@ class TWBVPersonagemSheet extends ActorSheet {
       avanços.splice(index, 1);
       await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
     });
+
+    html.find(".twbv-eco-adjust").on("click", async (event) => {
+      const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
+      const ecoAtual = Number(this.actor.system.eco ?? 0);
+      const novoEco = Math.max(0, ecoAtual + adjust);
+      await this.actor.update({ "system.eco": novoEco });
+    });
   }
 }
 
@@ -69,7 +76,7 @@ Hooks.once("init", () => {
 
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
-    types: ["personagem"],
+    types: ["despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
 });

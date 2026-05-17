@@ -1,6 +1,10 @@
 {
   "Actor": {
-    "types": ["personagem"],
+    "types": [
+      "despertos",
+      "semi-despertos",
+      "sombras"
+    ],
     "templates": {
       "base": {
         "conceito": "",
@@ -18,17 +22,49 @@
           "dadoDesperto": "d12"
         },
         "atributos": {
-          "forca": { "valor": 0 },
-          "destreza": { "valor": 0 },
-          "constituicao": { "valor": 0 },
-          "inteligencia": { "valor": 0 },
-          "intuicao": { "valor": 0 },
-          "vontade": { "valor": 0 }
-        }
+          "forca": {
+            "valor": 0
+          },
+          "destreza": {
+            "valor": 0
+          },
+          "constituicao": {
+            "valor": 0
+          },
+          "inteligencia": {
+            "valor": 0
+          },
+          "intuicao": {
+            "valor": 0
+          },
+          "vontade": {
+            "valor": 0
+          }
+        },
+        "pericias": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
       }
     },
-    "personagem": {
-      "templates": ["base"]
+    "despertos": {
+      "templates": [
+        "base"
+      ]
+    },
+    "semi-despertos": {
+      "templates": [
+        "base"
+      ]
+    },
+    "sombras": {
+      "templates": [
+        "base"
+      ]
     }
   }
 }

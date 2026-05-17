@@ -1,37 +1,41 @@
 <form class="twbv-sheet {{cssClass}}" autocomplete="off">
-  <header class="twbv-top-frame">
-    <div class="twbv-portrait-panel twbv-ornate">
-      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
-      <p class="twbv-portrait-hint">Clique para editar retrato</p>
-    </div>
+  <header class="twbv-top-frame twbv-ornate">
+    <h1 class="twbv-title">
+      <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Personagem" />
+    </h1>
 
-    <div class="twbv-identity-panel twbv-ornate">
-      <h1 class="charname">
-        <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Personagem" />
-      </h1>
-      <div class="twbv-identity-grid">
+    <div class="twbv-header-layout">
+      <section class="twbv-header-side twbv-header-left twbv-panel twbv-ornate">
+        <h2>Nome</h2>
+        <input name="name" type="text" value="{{actor.name}}" />
+      </section>
+
+      <section class="twbv-header-center twbv-panel twbv-ornate">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+      </section>
+
+      <section class="twbv-header-side twbv-header-right twbv-panel twbv-ornate">
+        <h2>Conceito & Origem</h2>
         <label>Conceito
           <input type="text" name="system.conceito" value="{{system.conceito}}" />
-        </label>
-        <label>Arquétipo
-          <input type="text" name="system.arquetipo" value="{{system.arquetipo}}" />
         </label>
         <label>Origem
           <input type="text" name="system.origem" value="{{system.origem}}" />
         </label>
-        <label>Nível
-          <input type="number" name="system.nivel" value="{{system.nivel}}" />
+        <label>Avanços totais
+          <input type="number" name="system.avancosTotais" value="{{system.avancosTotais}}" min="0" />
         </label>
-        <label>Experiência
-          <input type="number" name="system.experiencia" value="{{system.experiencia}}" />
+        <label>Estágio atual
+          <input type="text" value="{{stageName}}" disabled />
         </label>
-      </div>
+      </section>
     </div>
   </header>
 
   <nav class="sheet-tabs tabs twbv-tabs" data-group="primary">
-    <a class="item" data-tab="resumo">Resumo</a>
+    <a class="item" data-tab="inicial">Inicial</a>
     <a class="item" data-tab="atributos">Atributos</a>
+    <a class="item" data-tab="avancos">Avanços</a>
     <a class="item" data-tab="pericias">Perícias</a>
     <a class="item" data-tab="poderes">Poderes</a>
     <a class="item" data-tab="equipamento">Equipamento</a>
@@ -40,119 +44,52 @@
   </nav>
 
   <section class="sheet-body twbv-tab-content">
-    <div class="tab" data-group="primary" data-tab="resumo">
-      <div class="twbv-summary-layout">
-        <aside class="twbv-summary-col twbv-summary-left">
-          <section class="twbv-panel twbv-ornate">
-            <h2>Identificação</h2>
-            <label>Nome
-              <input name="name" type="text" value="{{actor.name}}" />
-            </label>
-            <label>Conceito
-              <input type="text" name="system.conceito" value="{{system.conceito}}" />
-            </label>
-            <label>Arquétipo
-              <input type="text" name="system.arquetipo" value="{{system.arquetipo}}" />
-            </label>
-            <label>Origem
-              <input type="text" name="system.origem" value="{{system.origem}}" />
-            </label>
-            <div class="twbv-mini-grid">
-              <label>Nível
-                <input type="number" name="system.nivel" value="{{system.nivel}}" />
-              </label>
-              <label>Experiência
-                <input type="number" name="system.experiencia" value="{{system.experiencia}}" />
-              </label>
+    <div class="tab" data-group="primary" data-tab="inicial">
+      <section class="twbv-panel twbv-ornate">
+        <h2>Estágios de Avanço</h2>
+        <div class="twbv-stages-grid">
+          {{#each stages as |stage|}}
+            <div class="twbv-stage-chip {{#if stage.current}}is-current{{/if}}">
+              <span class="twbv-stage-name">{{stage.name}}</span>
+              <span class="twbv-stage-range">{{stage.range}}</span>
             </div>
-            <label>Estado: Semi Desperto
-              <input type="checkbox" name="system.semiDesperto" {{checked system.semiDesperto}} />
-            </label>
-            <label>Fragmentos
-              <input type="number" name="system.fragmentos" value="{{system.fragmentos}}" />
-            </label>
-          </section>
-        </aside>
-
-        <main class="twbv-summary-col twbv-summary-center">
-          <section class="twbv-panel twbv-ornate twbv-eco-panel">
-            <h2>Eco Arcano</h2>
-            <div class="twbv-eco-circle-wrap">
-              <div class="twbv-eco-circle">
-                <label>Eco
-                  <input type="number" name="system.eco" value="{{system.eco}}" />
-                </label>
-              </div>
-            </div>
-            <div class="twbv-mini-grid">
-              <label>Dado normal
-                <input type="text" name="system.rolagem.dadoNormal" value="{{system.rolagem.dadoNormal}}" />
-              </label>
-              <label>Dado desperto
-                <input type="text" name="system.rolagem.dadoDesperto" value="{{system.rolagem.dadoDesperto}}" />
-              </label>
-            </div>
-            <label>Dificuldade mínima (4)
-              <input type="number" name="system.rolagem.dificuldadeMinima" value="{{system.rolagem.dificuldadeMinima}}" />
-            </label>
-          </section>
-
-          <section class="twbv-panel twbv-ornate">
-            <h2>Ferimentos e Saúde</h2>
-            <label>Ferimentos
-              <input type="number" name="system.ferimentos" value="{{system.ferimentos}}" />
-            </label>
-          </section>
-        </main>
-
-        <aside class="twbv-summary-col twbv-summary-right">
-          <section class="twbv-panel twbv-ornate">
-            <h2>Poderes Ativos</h2>
-            <textarea name="system.resumo.poderes" rows="4">{{system.resumo.poderes}}</textarea>
-          </section>
-          <section class="twbv-panel twbv-ornate">
-            <h2>Equipamento Resumido</h2>
-            <textarea name="system.resumo.equipamento" rows="4">{{system.resumo.equipamento}}</textarea>
-          </section>
-          <section class="twbv-panel twbv-ornate">
-            <h2>Defesas</h2>
-            <textarea name="system.resumo.defesas" rows="3">{{system.resumo.defesas}}</textarea>
-          </section>
-          <section class="twbv-panel twbv-ornate">
-            <h2>Resumo de Teste</h2>
-            <textarea name="system.resumo.teste" rows="3">{{system.resumo.teste}}</textarea>
-          </section>
-        </aside>
-      </div>
+          {{/each}}
+        </div>
+      </section>
     </div>
 
     <div class="tab" data-group="primary" data-tab="atributos">
       <div class="twbv-attributes-grid">
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Força</h2>
-          <input type="number" name="system.atributos.forca.valor" value="{{system.atributos.forca.valor}}" />
-        </section>
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Destreza</h2>
-          <input type="number" name="system.atributos.destreza.valor" value="{{system.atributos.destreza.valor}}" />
-        </section>
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Constituição</h2>
-          <input type="number" name="system.atributos.constituicao.valor" value="{{system.atributos.constituicao.valor}}" />
-        </section>
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Inteligência</h2>
-          <input type="number" name="system.atributos.inteligencia.valor" value="{{system.atributos.inteligencia.valor}}" />
-        </section>
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Intuição</h2>
-          <input type="number" name="system.atributos.intuicao.valor" value="{{system.atributos.intuicao.valor}}" />
-        </section>
-        <section class="twbv-panel twbv-ornate twbv-attribute-card">
-          <h2>Vontade</h2>
-          <input type="number" name="system.atributos.vontade.valor" value="{{system.atributos.vontade.valor}}" />
-        </section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Força</h2><input type="number" name="system.atributos.forca.valor" value="{{system.atributos.forca.valor}}" /></section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Destreza</h2><input type="number" name="system.atributos.destreza.valor" value="{{system.atributos.destreza.valor}}" /></section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Constituição</h2><input type="number" name="system.atributos.constituicao.valor" value="{{system.atributos.constituicao.valor}}" /></section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Inteligência</h2><input type="number" name="system.atributos.inteligencia.valor" value="{{system.atributos.inteligencia.valor}}" /></section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Intuição</h2><input type="number" name="system.atributos.intuicao.valor" value="{{system.atributos.intuicao.valor}}" /></section>
+        <section class="twbv-panel twbv-ornate twbv-attribute-card"><h2>Vontade</h2><input type="number" name="system.atributos.vontade.valor" value="{{system.atributos.vontade.valor}}" /></section>
       </div>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="avancos">
+      <section class="twbv-panel twbv-ornate">
+        <div class="twbv-adv-header">
+          <h2>Avanços</h2>
+          <button type="button" class="twbv-add-advancement"><i class="fas fa-plus"></i> Adicionar avanço</button>
+        </div>
+        <div class="twbv-adv-list">
+          {{#each system.avancos as |avanco i|}}
+            <div class="twbv-adv-row">
+              <span class="twbv-adv-index">#{{i}}</span>
+              <select name="system.avancos.{{i}}.tipo">
+                {{#select avanco.tipo}}
+                  <option value="">Selecione...</option>
+                  {{#each @root.advancementOptions as |opt|}}<option value="{{opt}}">{{opt}}</option>{{/each}}
+                {{/select}}
+              </select>
+              <button type="button" class="twbv-remove-advancement" data-index="{{i}}"><i class="fas fa-trash"></i></button>
+            </div>
+          {{/each}}
+        </div>
+      </section>
     </div>
 
     <div class="tab" data-group="primary" data-tab="pericias"><div class="twbv-panel twbv-ornate"><h2>Perícias</h2><p>Em construção.</p></div></div>

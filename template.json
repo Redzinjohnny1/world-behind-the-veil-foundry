@@ -23,31 +23,37 @@
         },
         "atributos": {
           "forca": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           },
           "destreza": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           },
           "constituicao": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           },
           "inteligencia": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           },
           "intuicao": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           },
           "vontade": {
-            "valor": 0
+            "passo": 0,
+            "bonus": 0
           }
         },
         "pericias": [
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
+          {"nome": "", "passo": -1, "bonus": 0},
+          {"nome": "", "passo": -1, "bonus": 0},
+          {"nome": "", "passo": -1, "bonus": 0},
+          {"nome": "", "passo": -1, "bonus": 0},
+          {"nome": "", "passo": -1, "bonus": 0},
+          {"nome": "", "passo": -1, "bonus": 0}
         ]
       }
     },

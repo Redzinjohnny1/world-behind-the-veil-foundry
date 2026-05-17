@@ -282,10 +282,9 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
-              const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: `${attr.label} • bônus perícia/atributo${bonusTerm || " +0"}`,
+                subtitle: attr.label,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,

@@ -89,36 +89,44 @@
 }
 
 .attributes-runic-panel {
-  background-image: url("../assets/ui/runic-attributes-panel.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: top center;
   width: 100%;
-  max-width: 1200px;
-  aspect-ratio: 1536 / 1024;
-  min-height: 760px;
-  margin: 0 auto;
-  padding: 280px 150px 180px 150px;
-  box-sizing: border-box;
+  max-width: 980px;
+  height: 650px;
+  margin: 24px auto;
+  position: relative;
+  background-image: url("../assets/ui/runic-attributes-panel.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  overflow: hidden;
   border: none;
   border-radius: 0;
   box-shadow: none;
+  padding: 0;
 }
 
 .attributes-runic-panel::before {
   display: none;
 }
 
-.attributes-runic-panel .twbv-attributes-grid {
+.attributes-runic-grid {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 28%;
+  bottom: 16%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 120px 80px;
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: 8%;
+  row-gap: 12%;
   align-items: center;
+  justify-items: center;
 }
 
 .twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) 1fr; gap: 10px; min-height: 100%; }
 
-.twbv-attribute-card { text-align: center; margin: 0; padding: 0; display:flex; flex-direction:column; align-items:center; gap:6px; background: transparent; border: none; box-shadow: none; }
+.twbv-attribute-card { text-align: center; margin: 0; padding: 0; display:flex; flex-direction:column; align-items:center; gap:6px; border: none; box-shadow: none; }
 .twbv-attribute-card h3 { margin: 0; font-size: .82rem; color: #bce8ff; text-transform: uppercase; letter-spacing: .1em; text-shadow: 0 0 8px rgba(121,196,255,.55); }
 .twbv-attribute-card label { align-items: center; }
 .twbv-attribute-card select {
@@ -270,7 +278,8 @@
 @media (max-width: 980px) {
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
-  .twbv-stages-grid, .twbv-attributes-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .twbv-stages-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .attributes-runic-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: repeat(3, 1fr); }
 }
 
 @media (max-width: 720px) {

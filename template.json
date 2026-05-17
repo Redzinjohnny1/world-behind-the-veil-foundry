@@ -23,27 +23,27 @@
         },
         "atributos": {
           "forca": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           },
           "destreza": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           },
           "constituicao": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           },
           "inteligencia": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           },
           "intuicao": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           },
           "vontade": {
-            "passo": 0,
+            "passo": 4,
             "bonus": 0
           }
         },

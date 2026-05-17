@@ -179,7 +179,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       });
     });
 
-    html.find(".twbv-add-skill").on("click", async () => {
+    html.find(".twbv-add-skill").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
       const novaPericia = await foundry.applications.api.DialogV2.prompt({
         window: { title: "Nova perícia" },
         content: `<div class="twbv-roll-dialog"><label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label><label>Bônus da perícia<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label></div>`,
@@ -193,15 +196,18 @@ class TWBVPersonagemSheet extends ActorSheet {
       });
       if (!novaPericia?.nome) return;
 
-      const pericias = Array.from(this.actor.system.pericias ?? []);
+      const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
       pericias.push({ nome: novaPericia.nome, passo: Number.isFinite(novaPericia.passo) ? novaPericia.passo : -1, bonus: 0 });
       await this.actor.update({ "system.pericias": pericias });
     });
 
     html.find(".twbv-remove-skill").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
       const index = Number(event.currentTarget.dataset.index ?? -1);
       if (index < 0) return;
-      const pericias = Array.from(this.actor.system.pericias ?? []);
+      const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
       pericias.splice(index, 1);
       await this.actor.update({ "system.pericias": pericias });
     });

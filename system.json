@@ -4,9 +4,9 @@
   "description": "Sistema customizado para Foundry VTT - The World Behind the Veil",
   "version": "0.1.0",
   "compatibility": {
-    "minimum": "12",
-    "verified": "12",
-    "maximum": "12"
+    "minimum": "13",
+    "verified": "13",
+    "maximum": "13"
   },
   "authors": [
     {

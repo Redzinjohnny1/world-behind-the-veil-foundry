@@ -42,6 +42,14 @@ function normalizeAttributeStep(value) {
 }
 
 
+
+function resolveAwakenedDie(attributeDie) {
+  const die = normalizeAttributeStep(attributeDie);
+  if (die <= 6) return 4;
+  if (die <= 10) return 6;
+  return 8;
+}
+
 function resolveDialogRoot(dialog) {
   if (!dialog) return null;
   if (typeof dialog.querySelector === "function") return dialog;
@@ -205,16 +213,18 @@ class TWBVPersonagemSheet extends ActorSheet {
               const attr = attributes.find((a) => a.key === attrKey) ?? attributes[0];
               const attrData = this.actor.system.atributos?.[attr.key] ?? {};
               const attrBonus = Number(attrData.bonus ?? 0);
+              const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
+              const awakenedDie = resolveAwakenedDie(attrDie);
               const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
-              const formula = `1d${skillDie}${bonusTerm}`;
+              const formula = `{1d${skillDie},1d${awakenedDie}}kh${bonusTerm}`;
               const roll = await new Roll(formula).evaluate();
               await roll.toMessage({
                 speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                flavor: `${skill.nome || `Perícia ${index + 1}`} (${attr.label}) • ${buildDieLabel(skillDie, totalBonus)}`
+                flavor: `${skill.nome || `Perícia ${index + 1}`} (${attr.label}) • Maior entre d${skillDie} e Dado Desperto d${awakenedDie}${bonusTerm}`
               });
             }
           },

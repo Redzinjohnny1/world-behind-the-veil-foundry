@@ -7,13 +7,7 @@
     <div class="twbv-header-layout">
       <section class="twbv-header-side twbv-header-left twbv-panel twbv-ornate">
         <h2>Identidade</h2>
-        <input name="name" type="text" value="{{actor.name}}" />
-        <label>Tier atual
-          <input type="text" value="{{stageName}}" disabled />
-        </label>
-        <label>Avanços
-          <input type="number" value="{{system.avancosTotais}}" disabled />
-        </label>
+        <input type="text" value="{{actor.name}}" disabled />
       </section>
 
       <section class="twbv-header-center twbv-panel twbv-ornate">
@@ -75,8 +69,8 @@
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
               <div class="twbv-skill-row">
-                <button type="button" class="twbv-skill-roll" data-index="{{i}}">{{pericia.nome}}</button>
-                <span class="twbv-skill-step">{{pericia.label}}</span>
+                <input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" />
+                <select name="system.pericias.{{i}}.passo">{{#select pericia.passo}}{{#each @root.skillOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select>
               </div>
             {{/each}}
           </div>

@@ -62,9 +62,11 @@
           <section class="twbv-panel twbv-ornate twbv-eco-panel">
             <h2>Eco</h2>
             <div class="twbv-eco-controls">
-              <button type="button" class="twbv-eco-adjust" data-adjust="-1">-</button>
-              <input type="number" name="system.eco" value="{{system.eco}}" min="0" />
-              <button type="button" class="twbv-eco-adjust" data-adjust="1">+</button>
+              <button type="button" class="twbv-eco-adjust twbv-eco-adjust--minus" data-adjust="-1" aria-label="Reduzir Eco">-</button>
+              <div class="twbv-eco-core">
+                <input type="number" name="system.eco" value="{{system.eco}}" min="0" aria-label="Valor de Eco" />
+              </div>
+              <button type="button" class="twbv-eco-adjust twbv-eco-adjust--plus" data-adjust="1" aria-label="Aumentar Eco">+</button>
             </div>
           </section>
 

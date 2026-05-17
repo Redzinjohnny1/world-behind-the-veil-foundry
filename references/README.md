@@ -1,0 +1,1 @@
+Pasta de referências visuais.

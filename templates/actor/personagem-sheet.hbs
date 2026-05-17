@@ -82,15 +82,11 @@
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
               <div class="twbv-skill-row" data-index="{{i}}" draggable="true">
-                <select name="system.pericias.{{i}}.dado">
-                  {{#select pericia.dado}}
-                    {{#each @root.skillDiceOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}
-                  {{/select}}
-                </select>
-                <input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" />
-                <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Editar dado rolado da perícia">{{pericia.rollLabel}}</button>
                 <button type="button" class="twbv-skill-roll" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}">🎲</button>
+                <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">{{pericia.nome}}</button>
+                <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>
                 <div class="twbv-skill-controls">
+                  <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}">{{#if pericia.locked}}🔒{{else}}🔓{{/if}}</button>
                   <button type="button" class="twbv-remove-skill" data-index="{{i}}" title="Remover perícia"><i class="fas fa-trash"></i></button>
                 </div>
               </div>

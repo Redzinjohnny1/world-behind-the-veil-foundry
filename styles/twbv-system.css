@@ -120,7 +120,7 @@
 .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 8px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
-.twbv-skill-row { display: grid; grid-template-columns: 96px minmax(180px, 2fr) 130px 48px auto; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; cursor: grab; }
+.twbv-skill-row { display: grid; grid-template-columns: 48px minmax(220px, 2fr) 120px auto; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; cursor: grab; }
 .twbv-skill-row.is-dragging { opacity: .45; }
 .twbv-skill-roll { width: 44px; height: 34px; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 0; font-size: 1.1rem; }
 .twbv-edit-skill-roll { min-height: 34px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); font-weight: 600; }
@@ -134,6 +134,8 @@
   color: var(--twbv-muted);
 }
 .twbv-skill-controls { display: flex; gap: 6px; justify-content: flex-end; }
+.twbv-edit-skill-config { min-height: 34px; text-align: left; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-toggle-skill-lock { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-remove-skill { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-attr-roll {
   margin-top: 6px;
@@ -180,5 +182,5 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { grid-template-columns: 84px 1fr 120px 48px auto; }
+  .twbv-skill-row { grid-template-columns: 48px 1fr 112px auto; }
 }

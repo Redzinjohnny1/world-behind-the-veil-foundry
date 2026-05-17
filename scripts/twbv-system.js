@@ -50,6 +50,44 @@ function resolveAwakenedDie(attributeDie) {
   return 8;
 }
 
+function renderDualDieResult({ title, dieA, labelA, dieB, labelB, bonus = 0, actor, subtitle = "" }) {
+  return (async () => {
+    const rollA = await new Roll(`1d${dieA}`).evaluate();
+    const rollB = await new Roll(`1d${dieB}`).evaluate();
+    const valueA = Number(rollA.total ?? 0);
+    const valueB = Number(rollB.total ?? 0);
+    const highest = Math.max(valueA, valueB);
+    const total = highest + bonus;
+    const bonusLabel = bonus === 0 ? "" : ` ${bonus > 0 ? "+" : ""}${bonus}`;
+    const totalLabel = `${highest}${bonusLabel} = ${total}`;
+    const dieCard = (label, die, value, selected) => `
+      <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
+        <div class="twbv-roll-card__label">${label}</div>
+        <div class="twbv-roll-card__die">d${die}</div>
+        <div class="twbv-roll-card__value">${value}</div>
+      </div>`;
+
+    const content = `
+      <section class="twbv-roll-chat">
+        <header class="twbv-roll-chat__header">
+          <h3>${title}</h3>
+          ${subtitle ? `<p>${subtitle}</p>` : ""}
+        </header>
+        <div class="twbv-roll-chat__grid">
+          ${dieCard(labelA, dieA, valueA, valueA === highest)}
+          ${dieCard(labelB, dieB, valueB, valueB === highest)}
+        </div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
+      </section>`;
+
+    const inlineRoll = await new Roll(String(total)).toMessage({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flavor: content
+    });
+    return inlineRoll;
+  })();
+}
+
 function resolveDialogRoot(dialog) {
   if (!dialog) return null;
   if (typeof dialog.querySelector === "function") return dialog;
@@ -220,11 +258,15 @@ class TWBVPersonagemSheet extends ActorSheet {
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
-              const formula = `{1d${skillDie},1d${awakenedDie}}kh${bonusTerm}`;
-              const roll = await new Roll(formula).evaluate();
-              await roll.toMessage({
-                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-                flavor: `${skill.nome || `Perícia ${index + 1}`} (${attr.label}) • Maior entre d${skillDie} e Dado Desperto d${awakenedDie}${bonusTerm}`
+              await renderDualDieResult({
+                title: skill.nome || `Perícia ${index + 1}`,
+                subtitle: `${attr.label} • bônus perícia/atributo${bonusTerm || " +0"}`,
+                dieA: skillDie,
+                labelA: "Perícia",
+                dieB: awakenedDie,
+                labelB: "Desperto",
+                bonus: totalBonus,
+                actor: this.actor
               });
             }
           },
@@ -250,14 +292,19 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!attributeKey) return;
       const attrData = this.actor.system.atributos?.[attributeKey] ?? {};
       const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
+      const awakenedDie = resolveAwakenedDie(attrDie);
       const totalBonus = Number(attrData.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
-      const formula = `1d${attrDie}${bonusTerm}`;
 
-      const roll = await new Roll(formula).evaluate();
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `${labels[attributeKey] ?? attributeKey} • ${buildDieLabel(attrDie, totalBonus)}`
+      await renderDualDieResult({
+        title: labels[attributeKey] ?? attributeKey,
+        subtitle: `Atributo vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}`,
+        dieA: attrDie,
+        labelA: "Atributo",
+        dieB: awakenedDie,
+        labelB: "Desperto",
+        bonus: totalBonus,
+        actor: this.actor
       });
     });
 

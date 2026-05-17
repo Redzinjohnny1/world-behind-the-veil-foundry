@@ -262,3 +262,28 @@
 @media (max-width: 720px) {
   .twbv-skill-row { grid-template-columns: 48px 1fr 112px auto; }
 }
+
+.twbv-roll-chat {
+  border: 1px solid rgba(154, 123, 255, 0.45);
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(16, 10, 29, 0.95), rgba(9, 7, 17, 0.98));
+}
+.twbv-roll-chat__header h3 { margin: 0; color: #ffe7b0; font-size: 1rem; }
+.twbv-roll-chat__header p { margin: 2px 0 8px; color: #c9bfe8; font-size: .85rem; }
+.twbv-roll-chat__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.twbv-roll-card {
+  border: 1px solid rgba(121, 196, 255, 0.35);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  background: rgba(15, 12, 26, 0.9);
+}
+.twbv-roll-card.is-selected {
+  border-color: rgba(217, 183, 117, 0.9);
+  box-shadow: 0 0 14px rgba(217, 183, 117, 0.35);
+}
+.twbv-roll-card__label { font-size: .75rem; color: #c7bcde; text-transform: uppercase; }
+.twbv-roll-card__die { font-size: .9rem; color: #8fd2ff; }
+.twbv-roll-card__value { font-size: 1.6rem; font-weight: 800; color: #fff3cf; }
+.twbv-roll-chat__total { margin-top: 8px; color: #f3e8ca; text-align: right; }

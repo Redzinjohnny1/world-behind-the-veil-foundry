@@ -81,6 +81,27 @@
 .twbv-principal-main > .twbv-right-column { grid-area: eco; }
 .twbv-principal-main > section:nth-child(3) { grid-area: skills; }
 
+
+.twbv-attributes-panel {
+  background-image: url("../assets/ui/wbtv-attributes-panel-bg.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  border: none;
+  box-shadow: none;
+}
+
+.twbv-attributes-panel::before {
+  display: none;
+}
+
+.twbv-attributes-panel h2 {
+  border-bottom: none;
+}
+
+.twbv-attributes-panel .twbv-attribute-card {
+  position: relative;
+  z-index: 1;
+}
 .twbv-attributes-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 
 .twbv-right-column { display: grid; grid-template-rows: minmax(180px, auto) 1fr; gap: 10px; min-height: 100%; }

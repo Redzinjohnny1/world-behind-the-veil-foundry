@@ -79,6 +79,11 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "vontade", label: "Vontade" }
     ];
     context.skillOptions = SKILL_STEPS.map((step, idx) => ({ value: idx - 1, label: step.label }));
+    context.system.pericias = (context.system.pericias ?? []).map((pericia) => {
+      const step = Number(pericia.passo ?? -1);
+      const skillIndex = Math.max(0, Math.min(step + 1, SKILL_STEPS.length - 1));
+      return { ...pericia, label: SKILL_STEPS[skillIndex].label };
+    });
 
     this._ensureSystemDefaults();
 
@@ -87,9 +92,10 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _ensureSystemDefaults() {
     const pericias = Array.from(this.actor.system.pericias ?? []);
-    while (pericias.length < 6) pericias.push({ nome: "", passo: -1, bonus: 0 });
+    if (!pericias.length) pericias.push({ nome: "Sem Perícia", passo: -1, bonus: 0 });
     for (let i = 0; i < pericias.length; i += 1) {
       if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], passo: -1, bonus: 0 };
+      pericias[i].nome = String(pericias[i].nome ?? "").trim() || `Perícia ${i + 1}`;
       pericias[i].passo = Number.isFinite(Number(pericias[i].passo)) ? Number(pericias[i].passo) : -1;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
     }
@@ -140,31 +146,57 @@ class TWBVPersonagemSheet extends ActorSheet {
         vontade: "Vontade"
       };
 
-      const attributeKey = await foundry.applications.api.DialogV2.prompt({
-        window: { title: "Escolher atributo" },
-        content: `<label>Atributo base do dado desperto: <select id="twbv-attr">${Object.entries(choices).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>`,
-        ok: { label: "Rolar", callback: (event, button, dialog) => dialog.querySelector("#twbv-attr")?.value }
+      const promptData = await foundry.applications.api.DialogV2.prompt({
+        window: { title: "Rolar perícia" },
+        content: `<div class="twbv-roll-dialog"><label>Atributo (dado desperto)<select id="twbv-attr">${Object.entries(choices).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label><label>Bônus extra da rolagem<input id="twbv-extra" type="number" value="0" /></label></div>`,
+        ok: {
+          label: "Rolar",
+          callback: (event, button, dialog) => ({
+            attributeKey: dialog.querySelector("#twbv-attr")?.value,
+            extraBonus: Number(dialog.querySelector("#twbv-extra")?.value ?? 0)
+          })
+        }
       });
-      if (!attributeKey) return;
+      if (!promptData?.attributeKey) return;
 
       const step = Number(skill.passo ?? -1);
       const skillIndex = Math.max(0, Math.min(step + 1, SKILL_STEPS.length - 1));
       const skillStep = SKILL_STEPS[skillIndex];
       const skillBonus = Number(skill.bonus ?? 0);
 
-      const attrStep = normalizeAttributeStep(this.actor.system.atributos?.[attributeKey]?.passo ?? 4);
-      const attrBonus = Number(this.actor.system.atributos?.[attributeKey]?.bonus ?? 0);
+      const attrStep = normalizeAttributeStep(this.actor.system.atributos?.[promptData.attributeKey]?.passo ?? 4);
       const attrDie = attrStep;
       const awakDie = attrDie <= 6 ? 4 : attrDie <= 10 ? 6 : 8;
 
-      const untrainedPenalty = step <= -1 ? -2 : 0;
-      const formula = `1d${skillStep.die}${skillStep.bonus + skillBonus >= 0 ? "+" : ""}${skillStep.bonus + skillBonus} + 1d${awakDie}${untrainedPenalty < 0 ? untrainedPenalty : ""}`;
+      const extraBonus = Number.isFinite(promptData.extraBonus) ? promptData.extraBonus : 0;
+      const totalBonus = skillStep.bonus + skillBonus + extraBonus;
+      const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
+      const formula = `1d${skillStep.die}${bonusTerm} + 1d${awakDie}`;
 
       const roll = await new Roll(formula).evaluate();
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `${skill.nome || `Perícia ${index + 1}`} • Atributo: ${choices[attributeKey]} (${buildDieLabel(attrDie, attrBonus)})`
+        flavor: `${skill.nome || `Perícia ${index + 1}`} • Atributo: ${choices[promptData.attributeKey]} (${buildDieLabel(attrDie)}) • Bônus: ${totalBonus >= 0 ? "+" : ""}${totalBonus}`
       });
+    });
+
+    html.find(".twbv-add-skill").on("click", async () => {
+      const nome = await foundry.applications.api.DialogV2.prompt({
+        window: { title: "Nova perícia" },
+        content: `<label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label>`,
+        ok: { label: "Continuar", callback: (event, button, dialog) => dialog.querySelector("#twbv-skill-name")?.value?.trim() }
+      });
+      if (!nome) return;
+
+      const passo = await foundry.applications.api.DialogV2.prompt({
+        window: { title: "Dado da perícia" },
+        content: `<label>Nível<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label>`,
+        ok: { label: "Adicionar", callback: (event, button, dialog) => Number(dialog.querySelector("#twbv-skill-step")?.value ?? -1) }
+      });
+
+      const pericias = Array.from(this.actor.system.pericias ?? []);
+      pericias.push({ nome, passo: Number.isFinite(passo) ? passo : -1, bonus: 0 });
+      await this.actor.update({ "system.pericias": pericias });
     });
   }
 }

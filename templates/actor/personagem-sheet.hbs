@@ -43,12 +43,12 @@
         <section class="twbv-panel twbv-ornate">
           <h2>Atributos</h2>
           <div class="twbv-attributes-grid">
-            <section class="twbv-attribute-card"><h3>Força</h3><label>Dado<select name="system.atributos.forca.passo">{{#select system.atributos.forca.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.forca.bonus" value="{{system.atributos.forca.bonus}}" min="0" /></label></section>
-            <section class="twbv-attribute-card"><h3>Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.destreza.bonus" value="{{system.atributos.destreza.bonus}}" min="0" /></label></section>
-            <section class="twbv-attribute-card"><h3>Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.constituicao.bonus" value="{{system.atributos.constituicao.bonus}}" min="0" /></label></section>
-            <section class="twbv-attribute-card"><h3>Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.inteligencia.bonus" value="{{system.atributos.inteligencia.bonus}}" min="0" /></label></section>
-            <section class="twbv-attribute-card"><h3>Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.intuicao.bonus" value="{{system.atributos.intuicao.bonus}}" min="0" /></label></section>
-            <section class="twbv-attribute-card"><h3>Vontade</h3><label>Dado<select name="system.atributos.vontade.passo">{{#select system.atributos.vontade.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><label>Bônus +<input type="number" name="system.atributos.vontade.bonus" value="{{system.atributos.vontade.bonus}}" min="0" /></label></section>
+            <section class="twbv-attribute-card"><h3>Força</h3><label>Dado<select name="system.atributos.forca.passo">{{#select system.atributos.forca.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
+            <section class="twbv-attribute-card"><h3>Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
+            <section class="twbv-attribute-card"><h3>Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
+            <section class="twbv-attribute-card"><h3>Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
+            <section class="twbv-attribute-card"><h3>Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
+            <section class="twbv-attribute-card"><h3>Vontade</h3><label>Dado<select name="system.atributos.vontade.passo">{{#select system.atributos.vontade.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label></section>
           </div>
         </section>
 
@@ -62,14 +62,15 @@
         </section>
 
         <section class="twbv-panel twbv-ornate">
-          <h2>Perícias</h2>
+          <div class="twbv-pericias-header">
+            <h2>Perícias</h2>
+            <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
+          </div>
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
-              <div>
-                <label>Perícia {{i}}<input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" /></label>
-                <label>Nível<select name="system.pericias.{{i}}.passo">{{#select pericia.passo}}{{#each @root.skillOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label>
-                <label>Bônus +<input type="number" name="system.pericias.{{i}}.bonus" value="{{pericia.bonus}}" min="0" /></label>
-                <button type="button" class="twbv-skill-roll" data-index="{{i}}">Rolar</button>
+              <div class="twbv-skill-row">
+                <button type="button" class="twbv-skill-roll" data-index="{{i}}">{{pericia.nome}}</button>
+                <span class="twbv-skill-step">{{pericia.label}}</span>
               </div>
             {{/each}}
           </div>

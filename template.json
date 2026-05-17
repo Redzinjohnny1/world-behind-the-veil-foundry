@@ -47,13 +47,7 @@
             "bonus": 0
           }
         },
-        "pericias": [
-          {
-            "nome": "Sem Perícia",
-            "passo": -1,
-            "bonus": 0
-          }
-        ]
+        "pericias": []
       }
     },
     "despertos": {

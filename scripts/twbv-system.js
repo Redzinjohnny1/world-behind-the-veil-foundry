@@ -92,10 +92,9 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _ensureSystemDefaults() {
     const pericias = Array.from(this.actor.system.pericias ?? []);
-    if (!pericias.length) pericias.push({ nome: "Sem Perícia", passo: -1, bonus: 0 });
     for (let i = 0; i < pericias.length; i += 1) {
       if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], passo: -1, bonus: 0 };
-      pericias[i].nome = String(pericias[i].nome ?? "").trim() || `Perícia ${i + 1}`;
+      pericias[i].nome = String(pericias[i].nome ?? "").trim();
       pericias[i].passo = Number.isFinite(Number(pericias[i].passo)) ? Number(pericias[i].passo) : -1;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
     }

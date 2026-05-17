@@ -81,26 +81,39 @@
 .twbv-principal-main > .twbv-right-column { grid-area: eco; }
 .twbv-principal-main > section:nth-child(3) { grid-area: skills; }
 
-.twbv-attributes-panel .twbv-attribute-card label {
-  margin: 0;
-  gap: 2px;
-  font-size: .56rem;
-  letter-spacing: .08em;
+.attributes-art-panel {
+  width: 100%;
+  max-width: 760px;
+  height: 495px;
+  margin: 16px auto;
+  position: relative;
+  overflow: hidden;
+  background-image: url("../assets/ui/attributes-panel-dark-purple.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.twbv-attributes-grid {
+.attributes-art-grid {
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 22%;
+  bottom: 10%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, auto);
-  gap: 10px;
-  align-items: start;
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: 6%;
+  row-gap: 8%;
+  align-items: center;
+  justify-items: center;
 }
 
 .twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) 1fr; gap: 10px; min-height: 100%; }
 
-.twbv-attribute-card { text-align: center; margin: 0; padding: 8px; display:flex; flex-direction:column; align-items:center; gap:6px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; background: rgba(11, 9, 20, 0.6); }
+.twbv-attribute-card { text-align: center; margin: 0; padding: 4px; display:flex; flex-direction:column; align-items:center; gap:6px; border: none; border-radius: 0; background: transparent; box-shadow: none; }
 .twbv-attribute-card h3 { margin: 0; font-size: .82rem; color: #bce8ff; text-transform: uppercase; letter-spacing: .1em; text-shadow: 0 0 8px rgba(121,196,255,.55); }
-.twbv-attribute-card label { align-items: center; }
+.twbv-attributes-panel .twbv-attribute-card label { margin: 0; gap: 2px; font-size: .56rem; letter-spacing: .08em; align-items: center; }
 .twbv-attribute-card select {
   width: 100%;
   max-width: 148px;
@@ -250,7 +263,8 @@
 @media (max-width: 980px) {
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
-  .twbv-stages-grid, .twbv-attributes-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .twbv-stages-grid, .attributes-art-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .attributes-art-panel { height: auto; min-height: 495px; }
 }
 
 @media (max-width: 720px) {

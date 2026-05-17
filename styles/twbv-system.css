@@ -120,7 +120,7 @@
 .twbv-skills-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
-.twbv-skill-row { display: grid; grid-template-columns: minmax(230px, 2.2fr) minmax(90px, 1fr) 40px; align-items: center; gap: 8px; padding: 6px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
+.twbv-skill-row { display: grid; grid-template-columns: minmax(170px, 2fr) minmax(86px, 1fr) minmax(120px, 1fr) 40px; align-items: center; gap: 8px; padding: 6px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
 .twbv-skill-roll { flex: 1; text-align: left; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 6px; }
 .twbv-skill-step { font-size: .78rem; color: var(--twbv-muted); white-space: nowrap; }
 .twbv-skills-empty {
@@ -133,6 +133,17 @@
   color: var(--twbv-muted);
 }
 .twbv-remove-skill { height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-attr-roll {
+  margin-top: 6px;
+  width: 170px;
+  min-height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(217,183,117,.72);
+  background: linear-gradient(180deg, rgba(82,58,118,.95), rgba(24,18,36,.95));
+  color: #ffe8b0;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
 .twbv-stages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .twbv-stage-chip { border: 1px solid rgba(154, 123, 255, 0.45); border-radius: 8px; padding: 8px; display:flex; flex-direction:column; gap:4px; }
 .twbv-stage-chip.is-current { border-color: var(--twbv-accent-gold); box-shadow: 0 0 16px rgba(217,183,117,.3); }

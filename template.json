@@ -1,0 +1,34 @@
+{
+  "Actor": {
+    "types": ["personagem"],
+    "templates": {
+      "base": {
+        "conceito": "",
+        "arquetipo": "",
+        "origem": "",
+        "nivel": 1,
+        "experiencia": 0,
+        "eco": 0,
+        "ferimentos": 0,
+        "fragmentos": 0,
+        "semiDesperto": false,
+        "rolagem": {
+          "dificuldadeMinima": 4,
+          "dadoNormal": "d10",
+          "dadoDesperto": "d12"
+        },
+        "atributos": {
+          "forca": { "valor": 0 },
+          "destreza": { "valor": 0 },
+          "constituicao": { "valor": 0 },
+          "inteligencia": { "valor": 0 },
+          "intuicao": { "valor": 0 },
+          "vontade": { "valor": 0 }
+        }
+      }
+    },
+    "personagem": {
+      "templates": ["base"]
+    }
+  }
+}

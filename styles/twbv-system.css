@@ -49,3 +49,53 @@
 .twbv-eco-controls input { width: 120px; text-align:center; font-size: 1.2rem; }
 .twbv-eco-adjust { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--twbv-border-soft); background: rgba(20,25,40,.95); color: var(--twbv-text); font-size: 1.3rem; }
 .twbv-skills-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+
+
+/* Principal tab layout inspired by references/sheet-reference.jpg */
+.twbv.sheet.actor .window-content {
+  background-image:
+    linear-gradient(rgba(6, 7, 12, 0.80), rgba(6, 7, 12, 0.88)),
+    url("../references/sheet-reference.jpg");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.twbv-principal-main {
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    "attributes eco"
+    "skills eco";
+  align-items: start;
+}
+
+.twbv-principal-main > section:nth-child(1) { grid-area: attributes; }
+.twbv-principal-main > section:nth-child(2) {
+  grid-area: eco;
+  position: sticky;
+  top: 8px;
+  min-height: 100%;
+}
+.twbv-principal-main > section:nth-child(3) { grid-area: skills; }
+
+.twbv-eco-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 320px;
+}
+
+@media (max-width: 980px) {
+  .twbv-principal-main {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "attributes"
+      "eco"
+      "skills";
+  }
+
+  .twbv-principal-main > section:nth-child(2) {
+    position: static;
+    min-height: 0;
+  }
+}

@@ -56,16 +56,21 @@ function renderDualDieResult({ title, dieA, labelA, dieB, labelB, bonus = 0, act
     const rollB = await new Roll(`1d${dieB}`).evaluate();
     const valueA = Number(rollA.total ?? 0);
     const valueB = Number(rollB.total ?? 0);
-    const highest = Math.max(valueA, valueB);
-    const total = highest + bonus;
-    const bonusLabel = bonus === 0 ? "" : ` ${bonus > 0 ? "+" : ""}${bonus}`;
-    const totalLabel = `${highest}${bonusLabel} = ${total}`;
-    const dieCard = (label, die, value, selected) => `
+    const modifiedA = valueA + bonus;
+    const modifiedB = valueB + bonus;
+    const highestModified = Math.max(modifiedA, modifiedB);
+    const total = highestModified;
+    const dieCard = (label, die, value, modified, selected) => {
+      const bonusLabel = bonus === 0 ? "" : ` ${bonus > 0 ? "+" : ""}${bonus}`;
+      const valueLabel = bonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
+      return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
         <div class="twbv-roll-card__die">d${die}</div>
-        <div class="twbv-roll-card__value">${value}</div>
+        <div class="twbv-roll-card__value">${valueLabel}</div>
       </div>`;
+    };
+    const totalLabel = `${total}`;
 
     const content = `
       <section class="twbv-roll-chat">
@@ -74,8 +79,8 @@ function renderDualDieResult({ title, dieA, labelA, dieB, labelB, bonus = 0, act
           ${subtitle ? `<p>${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieA, valueA, valueA === highest)}
-          ${dieCard(labelB, dieB, valueB, valueB === highest)}
+          ${dieCard(labelA, dieA, valueA, modifiedA, modifiedA === highestModified)}
+          ${dieCard(labelB, dieB, valueB, modifiedB, modifiedB === highestModified)}
         </div>
         <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
       </section>`;

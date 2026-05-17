@@ -40,3 +40,12 @@
 .twbv-adv-row { display:grid; grid-template-columns: 56px 1fr 44px; gap:8px; align-items:center; }
 
 @media (max-width: 980px) { .twbv-header-layout { grid-template-columns: 1fr; } .twbv-stages-grid, .twbv-attributes-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+
+.twbv-principal-grid { display: grid; gap: 12px; }
+.twbv-attribute-card h3 { margin: 0; font-size: .82rem; color: #f0ddb2; text-transform: uppercase; }
+.twbv-eco-panel { text-align: center; }
+.twbv-eco-controls { display:flex; justify-content:center; align-items:center; gap:10px; }
+.twbv-eco-controls input { width: 120px; text-align:center; font-size: 1.2rem; }
+.twbv-eco-adjust { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--twbv-border-soft); background: rgba(20,25,40,.95); color: var(--twbv-text); font-size: 1.3rem; }
+.twbv-skills-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }

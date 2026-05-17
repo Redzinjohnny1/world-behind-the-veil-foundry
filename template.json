@@ -48,12 +48,11 @@
           }
         },
         "pericias": [
-          {"nome": "", "passo": -1, "bonus": 0},
-          {"nome": "", "passo": -1, "bonus": 0},
-          {"nome": "", "passo": -1, "bonus": 0},
-          {"nome": "", "passo": -1, "bonus": 0},
-          {"nome": "", "passo": -1, "bonus": 0},
-          {"nome": "", "passo": -1, "bonus": 0}
+          {
+            "nome": "Sem Perícia",
+            "passo": -1,
+            "bonus": 0
+          }
         ]
       }
     },

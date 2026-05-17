@@ -312,3 +312,115 @@
 .twbv-roll-card__die { font-size: .9rem; color: #8fd2ff; }
 .twbv-roll-card__value { font-size: 1.6rem; font-weight: 800; color: #fff3cf; }
 .twbv-roll-chat__total { margin-top: 8px; color: #f3e8ca; text-align: right; }
+
+/* Skill Roll Dialog Redesign */
+.window-app.dialog:has(.twbv-roll-skill-dialog) {
+  border: 1px solid rgba(217, 183, 117, 0.72);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.25), 0 0 24px rgba(134, 98, 198, 0.48), 0 18px 40px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .window-header {
+  background: linear-gradient(180deg, rgba(36, 20, 60, 0.98), rgba(14, 9, 26, 0.98));
+  border-bottom: 1px solid rgba(217, 183, 117, 0.62);
+  color: #f7e7be;
+  text-shadow: 0 0 8px rgba(154, 123, 255, 0.52);
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .window-title {
+  font-family: "Cinzel", "Palatino Linotype", serif;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .window-content {
+  background:
+    radial-gradient(circle at top, rgba(112, 74, 172, 0.34), transparent 52%),
+    linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(7, 5, 14, 0.99));
+  color: var(--twbv-text);
+  padding: 12px;
+}
+
+.twbv-roll-skill-dialog {
+  padding: 10px;
+  border: 1px solid rgba(217, 183, 117, 0.45);
+  border-radius: 10px;
+  background: linear-gradient(160deg, rgba(23, 14, 39, 0.9), rgba(10, 8, 20, 0.95));
+  box-shadow: inset 0 0 0 1px rgba(154, 123, 255, 0.2), inset 0 0 16px rgba(154, 123, 255, 0.14);
+}
+
+.twbv-roll-skill-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  color: #f0dfb8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.twbv-roll-skill-dialog label:last-child {
+  margin-bottom: 0;
+}
+
+.twbv-roll-skill-dialog select,
+.twbv-roll-skill-dialog input {
+  min-height: 34px;
+  border-radius: 7px;
+  border: 1px solid rgba(217, 183, 117, 0.58);
+  background: rgba(12, 9, 22, 0.96);
+  color: #f6eeff;
+  padding: 6px 9px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.twbv-roll-skill-dialog select:hover,
+.twbv-roll-skill-dialog input:hover {
+  border-color: rgba(154, 123, 255, 0.9);
+}
+
+.twbv-roll-skill-dialog select:focus,
+.twbv-roll-skill-dialog input:focus {
+  outline: none;
+  border-color: rgba(217, 183, 117, 0.84);
+  box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(154, 123, 255, 0.5);
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons {
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button {
+  border-radius: 8px;
+  border: 1px solid rgba(217, 183, 117, 0.62);
+  color: #ffedc2;
+  background: linear-gradient(180deg, rgba(72, 48, 108, 0.95), rgba(25, 17, 41, 0.98));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 0 12px rgba(154, 123, 255, 0.16), 0 0 10px rgba(93, 64, 143, 0.35);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button:hover,
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button:focus-visible {
+  border-color: rgba(217, 183, 117, 0.9);
+  box-shadow: 0 0 14px rgba(217, 183, 117, 0.38), 0 0 18px rgba(154, 123, 255, 0.48);
+  transform: translateY(-1px);
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button[data-button="cancel"] {
+  color: #d8caee;
+  border-color: rgba(154, 123, 255, 0.58);
+  background: linear-gradient(180deg, rgba(40, 28, 63, 0.9), rgba(17, 13, 29, 0.96));
+}
+
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button[data-button="cancel"]:hover,
+.window-app.dialog:has(.twbv-roll-skill-dialog) .dialog-buttons button[data-button="cancel"]:focus-visible {
+  border-color: rgba(154, 123, 255, 0.9);
+  box-shadow: 0 0 12px rgba(154, 123, 255, 0.45);
+}

@@ -465,3 +465,10 @@ Hooks.once("init", () => {
     makeDefault: true
   });
 });
+
+Hooks.on("renderChatMessage", (message, html) => {
+  const root = html?.[0] ?? html;
+  if (!root || typeof root.querySelector !== "function") return;
+  if (!root.querySelector(".twbv-roll-chat")) return;
+  root.classList.add("twbv-chat-message");
+});

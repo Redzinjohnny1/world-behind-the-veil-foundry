@@ -289,29 +289,90 @@
 }
 
 .twbv-roll-chat {
-  border: 1px solid rgba(154, 123, 255, 0.45);
-  border-radius: 10px;
-  padding: 10px;
-  background: linear-gradient(180deg, rgba(16, 10, 29, 0.95), rgba(9, 7, 17, 0.98));
+  border: 1px solid rgba(217, 183, 117, 0.78);
+  border-radius: 14px;
+  padding: 12px;
+  background:
+    radial-gradient(circle at 14% 0%, rgba(120, 74, 186, 0.42), transparent 52%),
+    linear-gradient(170deg, rgba(20, 11, 36, 0.96), rgba(7, 6, 16, 0.99));
+  box-shadow: inset 0 0 0 1px rgba(154, 123, 255, 0.26), 0 0 20px rgba(132, 88, 204, 0.28);
 }
-.twbv-roll-chat__header h3 { margin: 0; color: #ffe7b0; font-size: 1rem; }
-.twbv-roll-chat__header p { margin: 2px 0 8px; color: #c9bfe8; font-size: .85rem; }
-.twbv-roll-chat__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.twbv-roll-chat__header h3 { margin: 0; color: #ffebbf; font-size: 1.02rem; letter-spacing: .03em; }
+.twbv-roll-chat__header p { margin: 3px 0 10px; color: #d1c4ee; font-size: .82rem; opacity: .88; }
+.twbv-roll-chat__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .twbv-roll-card {
-  border: 1px solid rgba(121, 196, 255, 0.35);
-  border-radius: 8px;
-  padding: 8px;
+  border: 1px solid rgba(217, 183, 117, 0.45);
+  border-radius: 10px;
+  padding: 9px 8px;
   text-align: center;
-  background: rgba(15, 12, 26, 0.9);
+  background: linear-gradient(180deg, rgba(15, 11, 26, 0.96), rgba(10, 8, 19, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(106, 82, 153, 0.42), inset 0 0 14px rgba(84, 58, 129, 0.3);
 }
 .twbv-roll-card.is-selected {
-  border-color: rgba(217, 183, 117, 0.9);
-  box-shadow: 0 0 14px rgba(217, 183, 117, 0.35);
+  border-color: rgba(217, 183, 117, 0.95);
+  box-shadow: inset 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 16px rgba(132, 88, 204, 0.42);
 }
-.twbv-roll-card__label { font-size: .75rem; color: #c7bcde; text-transform: uppercase; }
-.twbv-roll-card__die { font-size: .9rem; color: #8fd2ff; }
+.twbv-roll-card__label { font-size: .72rem; color: #dbd0f3; text-transform: uppercase; letter-spacing: .08em; }
+.twbv-roll-card__die { font-size: .92rem; color: #98d8ff; font-weight: 700; }
 .twbv-roll-card__value { font-size: 1.6rem; font-weight: 800; color: #fff3cf; }
-.twbv-roll-chat__total { margin-top: 8px; color: #f3e8ca; text-align: right; }
+.twbv-roll-chat__total {
+  margin-top: 10px;
+  color: #f3e8ca;
+  text-align: right;
+  border-top: 1px solid rgba(217, 183, 117, 0.32);
+  padding-top: 8px;
+}
+.twbv-roll-chat__total strong {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: #fff4ce;
+  border: 1px solid rgba(217, 183, 117, 0.75);
+  background: linear-gradient(180deg, rgba(76, 52, 112, 0.95), rgba(24, 17, 38, 0.98));
+  box-shadow: 0 0 12px rgba(154, 123, 255, 0.35);
+}
+
+/* Chat Message wrapper theme (only TWBV custom roll messages) */
+.chat-message.twbv-chat-message {
+  border-radius: 14px;
+  border: 1px solid rgba(217, 183, 117, 0.62);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.28), transparent 50%),
+    linear-gradient(170deg, rgba(15, 10, 27, 0.95), rgba(8, 7, 17, 0.98));
+  box-shadow: 0 0 0 1px rgba(96, 73, 138, 0.35), 0 0 16px rgba(117, 76, 186, 0.28), 0 8px 18px rgba(0, 0, 0, 0.5);
+}
+
+.chat-message.twbv-chat-message .message-content {
+  background: transparent;
+  border: 0;
+  color: #efe7ff;
+}
+
+.chat-message.twbv-chat-message .dice-roll,
+.chat-message.twbv-chat-message .twbv-roll-chat + .dice-roll,
+.chat-message.twbv-chat-message .twbv-roll-chat ~ .dice-roll {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(21, 15, 35, 0.95), rgba(11, 10, 22, 0.98));
+  border: 1px solid rgba(217, 183, 117, 0.48);
+  box-shadow: inset 0 0 0 1px rgba(112, 84, 164, 0.3);
+}
+
+.chat-message.twbv-chat-message .dice-result,
+.chat-message.twbv-chat-message .dice-total,
+.chat-message.twbv-chat-message .dice-formula {
+  background: rgba(16, 12, 28, 0.92);
+  color: #fbeec7;
+  border: 1px solid rgba(217, 183, 117, 0.45);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(132, 88, 204, 0.2);
+}
+
+.chat-message.twbv-chat-message .dice-formula {
+  color: #cfd5ff;
+}
 
 /* Skill Roll Dialog Redesign */
 .window-app.dialog:has(.twbv-roll-skill-dialog) {

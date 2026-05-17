@@ -41,10 +41,15 @@
 }
 
 .twbv-title input { font-size: 2rem; letter-spacing: .02em; font-weight: 700; text-align: center; height: 2.7rem; border: none; background: transparent; color: #ffedbc; text-shadow: 0 0 10px rgba(141, 95, 205, 0.35); }
-.twbv-top-frame { padding: 10px; }
-.twbv-header-layout { display: grid; grid-template-columns: 1fr 260px 1fr; gap: 10px; align-items: stretch; }
+.twbv-top-frame { padding: 8px; }
+.twbv-header-layout { display: grid; grid-template-columns: 1fr 210px 1fr; gap: 8px; align-items: stretch; }
 .twbv-panel { padding: 10px; }
 .twbv-panel h2 { margin: 0 0 8px; font-size: .76rem; color: #f3e2b8; text-transform: uppercase; border-bottom: 1px solid rgba(217, 183, 117, 0.42); padding-bottom: 5px; letter-spacing: 0.09em; }
+.twbv-header-side h2,
+.twbv-header-side label,
+.twbv-header-side input {
+  font-size: 1.2em;
+}
 .profile-img { width: 100%; aspect-ratio: 0.8/1; border-radius: 8px; object-fit: cover; border: 1px solid rgba(154, 123, 255, 0.85); cursor: pointer; }
 .twbv-sheet label { display: flex; flex-direction: column; gap: 4px; margin-bottom: 7px; font-size: 0.66rem; text-transform: uppercase; color: #ecdeb8; letter-spacing: .05em; }
 .twbv-sheet input[type='text'], .twbv-sheet input[type='number'], .twbv-sheet select, .twbv-sheet textarea { background: rgba(8, 8, 17, 0.86); border: 1px solid var(--twbv-border-soft); color: var(--twbv-text); border-radius: 5px; padding: 5px 7px; }
@@ -86,11 +91,11 @@
 .twbv-eco-panel h2 { border: none; font-size: .95rem; }
 .twbv-eco-controls { display:flex; justify-content:center; align-items:center; gap:8px; }
 .twbv-eco-controls input {
-  width: 184px;
-  height: 184px;
+  width: 118px;
+  height: 118px;
   border-radius: 50%;
   text-align:center;
-  font-size: 3.2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   padding: 0;
   border: 2px solid rgba(224, 96, 96, 0.74);

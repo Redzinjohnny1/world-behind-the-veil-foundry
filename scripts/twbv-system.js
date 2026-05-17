@@ -122,6 +122,13 @@ function resolveDialogRoot(dialog) {
   if (dialog[0]?.querySelector) return dialog[0];
   return null;
 }
+
+function applyDialogWindowClass(dialogLike, className) {
+  const root = resolveDialogRoot(dialogLike);
+  if (!root || !className) return;
+  const windowApp = root.closest?.(".window-app");
+  if (windowApp) windowApp.classList.add(className);
+}
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -387,6 +394,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       new Dialog({
         title: `Configurar perícia: ${pericia.nome || `Perícia ${index + 1}`}`,
         content,
+        classes: ["wbtv-skill-config-dialog"],
+        render: (dialog, html) => {
+          applyDialogWindowClass(html ?? dialog, "wbtv-skill-config-dialog");
+        },
         buttons: {
           save: {
             label: "Salvar",

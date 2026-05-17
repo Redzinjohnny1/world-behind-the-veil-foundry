@@ -18,6 +18,17 @@ const ADVANCEMENT_OPTIONS = [
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
+const SKILL_LEVELS = [
+  { dado: 4, bonus: 0 },
+  { dado: 4, bonus: 1 },
+  { dado: 6, bonus: 1 },
+  { dado: 6, bonus: 2 },
+  { dado: 8, bonus: 2 },
+  { dado: 8, bonus: 3 },
+  { dado: 10, bonus: 3 },
+  { dado: 10, bonus: 4 },
+  { dado: 12, bonus: 5 }
+];
 
 function buildDieLabel(die, bonus = 0) {
   return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
@@ -37,6 +48,7 @@ function resolveDialogRoot(dialog) {
   if (dialog.element?.querySelector) return dialog.element;
   if (dialog.window?.element?.querySelector) return dialog.window.element;
   if (Array.isArray(dialog.element) && dialog.element[0]?.querySelector) return dialog.element[0];
+  if (dialog[0]?.querySelector) return dialog[0];
   return null;
 }
 class TWBVPersonagemSheet extends ActorSheet {
@@ -76,15 +88,30 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "intuicao", label: "Intuição" },
       { key: "vontade", label: "Vontade" }
     ];
-    context.skillDiceOptions = SKILL_DICE.map((die) => ({ value: die, label: `d${die}` }));
+    context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
+      value: index,
+      label: buildDieLabel(level.dado, level.bonus),
+      dado: level.dado,
+      bonus: level.bonus
+    }));
     context.system.pericias = Array.from(context.system.pericias ?? []).map((pericia) => {
       const dado = SKILL_DICE.includes(Number(pericia?.dado)) ? Number(pericia.dado) : 4;
-      const bonus = Number.isFinite(Number(pericia?.bonus)) ? Number(pericia.bonus) : 0;
+      let bonus = Number.isFinite(Number(pericia?.bonus)) ? Number(pericia.bonus) : 0;
+      const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === dado && level.bonus === bonus);
+      if (!normalizedLevel) {
+        const closestLevel = SKILL_LEVELS.reduce((best, level) => {
+          const bestDistance = Math.abs(best.dado - dado) + Math.abs(best.bonus - bonus);
+          const currentDistance = Math.abs(level.dado - dado) + Math.abs(level.bonus - bonus);
+          return currentDistance < bestDistance ? level : best;
+        }, SKILL_LEVELS[0]);
+        bonus = closestLevel.bonus;
+      }
       return {
         ...pericia,
         dado,
         bonus,
         locked: Boolean(pericia?.locked),
+        levelIndex: SKILL_LEVELS.findIndex((level) => level.dado === dado && level.bonus === bonus),
         rollLabel: buildDieLabel(dado, bonus)
       };
     });
@@ -105,6 +132,16 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       pericias[i].dado = SKILL_DICE.includes(Number(pericias[i].dado)) ? Number(pericias[i].dado) : 4;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
+      const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === pericias[i].dado && level.bonus === pericias[i].bonus);
+      if (!normalizedLevel) {
+        const closestLevel = SKILL_LEVELS.reduce((best, level) => {
+          const bestDistance = Math.abs(best.dado - pericias[i].dado) + Math.abs(best.bonus - pericias[i].bonus);
+          const currentDistance = Math.abs(level.dado - pericias[i].dado) + Math.abs(level.bonus - pericias[i].bonus);
+          return currentDistance < bestDistance ? level : best;
+        }, SKILL_LEVELS[0]);
+        pericias[i].dado = closestLevel.dado;
+        pericias[i].bonus = closestLevel.bonus;
+      }
       pericias[i].locked = Boolean(pericias[i].locked);
       delete pericias[i].passo;
     }
@@ -221,15 +258,16 @@ class TWBVPersonagemSheet extends ActorSheet {
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
       new Dialog({
         title: "Adicionar perícia",
-        content: `<div class="twbv-add-skill-dialog"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado base<select name="dado">${SKILL_DICE.map((die) => `<option value="${die}" ${die === 4 ? "selected" : ""}>d${die}</option>`).join("")}</select></label></div>`,
+        content: `<div class="twbv-add-skill-dialog"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado da perícia<select name="skillLevel">${SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === 0 ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("")}</select></label></div>`,
         buttons: {
           accept: {
             label: "Aceitar",
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const nome = String(root?.querySelector('input[name="nome"]')?.value ?? "").trim();
-              const dado = Number(root?.querySelector('select[name="dado"]')?.value ?? 4);
-              pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, dado: SKILL_DICE.includes(dado) ? dado : 4, bonus: 0, locked: false });
+              const skillLevel = Number(root?.querySelector('select[name="skillLevel"]')?.value ?? 0);
+              const selectedLevel = SKILL_LEVELS[skillLevel] ?? SKILL_LEVELS[0];
+              pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, dado: selectedLevel.dado, bonus: selectedLevel.bonus, locked: false });
               await this.actor.update({ "system.pericias": pericias });
             }
           },
@@ -249,17 +287,15 @@ class TWBVPersonagemSheet extends ActorSheet {
       const pericia = pericias[index];
       if (!pericia) return;
 
-      const diceOptions = SKILL_DICE.map((die) => `<option value="${die}" ${Number(pericia.dado) === die ? "selected" : ""}>d${die}</option>`).join("");
+      const currentLevelIndex = SKILL_LEVELS.findIndex((level) => level.dado === Number(pericia.dado) && level.bonus === Number(pericia.bonus));
+      const levelOptions = SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === (currentLevelIndex >= 0 ? currentLevelIndex : 0) ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("");
       const content = `
         <div class="twbv-edit-skill-dialog">
           <label>Nome
             <input type="text" name="nome" value="${pericia.nome ?? ""}" />
           </label>
-          <label>Dado
-            <select name="dado">${diceOptions}</select>
-          </label>
-          <label>Bônus da perícia
-            <input type="number" name="bonus" value="${Number(pericia.bonus ?? 0)}" />
+          <label>Nível da perícia
+            <select name="skillLevel">${levelOptions}</select>
           </label>
         </div>
       `;
@@ -273,11 +309,11 @@ class TWBVPersonagemSheet extends ActorSheet {
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const nome = String(root?.querySelector('input[name="nome"]')?.value ?? pericia.nome ?? "").trim();
-              const dado = Number(root?.querySelector('select[name="dado"]')?.value ?? pericia.dado ?? 4);
-              const bonus = Number(root?.querySelector('input[name="bonus"]')?.value ?? pericia.bonus ?? 0);
+              const skillLevel = Number(root?.querySelector('select[name="skillLevel"]')?.value ?? currentLevelIndex ?? 0);
+              const selectedLevel = SKILL_LEVELS[skillLevel] ?? SKILL_LEVELS[0];
               pericias[index].nome = nome || pericia.nome || `Perícia ${index + 1}`;
-              pericias[index].dado = SKILL_DICE.includes(dado) ? dado : 4;
-              pericias[index].bonus = Number.isFinite(bonus) ? bonus : 0;
+              pericias[index].dado = selectedLevel.dado;
+              pericias[index].bonus = selectedLevel.bonus;
               await this.actor.update({ "system.pericias": pericias });
             }
           },

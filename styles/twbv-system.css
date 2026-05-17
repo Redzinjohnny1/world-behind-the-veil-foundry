@@ -88,44 +88,32 @@
   letter-spacing: .08em;
 }
 
-.attributes-panel.runic-panel {
+.attributes-runic-panel {
   background-image: url("../assets/ui/runic-attributes-panel.png");
-  background-size: 100% 100%;
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top center;
   width: 100%;
-  min-height: 360px;
-  padding: 95px 70px 55px 70px;
+  max-width: 1200px;
+  aspect-ratio: 1536 / 1024;
+  min-height: 760px;
+  margin: 0 auto;
+  padding: 280px 150px 180px 150px;
   box-sizing: border-box;
   border: none;
   border-radius: 0;
   box-shadow: none;
 }
 
-.attributes-panel.runic-panel::before {
+.attributes-runic-panel::before {
   display: none;
 }
 
-.attributes-panel.runic-panel h2 {
-  border-bottom: none;
-  margin: 0;
-  text-align: center;
-  align-self: start;
-}
-
-.attributes-panel.runic-panel .twbv-attributes-grid {
-
+.attributes-runic-panel .twbv-attributes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 28px 44px;
+  gap: 120px 80px;
   align-items: center;
-}
-
-.attributes-panel.runic-panel {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  align-content: start;
-  row-gap: 26px;
 }
 
 .twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) 1fr; gap: 10px; min-height: 100%; }

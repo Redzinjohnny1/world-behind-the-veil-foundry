@@ -117,12 +117,12 @@
 }
 .twbv-eco-adjust { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); font-size: .9rem; }
 
-.twbv-skills-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+.twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 8px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
-.twbv-skill-row { display: grid; grid-template-columns: minmax(170px, 2fr) minmax(86px, 1fr) minmax(120px, 1fr) 40px; align-items: center; gap: 8px; padding: 6px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
-.twbv-skill-roll { flex: 1; text-align: left; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 6px; }
-.twbv-skill-step { font-size: .78rem; color: var(--twbv-muted); white-space: nowrap; }
+.twbv-skill-row { display: grid; grid-template-columns: minmax(180px, 2fr) minmax(140px, 1fr) 48px minmax(90px, 1fr); align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
+.twbv-skill-roll { width: 44px; height: 34px; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 0; font-size: 1.1rem; }
+.twbv-skill-step { font-size: .82rem; color: var(--twbv-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .twbv-skills-empty {
   border: 1px dashed rgba(154, 123, 255, 0.45);
   border-radius: 8px;
@@ -132,7 +132,8 @@
   justify-content: center;
   color: var(--twbv-muted);
 }
-.twbv-remove-skill { height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-skill-controls { display: flex; gap: 6px; justify-content: flex-end; }
+.twbv-move-skill, .twbv-remove-skill { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-attr-roll {
   margin-top: 6px;
   width: 170px;
@@ -142,6 +143,7 @@
   background: linear-gradient(180deg, rgba(82,58,118,.95), rgba(24,18,36,.95));
   color: #ffe8b0;
   font-weight: 700;
+  font-size: 1.15rem;
   letter-spacing: .03em;
 }
 .twbv-stages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
@@ -174,4 +176,8 @@
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
   .twbv-stages-grid, .twbv-attributes-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+@media (max-width: 720px) {
+  .twbv-skill-row { grid-template-columns: 1fr 1fr 48px auto; }
 }

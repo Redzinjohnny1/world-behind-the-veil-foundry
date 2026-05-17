@@ -218,6 +218,23 @@ class TWBVPersonagemSheet extends ActorSheet {
       pericias.splice(index, 1);
       await this.actor.update({ "system.pericias": pericias });
     });
+
+    html.find(".twbv-move-skill").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      const direction = String(event.currentTarget.dataset.direction ?? "");
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
+      if (index < 0) return;
+
+      const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+      if (targetIndex < 0 || targetIndex >= pericias.length) return;
+
+      const [moved] = pericias.splice(index, 1);
+      pericias.splice(targetIndex, 0, moved);
+      await this.actor.update({ "system.pericias": pericias });
+    });
   }
 }
 

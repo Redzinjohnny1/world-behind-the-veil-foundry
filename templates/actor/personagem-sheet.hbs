@@ -70,15 +70,9 @@
         <section class="twbv-panel twbv-ornate">
           <div class="twbv-pericias-header">
             <h2>Perícias</h2>
-            <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
           </div>
           <div class="twbv-skills-grid">
-            {{#each system.pericias as |pericia i|}}
-              <div class="twbv-skill-row">
-                <button type="button" class="twbv-skill-roll" data-index="{{i}}">{{pericia.nome}}</button>
-                <span class="twbv-skill-step">{{pericia.label}}</span>
-              </div>
-            {{/each}}
+            <div class="twbv-skills-empty">Quadro de perícias em branco.</div>
           </div>
         </section>
       </div>

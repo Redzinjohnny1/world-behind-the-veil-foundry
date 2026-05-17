@@ -85,7 +85,17 @@
 .twbv-attribute-card { text-align: center; }
 .twbv-attribute-card h3 { margin: 0 0 6px; font-size: .9rem; color: #ffe6ab; text-transform: uppercase; letter-spacing: .08em; text-shadow: 0 0 8px rgba(217,183,117,.45); }
 .twbv-attribute-card label { align-items: center; }
-.twbv-attribute-card select { width: 140px; font-weight: 800; font-size: 1.1rem; text-align: center; border: 2px solid rgba(217, 183, 117, 0.78); box-shadow: 0 0 22px rgba(121, 196, 255, 0.28), inset 0 0 24px rgba(154, 123, 255, 0.26); }
+.twbv-attribute-card select {
+  width: 170px;
+  min-height: 40px;
+  padding: 6px 28px 6px 12px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  text-align: center;
+  border: 2px solid rgba(217, 183, 117, 0.78);
+  box-shadow: 0 0 22px rgba(121, 196, 255, 0.28), inset 0 0 24px rgba(154, 123, 255, 0.26);
+}
 
 .twbv-eco-panel { text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 100%; }
 .twbv-eco-panel h2 { border: none; font-size: .95rem; }
@@ -110,6 +120,16 @@
 .twbv-skill-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
 .twbv-skill-roll { flex: 1; text-align: left; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 6px; }
 .twbv-skill-step { font-size: .78rem; color: var(--twbv-muted); white-space: nowrap; }
+.twbv-skills-empty {
+  border: 1px dashed rgba(154, 123, 255, 0.45);
+  border-radius: 8px;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--twbv-muted);
+  font-style: italic;
+}
 .twbv-stages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .twbv-stage-chip { border: 1px solid rgba(154, 123, 255, 0.45); border-radius: 8px; padding: 8px; display:flex; flex-direction:column; gap:4px; }
 .twbv-stage-chip.is-current { border-color: var(--twbv-accent-gold); box-shadow: 0 0 16px rgba(217,183,117,.3); }

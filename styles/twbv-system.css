@@ -105,10 +105,6 @@
   padding: 0;
 }
 
-.attributes-runic-panel::before {
-  display: none;
-}
-
 .attributes-runic-grid {
   position: absolute;
   left: 12%;
@@ -278,8 +274,7 @@
 @media (max-width: 980px) {
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
-  .twbv-stages-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .attributes-runic-grid { grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: repeat(3, 1fr); }
+  .twbv-stages-grid, .attributes-runic-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 
 @media (max-width: 720px) {

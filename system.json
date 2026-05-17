@@ -28,8 +28,8 @@
   ],
   "primaryTokenAttribute": "",
   "secondaryTokenAttribute": "",
-  "url": "",
-  "manifest": "",
-  "download": "",
+  "url": "https://github.com/Redzinhohnny1/world-behind-the-veil-foundry",
+  "manifest": "https://raw.githubusercontent.com/Redzinhohnny1/world-behind-the-veil-foundry/main/system.json",
+  "download": "https://github.com/Redzinhohnny1/world-behind-the-veil-foundry/archive/refs/heads/main.zip",
   "license": "LICENSE.txt"
 }

@@ -50,23 +50,38 @@ function resolveAwakenedDie(attributeDie) {
   return 8;
 }
 
-function renderDualDieResult({ title, dieA, labelA, dieB, labelB, bonus = 0, actor, subtitle = "" }) {
+function renderDualDieResult({
+  title,
+  dieA,
+  labelA,
+  dieB,
+  labelB,
+  bonus = 0,
+  bonusA,
+  bonusB,
+  dieDisplayA,
+  dieDisplayB,
+  actor,
+  subtitle = ""
+}) {
   return (async () => {
     const rollA = await new Roll(`1d${dieA}`).evaluate();
     const rollB = await new Roll(`1d${dieB}`).evaluate();
     const valueA = Number(rollA.total ?? 0);
     const valueB = Number(rollB.total ?? 0);
-    const modifiedA = valueA + bonus;
-    const modifiedB = valueB + bonus;
+    const effectiveBonusA = Number.isFinite(Number(bonusA)) ? Number(bonusA) : Number(bonus ?? 0);
+    const effectiveBonusB = Number.isFinite(Number(bonusB)) ? Number(bonusB) : Number(bonus ?? 0);
+    const modifiedA = valueA + effectiveBonusA;
+    const modifiedB = valueB + effectiveBonusB;
     const highestModified = Math.max(modifiedA, modifiedB);
     const total = highestModified;
-    const dieCard = (label, die, value, modified, selected) => {
-      const bonusLabel = bonus === 0 ? "" : ` ${bonus > 0 ? "+" : ""}${bonus}`;
-      const valueLabel = bonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
+    const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected) => {
+      const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
+      const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
-        <div class="twbv-roll-card__die">d${die}</div>
+        <div class="twbv-roll-card__die">${dieDisplay}</div>
         <div class="twbv-roll-card__value">${valueLabel}</div>
       </div>`;
     };
@@ -79,8 +94,8 @@ function renderDualDieResult({ title, dieA, labelA, dieB, labelB, bonus = 0, act
           ${subtitle ? `<p>${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieA, valueA, modifiedA, modifiedA === highestModified)}
-          ${dieCard(labelB, dieB, valueB, modifiedB, modifiedB === highestModified)}
+          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, valueA, effectiveBonusA, modifiedA, modifiedA === highestModified)}
+          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, valueB, effectiveBonusB, modifiedB, modifiedB === highestModified)}
         </div>
         <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
       </section>`;
@@ -270,7 +285,10 @@ class TWBVPersonagemSheet extends ActorSheet {
                 labelA: "Perícia",
                 dieB: awakenedDie,
                 labelB: "Desperto",
-                bonus: totalBonus,
+                bonusA: totalBonus,
+                bonusB: 0,
+                dieDisplayA: buildDieLabel(skillDie, totalBonus),
+                dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
               });
             }

@@ -102,6 +102,7 @@
   border: none;
   border-radius: 0;
   box-shadow: none;
+  padding: 0;
 }
 
 .attributes-runic-grid {
@@ -121,7 +122,7 @@
 
 .twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) 1fr; gap: 10px; min-height: 100%; }
 
-.twbv-attribute-card { text-align: center; margin: 0; padding: 0; display:flex; flex-direction:column; align-items:center; gap:6px; background: transparent; border: none; box-shadow: none; }
+.twbv-attribute-card { text-align: center; margin: 0; padding: 0; display:flex; flex-direction:column; align-items:center; gap:6px; border: none; box-shadow: none; }
 .twbv-attribute-card h3 { margin: 0; font-size: .82rem; color: #bce8ff; text-transform: uppercase; letter-spacing: .1em; text-shadow: 0 0 8px rgba(121,196,255,.55); }
 .twbv-attribute-card label { align-items: center; }
 .twbv-attribute-card select {

@@ -41,6 +41,15 @@ function normalizeAttributeStep(value) {
   return ATTRIBUTE_DICE[Math.max(0, Math.min(parsed, ATTRIBUTE_DICE.length - 1))];
 }
 
+
+function resolveDialogRoot(dialog) {
+  if (!dialog) return null;
+  if (typeof dialog.querySelector === "function") return dialog;
+  if (dialog.element?.querySelector) return dialog.element;
+  if (dialog.window?.element?.querySelector) return dialog.window.element;
+  if (Array.isArray(dialog.element) && dialog.element[0]?.querySelector) return dialog.element[0];
+  return null;
+}
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -188,10 +197,13 @@ class TWBVPersonagemSheet extends ActorSheet {
         content: `<div class="twbv-roll-dialog"><label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label><label>Bônus da perícia<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label></div>`,
         ok: {
           label: "Adicionar",
-          callback: (event, button, dialog) => ({
-            nome: dialog.querySelector("#twbv-skill-name")?.value?.trim(),
-            passo: Number(dialog.querySelector("#twbv-skill-step")?.value ?? -1)
-          })
+          callback: (event, button, dialog) => {
+            const root = resolveDialogRoot(dialog);
+            return {
+              nome: root?.querySelector("#twbv-skill-name")?.value?.trim(),
+              passo: Number(root?.querySelector("#twbv-skill-step")?.value ?? -1)
+            };
+          }
         }
       });
       if (!novaPericia?.nome) return;

@@ -1,0 +1,116 @@
+:root {
+  --twbv-bg: #0f1118;
+  --twbv-panel: rgba(22, 26, 38, 0.76);
+  --twbv-accent-purple: #6f55c7;
+  --twbv-accent-blue: #2b3f83;
+  --twbv-accent-gold: #b79958;
+  --twbv-border: rgba(183, 153, 88, 0.42);
+  --twbv-text: #dfdfeb;
+}
+
+.twbv.sheet.actor .window-content {
+  background: radial-gradient(circle at top right, #1a1f33 0%, #0c0f18 58%, #090b12 100%);
+  color: var(--twbv-text);
+}
+
+.twbv-sheet {
+  position: relative;
+  min-height: 100%;
+  padding: 14px;
+}
+
+.twbv-header {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.twbv-portrait-panel {
+  border: 1px solid var(--twbv-border);
+  border-radius: 10px;
+  background: var(--twbv-panel);
+  padding: 8px;
+}
+
+.twbv-portrait-panel .profile-img {
+  width: 170px;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(111, 85, 199, 0.8);
+  cursor: pointer;
+}
+
+.twbv-main-info,
+.twbv-panel {
+  background: var(--twbv-panel);
+  border: 1px solid var(--twbv-border);
+  border-radius: 10px;
+  padding: 10px;
+  backdrop-filter: blur(2px);
+}
+
+.twbv-main-info .charname input {
+  font-size: 1.4rem;
+  height: 2rem;
+}
+
+.twbv-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.twbv-grid-top { grid-template-columns: repeat(3, 1fr); }
+.twbv-grid-stats { grid-template-columns: repeat(5, 1fr); }
+.twbv-grid-summary { grid-template-columns: repeat(2, 1fr); }
+
+.twbv-sheet label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #e8d8af;
+}
+
+.twbv-sheet input[type="text"],
+.twbv-sheet input[type="number"] {
+  background: rgba(6, 7, 12, 0.75);
+  border: 1px solid rgba(43, 63, 131, 0.8);
+  color: var(--twbv-text);
+  border-radius: 5px;
+}
+
+.twbv-tabs {
+  border-bottom: 1px solid var(--twbv-border);
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.twbv-tabs .item {
+  background: rgba(20, 24, 36, 0.85);
+  border: 1px solid rgba(111, 85, 199, 0.5);
+  color: #d7d9e6;
+  padding: 6px 10px;
+  border-radius: 6px 6px 0 0;
+}
+
+.twbv-tabs .item.active {
+  border-color: var(--twbv-accent-gold);
+  color: #f0dfb5;
+}
+
+.twbv-panel h2 {
+  margin: 0 0 8px;
+  color: #f0dfb5;
+  border-bottom: 1px solid rgba(183, 153, 88, 0.35);
+  padding-bottom: 4px;
+}
+
+.twbv-attributes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}

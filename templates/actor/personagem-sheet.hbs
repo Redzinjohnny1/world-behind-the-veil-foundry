@@ -1,0 +1,125 @@
+<form class="twbv-sheet {{cssClass}}" autocomplete="off">
+  <div class="twbv-background"></div>
+
+  <header class="twbv-header">
+    <div class="twbv-portrait-panel">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    </div>
+
+    <div class="twbv-main-info">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Personagem" />
+      </h1>
+
+      <div class="twbv-grid twbv-grid-top">
+        <label>Conceito
+          <input type="text" name="system.conceito" value="{{system.conceito}}" />
+        </label>
+        <label>Arquétipo
+          <input type="text" name="system.arquetipo" value="{{system.arquetipo}}" />
+        </label>
+        <label>Origem
+          <input type="text" name="system.origem" value="{{system.origem}}" />
+        </label>
+      </div>
+
+      <div class="twbv-grid twbv-grid-stats">
+        <label>Nível
+          <input type="number" name="system.nivel" value="{{system.nivel}}" />
+        </label>
+        <label>Experiência
+          <input type="number" name="system.experiencia" value="{{system.experiencia}}" />
+        </label>
+        <label>Eco
+          <input type="number" name="system.eco" value="{{system.eco}}" />
+        </label>
+        <label>Ferimentos
+          <input type="number" name="system.ferimentos" value="{{system.ferimentos}}" />
+        </label>
+        <label>Fragmentos
+          <input type="number" name="system.fragmentos" value="{{system.fragmentos}}" />
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <nav class="sheet-tabs tabs twbv-tabs" data-group="primary">
+    <a class="item" data-tab="resumo">Resumo</a>
+    <a class="item" data-tab="atributos">Atributos</a>
+    <a class="item" data-tab="pericias">Perícias</a>
+    <a class="item" data-tab="poderes">Poderes</a>
+    <a class="item" data-tab="equipamento">Equipamento</a>
+    <a class="item" data-tab="historia">História</a>
+    <a class="item" data-tab="efeitos">Efeitos</a>
+  </nav>
+
+  <section class="sheet-body twbv-tab-content">
+    <div class="tab" data-group="primary" data-tab="resumo">
+      <div class="twbv-panel">
+        <h2>Resumo do Personagem</h2>
+        <p>Base inicial do sistema. Campos já editáveis e persistentes.</p>
+
+        <div class="twbv-grid twbv-grid-summary">
+          <label>
+            Semi Desperto
+            <input type="checkbox" name="system.semiDesperto" {{checked system.semiDesperto}} />
+          </label>
+          <label>
+            Dificuldade Mínima
+            <input type="number" name="system.rolagem.dificuldadeMinima" value="{{system.rolagem.dificuldadeMinima}}" />
+          </label>
+          <label>
+            Dado Normal
+            <input type="text" name="system.rolagem.dadoNormal" value="{{system.rolagem.dadoNormal}}" />
+          </label>
+          <label>
+            Dado Desperto
+            <input type="text" name="system.rolagem.dadoDesperto" value="{{system.rolagem.dadoDesperto}}" />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="atributos">
+      <div class="twbv-panel">
+        <h2>Atributos</h2>
+        <div class="twbv-attributes-grid">
+          <label>Força
+            <input type="number" name="system.atributos.forca.valor" value="{{system.atributos.forca.valor}}" />
+          </label>
+          <label>Destreza
+            <input type="number" name="system.atributos.destreza.valor" value="{{system.atributos.destreza.valor}}" />
+          </label>
+          <label>Constituição
+            <input type="number" name="system.atributos.constituicao.valor" value="{{system.atributos.constituicao.valor}}" />
+          </label>
+          <label>Inteligência
+            <input type="number" name="system.atributos.inteligencia.valor" value="{{system.atributos.inteligencia.valor}}" />
+          </label>
+          <label>Intuição
+            <input type="number" name="system.atributos.intuicao.valor" value="{{system.atributos.intuicao.valor}}" />
+          </label>
+          <label>Vontade
+            <input type="number" name="system.atributos.vontade.valor" value="{{system.atributos.vontade.valor}}" />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="pericias">
+      <div class="twbv-panel"><h2>Perícias</h2><p>Em construção.</p></div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="poderes">
+      <div class="twbv-panel"><h2>Poderes</h2><p>Em construção.</p></div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="equipamento">
+      <div class="twbv-panel"><h2>Equipamento</h2><p>Em construção.</p></div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="historia">
+      <div class="twbv-panel"><h2>História</h2><p>Em construção.</p></div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="efeitos">
+      <div class="twbv-panel"><h2>Efeitos</h2><p>Em construção.</p></div>
+    </div>
+  </section>
+</form>

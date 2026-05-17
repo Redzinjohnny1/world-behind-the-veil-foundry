@@ -1,0 +1,35 @@
+{
+  "id": "world-behind-the-veil",
+  "title": "The World Behind the Veil",
+  "description": "Sistema customizado para Foundry VTT - The World Behind the Veil",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12",
+    "maximum": "12"
+  },
+  "authors": [
+    {
+      "name": "The World Behind the Veil Team"
+    }
+  ],
+  "esmodules": [
+    "scripts/twbv-system.js"
+  ],
+  "styles": [
+    "styles/twbv-system.css"
+  ],
+  "languages": [
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "lang/pt-BR.json"
+    }
+  ],
+  "primaryTokenAttribute": "",
+  "secondaryTokenAttribute": "",
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE.txt"
+}

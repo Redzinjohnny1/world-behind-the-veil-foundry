@@ -71,10 +71,15 @@ function renderDualDieResult({
     const valueB = Number(rollB.total ?? 0);
     const effectiveBonusA = Number.isFinite(Number(bonusA)) ? Number(bonusA) : Number(bonus ?? 0);
     const effectiveBonusB = Number.isFinite(Number(bonusB)) ? Number(bonusB) : Number(bonus ?? 0);
-    const modifiedA = valueA + effectiveBonusA;
-    const modifiedB = valueB + effectiveBonusB;
-    const highestModified = Math.max(modifiedA, modifiedB);
-    const total = highestModified;
+
+    const skillDieResult = valueA;
+    const skillBonus = effectiveBonusA;
+    const skillTotal = skillDieResult + skillBonus;
+
+    const awakenedDieResult = valueB;
+    const awakenedTotal = awakenedDieResult + effectiveBonusB;
+
+    const total = Math.max(skillTotal, awakenedTotal);
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
       const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
@@ -94,8 +99,8 @@ function renderDualDieResult({
           ${subtitle ? `<p>${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, valueA, effectiveBonusA, modifiedA, modifiedA === highestModified)}
-          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, valueB, effectiveBonusB, modifiedB, modifiedB === highestModified)}
+          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
+          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total)}
         </div>
         <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
       </section>`;
@@ -287,7 +292,7 @@ class TWBVPersonagemSheet extends ActorSheet {
                 labelB: "Desperto",
                 bonusA: totalBonus,
                 bonusB: 0,
-                dieDisplayA: buildDieLabel(skillDie, totalBonus),
+                dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
               });

@@ -34,6 +34,13 @@ function buildDieLabel(die, bonus = 0) {
   return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
 }
 
+function normalizeAttributeStep(value) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return 4;
+  if (ATTRIBUTE_DICE.includes(parsed)) return parsed;
+  return ATTRIBUTE_DICE[Math.max(0, Math.min(parsed, ATTRIBUTE_DICE.length - 1))];
+}
+
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -62,7 +69,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       current: stage.name === currentStage.name
     }));
 
-    context.attributeOptions = ATTRIBUTE_DICE.map((die, idx) => ({ value: idx, label: `d${die}` }));
+    context.attributeOptions = ATTRIBUTE_DICE.map((die) => ({ value: die, label: `d${die}` }));
     context.attributeKeys = [
       { key: "forca", label: "Força" },
       { key: "destreza", label: "Destreza" },
@@ -85,6 +92,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], passo: -1, bonus: 0 };
       pericias[i].passo = Number.isFinite(Number(pericias[i].passo)) ? Number(pericias[i].passo) : -1;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
+    }
+
+    const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
+    const keys = ["forca", "destreza", "constituicao", "inteligencia", "intuicao", "vontade"];
+    for (const key of keys) {
+      atributos[key] = atributos[key] ?? {};
+      atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
+      atributos[key].bonus = Number.isFinite(Number(atributos[key].bonus)) ? Number(atributos[key].bonus) : 0;
     }
   }
 
@@ -137,9 +152,9 @@ class TWBVPersonagemSheet extends ActorSheet {
       const skillStep = SKILL_STEPS[skillIndex];
       const skillBonus = Number(skill.bonus ?? 0);
 
-      const attrStep = Number(this.actor.system.atributos?.[attributeKey]?.passo ?? 0);
+      const attrStep = normalizeAttributeStep(this.actor.system.atributos?.[attributeKey]?.passo ?? 4);
       const attrBonus = Number(this.actor.system.atributos?.[attributeKey]?.bonus ?? 0);
-      const attrDie = ATTRIBUTE_DICE[Math.max(0, Math.min(attrStep, ATTRIBUTE_DICE.length - 1))];
+      const attrDie = attrStep;
       const awakDie = attrDie <= 6 ? 4 : attrDie <= 10 ? 6 : 8;
 
       const untrainedPenalty = step <= -1 ? -2 : 0;

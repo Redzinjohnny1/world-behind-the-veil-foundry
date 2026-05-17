@@ -16,6 +16,24 @@ const ADVANCEMENT_OPTIONS = [
   "5 pontos de poder e uma mágia"
 ];
 
+const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
+const SKILL_STEPS = [
+  { die: 4, bonus: -2, label: "Sem perícia (d4-2)" },
+  { die: 4, bonus: 0, label: "d4" },
+  { die: 4, bonus: 1, label: "d4+1" },
+  { die: 6, bonus: 1, label: "d6+1" },
+  { die: 6, bonus: 2, label: "d6+2" },
+  { die: 8, bonus: 2, label: "d8+2" },
+  { die: 8, bonus: 3, label: "d8+3" },
+  { die: 10, bonus: 3, label: "d10+3" },
+  { die: 10, bonus: 4, label: "d10+4" },
+  { die: 12, bonus: 4, label: "d12+4" }
+];
+
+function buildDieLabel(die, bonus = 0) {
+  return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
+}
+
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -44,7 +62,30 @@ class TWBVPersonagemSheet extends ActorSheet {
       current: stage.name === currentStage.name
     }));
 
+    context.attributeOptions = ATTRIBUTE_DICE.map((die, idx) => ({ value: idx, label: `d${die}` }));
+    context.attributeKeys = [
+      { key: "forca", label: "Força" },
+      { key: "destreza", label: "Destreza" },
+      { key: "constituicao", label: "Constituição" },
+      { key: "inteligencia", label: "Inteligência" },
+      { key: "intuicao", label: "Intuição" },
+      { key: "vontade", label: "Vontade" }
+    ];
+    context.skillOptions = SKILL_STEPS.map((step, idx) => ({ value: idx - 1, label: step.label }));
+
+    this._ensureSystemDefaults();
+
     return context;
+  }
+
+  _ensureSystemDefaults() {
+    const pericias = Array.from(this.actor.system.pericias ?? []);
+    while (pericias.length < 6) pericias.push({ nome: "", passo: -1, bonus: 0 });
+    for (let i = 0; i < pericias.length; i += 1) {
+      if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], passo: -1, bonus: 0 };
+      pericias[i].passo = Number.isFinite(Number(pericias[i].passo)) ? Number(pericias[i].passo) : -1;
+      pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
+    }
   }
 
   activateListeners(html) {
@@ -68,6 +109,47 @@ class TWBVPersonagemSheet extends ActorSheet {
       const ecoAtual = Number(this.actor.system.eco ?? 0);
       const novoEco = Math.max(0, ecoAtual + adjust);
       await this.actor.update({ "system.eco": novoEco });
+    });
+
+    html.find(".twbv-skill-roll").on("click", async (event) => {
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      const skill = this.actor.system.pericias?.[index];
+      if (!skill) return;
+
+      const choices = {
+        forca: "Força",
+        destreza: "Destreza",
+        constituicao: "Constituição",
+        inteligencia: "Inteligência",
+        intuicao: "Intuição",
+        vontade: "Vontade"
+      };
+
+      const attributeKey = await foundry.applications.api.DialogV2.prompt({
+        window: { title: "Escolher atributo" },
+        content: `<label>Atributo base do dado desperto: <select id="twbv-attr">${Object.entries(choices).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>`,
+        ok: { label: "Rolar", callback: (event, button, dialog) => dialog.querySelector("#twbv-attr")?.value }
+      });
+      if (!attributeKey) return;
+
+      const step = Number(skill.passo ?? -1);
+      const skillIndex = Math.max(0, Math.min(step + 1, SKILL_STEPS.length - 1));
+      const skillStep = SKILL_STEPS[skillIndex];
+      const skillBonus = Number(skill.bonus ?? 0);
+
+      const attrStep = Number(this.actor.system.atributos?.[attributeKey]?.passo ?? 0);
+      const attrBonus = Number(this.actor.system.atributos?.[attributeKey]?.bonus ?? 0);
+      const attrDie = ATTRIBUTE_DICE[Math.max(0, Math.min(attrStep, ATTRIBUTE_DICE.length - 1))];
+      const awakDie = attrDie <= 6 ? 4 : attrDie <= 10 ? 6 : 8;
+
+      const untrainedPenalty = step <= -1 ? -2 : 0;
+      const formula = `1d${skillStep.die}${skillStep.bonus + skillBonus >= 0 ? "+" : ""}${skillStep.bonus + skillBonus} + 1d${awakDie}${untrainedPenalty < 0 ? untrainedPenalty : ""}`;
+
+      const roll = await new Roll(formula).evaluate();
+      await roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        flavor: `${skill.nome || `Perícia ${index + 1}`} • Atributo: ${choices[attributeKey]} (${buildDieLabel(attrDie, attrBonus)})`
+      });
     });
   }
 }

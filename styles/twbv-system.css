@@ -165,7 +165,7 @@
 }
 .twbv-attribute-card::before { top: 6px; left: 7px; }
 .twbv-attribute-card::after { bottom: 6px; right: 7px; }
-.twbv-attribute-card h3 { margin: 0; font-size: .78rem; color: #f2e5c2; text-transform: uppercase; font-variant: small-caps; letter-spacing: .14em; font-family: "Cinzel", "Palatino Linotype", serif; text-shadow: 0 0 8px rgba(217, 183, 117, .4); }
+.twbv-attribute-card h3 { margin: 0; font-size: .86rem; font-weight: 700; color: #f4e8c7; text-transform: uppercase; font-variant: small-caps; letter-spacing: .16em; font-family: "Cinzel", "Palatino Linotype", serif; text-shadow: 0 0 9px rgba(217, 183, 117, .45), 0 0 6px rgba(116, 80, 180, .28); }
 .twbv-attributes-panel .twbv-attribute-card label { margin: 0; gap: 2px; font-size: .56rem; letter-spacing: .08em; align-items: center; color: #d5caee; }
 .twbv-attribute-card select {
   width: 100%;

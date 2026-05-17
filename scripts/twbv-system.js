@@ -84,6 +84,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         ...pericia,
         dado,
         bonus,
+        locked: Boolean(pericia?.locked),
         rollLabel: buildDieLabel(dado, bonus)
       };
     });
@@ -104,6 +105,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       pericias[i].dado = SKILL_DICE.includes(Number(pericias[i].dado)) ? Number(pericias[i].dado) : 4;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
+      pericias[i].locked = Boolean(pericias[i].locked);
       delete pericias[i].passo;
     }
 
@@ -139,22 +141,54 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.update({ "system.eco": novoEco });
     });
 
-    html.find(".twbv-skill-roll").on("click", async (event) => {
+    const openSkillRollDialog = async (event) => {
       const index = Number(event.currentTarget.dataset.index ?? -1);
       const skill = this.actor.system.pericias?.[index];
       if (!skill) return;
 
-      const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
-      const totalBonus = Number(skill.bonus ?? 0);
-      const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
-      const formula = `1d${skillDie}${bonusTerm}`;
+      const attributes = [
+        { key: "forca", label: "Força" },
+        { key: "destreza", label: "Destreza" },
+        { key: "constituicao", label: "Constituição" },
+        { key: "inteligencia", label: "Inteligência" },
+        { key: "intuicao", label: "Intuição" },
+        { key: "vontade", label: "Vontade" }
+      ];
 
-      const roll = await new Roll(formula).evaluate();
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `${skill.nome || `Perícia ${index + 1}`} • ${buildDieLabel(skillDie, totalBonus)}`
-      });
-    });
+      const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
+      new Dialog({
+        title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
+        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><label>Bônus manual<input type="number" name="manualBonus" value="0" step="1" /></label></div>`,
+        buttons: {
+          roll: {
+            label: "Rolar",
+            callback: async (dialogHtml) => {
+              const root = resolveDialogRoot(dialogHtml);
+              const attrKey = String(root?.querySelector('select[name="attr"]')?.value ?? "forca");
+              const attr = attributes.find((a) => a.key === attrKey) ?? attributes[0];
+              const attrData = this.actor.system.atributos?.[attr.key] ?? {};
+              const attrBonus = Number(attrData.bonus ?? 0);
+              const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
+              const skillBonus = Number(skill.bonus ?? 0);
+              const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
+              const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
+              const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
+              const formula = `1d${skillDie}${bonusTerm}`;
+              const roll = await new Roll(formula).evaluate();
+              await roll.toMessage({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                flavor: `${skill.nome || `Perícia ${index + 1}`} (${attr.label}) • ${buildDieLabel(skillDie, totalBonus)}`
+              });
+            }
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "roll"
+      }).render(true);
+    };
+
+    html.find(".twbv-skill-roll").on("click", openSkillRollDialog);
+    html.find(".twbv-edit-skill-roll").on("click", openSkillRollDialog);
 
     html.find(".twbv-attr-roll").on("click", async (event) => {
       const labels = {
@@ -185,11 +219,27 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
-      pericias.push({ nome: "", dado: 4, bonus: 0 });
-      await this.actor.update({ "system.pericias": pericias });
+      new Dialog({
+        title: "Adicionar perícia",
+        content: `<div class="twbv-add-skill-dialog"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado base<select name="dado">${SKILL_DICE.map((die) => `<option value="${die}" ${die === 4 ? "selected" : ""}>d${die}</option>`).join("")}</select></label></div>`,
+        buttons: {
+          accept: {
+            label: "Aceitar",
+            callback: async (dialogHtml) => {
+              const root = resolveDialogRoot(dialogHtml);
+              const nome = String(root?.querySelector('input[name="nome"]')?.value ?? "").trim();
+              const dado = Number(root?.querySelector('select[name="dado"]')?.value ?? 4);
+              pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, dado: SKILL_DICE.includes(dado) ? dado : 4, bonus: 0, locked: false });
+              await this.actor.update({ "system.pericias": pericias });
+            }
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "accept"
+      }).render(true);
     });
 
-    html.find(".twbv-edit-skill-roll").on("click", async (event) => {
+    html.find(".twbv-edit-skill-config").on("click", async (event) => {
       event.preventDefault();
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
@@ -202,25 +252,30 @@ class TWBVPersonagemSheet extends ActorSheet {
       const diceOptions = SKILL_DICE.map((die) => `<option value="${die}" ${Number(pericia.dado) === die ? "selected" : ""}>d${die}</option>`).join("");
       const content = `
         <div class="twbv-edit-skill-dialog">
+          <label>Nome
+            <input type="text" name="nome" value="${pericia.nome ?? ""}" />
+          </label>
           <label>Dado
             <select name="dado">${diceOptions}</select>
           </label>
-          <label>Bônus
+          <label>Bônus da perícia
             <input type="number" name="bonus" value="${Number(pericia.bonus ?? 0)}" />
           </label>
         </div>
       `;
 
       new Dialog({
-        title: `Editar rolagem: ${pericia.nome || `Perícia ${index + 1}`}`,
+        title: `Configurar perícia: ${pericia.nome || `Perícia ${index + 1}`}`,
         content,
         buttons: {
           save: {
             label: "Salvar",
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
+              const nome = String(root?.querySelector('input[name="nome"]')?.value ?? pericia.nome ?? "").trim();
               const dado = Number(root?.querySelector('select[name="dado"]')?.value ?? pericia.dado ?? 4);
               const bonus = Number(root?.querySelector('input[name="bonus"]')?.value ?? pericia.bonus ?? 0);
+              pericias[index].nome = nome || pericia.nome || `Perícia ${index + 1}`;
               pericias[index].dado = SKILL_DICE.includes(dado) ? dado : 4;
               pericias[index].bonus = Number.isFinite(bonus) ? bonus : 0;
               await this.actor.update({ "system.pericias": pericias });
@@ -239,7 +294,19 @@ class TWBVPersonagemSheet extends ActorSheet {
       const index = Number(event.currentTarget.dataset.index ?? -1);
       if (index < 0) return;
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+      if (pericias[index]?.locked) return ui.notifications?.warn("Esta perícia está travada.");
       pericias.splice(index, 1);
+      await this.actor.update({ "system.pericias": pericias });
+    });
+
+
+    html.find(".twbv-toggle-skill-lock").on("click", async (event) => {
+      event.preventDefault();
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      if (index < 0) return;
+      const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+      if (!pericias[index]) return;
+      pericias[index].locked = !Boolean(pericias[index].locked);
       await this.actor.update({ "system.pericias": pericias });
     });
 

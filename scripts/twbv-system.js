@@ -77,6 +77,16 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "vontade", label: "Vontade" }
     ];
     context.skillDiceOptions = SKILL_DICE.map((die) => ({ value: die, label: `d${die}` }));
+    context.system.pericias = Array.from(context.system.pericias ?? []).map((pericia) => {
+      const dado = SKILL_DICE.includes(Number(pericia?.dado)) ? Number(pericia.dado) : 4;
+      const bonus = Number.isFinite(Number(pericia?.bonus)) ? Number(pericia.bonus) : 0;
+      return {
+        ...pericia,
+        dado,
+        bonus,
+        rollLabel: buildDieLabel(dado, bonus)
+      };
+    });
 
     this._ensureSystemDefaults();
 
@@ -179,19 +189,47 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.update({ "system.pericias": pericias });
     });
 
-    html.find(".twbv-skill-adjust-bonus").on("click", async (event) => {
+    html.find(".twbv-edit-skill-roll").on("click", async (event) => {
       event.preventDefault();
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
       const index = Number(event.currentTarget.dataset.index ?? -1);
-      const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
-      if (index < 0 || !Number.isFinite(adjust)) return;
-
+      if (index < 0) return;
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
-      if (!pericias[index]) return;
-      const current = Number(pericias[index].bonus ?? 0);
-      pericias[index].bonus = current + adjust;
-      await this.actor.update({ "system.pericias": pericias });
+      const pericia = pericias[index];
+      if (!pericia) return;
+
+      const diceOptions = SKILL_DICE.map((die) => `<option value="${die}" ${Number(pericia.dado) === die ? "selected" : ""}>d${die}</option>`).join("");
+      const content = `
+        <div class="twbv-edit-skill-dialog">
+          <label>Dado
+            <select name="dado">${diceOptions}</select>
+          </label>
+          <label>Bônus
+            <input type="number" name="bonus" value="${Number(pericia.bonus ?? 0)}" />
+          </label>
+        </div>
+      `;
+
+      new Dialog({
+        title: `Editar rolagem: ${pericia.nome || `Perícia ${index + 1}`}`,
+        content,
+        buttons: {
+          save: {
+            label: "Salvar",
+            callback: async (dialogHtml) => {
+              const root = resolveDialogRoot(dialogHtml);
+              const dado = Number(root?.querySelector('select[name="dado"]')?.value ?? pericia.dado ?? 4);
+              const bonus = Number(root?.querySelector('input[name="bonus"]')?.value ?? pericia.bonus ?? 0);
+              pericias[index].dado = SKILL_DICE.includes(dado) ? dado : 4;
+              pericias[index].bonus = Number.isFinite(bonus) ? bonus : 0;
+              await this.actor.update({ "system.pericias": pericias });
+            }
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "save"
+      }).render(true);
     });
 
     html.find(".twbv-remove-skill").on("click", async (event) => {
@@ -205,20 +243,26 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.update({ "system.pericias": pericias });
     });
 
-    html.find(".twbv-move-skill").on("click", async (event) => {
+    html.find(".twbv-skill-row").on("dragstart", (event) => {
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      event.originalEvent.dataTransfer?.setData("text/plain", String(index));
+      event.currentTarget.classList.add("is-dragging");
+    });
+    html.find(".twbv-skill-row").on("dragend", (event) => {
+      event.currentTarget.classList.remove("is-dragging");
+    });
+    html.find(".twbv-skill-row").on("dragover", (event) => event.preventDefault());
+    html.find(".twbv-skill-row").on("drop", async (event) => {
       event.preventDefault();
       await this._onSubmit(event, { preventClose: true, preventRender: true });
-
-      const index = Number(event.currentTarget.dataset.index ?? -1);
-      const direction = String(event.currentTarget.dataset.direction ?? "");
-      const targetIndex = direction === "up" ? index - 1 : index + 1;
-      if (index < 0) return;
+      const fromIndex = Number(event.originalEvent.dataTransfer?.getData("text/plain") ?? -1);
+      const toIndex = Number(event.currentTarget.dataset.index ?? -1);
+      if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
 
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
-      if (targetIndex < 0 || targetIndex >= pericias.length) return;
-
-      const [moved] = pericias.splice(index, 1);
-      pericias.splice(targetIndex, 0, moved);
+      const [moved] = pericias.splice(fromIndex, 1);
+      if (!moved) return;
+      pericias.splice(toIndex, 0, moved);
       await this.actor.update({ "system.pericias": pericias });
     });
   }

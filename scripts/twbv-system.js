@@ -180,21 +180,29 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".twbv-add-skill").on("click", async () => {
-      const nome = await foundry.applications.api.DialogV2.prompt({
+      const novaPericia = await foundry.applications.api.DialogV2.prompt({
         window: { title: "Nova perícia" },
-        content: `<label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label>`,
-        ok: { label: "Continuar", callback: (event, button, dialog) => dialog.querySelector("#twbv-skill-name")?.value?.trim() }
+        content: `<div class="twbv-roll-dialog"><label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label><label>Bônus da perícia<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label></div>`,
+        ok: {
+          label: "Adicionar",
+          callback: (event, button, dialog) => ({
+            nome: dialog.querySelector("#twbv-skill-name")?.value?.trim(),
+            passo: Number(dialog.querySelector("#twbv-skill-step")?.value ?? -1)
+          })
+        }
       });
-      if (!nome) return;
-
-      const passo = await foundry.applications.api.DialogV2.prompt({
-        window: { title: "Dado da perícia" },
-        content: `<label>Nível<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label>`,
-        ok: { label: "Adicionar", callback: (event, button, dialog) => Number(dialog.querySelector("#twbv-skill-step")?.value ?? -1) }
-      });
+      if (!novaPericia?.nome) return;
 
       const pericias = Array.from(this.actor.system.pericias ?? []);
-      pericias.push({ nome, passo: Number.isFinite(passo) ? passo : -1, bonus: 0 });
+      pericias.push({ nome: novaPericia.nome, passo: Number.isFinite(novaPericia.passo) ? novaPericia.passo : -1, bonus: 0 });
+      await this.actor.update({ "system.pericias": pericias });
+    });
+
+    html.find(".twbv-remove-skill").on("click", async (event) => {
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      if (index < 0) return;
+      const pericias = Array.from(this.actor.system.pericias ?? []);
+      pericias.splice(index, 1);
       await this.actor.update({ "system.pericias": pericias });
     });
   }

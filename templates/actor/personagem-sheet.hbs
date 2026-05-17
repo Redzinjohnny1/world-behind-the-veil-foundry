@@ -70,9 +70,22 @@
         <section class="twbv-panel twbv-ornate">
           <div class="twbv-pericias-header">
             <h2>Perícias</h2>
+            <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
           </div>
           <div class="twbv-skills-grid">
-            <div class="twbv-skills-empty">Quadro de perícias em branco.</div>
+            {{#each system.pericias as |pericia i|}}
+              <div class="twbv-skill-row">
+                <input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" />
+                <select name="system.pericias.{{i}}.passo">
+                  {{#select pericia.passo}}
+                    {{#each @root.skillOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}
+                  {{/select}}
+                </select>
+                <button type="button" class="twbv-remove-skill" data-index="{{i}}" title="Remover perícia"><i class="fas fa-trash"></i></button>
+              </div>
+            {{else}}
+              <div class="twbv-skills-empty"></div>
+            {{/each}}
           </div>
         </section>
       </div>

@@ -120,9 +120,11 @@
 .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 8px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
-.twbv-skill-row { display: grid; grid-template-columns: minmax(180px, 2fr) minmax(140px, 1fr) 48px minmax(90px, 1fr); align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
+.twbv-skill-row { display: grid; grid-template-columns: 96px minmax(180px, 2fr) 130px 48px auto; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; }
 .twbv-skill-roll { width: 44px; height: 34px; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 0; font-size: 1.1rem; }
-.twbv-skill-step { font-size: .82rem; color: var(--twbv-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.twbv-skill-bonus-inline { display: grid; grid-template-columns: 30px 1fr 30px; gap: 4px; align-items: center; }
+.twbv-skill-bonus-inline button { height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-skill-bonus-inline input { text-align: center; }
 .twbv-skills-empty {
   border: 1px dashed rgba(154, 123, 255, 0.45);
   border-radius: 8px;
@@ -179,5 +181,5 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { grid-template-columns: 1fr 1fr 48px auto; }
+  .twbv-skill-row { grid-template-columns: 84px 1fr 120px 48px auto; }
 }

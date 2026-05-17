@@ -17,18 +17,7 @@ const ADVANCEMENT_OPTIONS = [
 ];
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
-const SKILL_STEPS = [
-  { die: 4, bonus: -2, label: "Sem perícia (d4-2)" },
-  { die: 4, bonus: 0, label: "d4" },
-  { die: 4, bonus: 1, label: "d4+1" },
-  { die: 6, bonus: 1, label: "d6+1" },
-  { die: 6, bonus: 2, label: "d6+2" },
-  { die: 8, bonus: 2, label: "d8+2" },
-  { die: 8, bonus: 3, label: "d8+3" },
-  { die: 10, bonus: 3, label: "d10+3" },
-  { die: 10, bonus: 4, label: "d10+4" },
-  { die: 12, bonus: 4, label: "d12+4" }
-];
+const SKILL_DICE = [4, 6, 8, 10, 12];
 
 function buildDieLabel(die, bonus = 0) {
   return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
@@ -87,12 +76,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "intuicao", label: "Intuição" },
       { key: "vontade", label: "Vontade" }
     ];
-    context.skillOptions = SKILL_STEPS.map((step, idx) => ({ value: idx - 1, label: step.label }));
-    context.system.pericias = (context.system.pericias ?? []).map((pericia) => {
-      const step = Number(pericia.passo ?? -1);
-      const skillIndex = Math.max(0, Math.min(step + 1, SKILL_STEPS.length - 1));
-      return { ...pericia, label: SKILL_STEPS[skillIndex].label };
-    });
+    context.skillDiceOptions = SKILL_DICE.map((die) => ({ value: die, label: `d${die}` }));
 
     this._ensureSystemDefaults();
 
@@ -102,10 +86,15 @@ class TWBVPersonagemSheet extends ActorSheet {
   _ensureSystemDefaults() {
     const pericias = Array.from(this.actor.system.pericias ?? []);
     for (let i = 0; i < pericias.length; i += 1) {
-      if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], passo: -1, bonus: 0 };
+      if (typeof pericias[i] === "string") pericias[i] = { nome: pericias[i], dado: 4, bonus: 0 };
       pericias[i].nome = String(pericias[i].nome ?? "").trim();
-      pericias[i].passo = Number.isFinite(Number(pericias[i].passo)) ? Number(pericias[i].passo) : -1;
+      if (Number.isFinite(Number(pericias[i].passo))) {
+        const legacyStep = Math.max(-1, Math.min(Number(pericias[i].passo), 8));
+        pericias[i].dado = SKILL_DICE[Math.max(0, Math.floor((legacyStep + 1) / 2))] ?? 4;
+      }
+      pericias[i].dado = SKILL_DICE.includes(Number(pericias[i].dado)) ? Number(pericias[i].dado) : 4;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
+      delete pericias[i].passo;
     }
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
@@ -145,17 +134,15 @@ class TWBVPersonagemSheet extends ActorSheet {
       const skill = this.actor.system.pericias?.[index];
       if (!skill) return;
 
-      const step = Number(skill.passo ?? -1);
-      const skillIndex = Math.max(0, Math.min(step + 1, SKILL_STEPS.length - 1));
-      const skillStep = SKILL_STEPS[skillIndex];
-      const totalBonus = skillStep.bonus + Number(skill.bonus ?? 0);
+      const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
+      const totalBonus = Number(skill.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
-      const formula = `1d${skillStep.die}${bonusTerm}`;
+      const formula = `1d${skillDie}${bonusTerm}`;
 
       const roll = await new Roll(formula).evaluate();
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `${skill.nome || `Perícia ${index + 1}`} • ${buildDieLabel(skillStep.die, totalBonus)}`
+        flavor: `${skill.nome || `Perícia ${index + 1}`} • ${buildDieLabel(skillDie, totalBonus)}`
       });
     });
 
@@ -187,24 +174,23 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
-      const novaPericia = await foundry.applications.api.DialogV2.prompt({
-        window: { title: "Nova perícia" },
-        content: `<div class="twbv-roll-dialog"><label>Nome da perícia<input id="twbv-skill-name" type="text" placeholder="Ex: Furtividade" /></label><label>Bônus da perícia<select id="twbv-skill-step">${SKILL_STEPS.map((step, idx) => `<option value="${idx - 1}">${step.label}</option>`).join("")}</select></label></div>`,
-        ok: {
-          label: "Adicionar",
-          callback: (event, button, dialog) => {
-            const root = resolveDialogRoot(dialog);
-            return {
-              nome: root?.querySelector("#twbv-skill-name")?.value?.trim(),
-              passo: Number(root?.querySelector("#twbv-skill-step")?.value ?? -1)
-            };
-          }
-        }
-      });
-      if (!novaPericia?.nome) return;
+      const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+      pericias.push({ nome: "", dado: 4, bonus: 0 });
+      await this.actor.update({ "system.pericias": pericias });
+    });
+
+    html.find(".twbv-skill-adjust-bonus").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
+      const index = Number(event.currentTarget.dataset.index ?? -1);
+      const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
+      if (index < 0 || !Number.isFinite(adjust)) return;
 
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
-      pericias.push({ nome: novaPericia.nome, passo: Number.isFinite(novaPericia.passo) ? novaPericia.passo : -1, bonus: 0 });
+      if (!pericias[index]) return;
+      const current = Number(pericias[index].bonus ?? 0);
+      pericias[index].bonus = current + adjust;
       await this.actor.update({ "system.pericias": pericias });
     });
 

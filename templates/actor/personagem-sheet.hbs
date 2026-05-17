@@ -82,14 +82,18 @@
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
               <div class="twbv-skill-row">
-                <input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" />
-                <select name="system.pericias.{{i}}.passo">
-                  {{#select pericia.passo}}
-                    {{#each @root.skillOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}
+                <select name="system.pericias.{{i}}.dado">
+                  {{#select pericia.dado}}
+                    {{#each @root.skillDiceOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}
                   {{/select}}
                 </select>
+                <input type="text" name="system.pericias.{{i}}.nome" value="{{pericia.nome}}" placeholder="Nome da perícia" />
+                <div class="twbv-skill-bonus-inline">
+                  <button type="button" class="twbv-skill-adjust-bonus" data-index="{{i}}" data-adjust="-1" title="Diminuir bônus">-</button>
+                  <input type="number" name="system.pericias.{{i}}.bonus" value="{{pericia.bonus}}" />
+                  <button type="button" class="twbv-skill-adjust-bonus" data-index="{{i}}" data-adjust="1" title="Aumentar bônus">+</button>
+                </div>
                 <button type="button" class="twbv-skill-roll" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}">🎲</button>
-                <span class="twbv-skill-step">{{pericia.label}}</span>
                 <div class="twbv-skill-controls">
                   <button type="button" class="twbv-move-skill" data-index="{{i}}" data-direction="up" title="Mover perícia para cima"><i class="fas fa-chevron-up"></i></button>
                   <button type="button" class="twbv-move-skill" data-index="{{i}}" data-direction="down" title="Mover perícia para baixo"><i class="fas fa-chevron-down"></i></button>

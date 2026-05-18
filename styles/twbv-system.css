@@ -648,20 +648,21 @@
   50% { transform: scale(1.03); filter: drop-shadow(0 0 12px rgba(217, 183, 117, 0.5)); }
 }
 
- .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 2px; }
+ .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 0; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-skill-row {
   position: relative;
   width: 100%;
-  aspect-ratio: 1536 / 1024;
-  min-height: 0;
-  height: auto;
+  height: clamp(88px, 6.6vw, 110px);
+  min-height: 88px;
+  max-height: 110px;
   padding: 0;
   margin: 0;
   display: block;
   cursor: grab;
   background: url("../assets/background/pericias.png") center center / 100% 100% no-repeat !important;
+  overflow: hidden;
 }
 .twbv-skill-row.is-dragging { opacity: .45; }
 .twbv-skill-row > * { position: absolute; }
@@ -808,7 +809,7 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { aspect-ratio: 1536 / 1024; min-height: 0; height: auto; padding: 0; }
+  .twbv-skill-row { height: 92px; min-height: 92px; max-height: 92px; padding: 0; }
   .twbv-skill-roll { left: 2.4%; top: 22%; width: 10%; height: 56%; }
   .twbv-edit-skill-config { left: 13%; top: 15%; width: 52%; height: 70%; }
   .twbv-skill-name { font-size: 1.1rem; }

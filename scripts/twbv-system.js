@@ -698,18 +698,20 @@ class TWBVPersonagemSheet extends ActorSheet {
         <label>${defaults.tierLabel}</label>
         <input type="text" name="tier" placeholder="Ex: Novato, Treinado..." />
       </div>` : "";
+    const categoryField = type === "complicacao" ? `
+      <div class="form-group">
+        <label>Categoria/Tipo</label>
+        <input type="text" name="category" placeholder="Opcional" />
+      </div>` : "";
     const content = `
       <form class="twbv-custom-item-dialog">
         <div class="form-group">
           <label>Nome</label>
           <input type="text" name="name" placeholder="Nome" autofocus />
         </div>
-        <div class="form-group">
-          <label>Categoria/Tipo</label>
-          <input type="text" name="category" placeholder="Opcional" />
-        </div>
         ${tierField}
         ${severityField}
+        ${categoryField}
         <div class="form-group">
           <label>Descrição</label>
           <textarea name="description" rows="4" placeholder="Descrição"></textarea>

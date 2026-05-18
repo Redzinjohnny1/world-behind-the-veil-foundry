@@ -5,29 +5,51 @@
     </h1>
 
     <div class="twbv-header-layout">
-      <section class="twbv-header-center twbv-panel twbv-ornate">
+      <section class="twbv-header-portrait twbv-panel twbv-ornate">
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
       </section>
 
-      <section class="twbv-header-side twbv-header-left twbv-panel twbv-ornate">
+      <section class="twbv-header-identity twbv-panel twbv-ornate">
         <h2>Identidade</h2>
-        <input type="text" value="{{actor.name}}" disabled />
-        <label>Tier atual
+        <label>Nome
+          <input type="text" value="{{actor.name}}" disabled />
+        </label>
+        <label>Conceito
+          <input type="text" name="system.conceito" value="{{system.conceito}}" />
+        </label>
+        <label>Naturalidade / Nacionalidade
+          <input type="text" name="system.origem" value="{{system.origem}}" />
+        </label>
+        <label>Tier Atual
           <input type="text" value="{{stageName}}" disabled />
         </label>
-        <label>Avanços
+        <label>Avanço
           <input type="number" value="{{system.avancosTotais}}" disabled />
         </label>
       </section>
 
-      <section class="twbv-header-side twbv-header-right twbv-panel twbv-ornate">
-        <h2>Conceito e Origem</h2>
-        <label>Conceito
-          <input type="text" name="system.conceito" value="{{system.conceito}}" />
-        </label>
-        <label>Origem
-          <input type="text" name="system.origem" value="{{system.origem}}" />
-        </label>
+      <section class="twbv-header-resources">
+        <section class="twbv-panel twbv-ornate twbv-eco-panel resource-panel">
+          <h2 class="twbv-eco-spend-trigger" role="button" tabindex="0" aria-label="Gastar 1 Eco">Eco</h2>
+          <div class="twbv-eco-controls">
+            <button type="button" class="twbv-eco-adjust twbv-eco-adjust--minus" data-adjust="-1" aria-label="Reduzir Eco">-</button>
+            <div class="twbv-eco-core twbv-eco-spend-trigger" role="button" tabindex="0" aria-label="Gastar 1 Eco">
+              <input type="number" name="system.eco" value="{{system.eco}}" min="0" aria-label="Valor de Eco" />
+            </div>
+            <button type="button" class="twbv-eco-adjust twbv-eco-adjust--plus" data-adjust="1" aria-label="Aumentar Eco">+</button>
+          </div>
+        </section>
+
+        <section class="twbv-panel twbv-ornate mana-panel resource-panel">
+          <h2 class="twbv-mana-trigger" role="button" tabindex="0" aria-label="Gastar 1 Mana">MANA</h2>
+          <div class="twbv-mana-controls">
+            <button type="button" class="mana-control mana-control--minus" data-adjust="-1" aria-label="Reduzir Mana">-</button>
+            <div class="mana-orb">
+              <input class="mana-value" type="number" name="system.mana.value" value="{{system.mana.value}}" min="0" aria-label="Valor de Mana" />
+            </div>
+            <button type="button" class="mana-control mana-control--plus" data-adjust="1" aria-label="Aumentar Mana">+</button>
+          </div>
+        </section>
       </section>
     </div>
   </header>
@@ -60,17 +82,6 @@
         </section>
 
         <div class="twbv-right-column">
-          <section class="twbv-panel twbv-ornate twbv-eco-panel">
-            <h2 class="twbv-eco-spend-trigger" role="button" tabindex="0" aria-label="Gastar 1 Eco">Eco</h2>
-            <div class="twbv-eco-controls">
-              <button type="button" class="twbv-eco-adjust twbv-eco-adjust--minus" data-adjust="-1" aria-label="Reduzir Eco">-</button>
-              <div class="twbv-eco-core twbv-eco-spend-trigger" role="button" tabindex="0" aria-label="Gastar 1 Eco">
-                <input type="number" name="system.eco" value="{{system.eco}}" min="0" aria-label="Valor de Eco" />
-              </div>
-              <button type="button" class="twbv-eco-adjust twbv-eco-adjust--plus" data-adjust="1" aria-label="Aumentar Eco">+</button>
-            </div>
-          </section>
-
           <section class="twbv-panel twbv-ornate twbv-favorites-panel">
             <h2>Favoritos</h2>
             <div class="twbv-favorites-placeholder">Armas favoritas, magias e outros favoritos.</div>

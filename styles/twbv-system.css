@@ -923,4 +923,42 @@
 .twbv-add-adv-dialog-content label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
 .twbv-add-adv-dialog-content select, .twbv-add-adv-dialog-content textarea { width: 100%; border-radius: 8px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 7px 9px; }
 .twbv-add-adv-dialog-content select:focus, .twbv-add-adv-dialog-content textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }
+
+.wbtv-advance-dialog select,
+.wbtv-add-adv-dialog select {
+  background: rgba(9, 6, 18, 0.98);
+  color: #f8edcc;
+  border: 1px solid rgba(149, 96, 224, 0.75);
+}
+
+.wbtv-advance-dialog select option,
+.wbtv-add-adv-dialog select option {
+  background: rgba(8, 6, 16, 0.99);
+  color: #f8edcc;
+}
+
+.wbtv-advance-dialog select option:checked,
+.wbtv-advance-dialog select option:selected,
+.wbtv-add-adv-dialog select option:checked,
+.wbtv-add-adv-dialog select option:selected {
+  background: linear-gradient(180deg, rgba(88, 66, 176, 0.95), rgba(44, 74, 148, 0.96));
+  color: #fff2cc;
+}
+
+.wbtv-advance-dialog textarea,
+.wbtv-add-adv-dialog textarea {
+  min-height: 90px;
+  resize: vertical;
+  background: rgba(10, 7, 20, 0.98);
+  color: #f8edcc;
+  border: 1px solid rgba(217, 183, 117, 0.78);
+}
+
+.wbtv-advance-dialog textarea:focus,
+.wbtv-add-adv-dialog textarea:focus {
+  outline: none;
+  border-color: rgba(217, 183, 117, 0.95);
+  box-shadow: 0 0 0 1px rgba(126, 92, 214, 0.4), 0 0 12px rgba(126, 92, 214, 0.45);
+}
+
 .wbtv-add-adv-dialog .dialog-buttons button { border-radius: 8px; border: 1px solid rgba(217, 183, 117, 0.72); color: #ffedc5; background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)); }

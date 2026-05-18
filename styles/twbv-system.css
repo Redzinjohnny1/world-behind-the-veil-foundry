@@ -14,13 +14,18 @@
 
 .twbv.sheet.actor .window-content,
 .window-app.sheet.actor .window-content {
-  background-image:
-    linear-gradient(rgba(5,3,12,0.45), rgba(5,3,12,0.82)),
-    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png") !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
+  background:
+    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png") center / cover no-repeat !important;
   color: var(--twbv-text);
+}
+
+.window-app.sheet.actor .window-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 3, 12, 0.18);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .twbv.sheet.actor .window-content form,
@@ -35,7 +40,9 @@
 }
 
 .window-app.sheet.actor .window-content form {
-  opacity: 0.5 !important;
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
 }
 
 .twbv-sheet { min-height: 100%; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
@@ -716,8 +723,3 @@
   box-shadow: 0 0 14px rgba(217, 183, 117, 0.35), 0 0 18px rgba(149, 96, 224, 0.5);
 }
 
-.window-app.sheet.actor .window-content {
-  background:
-    linear-gradient(rgba(5,3,12,0.72), rgba(5,3,12,0.90)),
-    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png") center / cover no-repeat !important;
-}

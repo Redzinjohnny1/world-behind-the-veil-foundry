@@ -436,12 +436,14 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
+      if (event.shiftKey) return;
       if (event.target?.matches?.('input[name="system.eco"]')) return;
       event.preventDefault();
       await updateEcoValue(-1, { triggerEffect: true });
     });
 
     html.find(".twbv-eco-spend-trigger").on("keydown", async (event) => {
+      if (event.shiftKey) return;
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
       await updateEcoValue(-1, { triggerEffect: true });
@@ -461,6 +463,39 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".mana-control").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
       await updateManaValue(adjust);
+    });
+
+    html.find(".twbv-mana-trigger").on("click", async (event) => {
+      event.preventDefault();
+      if (event.shiftKey) {
+        await updateManaValue(1);
+        return;
+      }
+      await updateManaValue(-1);
+    });
+
+    html.find(".twbv-mana-trigger").on("keydown", async (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      if (event.shiftKey) {
+        await updateManaValue(1);
+        return;
+      }
+      await updateManaValue(-1);
+    });
+
+    html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
+      if (!event.shiftKey) return;
+      if (event.target?.matches?.('input[name="system.eco"]')) return;
+      event.preventDefault();
+      await updateManaValue(1);
+    });
+
+    html.find(".twbv-eco-spend-trigger").on("keydown", async (event) => {
+      if (!event.shiftKey) return;
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      await updateManaValue(1);
     });
 
     const openSkillRollDialog = async (event) => {

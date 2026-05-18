@@ -309,19 +309,33 @@
   width: 100%;
   max-width: 760px;
   margin: 8px auto 4px;
-  padding: 14px;
+  padding: clamp(16px, 3vw, 24px);
   border-radius: 16px;
-  border: 1px solid rgba(217, 183, 117, 0.55);
-  background: radial-gradient(circle at top, rgba(82, 58, 118, 0.38), rgba(18, 12, 30, 0.96) 56%, rgba(11, 8, 19, 0.98));
-  box-shadow: inset 0 0 18px rgba(217, 183, 117, 0.14), 0 0 26px rgba(93, 70, 140, 0.35), 0 12px 26px rgba(5, 3, 10, 0.55);
+  border: 1px solid rgba(217, 183, 117, 0.4);
+  background-image: url("../assets/ui/attributes-panel-dark-purple.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  box-shadow: 0 0 26px rgba(93, 70, 140, 0.35), 0 12px 26px rgba(5, 3, 10, 0.55);
 }
 
 .attributes-art-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-areas:
+    "forca destreza constituicao"
+    "inteligencia intuicao vontade";
+  gap: clamp(8px, 1.3vw, 12px);
+  min-height: clamp(260px, 35vw, 320px);
 }
+
+.attributes-art-grid .twbv-attribute-card:nth-child(1) { grid-area: forca; }
+.attributes-art-grid .twbv-attribute-card:nth-child(2) { grid-area: destreza; }
+.attributes-art-grid .twbv-attribute-card:nth-child(3) { grid-area: constituicao; }
+.attributes-art-grid .twbv-attribute-card:nth-child(4) { grid-area: inteligencia; }
+.attributes-art-grid .twbv-attribute-card:nth-child(5) { grid-area: intuicao; }
+.attributes-art-grid .twbv-attribute-card:nth-child(6) { grid-area: vontade; }
 
 .twbv-item-tab-header {
   display: flex;
@@ -396,14 +410,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  border: 1px solid rgba(217, 183, 117, 0.46);
+  border: none;
   border-radius: 14px;
-  background: linear-gradient(170deg, rgba(58, 39, 86, 0.84), rgba(26, 16, 44, 0.96));
-  box-shadow: inset 0 0 10px rgba(217, 183, 117, 0.12), 0 0 14px rgba(126, 89, 190, 0.28), 0 6px 12px rgba(6, 4, 12, 0.42);
+  background: transparent;
+  box-shadow: none;
 }
 .twbv-attribute-card::before,
 .twbv-attribute-card::after {
+  opacity: 0.7;
   content: "✦";
   position: absolute;
   font-size: .58rem;
@@ -619,13 +635,31 @@
 @media (max-width: 980px) {
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
-  .twbv-stages-grid, .attributes-art-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .twbv-stages-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .attributes-art-grid {
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-areas:
+      "forca destreza"
+      "constituicao inteligencia"
+      "intuicao vontade";
+    min-height: auto;
+  }
+  .attributes-art-panel { background-size: cover; }
 }
 
 @media (max-width: 720px) {
   .twbv-skill-row { grid-template-columns: 48px 1fr 112px auto; }
 
-  .attributes-art-grid { grid-template-columns: 1fr; }
+  .attributes-art-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "forca"
+      "destreza"
+      "constituicao"
+      "inteligencia"
+      "intuicao"
+      "vontade";
+  }
 }
 
 .twbv-roll-chat {

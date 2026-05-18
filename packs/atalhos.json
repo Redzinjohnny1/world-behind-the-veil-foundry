@@ -30,7 +30,7 @@
         },
         "text": {
           "format": 1,
-          "content": "<h2>Atalhos de Recursos</h2><p><strong>MANA</strong>: clique no nome <em>MANA</em> para reduzir 1 ponto de Mana.</p><p><strong>SHIFT + clique em MANA</strong>: adiciona 1 ponto de Mana.</p><p><strong>SHIFT + clique em ECO</strong>: adiciona 1 ponto de Mana.</p><p>Obs.: a Mana respeita limite mínimo 0 e máximo <code>system.mana.max</code>.</p>"
+          "content": "<h2>Atalhos de Recursos</h2><p><strong>MANA</strong>: clique no nome <em>MANA</em> para reduzir 1 ponto de Mana.</p><p><strong>SHIFT + clique em MANA</strong>: adiciona 1 ponto de Mana.</p><p><strong>SHIFT + clique em ECO</strong>: adiciona 1 ponto de Mana.</p><p>Obs.: a Mana respeita apenas limite mínimo 0 (sem limite máximo).</p>"
         },
         "image": {},
         "video": {},

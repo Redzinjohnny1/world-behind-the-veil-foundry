@@ -482,9 +482,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const updateManaValue = async (delta) => {
       const manaInput = html.find('input[name="system.mana.value"]')[0];
       const manaAtual = Number(this.actor.system?.mana?.value ?? 0);
-      const manaMax = Number(this.actor.system?.mana?.max ?? 3);
-      const limitedMax = Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3;
-      const novoMana = Math.max(0, Math.min(limitedMax, manaAtual + delta));
+      const novoMana = Math.max(0, manaAtual + delta);
       if (novoMana === manaAtual) return;
       if (manaInput) manaInput.value = String(novoMana);
       await this.actor.update({ "system.mana.value": novoMana });

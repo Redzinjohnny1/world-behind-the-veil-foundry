@@ -146,9 +146,10 @@ function resolveDialogRoot(dialog) {
 
 function applyDialogWindowClass(dialogLike, className) {
   const root = resolveDialogRoot(dialogLike);
-  if (!root || !className) return;
+  if (!root || !className) return null;
   const windowApp = root.closest?.(".window-app");
   if (windowApp) windowApp.classList.add(className);
+  return windowApp ?? null;
 }
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
@@ -909,8 +910,17 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
-        applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog");
-        if (type === "vantagem") applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-vantagem-dialog");
+        const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
+          ?? dialogApp?.element?.[0]
+          ?? root.closest?.(".window-app");
+        if (type === "vantagem") {
+          dialogWindow?.classList?.add("wbtv-vantagem-dialog");
+          dialogWindow?.classList?.add("wbtv-vantagem-dialog-window");
+          root.classList.add("wbtv-vantagem-dialog");
+          const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+          formRoot?.classList?.add("wbtv-vantagem-dialog");
+          formRoot?.setAttribute("style", "background: linear-gradient(180deg, #1a1028, #07040d); color: #f4e6ba;");
+        }
       },
       buttons: {
         save: {

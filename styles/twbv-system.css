@@ -1230,13 +1230,14 @@
 }
 
 /* Force WBTW skin only for Nova/Editar Vantagem dialog */
-.window-app.wbtv-vantagem-dialog .window-content,
+.wbtv-vantagem-dialog,
 .wbtv-vantagem-dialog .window-content,
+.wbtv-vantagem-dialog .dialog-content,
 .wbtv-vantagem-dialog form,
-.wbtv-vantagem-dialog .dialog-content {
+.wbtv-vantagem-dialog .tab,
+.wbtv-vantagem-dialog .content {
   background: linear-gradient(180deg, #1a1028 0%, #07040d 100%) !important;
   background-image: none !important;
-  background-color: transparent !important;
   color: #f4e6ba !important;
 }
 

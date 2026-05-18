@@ -20,6 +20,8 @@ const ADVANCEMENT_OPTIONS = [
 const TWBV_ITEM_TYPES = {
   vantagem: "Vantagem",
   desvantagem: "Desvantagem",
+  habilidadeEspecial: "Habilidade Especial",
+  complicacao: "Complicação",
   equipamento: "Equipamento",
   arma: "Arma",
   armadura: "Armadura"
@@ -264,7 +266,8 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     context.vantagens = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
-    context.desvantagens = actorItems.filter((item) => item.type === "desvantagem").map(mapItem);
+    context.habilidadesEspeciais = actorItems.filter((item) => item.type === "habilidadeEspecial").map(mapItem);
+    context.complicacoes = actorItems.filter((item) => ["complicacao", "desvantagem"].includes(item.type)).map(mapItem);
     context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
@@ -631,6 +634,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".twbv-item-create").on("click", async (event) => {
       event.preventDefault();
       const type = String(event.currentTarget.dataset.type ?? "equipamento");
+      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
+        await this._openCustomItemDialog(type);
+        return;
+      }
       const name = `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
       await this.actor.createEmbeddedDocuments("Item", [{ type, name }]);
     });
@@ -667,6 +674,76 @@ class TWBVPersonagemSheet extends ActorSheet {
           await effect.update({ disabled: !enableEffects });
         }
       }
+    });
+  }
+
+  async _openCustomItemDialog(type) {
+    const defaultsByType = {
+      vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
+      habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
+      complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
+    };
+    const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
+    const severityField = type === "complicacao" ? `
+      <div class="form-group">
+        <label>Severidade</label>
+        <select name="severity">
+          <option value="Menor">Menor</option>
+          <option value="Maior">Maior</option>
+          <option value="Ambas">Ambas</option>
+        </select>
+      </div>` : "";
+    const tierField = type === "vantagem" ? `
+      <div class="form-group">
+        <label>${defaults.tierLabel}</label>
+        <input type="text" name="tier" placeholder="Ex: Novato, Treinado..." />
+      </div>` : "";
+    const content = `
+      <form class="twbv-custom-item-dialog">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" name="name" placeholder="Nome" autofocus />
+        </div>
+        <div class="form-group">
+          <label>Categoria/Tipo</label>
+          <input type="text" name="category" placeholder="Opcional" />
+        </div>
+        ${tierField}
+        ${severityField}
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea name="description" rows="4" placeholder="Descrição"></textarea>
+        </div>
+      </form>`;
+
+    const dialog = new Dialog({
+      title: defaults.title,
+      content,
+      buttons: {
+        save: {
+          label: "Salvar",
+          callback: async (dialogHtml) => {
+            const root = resolveDialogRoot(dialogHtml);
+            const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
+            if (!name) return ui.notifications?.warn("Informe o nome.");
+            const description = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+            const category = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
+            const tier = String(root?.querySelector('input[name="tier"]')?.value ?? "").trim();
+            const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaults.severity ?? "").trim();
+            await this.actor.createEmbeddedDocuments("Item", [{
+              type,
+              name,
+              system: { description, tier, severity, tags: category, active: true }
+            }]);
+          }
+        },
+        cancel: { label: "Cancelar" }
+      },
+      default: "save"
+    }, { width: 520, height: "auto" });
+    dialog.render(true);
+    Hooks.once("renderDialog", (app, renderedHtml) => {
+      if (app === dialog) applyDialogWindowClass(renderedHtml?.[0] ?? renderedHtml, "wbtv-custom-item-dialog");
     });
   }
 }

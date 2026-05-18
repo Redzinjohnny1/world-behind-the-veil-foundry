@@ -13,12 +13,11 @@
 }
 
 .twbv.sheet.actor .window-content {
-  background:
-    radial-gradient(circle at 50% -10%, rgba(115, 80, 178, 0.32), transparent 45%),
-    linear-gradient(rgba(3, 2, 8, 0.88), rgba(3, 2, 8, 0.93)),
-    url("../assets/actor-sheet-bg-dark-fantasy-16x9.svg");
+  background-image:
+    linear-gradient(rgba(5,3,12,0.78), rgba(5,3,12,0.88)),
+    url("../assets/ui/sheet-background-veil.png");
   background-size: cover;
-  background-position: center top;
+  background-position: center;
   background-repeat: no-repeat;
   color: var(--twbv-text);
 }

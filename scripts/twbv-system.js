@@ -824,19 +824,27 @@ class TWBVPersonagemSheet extends ActorSheet {
     const submitItemForm = async (root, dialogApp) => {
       const form = root?.querySelector("form.twbv-custom-item-dialog");
       const nameInput = form?.querySelector('input[name="name"]');
-      if (!form || !nameInput) return;
-      if (!form.checkValidity() || !String(nameInput.value ?? "").trim()) {
-        nameInput.setCustomValidity("Nome é obrigatório.");
-        form.reportValidity();
-        nameInput.setCustomValidity("");
+      if (!form || !nameInput) return false;
+
+      const nome = String(nameInput.value ?? "").trim();
+      if (!nome) {
+        ui.notifications?.error("O nome da vantagem é obrigatório.");
+        nameInput.focus();
         this._setCustomDialogValidationState(root);
-        return;
+        return false;
       }
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
-      if (item) await item.update(payload);
-      else await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+      if (item) {
+        await item.update(payload);
+      } else {
+        await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+      }
+
+      await this.render(false);
       await dialogApp.close();
+      ui.notifications?.info(type === "vantagem" ? "Vantagem adicionada." : "Item adicionado.");
+      return true;
     };
 
     const dialog = new Dialog({

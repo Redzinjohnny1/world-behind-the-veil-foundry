@@ -55,8 +55,8 @@ const SKILL_ATTRIBUTES = [
   { key: "destreza", label: "Destreza", icon: "fa-hand-sparkles" },
   { key: "constituicao", label: "Constituição", icon: "fa-shield-heart" },
   { key: "inteligencia", label: "Inteligência", icon: "fa-brain" },
-  { key: "intuicao", label: "Intuição", icon: "fa-eye" },
-  { key: "vontade", label: "Vontade", icon: "fa-fire" }
+  { key: "influencia", label: "Influência", icon: "fa-fire" },
+  { key: "intuicao", label: "Intuição", icon: "fa-eye" }
 ];
 
 function getSkillRank(dado, bonus = 0) {
@@ -234,8 +234,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "destreza", label: "Destreza" },
       { key: "constituicao", label: "Constituição" },
       { key: "inteligencia", label: "Inteligência" },
-      { key: "intuicao", label: "Intuição" },
-      { key: "vontade", label: "Vontade" }
+      { key: "influencia", label: "Influência" },
+      { key: "intuicao", label: "Intuição" }
     ];
     context.skillAttributeOptions = SKILL_ATTRIBUTES;
     context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
@@ -365,7 +365,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
-    const keys = ["forca", "destreza", "constituicao", "inteligencia", "intuicao", "vontade"];
+    const keys = ["forca", "destreza", "constituicao", "inteligencia", "influencia", "intuicao"];
     for (const key of keys) {
       atributos[key] = atributos[key] ?? {};
       atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
@@ -529,8 +529,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         { key: "destreza", label: "Destreza" },
         { key: "constituicao", label: "Constituição" },
         { key: "inteligencia", label: "Inteligência" },
-        { key: "intuicao", label: "Intuição" },
-        { key: "vontade", label: "Vontade" }
+        { key: "influencia", label: "Influência" },
+        { key: "intuicao", label: "Intuição" }
       ];
 
       const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
@@ -582,8 +582,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         destreza: "Destreza",
         constituicao: "Constituição",
         inteligencia: "Inteligência",
-        intuicao: "Intuição",
-        vontade: "Vontade"
+        influencia: "Influência",
+        intuicao: "Intuição"
       };
       const attributeKey = String(event.currentTarget.dataset.attr ?? "");
       if (!attributeKey) return;

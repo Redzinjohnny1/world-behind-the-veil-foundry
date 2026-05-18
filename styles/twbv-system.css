@@ -648,14 +648,16 @@
   50% { transform: scale(1.03); filter: drop-shadow(0 0 12px rgba(217, 183, 117, 0.5)); }
 }
 
- .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 12px; }
+ .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 4px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-skill-row {
   position: relative;
-  min-height: 180px;
-  height: 180px;
-  padding: 20px 30px;
+  width: 100%;
+  min-height: 122px;
+  height: 122px;
+  padding: 0;
+  margin: 0;
   display: block;
   cursor: grab;
   background: url("../assets/background/pericias.png") center center / 100% 100% no-repeat;
@@ -663,10 +665,10 @@
 .twbv-skill-row.is-dragging { opacity: .45; }
 .twbv-skill-row > * { position: absolute; }
 .twbv-skill-roll {
-  left: 34px;
-  top: 46px;
-  width: 88px;
-  height: 88px;
+  left: 2.4%;
+  top: 21%;
+  width: 9%;
+  height: 58%;
   border: 0;
   background: transparent;
   border-radius: 50%;
@@ -678,10 +680,10 @@
   object-fit: contain;
 }
 .twbv-edit-skill-config {
-  left: 148px;
-  top: 28px;
-  width: 620px;
-  height: 120px;
+  left: 13.2%;
+  top: 14%;
+  width: 54%;
+  height: 72%;
   text-align: left;
   border: 0;
   background: transparent;
@@ -693,16 +695,16 @@
   gap: 2px;
   padding: 0;
 }
-.twbv-skill-name { font-size: 2rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
-.twbv-skill-attr { font-size: 1.02rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
-.twbv-skill-rank { font-size: .9rem; font-weight: 700; letter-spacing: .09em; border-radius: 999px; padding: 2px 10px; border: 1px solid transparent; }
+.twbv-skill-name { font-size: 1.35rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
+.twbv-skill-attr { font-size: .86rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
+.twbv-skill-rank { font-size: .78rem; font-weight: 700; letter-spacing: .09em; border-radius: 999px; padding: 2px 10px; border: 1px solid transparent; }
 .twbv-edit-skill-roll {
-  top: 58px;
-  right: 210px;
-  width: 138px;
+  top: 31%;
+  right: 16.8%;
+  width: 11%;
   min-height: 0;
-  height: 62px;
-  transform: scale(1.32);
+  height: 38%;
+  transform: scale(1.08);
   transform-origin: center;
   border: 0;
   background: transparent;
@@ -711,17 +713,17 @@
   letter-spacing: .03em;
 }
 .twbv-toggle-skill-lock, .twbv-remove-skill {
-  top: 62px;
-  width: 44px;
-  height: 44px;
+  top: 34%;
+  width: 3.4%;
+  height: 32%;
   border-radius: 6px;
   border: 0;
   background: transparent;
   color: #e8daf8;
-  font-size: .9rem;
+  font-size: .78rem;
 }
-.twbv-toggle-skill-lock { right: 112px; }
-.twbv-remove-skill { right: 52px; }
+.twbv-toggle-skill-lock { right: 8.2%; }
+.twbv-remove-skill { right: 2.8%; }
 .twbv-skills-empty {
   border: 1px dashed rgba(154, 123, 255, 0.45);
   border-radius: 8px;
@@ -805,13 +807,13 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { min-height: 145px; height: 145px; padding: 14px 18px; }
-  .twbv-skill-roll { left: 20px; top: 37px; width: 70px; height: 70px; }
-  .twbv-edit-skill-config { left: 102px; top: 24px; width: calc(100% - 330px); height: 98px; }
-  .twbv-skill-name { font-size: 1.55rem; }
-  .twbv-edit-skill-roll { top: 49px; right: 150px; width: 100px; height: 48px; transform: scale(1.14); }
-  .twbv-toggle-skill-lock { top: 52px; right: 88px; width: 36px; height: 36px; }
-  .twbv-remove-skill { top: 52px; right: 40px; width: 36px; height: 36px; }
+  .twbv-skill-row { min-height: 108px; height: 108px; padding: 0; }
+  .twbv-skill-roll { left: 2.4%; top: 22%; width: 10%; height: 56%; }
+  .twbv-edit-skill-config { left: 13%; top: 15%; width: 52%; height: 70%; }
+  .twbv-skill-name { font-size: 1.1rem; }
+  .twbv-edit-skill-roll { top: 32%; right: 16%; width: 12%; height: 36%; transform: scale(1.02); }
+  .twbv-toggle-skill-lock { top: 35%; right: 8.4%; width: 4.4%; height: 30%; }
+  .twbv-remove-skill { top: 35%; right: 2.8%; width: 4.4%; height: 30%; }
 
   .attributes-art-grid { grid-template-columns: 1fr; }
 }

@@ -437,10 +437,10 @@
 }
 .attribute-orb-label-svg {
   position: absolute;
-  top: 1px;
+  top: -8px;
   left: 50%;
-  width: 180px;
-  height: 64px;
+  width: 92%;
+  height: 46px;
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 1;
@@ -448,16 +448,16 @@
 }
 .attribute-orb-label {
   fill: #f5e6b8;
-  font-size: 10px;
+  font-size: 9.6px;
   font-weight: 700;
-  letter-spacing: 0.72px;
+  letter-spacing: 0.9px;
   text-shadow: 0 0 6px rgba(184, 125, 255, 0.9);
   font-family: "Cinzel", "Palatino Linotype", serif;
 }
 
 .attribute-orb-label--long {
-  font-size: 8.2px;
-  letter-spacing: 0.2px;
+  font-size: 8.6px;
+  letter-spacing: 0.45px;
 }
 
 .attribute-orb-label textPath {

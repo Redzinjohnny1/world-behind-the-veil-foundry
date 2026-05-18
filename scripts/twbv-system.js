@@ -249,11 +249,42 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
     });
 
+    const triggerEcoSpendEffect = () => {
+      const effectNode = html.find(".twbv-eco-core")[0];
+      if (!effectNode) return;
+      effectNode.classList.remove("eco-spend-effect");
+      void effectNode.offsetWidth;
+      effectNode.classList.add("eco-spend-effect");
+      const cleanup = () => effectNode.classList.remove("eco-spend-effect");
+      effectNode.addEventListener("animationend", cleanup, { once: true });
+      window.setTimeout(cleanup, 700);
+    };
+
+    const updateEcoValue = async (delta, { triggerEffect = false } = {}) => {
+      const ecoInput = html.find('input[name="system.eco"]')[0];
+      const ecoAtual = Number(this.actor.system.eco ?? 0);
+      const novoEco = Math.max(0, ecoAtual + delta);
+      if (novoEco === ecoAtual) return;
+      if (ecoInput) ecoInput.value = String(novoEco);
+      if (triggerEffect && delta < 0) triggerEcoSpendEffect();
+      await this.actor.update({ "system.eco": novoEco });
+    };
+
     html.find(".twbv-eco-adjust").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
-      const ecoAtual = Number(this.actor.system.eco ?? 0);
-      const novoEco = Math.max(0, ecoAtual + adjust);
-      await this.actor.update({ "system.eco": novoEco });
+      await updateEcoValue(adjust, { triggerEffect: adjust < 0 });
+    });
+
+    html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
+      if (event.target?.matches?.('input[name="system.eco"]')) return;
+      event.preventDefault();
+      await updateEcoValue(-1, { triggerEffect: true });
+    });
+
+    html.find(".twbv-eco-spend-trigger").on("keydown", async (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      await updateEcoValue(-1, { triggerEffect: true });
     });
 
     const openSkillRollDialog = async (event) => {

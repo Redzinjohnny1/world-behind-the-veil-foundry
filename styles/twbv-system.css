@@ -317,6 +317,7 @@
     linear-gradient(160deg, rgba(9, 23, 48, 0.92), rgba(5, 10, 24, 0.98));
 }
 .mana-panel h2 { border:none; font-size:.8rem; margin-bottom:4px; color:#a7e6ff; text-shadow:0 0 14px rgba(98,182,255,.7); }
+.twbv-mana-trigger { cursor: pointer; }
 .mana-orb {
   width: 108px;
   height: 108px;
@@ -338,6 +339,7 @@
   border-radius: 50%;
   border: 1px solid rgba(172, 241, 255, 0.6);
   box-shadow: 0 0 14px rgba(106, 218, 255, 0.5);
+  pointer-events: none;
 }
 .mana-value {
   width: 52px;

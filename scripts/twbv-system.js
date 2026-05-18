@@ -17,6 +17,24 @@ const ADVANCEMENT_OPTIONS = [
   "Outro"
 ];
 
+const TWBV_ITEM_TYPES = {
+  vantagem: "Vantagem",
+  desvantagem: "Desvantagem",
+  equipamento: "Equipamento",
+  arma: "Arma",
+  armadura: "Armadura"
+};
+
+function summarizeItemActiveEffects(item) {
+  const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
+  if (explicitSummary) return explicitSummary;
+  const changes = Array.from(item.effects ?? []).flatMap((effect) =>
+    Array.from(effect.changes ?? []).map((change) => String(change.key ?? "").trim()).filter(Boolean)
+  );
+  if (!changes.length) return "";
+  return changes.slice(0, 3).join(", ");
+}
+
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
 const SKILL_LEVELS = [
@@ -201,6 +219,44 @@ class TWBVPersonagemSheet extends ActorSheet {
         rollLabel: buildDieLabel(dado, bonus)
       };
     });
+
+    const actorItems = Array.from(this.actor.items ?? []);
+    const parseNumber = (value, fallback = 0) => {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+
+    const mapItem = (item) => ({
+      id: item.id,
+      name: item.name,
+      type: item.type,
+      typeLabel: TWBV_ITEM_TYPES[item.type] ?? item.type,
+      active: Boolean(item.system?.active),
+      equipped: Boolean(item.system?.equipped),
+      tier: String(item.system?.tier ?? "").trim(),
+      severity: String(item.system?.severity ?? "").trim(),
+      description: String(item.system?.description ?? "").trim(),
+      effectsSummary: summarizeItemActiveEffects(item),
+      quantity: parseNumber(item.system?.quantity, 1),
+      weight: parseNumber(item.system?.weight),
+      cost: parseNumber(item.system?.cost),
+      damage: String(item.system?.damage ?? "").trim(),
+      range: String(item.system?.range ?? "").trim(),
+      bonus: String(item.system?.bonus ?? "").trim(),
+      protection: String(item.system?.protection ?? "").trim(),
+      penalty: String(item.system?.penalty ?? "").trim(),
+      tags: String(item.system?.tags ?? "").trim()
+    });
+
+    context.vantagens = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
+    context.desvantagens = actorItems.filter((item) => item.type === "desvantagem").map(mapItem);
+    context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
+    context.activeBonuses = actorItems
+      .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
+      .map((item) => ({
+        name: item.name,
+        summary: summarizeItemActiveEffects(item)
+      }));
 
     this._ensureSystemDefaults();
 
@@ -554,6 +610,47 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!moved) return;
       pericias.splice(toIndex, 0, moved);
       await this.actor.update({ "system.pericias": pericias });
+    });
+
+    html.find(".twbv-item-create").on("click", async (event) => {
+      event.preventDefault();
+      const type = String(event.currentTarget.dataset.type ?? "equipamento");
+      const name = `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
+      await this.actor.createEmbeddedDocuments("Item", [{ type, name }]);
+    });
+
+    html.find(".twbv-item-edit").on("click", (event) => {
+      event.preventDefault();
+      const itemId = String(event.currentTarget.dataset.itemId ?? "");
+      this.actor.items.get(itemId)?.sheet?.render(true);
+    });
+
+    html.find(".twbv-item-delete").on("click", async (event) => {
+      event.preventDefault();
+      const itemId = String(event.currentTarget.dataset.itemId ?? "");
+      if (!itemId) return;
+      await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+    });
+
+    html.find(".twbv-item-toggle-active, .twbv-item-toggle-equipped").on("change", async (event) => {
+      const itemId = String(event.currentTarget.dataset.itemId ?? "");
+      const field = String(event.currentTarget.dataset.field ?? "active");
+      const value = Boolean(event.currentTarget.checked);
+      const item = this.actor.items.get(itemId);
+      if (!item) return;
+
+      await item.update({ [`system.${field}`]: value });
+
+      const itemActive = field === "active" ? value : Boolean(item.system?.active);
+      const itemEquipped = field === "equipped" ? value : Boolean(item.system?.equipped);
+      const needsEquip = ["equipamento", "arma", "armadura"].includes(item.type);
+      const enableEffects = itemActive && (!needsEquip || itemEquipped);
+
+      for (const effect of item.effects) {
+        if (effect.disabled !== !enableEffects) {
+          await effect.update({ disabled: !enableEffects });
+        }
+      }
     });
   }
 }

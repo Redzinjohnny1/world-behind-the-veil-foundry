@@ -1065,3 +1065,86 @@
 .wbtv-advance-dialog .dialog-buttons {
   margin-top: 12px;
 }
+
+/* Stable layout + theme for custom WBTW dialogs */
+.window-app.wbtv-advance-dialog,
+.window-app.wbtv-complication-dialog,
+.window-app.wbtv-vantagem-dialog,
+.window-app.wbtv-habilidade-dialog {
+  width: 620px !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.window-app.wbtv-advance-dialog .window-content,
+.window-app.wbtv-complication-dialog .window-content,
+.window-app.wbtv-vantagem-dialog .window-content,
+.window-app.wbtv-habilidade-dialog .window-content {
+  background: linear-gradient(180deg, #1b102b, #07040d) !important;
+  color: #f5e6b8 !important;
+  overflow: visible !important;
+  padding: 14px !important;
+}
+
+.window-app.wbtv-advance-dialog form,
+.window-app.wbtv-complication-dialog form,
+.window-app.wbtv-vantagem-dialog form,
+.window-app.wbtv-habilidade-dialog form {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+.window-app.wbtv-advance-dialog label,
+.window-app.wbtv-complication-dialog label,
+.window-app.wbtv-vantagem-dialog label,
+.window-app.wbtv-habilidade-dialog label {
+  color: #f5e6b8 !important;
+}
+
+.window-app.wbtv-advance-dialog input,
+.window-app.wbtv-advance-dialog select,
+.window-app.wbtv-advance-dialog textarea,
+.window-app.wbtv-complication-dialog input,
+.window-app.wbtv-complication-dialog select,
+.window-app.wbtv-complication-dialog textarea,
+.window-app.wbtv-vantagem-dialog input,
+.window-app.wbtv-vantagem-dialog select,
+.window-app.wbtv-vantagem-dialog textarea,
+.window-app.wbtv-habilidade-dialog input,
+.window-app.wbtv-habilidade-dialog select,
+.window-app.wbtv-habilidade-dialog textarea {
+  background: #10081c !important;
+  color: #f5e6b8 !important;
+  border: 1px solid #8e63cd !important;
+}
+
+.window-app.wbtv-advance-dialog button,
+.window-app.wbtv-complication-dialog button,
+.window-app.wbtv-vantagem-dialog button,
+.window-app.wbtv-habilidade-dialog button {
+  background: linear-gradient(180deg, #4d2f7f, #201133) !important;
+  color: #f5e6b8 !important;
+  border: 1px solid #d9b775 !important;
+}
+
+.window-app.wbtv-advance-dialog .dialog-buttons,
+.window-app.wbtv-complication-dialog .dialog-buttons,
+.window-app.wbtv-vantagem-dialog .dialog-buttons,
+.window-app.wbtv-habilidade-dialog .dialog-buttons {
+  position: relative;
+  margin-top: 10px;
+  width: 100%;
+  overflow: visible;
+}
+
+.window-app.wbtv-advance-dialog select option,
+.window-app.wbtv-complication-dialog select option,
+.window-app.wbtv-vantagem-dialog select option,
+.window-app.wbtv-habilidade-dialog select option {
+  background: #10081c;
+  color: #f5e6b8;
+}

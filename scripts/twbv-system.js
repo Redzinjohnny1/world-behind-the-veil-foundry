@@ -466,13 +466,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
-      if (event.shiftKey) return;
-      if (event.target?.matches?.('input[name="system.eco"]')) return;
       event.preventDefault();
       if (event.shiftKey) {
         await updateEcoValue(1);
         return;
       }
+      if (event.target?.matches?.('input[name="system.eco"]')) return;
       await updateEcoValue(-1, { triggerEffect: true });
     });
 

@@ -425,6 +425,36 @@
   inset: 10px;
   background: radial-gradient(circle at 50% 55%, rgba(210, 165, 255, 0.14), rgba(13, 9, 24, 0));
 }
+
+.twbv-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.attribute-orb-label-svg {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 135px;
+  height: 62px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+.attribute-orb-label {
+  fill: #f5e6b8;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 6px rgba(184, 125, 255, 0.9);
+  font-family: "Cinzel", "Palatino Linotype", serif;
+}
 .twbv-attribute-card h3 {
   position: relative;
   z-index: 1;

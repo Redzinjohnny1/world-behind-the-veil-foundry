@@ -2,7 +2,7 @@ const STAGES = [
   { name: "Novato", min: 0, max: 3 },
   { name: "Treinado", min: 4, max: 7 },
   { name: "Veterano", min: 8, max: 11 },
-  { name: "Elíte", min: 12, max: 15 },
+  { name: "Elite", min: 12, max: 15 },
   { name: "Mítico", min: 16, max: 19 },
   { name: "Lendário", min: 20, max: Infinity }
 ];
@@ -162,8 +162,23 @@ class TWBVPersonagemSheet extends ActorSheet {
       ...avanco,
       numero: Number(avanco?.numero) || index + 1,
       tipo: String(avanco?.tipo ?? "").trim(),
-      descricao: String(avanco?.descricao ?? "").trim()
+      descricao: String(avanco?.descricao ?? "").trim(),
+      sourceIndex: index
     }));
+
+    const currentStageIndex = STAGES.findIndex((stage) => stage.name === currentStage.name);
+    context.advancementGroups = STAGES.map((stage, stageIndex) => {
+      const entries = context.system.avancos.filter((avanco) => {
+        const progression = Math.max(0, Number(avanco.numero ?? 1) - 1);
+        return progression >= stage.min && progression <= stage.max;
+      });
+      return {
+        key: stage.name.toLowerCase(),
+        name: stage.name.toUpperCase(),
+        visible: stageIndex <= currentStageIndex || entries.length > 0,
+        entries
+      };
+    }).filter((stage) => stage.visible);
 
     context.attributeOptions = ATTRIBUTE_DICE.map((die) => ({ value: die, label: `d${die}` }));
     context.attributeKeys = [
@@ -303,7 +318,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       const index = Number(event.currentTarget.dataset.index);
       const avanços = Array.from(this.actor.system.avancos ?? []);
       avanços.splice(index, 1);
-      await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
+      const normalizedAdvances = avanços.map((avanco, position) => ({ ...avanco, numero: position + 1 }));
+      await this.actor.update({ "system.avancos": normalizedAdvances, "system.avancosTotais": normalizedAdvances.length });
     });
 
     const triggerEcoSpendEffect = () => {

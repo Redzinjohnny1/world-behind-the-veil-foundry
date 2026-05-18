@@ -128,14 +128,21 @@
         </div>
         <div class="twbv-adv-list">
           {{#if system.avancos.length}}
-            {{#each system.avancos as |avanco i|}}
-              <article class="twbv-adv-entry">
-                <div class="twbv-adv-entry-head">
-                  <h3>Avanço {{avanco.numero}} — {{#if avanco.tipo}}{{avanco.tipo}}{{else}}Outro{{/if}}</h3>
-                  <button type="button" class="twbv-remove-advancement" data-index="{{i}}" title="Remover avanço"><i class="fas fa-trash"></i></button>
+            {{#each advancementGroups as |group|}}
+              <section class="twbv-adv-tier-group" data-tier="{{group.key}}">
+                <header class="twbv-adv-tier-header">
+                  <span class="twbv-adv-tier-badge">{{group.name}}</span>
+                </header>
+                <div class="twbv-adv-tier-cards">
+                  {{#each group.entries as |avanco|}}
+                    <article class="twbv-adv-entry">
+                      <button type="button" class="twbv-remove-advancement" data-index="{{avanco.sourceIndex}}" title="Remover avanço"><i class="fas fa-trash"></i></button>
+                      <h3>Avanço {{avanco.numero}} — {{#if avanco.tipo}}{{avanco.tipo}}{{else}}Outro{{/if}}</h3>
+                      <p class="twbv-adv-entry-description">{{#if avanco.descricao}}{{avanco.descricao}}{{else}}Sem descrição.{{/if}}</p>
+                    </article>
+                  {{/each}}
                 </div>
-                <p class="twbv-adv-entry-description">{{#if avanco.descricao}}{{avanco.descricao}}{{else}}Sem descrição.{{/if}}</p>
-              </article>
+              </section>
             {{/each}}
           {{else}}
             <p class="twbv-adv-empty">Nenhum avanço registrado ainda.</p>

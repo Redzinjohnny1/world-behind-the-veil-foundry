@@ -344,6 +344,11 @@
 .twbv-item-toggle-row { display: flex; gap: 10px; }
 .twbv-item-toggle { margin: 6px 0 0; display: inline-flex; flex-direction: row; align-items: center; gap: 6px; font-size: 0.7rem; }
 .twbv-item-effect { margin: 4px 0 0; font-size: 0.7rem; color: #f2e4bf; }
+.twbv-item-section { margin-bottom: 14px; }
+.twbv-item-card--fantasy { background: linear-gradient(145deg, rgba(20, 11, 34, 0.95), rgba(48, 24, 74, 0.92)); border: 1px solid rgba(217, 183, 117, 0.45); box-shadow: inset 0 0 0 1px rgba(120, 80, 170, 0.3), 0 8px 20px rgba(8, 6, 15, 0.45); }
+.twbv-item-card-layout { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
+.twbv-item-card-icon { width: 32px; height: 32px; border-radius: 8px; background: radial-gradient(circle at 30% 30%, rgba(247, 224, 161, 0.28), rgba(62, 32, 102, 0.9)); color: #f5dfac; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(217, 183, 117, 0.5); }
+.twbv-item-card-content .twbv-item-effect { margin-top: 6px; color: #e9d4a2; }
 .twbv-active-bonuses {
   margin-top: 8px;
   border: 1px solid rgba(121, 196, 255, 0.45);
@@ -953,6 +958,13 @@
   overflow: visible;
   box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 26px rgba(149, 96, 224, 0.55), 0 16px 36px rgba(0, 0, 0, 0.7);
 }
+.wbtv-custom-item-dialog { border-radius: 12px; overflow: hidden; border: 1px solid rgba(217, 183, 117, 0.55); }
+.wbtv-custom-item-dialog .window-header { background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)); border-bottom: 1px solid rgba(217, 183, 117, 0.68); color: #f7e7be; }
+.wbtv-custom-item-dialog .window-content { background: radial-gradient(circle at top, rgba(52, 30, 90, 0.95), rgba(9, 7, 17, 0.98)); }
+.twbv-custom-item-dialog { display: grid; gap: 10px; }
+.twbv-custom-item-dialog label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
+.twbv-custom-item-dialog input, .twbv-custom-item-dialog select, .twbv-custom-item-dialog textarea { width: 100%; border-radius: 8px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 7px 9px; }
+.twbv-custom-item-dialog input:focus, .twbv-custom-item-dialog select:focus, .twbv-custom-item-dialog textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }
 .wbtv-add-adv-dialog .window-header { background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)); border-bottom: 1px solid rgba(217, 183, 117, 0.68); color: #f7e7be; }
 .wbtv-add-adv-dialog .window-content,
 .wbtv-advance-dialog .window-content {

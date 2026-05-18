@@ -76,6 +76,8 @@
     "types": [
       "vantagem",
       "desvantagem",
+      "habilidadeEspecial",
+      "complicacao",
       "equipamento",
       "arma",
       "armadura"
@@ -105,6 +107,17 @@
       ]
     },
     "desvantagem": {
+      "templates": [
+        "base",
+        "ranked"
+      ]
+    },
+    "habilidadeEspecial": {
+      "templates": [
+        "base"
+      ]
+    },
+    "complicacao": {
       "templates": [
         "base",
         "ranked"

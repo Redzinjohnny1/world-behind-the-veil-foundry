@@ -437,9 +437,9 @@
 }
 .attribute-orb-label-svg {
   position: absolute;
-  top: 6px;
+  top: -2px;
   left: 50%;
-  width: 170px;
+  width: 180px;
   height: 70px;
   transform: translateX(-50%);
   pointer-events: none;
@@ -448,16 +448,16 @@
 }
 .attribute-orb-label {
   fill: #f5e6b8;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 1.4px;
+  letter-spacing: 1px;
   text-shadow: 0 0 6px rgba(184, 125, 255, 0.9);
   font-family: "Cinzel", "Palatino Linotype", serif;
 }
 
 .attribute-orb-label--long {
-  font-size: 10px;
-  letter-spacing: 0.8px;
+  font-size: 9px;
+  letter-spacing: 0.35px;
 }
 .twbv-attribute-card h3 {
   position: relative;

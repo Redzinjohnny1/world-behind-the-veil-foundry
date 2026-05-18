@@ -265,9 +265,21 @@ class TWBVPersonagemSheet extends ActorSheet {
       tags: String(item.system?.tags ?? "").trim()
     });
 
-    context.vantagens = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
-    context.habilidadesEspeciais = actorItems.filter((item) => item.type === "habilidadeEspecial").map(mapItem);
-    context.complicacoes = actorItems.filter((item) => ["complicacao", "desvantagem"].includes(item.type)).map(mapItem);
+    const mapSystemEntry = (entry, fallbackType) => ({
+      id: String(entry?.id ?? foundry.utils.randomID()),
+      name: String(entry?.nome ?? entry?.name ?? "").trim(),
+      type: fallbackType,
+      typeLabel: TWBV_ITEM_TYPES[fallbackType] ?? fallbackType,
+      fonte: String(entry?.fonte ?? entry?.source ?? "").trim(),
+      categoria: String(entry?.categoria ?? entry?.category ?? "").trim(),
+      requisitos: String(entry?.requisitos ?? entry?.requirements ?? "").trim(),
+      severity: String(entry?.severity ?? "").trim(),
+      descricao: String(entry?.descricao ?? entry?.description ?? "").trim()
+    });
+
+    context.vantagens = Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
+    context.habilidadesEspeciais = Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
+    context.complicacoes = Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
     context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
@@ -305,6 +317,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       pericias[i].locked = Boolean(pericias[i].locked);
       delete pericias[i].passo;
     }
+
+    if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
+    if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
+    if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
     const keys = ["forca", "destreza", "constituicao", "inteligencia", "intuicao", "vontade"];
@@ -645,6 +661,16 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".twbv-item-edit").on("click", async (event) => {
       event.preventDefault();
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
+      const sourceType = String(event.currentTarget.dataset.sourceType ?? "item");
+      if (sourceType === "system") {
+        const listKey = String(event.currentTarget.dataset.listKey ?? "");
+        const type = String(event.currentTarget.dataset.type ?? "vantagem");
+        if (!listKey) return;
+        const entry = Array.from(this.actor.system?.[listKey] ?? []).find((v) => String(v?.id ?? "") === itemId);
+        if (!entry) return;
+        await this._openCustomItemDialog(type, entry, { listKey });
+        return;
+      }
       const item = this.actor.items.get(itemId);
       if (!item) return;
       if (["vantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
@@ -658,6 +684,15 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
       if (!itemId) return;
+      const sourceType = String(event.currentTarget.dataset.sourceType ?? "item");
+      if (sourceType === "system") {
+        const listKey = String(event.currentTarget.dataset.listKey ?? "");
+        if (!listKey) return;
+        const updated = Array.from(this.actor.system?.[listKey] ?? []).filter((entry) => String(entry?.id ?? "") !== itemId);
+        await this.actor.update({ [`system.${listKey}`]: updated });
+        await this.render(true);
+        return;
+      }
       await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
     });
 
@@ -801,7 +836,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     this._setCustomDialogValidationState(root);
   }
 
-  async _openCustomItemDialog(type, item = null) {
+  async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
       habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
@@ -833,25 +868,35 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
-      if (item) {
+      const isEmbeddedItem = item && typeof item.update === "function";
+      if (isEmbeddedItem) {
         await item.update(payload);
-      } else if (type === "vantagem") {
-        await this.actor.createEmbeddedDocuments("Item", [{
-          type: "vantagem",
-          name: nome,
-          system: {
-            fonte: payload.system.fonte,
-            categoria: payload.system.categoria,
-            requisitos: payload.system.requisitos,
-            descricao: payload.system.descricao
-          }
-        }]);
       } else {
-        await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+        const listKeyByType = {
+          vantagem: "vantagens",
+          habilidadeEspecial: "habilidadesEspeciais",
+          complicacao: "complicacoes"
+        };
+        const listKey = options.listKey ?? listKeyByType[type];
+        if (!listKey) return;
+        const currentList = Array.from(this.actor.system?.[listKey] ?? []);
+        const existingId = String(item?.id ?? "").trim();
+        const novoRegistro = {
+          id: existingId || foundry.utils.randomID(),
+          nome,
+          fonte: payload.system.fonte,
+          categoria: payload.system.categoria,
+          requisitos: payload.system.requisitos,
+          descricao: payload.system.descricao
+        };
+        const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);
+        if (existingIndex >= 0) currentList[existingIndex] = novoRegistro;
+        else currentList.push(novoRegistro);
+        await this.actor.update({ [`system.${listKey}`]: currentList });
       }
+      await dialogApp.close();
       await this.render(true);
       if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
-      await dialogApp.close();
     };
 
     const dialog = new Dialog({

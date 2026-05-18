@@ -56,7 +56,6 @@ const SKILL_ATTRIBUTES = [
   { key: "constituicao", label: "Constituição", iconPath: "assets/icons/constituicao.png" },
   { key: "inteligencia", label: "Inteligência", iconPath: "assets/icons/inteligencia.png" },
   { key: "intuicao", label: "Intuição", iconPath: "assets/icons/intuicao.png" },
-  { key: "vontade", label: "Vontade", iconPath: "assets/icons/vontade.png" },
   { key: "influencia", label: "Influência", iconPath: "assets/icons/influencia.png" }
 ];
 

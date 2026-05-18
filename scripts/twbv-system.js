@@ -786,7 +786,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"]');
     if (!form || !nameInput || !saveButton) return;
-    const isValid = form.checkValidity() && String(nameInput.value ?? "").trim().length > 0;
+    const isValid = String(nameInput.value ?? "").trim().length > 0;
     saveButton.disabled = !isValid;
   }
 
@@ -825,17 +825,32 @@ class TWBVPersonagemSheet extends ActorSheet {
       const form = root?.querySelector("form.twbv-custom-item-dialog");
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return;
-      if (!form.checkValidity() || !String(nameInput.value ?? "").trim()) {
-        nameInput.setCustomValidity("Nome é obrigatório.");
-        form.reportValidity();
-        nameInput.setCustomValidity("");
+      const nome = String(nameInput.value ?? "").trim();
+      if (!nome) {
+        ui.notifications?.error("Nome é obrigatório.");
         this._setCustomDialogValidationState(root);
         return;
       }
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
-      if (item) await item.update(payload);
-      else await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+      if (item) {
+        await item.update(payload);
+      } else if (type === "vantagem") {
+        await this.actor.createEmbeddedDocuments("Item", [{
+          type: "vantagem",
+          name: nome,
+          system: {
+            fonte: payload.system.fonte,
+            categoria: payload.system.categoria,
+            requisitos: payload.system.requisitos,
+            descricao: payload.system.descricao
+          }
+        }]);
+      } else {
+        await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+      }
+      await this.render(true);
+      if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
       await dialogApp.close();
     };
 
@@ -853,7 +868,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         save: {
           label: "Salvar",
           callback: async (dialogHtml) => {
-            const root = resolveDialogRoot(dialogHtml);
+            const root = resolveDialogRoot(dialogHtml) ?? dialog.element?.[0];
             await submitItemForm(root, dialog);
             return false;
           }

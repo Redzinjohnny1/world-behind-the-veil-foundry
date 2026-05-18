@@ -1228,3 +1228,33 @@
   background: #10081c;
   color: #f5e6b8;
 }
+
+/* Force WBTW skin only for Nova/Editar Vantagem dialog */
+.window-app.wbtv-vantagem-dialog .window-content,
+.wbtv-vantagem-dialog .window-content,
+.wbtv-vantagem-dialog form,
+.wbtv-vantagem-dialog .dialog-content {
+  background: linear-gradient(180deg, #1a1028 0%, #07040d 100%) !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  color: #f4e6ba !important;
+}
+
+.wbtv-vantagem-dialog label {
+  color: #f4e6ba !important;
+}
+
+.wbtv-vantagem-dialog input,
+.wbtv-vantagem-dialog textarea,
+.wbtv-vantagem-dialog select {
+  background: #080510 !important;
+  color: #f4e6ba !important;
+  border: 1px solid #8d6cff !important;
+  box-shadow: 0 0 8px rgba(140, 90, 255, 0.35) !important;
+}
+
+.wbtv-vantagem-dialog button {
+  background: linear-gradient(180deg, #5b3290, #24103f) !important;
+  color: #f4e6ba !important;
+  border: 1px solid #c9a96a !important;
+}

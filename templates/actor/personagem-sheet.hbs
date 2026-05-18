@@ -140,7 +140,8 @@
     </div>
     <div class="tab" data-group="primary" data-tab="desvantagens">
       <div class="twbv-panel twbv-ornate">
-        <div class="twbv-item-tab-header"><h2>Complicações</h2><button type="button" class="twbv-item-create" data-type="complicacao" data-label="Complicação"><i class="fas fa-plus"></i> + Complicação</button></div>
+        <div class="twbv-item-section">
+        <div class="twbv-item-tab-header"><h2>COMPLICAÇÕES</h2><button type="button" class="twbv-item-create twbv-item-create--fancy" data-type="complicacao" data-label="Complicação"><i class="fas fa-plus"></i> Adicionar complicação</button></div>
         <div class="twbv-item-card-list">
           {{#each complicacoes as |item|}}
             <article class="twbv-item-card twbv-item-card--fantasy">
@@ -154,6 +155,7 @@
               </div>
             </article>
           {{else}}<p class="twbv-adv-empty">Nenhuma complicação cadastrada.</p>{{/each}}
+        </div>
         </div>
       </div>
     </div>

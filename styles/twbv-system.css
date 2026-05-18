@@ -34,6 +34,10 @@
   background: transparent !important;
 }
 
+.window-app.sheet.actor .window-content form {
+  opacity: 0.5 !important;
+}
+
 .twbv-sheet { min-height: 100%; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
 .twbv-ornate {
   position: relative;

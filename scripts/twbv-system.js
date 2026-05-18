@@ -686,9 +686,9 @@ class TWBVPersonagemSheet extends ActorSheet {
   _buildCustomItemDialogContent(type, itemData = {}) {
     const fieldsByType = {
       vantagem: `
-        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.category ?? ""}" /></div>
-        <div class="form-group"><label>Requisitos</label><input type="text" name="requirements" value="${itemData.requirements ?? ""}" /></div>`,
-      habilidadeEspecial: `<div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.category ?? ""}" /></div>`,
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
+        <div class="form-group"><label>Requisitos</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>`,
+      habilidadeEspecial: `<div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
       complicacao: `
         <div class="form-group">
           <label>Severidade</label>
@@ -716,10 +716,10 @@ class TWBVPersonagemSheet extends ActorSheet {
           <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
         </nav>
         <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
-          <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.source ?? ""}" /></div>
+          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
           ${fieldsByType[type] ?? ""}
-          <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.description ?? ""}</textarea></div>
+          <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
         </section>
         <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
         <section class="twbv-custom-tab-pane" data-tab="efeitos">
@@ -752,15 +752,53 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {
     const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
-    const source = String(root?.querySelector('input[name="source"]')?.value ?? "").trim();
-    const category = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
-    const requirements = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
-    const description = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+    const fonte = String(root?.querySelector('input[name="source"]')?.value ?? "").trim();
+    const categoria = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
+    const requisitos = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
+    const descricao = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
     const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
     const effects = Array.from(root?.querySelectorAll('.twbv-effect-row input[type="text"]') ?? []).map((input) => String(input.value ?? "").trim()).filter(Boolean);
-    return { name, system: { source, category, requirements, description, severity, isArcaneBackground, hasCharges, activeEffects: effects, active: true } };
+    return {
+      name,
+      system: {
+        fonte,
+        categoria,
+        requisitos,
+        descricao,
+        source: fonte,
+        category: categoria,
+        requirements: requisitos,
+        description: descricao,
+        severity,
+        isArcaneBackground,
+        hasCharges,
+        activeEffects: effects,
+        active: true
+      }
+    };
+  }
+
+
+  _setCustomDialogValidationState(root) {
+    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const nameInput = form?.querySelector('input[name="name"]');
+    const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"]');
+    if (!form || !nameInput || !saveButton) return;
+    const isValid = form.checkValidity() && String(nameInput.value ?? "").trim().length > 0;
+    saveButton.disabled = !isValid;
+  }
+
+  _bindCustomDialogFormSubmit(root, onSubmit) {
+    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    if (!form || typeof onSubmit !== "function") return;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await onSubmit();
+    });
+    form.addEventListener("input", () => this._setCustomDialogValidationState(root));
+    this._setCustomDialogValidationState(root);
   }
 
   async _openCustomItemDialog(type, item = null) {
@@ -772,10 +810,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
     const itemData = {
       name: item?.name ?? "",
-      source: item?.system?.source ?? "",
-      category: item?.system?.category ?? "",
-      requirements: item?.system?.requirements ?? item?.system?.tier ?? "",
-      description: item?.system?.description ?? "",
+      fonte: item?.system?.fonte ?? item?.system?.source ?? "",
+      categoria: item?.system?.categoria ?? item?.system?.category ?? "",
+      requisitos: item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
+      descricao: item?.system?.descricao ?? item?.system?.description ?? "",
       severity: item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
@@ -783,12 +821,32 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
 
+    const submitItemForm = async (root, dialogApp) => {
+      const form = root?.querySelector("form.twbv-custom-item-dialog");
+      const nameInput = form?.querySelector('input[name="name"]');
+      if (!form || !nameInput) return;
+      if (!form.checkValidity() || !String(nameInput.value ?? "").trim()) {
+        nameInput.setCustomValidity("Nome é obrigatório.");
+        form.reportValidity();
+        nameInput.setCustomValidity("");
+        this._setCustomDialogValidationState(root);
+        return;
+      }
+
+      const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
+      if (item) await item.update(payload);
+      else await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+      await dialogApp.close();
+    };
+
     const dialog = new Dialog({
       title: item ? `Editar ${item.name}` : defaults.title,
       content,
       render: (dialogApp, renderedHtml) => {
         const root = resolveDialogRoot(renderedHtml);
-        if (root) this._bindCustomDialogUi(root);
+        if (!root) return;
+        this._bindCustomDialogUi(root);
+        this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
         applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog");
       },
       buttons: {
@@ -796,16 +854,23 @@ class TWBVPersonagemSheet extends ActorSheet {
           label: "Salvar",
           callback: async (dialogHtml) => {
             const root = resolveDialogRoot(dialogHtml);
-            const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
-            const name = payload.name;
-            if (!name) return ui.notifications?.warn("Informe o nome.");
-            if (item) await item.update(payload);
-            else await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
+            await submitItemForm(root, dialog);
+            return false;
           }
         },
-        cancel: { label: "Cancelar" }
+        cancel: {
+          label: "Cancelar",
+          callback: async () => {
+            await dialog.close();
+          }
+        }
       },
-      default: "save"
+      default: "save",
+      close: () => {
+        const root = dialog.element?.[0];
+        const nameInput = root?.querySelector('input[name="name"]');
+        if (nameInput) nameInput.setCustomValidity("");
+      }
     }, { width: 520, height: "auto" });
     dialog.render(true);
   }

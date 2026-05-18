@@ -910,6 +910,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
         applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog");
+        if (type === "vantagem") applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-vantagem-dialog");
       },
       buttons: {
         save: {

@@ -380,7 +380,11 @@ class TWBVPersonagemSheet extends ActorSheet {
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
       new Dialog({
         title: "Adicionar perícia",
-        content: `<div class="twbv-add-skill-dialog"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado da perícia<select name="skillLevel">${SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === 0 ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("")}</select></label></div>`,
+        content: `<div><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado da perícia<select name="skillLevel">${SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === 0 ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("")}</select></label></div>`,
+        classes: ["wbtv-add-skill-dialog"],
+        render: (dialog, html) => {
+          applyDialogWindowClass(html ?? dialog, "wbtv-add-skill-dialog");
+        },
         buttons: {
           accept: {
             label: "Aceitar",

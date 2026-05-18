@@ -309,33 +309,19 @@
   width: 100%;
   max-width: 760px;
   margin: 8px auto 4px;
-  padding: clamp(16px, 3vw, 24px);
+  padding: 14px;
   border-radius: 16px;
-  border: 1px solid rgba(217, 183, 117, 0.4);
-  background-image: url("../assets/ui/attributes-panel-dark-purple.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  box-shadow: 0 0 26px rgba(93, 70, 140, 0.35), 0 12px 26px rgba(5, 3, 10, 0.55);
+  border: 1px solid rgba(217, 183, 117, 0.55);
+  background: radial-gradient(circle at top, rgba(82, 58, 118, 0.38), rgba(18, 12, 30, 0.96) 56%, rgba(11, 8, 19, 0.98));
+  box-shadow: inset 0 0 18px rgba(217, 183, 117, 0.14), 0 0 26px rgba(93, 70, 140, 0.35), 0 12px 26px rgba(5, 3, 10, 0.55);
 }
 
 .attributes-art-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-template-areas:
-    "forca destreza constituicao"
-    "inteligencia intuicao vontade";
-  gap: clamp(8px, 1.3vw, 12px);
-  min-height: clamp(260px, 35vw, 320px);
+  gap: 12px;
 }
-
-.attributes-art-grid .twbv-attribute-card:nth-child(1) { grid-area: forca; }
-.attributes-art-grid .twbv-attribute-card:nth-child(2) { grid-area: destreza; }
-.attributes-art-grid .twbv-attribute-card:nth-child(3) { grid-area: constituicao; }
-.attributes-art-grid .twbv-attribute-card:nth-child(4) { grid-area: inteligencia; }
-.attributes-art-grid .twbv-attribute-card:nth-child(5) { grid-area: intuicao; }
-.attributes-art-grid .twbv-attribute-card:nth-child(6) { grid-area: vontade; }
 
 .twbv-item-tab-header {
   display: flex;
@@ -636,30 +622,13 @@
   .twbv-header-layout { grid-template-columns: 1fr; }
   .twbv-principal-main { grid-template-columns: 1fr; grid-template-areas: "attributes" "eco" "skills"; }
   .twbv-stages-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .attributes-art-grid {
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    grid-template-areas:
-      "forca destreza"
-      "constituicao inteligencia"
-      "intuicao vontade";
-    min-height: auto;
-  }
-  .attributes-art-panel { background-size: cover; }
+  .twbv-stages-grid, .attributes-art-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
 
 @media (max-width: 720px) {
   .twbv-skill-row { grid-template-columns: 48px 1fr 112px auto; }
 
-  .attributes-art-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "forca"
-      "destreza"
-      "constituicao"
-      "inteligencia"
-      "intuicao"
-      "vontade";
-  }
+  .attributes-art-grid { grid-template-columns: 1fr; }
 }
 
 .twbv-roll-chat {

@@ -890,7 +890,11 @@ class TWBVPersonagemSheet extends ActorSheet {
           fonte: payload.system.fonte,
           categoria: payload.system.categoria,
           requisitos: payload.system.requisitos,
-          descricao: payload.system.descricao
+          descricao: payload.system.descricao,
+          severity: payload.system.severity,
+          isArcaneBackground: payload.system.isArcaneBackground,
+          hasCharges: payload.system.hasCharges,
+          activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);
         if (existingIndex >= 0) currentList[existingIndex] = novoRegistro;
@@ -919,7 +923,6 @@ class TWBVPersonagemSheet extends ActorSheet {
           root.classList.add("wbtv-vantagem-dialog");
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
           formRoot?.classList?.add("wbtv-vantagem-dialog");
-          formRoot?.setAttribute("style", "background: linear-gradient(180deg, #1a1028, #07040d); color: #f4e6ba;");
         }
       },
       buttons: {

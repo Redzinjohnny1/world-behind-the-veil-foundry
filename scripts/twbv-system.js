@@ -272,7 +272,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     html.find(".twbv-eco-adjust").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
-      await updateEcoValue(adjust, { triggerEffect: adjust < 0 });
+      await updateEcoValue(adjust);
     });
 
     html.find(".twbv-eco-spend-trigger").on("click", async (event) => {

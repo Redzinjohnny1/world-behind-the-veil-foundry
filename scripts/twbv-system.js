@@ -859,12 +859,14 @@ class TWBVPersonagemSheet extends ActorSheet {
     const submitItemForm = async (root, dialogApp) => {
       const form = root?.querySelector("form.twbv-custom-item-dialog");
       const nameInput = form?.querySelector('input[name="name"]');
-      if (!form || !nameInput) return;
+      if (!form || !nameInput) return false;
+
       const nome = String(nameInput.value ?? "").trim();
       if (!nome) {
-        ui.notifications?.error("Nome é obrigatório.");
+        ui.notifications?.error("O nome da vantagem é obrigatório.");
+        nameInput.focus();
         this._setCustomDialogValidationState(root);
-        return;
+        return false;
       }
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);

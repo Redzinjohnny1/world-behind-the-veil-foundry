@@ -12,14 +12,26 @@
   --twbv-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
 }
 
-.twbv.sheet.actor .window-content {
+.twbv.sheet.actor .window-content,
+.window-app.sheet.actor .window-content {
   background-image:
-    linear-gradient(rgba(5,3,12,0.78), rgba(5,3,12,0.88)),
-    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+    linear-gradient(rgba(5,3,12,0.45), rgba(5,3,12,0.82)),
+    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
   color: var(--twbv-text);
+}
+
+.twbv.sheet.actor .window-content form,
+.twbv.sheet.actor .window-content .sheet-body,
+.twbv.sheet.actor .window-content .tab,
+.twbv.sheet.actor .window-content .sheet-content,
+.window-app.sheet.actor .window-content form,
+.window-app.sheet.actor .window-content .sheet-body,
+.window-app.sheet.actor .window-content .tab,
+.window-app.sheet.actor .window-content .sheet-content {
+  background: transparent !important;
 }
 
 .twbv-sheet { min-height: 100%; padding: 14px; display: flex; flex-direction: column; gap: 12px; }

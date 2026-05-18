@@ -111,9 +111,9 @@
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon"><i class="fas fa-gem"></i></div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="twbv-item-card-meta">Requisito/Tier: {{#if item.tier}}{{item.tier}}{{else}}-{{/if}}</div>
-                    <p class="twbv-item-effect">{{#if item.description}}{{item.description}}{{else}}Sem descrição.{{/if}}</p>
+                    <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="system" data-list-key="vantagens" data-type="vantagem"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="system" data-list-key="vantagens"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
+                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
@@ -128,8 +128,8 @@
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon"><i class="fas fa-hat-wizard"></i></div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
-                    <p class="twbv-item-effect">{{#if item.description}}{{item.description}}{{else}}Sem descrição.{{/if}}</p>
+                    <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="system" data-list-key="habilidadesEspeciais" data-type="habilidadeEspecial"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="system" data-list-key="habilidadesEspeciais"><i class="fas fa-trash"></i></button></div></div>
+                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
@@ -148,9 +148,9 @@
               <div class="twbv-item-card-layout">
                 <div class="twbv-item-card-icon"><i class="fas fa-skull"></i></div>
                 <div class="twbv-item-card-content">
-                  <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
-              <div class="twbv-item-card-meta">Severidade: {{#if item.severity}}{{item.severity}}{{else}}-{{/if}}</div>
-                  <p class="twbv-item-effect">{{#if item.description}}{{item.description}}{{else}}Sem descrição.{{/if}}</p>
+                  <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="system" data-list-key="complicacoes" data-type="complicacao"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="system" data-list-key="complicacoes"><i class="fas fa-trash"></i></button></div></div>
+              <div class="twbv-item-card-meta">Categoria: {{#if item.categoria}}{{item.categoria}}{{else}}-{{/if}}</div>
+                  <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                 </div>
               </div>
             </article>

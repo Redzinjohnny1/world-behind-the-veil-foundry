@@ -642,10 +642,16 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.createEmbeddedDocuments("Item", [{ type, name }]);
     });
 
-    html.find(".twbv-item-edit").on("click", (event) => {
+    html.find(".twbv-item-edit").on("click", async (event) => {
       event.preventDefault();
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
-      this.actor.items.get(itemId)?.sheet?.render(true);
+      const item = this.actor.items.get(itemId);
+      if (!item) return;
+      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
+        await this._openCustomItemDialog(item.type, item);
+        return;
+      }
+      item.sheet?.render(true);
     });
 
     html.find(".twbv-item-delete").on("click", async (event) => {
@@ -677,66 +683,124 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
   }
 
-  async _openCustomItemDialog(type) {
+  _buildCustomItemDialogContent(type, itemData = {}) {
+    const fieldsByType = {
+      vantagem: `
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.category ?? ""}" /></div>
+        <div class="form-group"><label>Requisitos</label><input type="text" name="requirements" value="${itemData.requirements ?? ""}" /></div>`,
+      habilidadeEspecial: `<div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.category ?? ""}" /></div>`,
+      complicacao: `
+        <div class="form-group">
+          <label>Severidade</label>
+          <select name="severity">
+            <option value="Menor" ${itemData.severity === "Menor" ? "selected" : ""}>Menor</option>
+            <option value="Maior" ${itemData.severity === "Maior" ? "selected" : ""}>Maior</option>
+            <option value="Ambas" ${itemData.severity === "Ambas" ? "selected" : ""}>Ambas</option>
+          </select>
+        </div>`
+    };
+    const propertiesField = type === "vantagem" ? `
+      <div class="twbv-property-checkboxes">
+        <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
+        <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
+      </div>` : `<p class="twbv-tab-empty">Sem propriedades adicionais para este tipo.</p>`;
+    const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
+    const effectsMarkup = effects.length
+      ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
+      : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
+    return `
+      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
+        <nav class="twbv-custom-tabs">
+          <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+          <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
+          <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+        </nav>
+        <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
+          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
+          <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.source ?? ""}" /></div>
+          ${fieldsByType[type] ?? ""}
+          <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.description ?? ""}</textarea></div>
+        </section>
+        <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
+        <section class="twbv-custom-tab-pane" data-tab="efeitos">
+          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+          <div class="twbv-effects-list">${effectsMarkup}</div>
+        </section>
+      </form>`;
+  }
+
+  _bindCustomDialogUi(root) {
+    const tabButtons = root.querySelectorAll(".twbv-tab-button");
+    tabButtons.forEach((button) => button.addEventListener("click", () => {
+      const tab = button.dataset.tab;
+      root.querySelectorAll(".twbv-tab-button").forEach((btn) => btn.classList.toggle("is-active", btn === button));
+      root.querySelectorAll(".twbv-custom-tab-pane").forEach((pane) => pane.classList.toggle("is-active", pane.dataset.tab === tab));
+    }));
+    const effectsList = root.querySelector(".twbv-effects-list");
+    root.querySelector(".twbv-effect-add")?.addEventListener("click", () => {
+      const index = effectsList.querySelectorAll(".twbv-effect-row").length;
+      effectsList.querySelector(".twbv-tab-empty")?.remove();
+      effectsList.insertAdjacentHTML("beforeend", `<div class="twbv-effect-row"><input type="text" name="effect-${index}" placeholder="Descrição do efeito ativo" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`);
+    });
+    effectsList?.addEventListener("click", (event) => {
+      const btn = event.target.closest(".twbv-effect-remove");
+      if (!btn) return;
+      btn.closest(".twbv-effect-row")?.remove();
+      if (!effectsList.querySelector(".twbv-effect-row")) effectsList.innerHTML = `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
+    });
+  }
+
+  _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {
+    const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
+    const source = String(root?.querySelector('input[name="source"]')?.value ?? "").trim();
+    const category = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
+    const requirements = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
+    const description = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+    const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
+    const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
+    const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
+    const effects = Array.from(root?.querySelectorAll('.twbv-effect-row input[type="text"]') ?? []).map((input) => String(input.value ?? "").trim()).filter(Boolean);
+    return { name, system: { source, category, requirements, description, severity, isArcaneBackground, hasCharges, activeEffects: effects, active: true } };
+  }
+
+  async _openCustomItemDialog(type, item = null) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
       habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
       complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
     };
     const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
-    const severityField = type === "complicacao" ? `
-      <div class="form-group">
-        <label>Severidade</label>
-        <select name="severity">
-          <option value="Menor">Menor</option>
-          <option value="Maior">Maior</option>
-          <option value="Ambas">Ambas</option>
-        </select>
-      </div>` : "";
-    const tierField = type === "vantagem" ? `
-      <div class="form-group">
-        <label>${defaults.tierLabel}</label>
-        <input type="text" name="tier" placeholder="Ex: Novato, Treinado..." />
-      </div>` : "";
-    const categoryField = type === "complicacao" ? `
-      <div class="form-group">
-        <label>Categoria/Tipo</label>
-        <input type="text" name="category" placeholder="Opcional" />
-      </div>` : "";
-    const content = `
-      <form class="twbv-custom-item-dialog">
-        <div class="form-group">
-          <label>Nome</label>
-          <input type="text" name="name" placeholder="Nome" autofocus />
-        </div>
-        ${tierField}
-        ${severityField}
-        ${categoryField}
-        <div class="form-group">
-          <label>Descrição</label>
-          <textarea name="description" rows="4" placeholder="Descrição"></textarea>
-        </div>
-      </form>`;
+    const itemData = {
+      name: item?.name ?? "",
+      source: item?.system?.source ?? "",
+      category: item?.system?.category ?? "",
+      requirements: item?.system?.requirements ?? item?.system?.tier ?? "",
+      description: item?.system?.description ?? "",
+      severity: item?.system?.severity ?? defaults.severity,
+      isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
+      hasCharges: Boolean(item?.system?.hasCharges),
+      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
+    };
+    const content = this._buildCustomItemDialogContent(type, itemData);
 
     const dialog = new Dialog({
-      title: defaults.title,
+      title: item ? `Editar ${item.name}` : defaults.title,
       content,
+      render: (dialogApp, renderedHtml) => {
+        const root = resolveDialogRoot(renderedHtml);
+        if (root) this._bindCustomDialogUi(root);
+        applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog");
+      },
       buttons: {
         save: {
           label: "Salvar",
           callback: async (dialogHtml) => {
             const root = resolveDialogRoot(dialogHtml);
-            const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
+            const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
+            const name = payload.name;
             if (!name) return ui.notifications?.warn("Informe o nome.");
-            const description = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
-            const category = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
-            const tier = String(root?.querySelector('input[name="tier"]')?.value ?? "").trim();
-            const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaults.severity ?? "").trim();
-            await this.actor.createEmbeddedDocuments("Item", [{
-              type,
-              name,
-              system: { description, tier, severity, tags: category, active: true }
-            }]);
+            if (item) await item.update(payload);
+            else await this.actor.createEmbeddedDocuments("Item", [{ type, ...payload }]);
           }
         },
         cancel: { label: "Cancelar" }
@@ -744,9 +808,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       default: "save"
     }, { width: 520, height: "auto" });
     dialog.render(true);
-    Hooks.once("renderDialog", (app, renderedHtml) => {
-      if (app === dialog) applyDialogWindowClass(renderedHtml?.[0] ?? renderedHtml, "wbtv-custom-item-dialog");
-    });
   }
 }
 

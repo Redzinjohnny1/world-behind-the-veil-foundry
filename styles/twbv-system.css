@@ -437,21 +437,27 @@
 }
 .attribute-orb-label-svg {
   position: absolute;
-  top: 5px;
+  top: 6px;
   left: 50%;
-  width: 135px;
-  height: 62px;
+  width: 170px;
+  height: 70px;
   transform: translateX(-50%);
   pointer-events: none;
   z-index: 1;
+  overflow: visible;
 }
 .attribute-orb-label {
   fill: #f5e6b8;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1.4px;
   text-shadow: 0 0 6px rgba(184, 125, 255, 0.9);
   font-family: "Cinzel", "Palatino Linotype", serif;
+}
+
+.attribute-orb-label--long {
+  font-size: 10px;
+  letter-spacing: 0.8px;
 }
 .twbv-attribute-card h3 {
   position: relative;

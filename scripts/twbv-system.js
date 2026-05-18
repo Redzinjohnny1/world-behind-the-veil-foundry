@@ -51,12 +51,13 @@ const SKILL_LEVELS = [
   { dado: 12, bonus: 5 }
 ];
 const SKILL_ATTRIBUTES = [
-  { key: "forca", label: "Força", icon: "fa-fist-raised" },
-  { key: "destreza", label: "Destreza", icon: "fa-hand-sparkles" },
-  { key: "constituicao", label: "Constituição", icon: "fa-shield-heart" },
-  { key: "inteligencia", label: "Inteligência", icon: "fa-brain" },
-  { key: "influencia", label: "Influência", icon: "fa-fire" },
-  { key: "intuicao", label: "Intuição", icon: "fa-eye" }
+  { key: "forca", label: "Força", iconPath: "assets/icons/forca.png" },
+  { key: "destreza", label: "Destreza", iconPath: "assets/icons/destreza.png" },
+  { key: "constituicao", label: "Constituição", iconPath: "assets/icons/constituicao.png" },
+  { key: "inteligencia", label: "Inteligência", iconPath: "assets/icons/inteligencia.png" },
+  { key: "intuicao", label: "Intuição", iconPath: "assets/icons/intuicao.png" },
+  { key: "vontade", label: "Vontade", iconPath: "assets/icons/vontade.png" },
+  { key: "influencia", label: "Influência", iconPath: "assets/icons/influencia.png" }
 ];
 
 function getSkillRank(dado, bonus = 0) {

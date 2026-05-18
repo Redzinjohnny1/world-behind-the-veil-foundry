@@ -96,10 +96,10 @@
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
               <div class="twbv-skill-row" data-index="{{i}}" draggable="true">
-                <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><i class="fas {{pericia.attributeMeta.icon}}"></i></button>
+                <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><img class="attribute-icon-img" src="{{pericia.attributeMeta.iconPath}}" alt="{{pericia.attributeMeta.label}}"></button>
                 <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">
                   <span class="twbv-skill-name">{{pericia.nome}}</span>
-                  <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}"><i class="fas fa-diamond"></i> {{pericia.attributeMeta.label}}</span>
+                  <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}"><img class="attribute-icon-img" src="{{pericia.attributeMeta.iconPath}}" alt="{{pericia.attributeMeta.label}}"> {{pericia.attributeMeta.label}}</span>
                   <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
                 </button>
                 <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>

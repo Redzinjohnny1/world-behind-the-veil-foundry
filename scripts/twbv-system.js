@@ -8,12 +8,13 @@ const STAGES = [
 ];
 
 const ADVANCEMENT_OPTIONS = [
-  "Uma Nova Vantagem e uma Perícia",
-  "Três Péricias",
-  "Um Atributo e uma perícia",
-  "Remover uma Desvantagem",
-  "Duas novas mágias e 2 pontos de poder",
-  "5 pontos de poder e uma mágia"
+  "Aumentar um atributo",
+  "Aumentar uma perícia",
+  "Comprar uma vantagem",
+  "Remover uma desvantagem",
+  "Novo poder",
+  "Melhorar poder existente",
+  "Outro"
 ];
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
@@ -157,6 +158,13 @@ class TWBVPersonagemSheet extends ActorSheet {
       current: stage.name === currentStage.name
     }));
 
+    context.system.avancos = Array.from(context.system.avancos ?? []).map((avanco, index) => ({
+      ...avanco,
+      numero: Number(avanco?.numero) || index + 1,
+      tipo: String(avanco?.tipo ?? "").trim(),
+      descricao: String(avanco?.descricao ?? "").trim()
+    }));
+
     context.attributeOptions = ATTRIBUTE_DICE.map((die) => ({ value: die, label: `d${die}` }));
     context.attributeKeys = [
       { key: "forca", label: "Força" },
@@ -237,9 +245,52 @@ class TWBVPersonagemSheet extends ActorSheet {
     super.activateListeners(html);
 
     html.find(".twbv-add-advancement").on("click", async () => {
-      const avanços = Array.from(this.actor.system.avancos ?? []);
-      avanços.push({ tipo: "" });
-      await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
+      const optionMarkup = ADVANCEMENT_OPTIONS.map((option) => `<option value="${option}">${option}</option>`).join("");
+      const dialogContent = `
+        <form class="twbv-add-adv-dialog-content">
+          <div class="form-group">
+            <label>Tipo de avanço</label>
+            <select name="tipo" required>
+              <option value="">Selecione...</option>
+              ${optionMarkup}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Descrição / Anotações</label>
+            <textarea name="descricao" rows="4" placeholder="Descreva este avanço..."></textarea>
+          </div>
+        </form>`;
+
+      const dialog = new Dialog({
+        title: "Adicionar avanço",
+        content: dialogContent,
+        buttons: {
+          confirm: {
+            label: "Confirmar",
+            callback: async (dialogHtml) => {
+              const root = resolveDialogRoot(dialogHtml);
+              const tipo = String(root?.querySelector('select[name="tipo"]')?.value ?? "").trim();
+              if (!tipo) {
+                ui.notifications?.warn("Selecione um tipo de avanço.");
+                return;
+              }
+              const descricao = String(root?.querySelector('textarea[name="descricao"]')?.value ?? "").trim();
+              const avanços = Array.from(this.actor.system.avancos ?? []);
+              const numero = avanços.length + 1;
+              avanços.push({ numero, tipo, descricao });
+              await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
+            }
+          },
+          cancel: {
+            label: "Cancelar"
+          }
+        },
+        default: "confirm"
+      });
+      dialog.render(true);
+      Hooks.once("renderDialog", (app, renderedHtml) => {
+        if (app === dialog) applyDialogWindowClass(renderedHtml?.[0] ?? renderedHtml, "wbtv-add-adv-dialog");
+      });
     });
 
     html.find(".twbv-remove-advancement").on("click", async (event) => {

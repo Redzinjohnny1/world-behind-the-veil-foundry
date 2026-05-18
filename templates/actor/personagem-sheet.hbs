@@ -127,18 +127,19 @@
           {{/each}}
         </div>
         <div class="twbv-adv-list">
-          {{#each system.avancos as |avanco i|}}
-            <div class="twbv-adv-row">
-              <span class="twbv-adv-index">#{{i}}</span>
-              <select name="system.avancos.{{i}}.tipo">
-                {{#select avanco.tipo}}
-                  <option value="">Selecione...</option>
-                  {{#each @root.advancementOptions as |opt|}}<option value="{{opt}}">{{opt}}</option>{{/each}}
-                {{/select}}
-              </select>
-              <button type="button" class="twbv-remove-advancement" data-index="{{i}}"><i class="fas fa-trash"></i></button>
-            </div>
-          {{/each}}
+          {{#if system.avancos.length}}
+            {{#each system.avancos as |avanco i|}}
+              <article class="twbv-adv-entry">
+                <div class="twbv-adv-entry-head">
+                  <h3>Avanço {{avanco.numero}} — {{#if avanco.tipo}}{{avanco.tipo}}{{else}}Outro{{/if}}</h3>
+                  <button type="button" class="twbv-remove-advancement" data-index="{{i}}" title="Remover avanço"><i class="fas fa-trash"></i></button>
+                </div>
+                <p class="twbv-adv-entry-description">{{#if avanco.descricao}}{{avanco.descricao}}{{else}}Sem descrição.{{/if}}</p>
+              </article>
+            {{/each}}
+          {{else}}
+            <p class="twbv-adv-empty">Nenhum avanço registrado ainda.</p>
+          {{/if}}
         </div>
       </section>
     </div>

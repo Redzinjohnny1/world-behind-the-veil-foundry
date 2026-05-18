@@ -388,125 +388,61 @@
 
 .twbv-attribute-card {
   position: relative;
-  width: 156px;
-  height: 156px;
-  margin: 0 auto;
-  padding: 14px 14px 12px;
-  border-radius: 50%;
+  text-align: center;
+  margin: 0;
+  padding: 10px 10px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 6px;
-  text-align: center;
-  background: radial-gradient(circle at 34% 28%, rgba(139, 99, 220, 0.46), rgba(45, 25, 72, 0.94) 48%, rgba(18, 10, 33, 0.98) 78%);
-  box-shadow: inset 0 0 18px rgba(203, 166, 255, 0.18), 0 0 15px rgba(120, 80, 196, 0.35), 0 9px 18px rgba(8, 4, 14, 0.55);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-.twbv-attribute-card:hover {
-  transform: scale(1.03);
-  box-shadow: inset 0 0 20px rgba(230, 203, 255, 0.2), 0 0 22px rgba(164, 112, 255, 0.45), 0 0 10px rgba(232, 194, 115, 0.35), 0 11px 22px rgba(7, 4, 14, 0.58);
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow: none;
 }
 .twbv-attribute-card::before,
 .twbv-attribute-card::after {
-  content: "";
+  opacity: 0.7;
+  content: "✦";
   position: absolute;
-  border-radius: 50%;
+  font-size: .58rem;
+  color: rgba(217, 183, 117, 0.7);
+  text-shadow: 0 0 6px rgba(217, 183, 117, 0.4);
   pointer-events: none;
 }
-.twbv-attribute-card::before {
-  inset: -5px;
-  border: 2px solid rgba(217, 183, 117, 0.68);
-  box-shadow: 0 0 10px rgba(217, 183, 117, 0.28), 0 0 18px rgba(132, 84, 206, 0.34);
-}
-.twbv-attribute-card::after {
-  inset: 10px;
-  background: radial-gradient(circle at 50% 55%, rgba(210, 165, 255, 0.14), rgba(13, 9, 24, 0));
-}
-
-.twbv-visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-.attribute-orb-label-svg {
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  width: 92%;
-  height: 46px;
-  transform: translateX(-50%);
-  pointer-events: none;
-  z-index: 1;
-  overflow: visible;
-}
-.attribute-orb-label {
-  fill: #f5e6b8;
-  font-size: 9.6px;
-  font-weight: 700;
-  letter-spacing: 0.9px;
-  text-shadow: 0 0 6px rgba(184, 125, 255, 0.9);
-  font-family: "Cinzel", "Palatino Linotype", serif;
-}
-
-.attribute-orb-label--long {
-  font-size: 8.6px;
-  letter-spacing: 0.45px;
-}
-
-.attribute-orb-label textPath {
-  dominant-baseline: middle;
-}
+.twbv-attribute-card::before { top: 6px; left: 7px; }
+.twbv-attribute-card::after { bottom: 6px; right: 7px; }
 .twbv-attribute-card h3 {
-  position: relative;
-  z-index: 1;
-  margin: 2px 0 0;
-  font-size: .76rem;
+  margin: 0;
+  font-size: .86rem;
   font-weight: 700;
   color: #f4e8c7;
   text-transform: uppercase;
-  letter-spacing: .2em;
+  font-variant: small-caps;
+  letter-spacing: .16em;
   font-family: "Cinzel", "Palatino Linotype", serif;
-  text-shadow: 0 0 9px rgba(217, 183, 117, .45), 0 0 7px rgba(136, 95, 210, .4);
-}
-.twbv-attribute-card h3::after {
-  content: "";
-  display: block;
-  width: 62px;
-  height: 8px;
-  margin: 2px auto 0;
-  border-bottom: 1px solid rgba(233, 206, 150, 0.75);
-  border-radius: 0 0 65px 65px;
-  box-shadow: 0 0 6px rgba(165, 120, 230, 0.36);
+  text-shadow: 0 0 9px rgba(217, 183, 117, .45), 0 0 6px rgba(116, 80, 180, .28);
 }
 .twbv-attributes-panel .twbv-attribute-card label {
-  position: relative;
-  z-index: 1;
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  gap: 2px;
+  font-size: .56rem;
+  letter-spacing: .08em;
   align-items: center;
-  gap: 4px;
   color: #d5caee;
 }
-.twbv-attr-label { font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
 .twbv-attribute-card select {
-  width: 98px;
-  min-height: 31px;
-  padding: 4px 21px 4px 8px;
+  width: 100%;
+  max-width: 148px;
+  min-height: 32px;
+  padding: 4px 24px 4px 10px;
   font-weight: 700;
-  font-size: .9rem;
+  font-size: .95rem;
   line-height: 1.1;
   text-align: center;
-  border-radius: 999px;
   border: 1px solid rgba(217, 183, 117, 0.62);
-  box-shadow: 0 0 9px rgba(136, 98, 199, 0.26), inset 0 0 11px rgba(154, 123, 255, 0.2);
+  box-shadow: 0 0 8px rgba(136, 98, 199, 0.2), inset 0 0 10px rgba(154, 123, 255, 0.18);
   background: rgba(17, 12, 28, 0.92);
   color: #f8e9c7;
 }

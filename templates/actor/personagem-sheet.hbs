@@ -5,6 +5,10 @@
     </h1>
 
     <div class="twbv-header-layout">
+      <section class="twbv-header-center twbv-panel twbv-ornate">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+      </section>
+
       <section class="twbv-header-side twbv-header-left twbv-panel twbv-ornate">
         <h2>Identidade</h2>
         <input type="text" value="{{actor.name}}" disabled />
@@ -14,10 +18,6 @@
         <label>Avanços
           <input type="number" value="{{system.avancosTotais}}" disabled />
         </label>
-      </section>
-
-      <section class="twbv-header-center twbv-panel twbv-ornate">
-        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
       </section>
 
       <section class="twbv-header-side twbv-header-right twbv-panel twbv-ornate">

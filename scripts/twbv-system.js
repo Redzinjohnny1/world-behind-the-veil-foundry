@@ -786,7 +786,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"]');
     if (!form || !nameInput || !saveButton) return;
-    const isValid = form.checkValidity() && String(nameInput.value ?? "").trim().length > 0;
+    const isValid = String(nameInput.value ?? "").trim().length > 0;
     saveButton.disabled = !isValid;
   }
 
@@ -861,7 +861,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         save: {
           label: "Salvar",
           callback: async (dialogHtml) => {
-            const root = resolveDialogRoot(dialogHtml);
+            const root = resolveDialogRoot(dialogHtml) ?? dialog.element?.[0];
             await submitItemForm(root, dialog);
             return false;
           }

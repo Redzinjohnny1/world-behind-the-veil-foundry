@@ -339,6 +339,7 @@
   border-radius: 50%;
   border: 1px solid rgba(172, 241, 255, 0.6);
   box-shadow: 0 0 14px rgba(106, 218, 255, 0.5);
+  pointer-events: none;
 }
 .mana-value {
   width: 52px;

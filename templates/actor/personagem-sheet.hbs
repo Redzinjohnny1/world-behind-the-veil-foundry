@@ -101,9 +101,54 @@
       </div>
     </div>
 
-    <div class="tab" data-group="primary" data-tab="vantagens"><div class="twbv-panel twbv-ornate"><h2>Vantagens</h2><p>Em construção.</p></div></div>
-    <div class="tab" data-group="primary" data-tab="desvantagens"><div class="twbv-panel twbv-ornate"><h2>Desvantagens</h2><p>Em construção.</p></div></div>
-    <div class="tab" data-group="primary" data-tab="equipamento"><div class="twbv-panel twbv-ornate"><h2>Equipamento</h2><p>Em construção.</p></div></div>
+    <div class="tab" data-group="primary" data-tab="vantagens">
+      <div class="twbv-panel twbv-ornate">
+        <div class="twbv-item-tab-header"><h2>Vantagens</h2><button type="button" class="twbv-item-create" data-type="vantagem"><i class="fas fa-plus"></i></button></div>
+        <div class="twbv-item-card-list">
+          {{#each vantagens as |item|}}
+            <article class="twbv-item-card">
+              <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
+              <div class="twbv-item-card-meta">Tier: {{#if item.tier}}{{item.tier}}{{else}}-{{/if}}</div>
+              <label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-active" data-item-id="{{item.id}}" data-field="active" {{checked item.active}} /> Ativa</label>
+              {{#if item.effectsSummary}}<p class="twbv-item-effect">Efeitos: {{item.effectsSummary}}</p>{{/if}}
+            </article>
+          {{else}}<p class="twbv-adv-empty">Nenhuma vantagem cadastrada.</p>{{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="desvantagens">
+      <div class="twbv-panel twbv-ornate">
+        <div class="twbv-item-tab-header"><h2>Desvantagens</h2><button type="button" class="twbv-item-create" data-type="desvantagem"><i class="fas fa-plus"></i></button></div>
+        <div class="twbv-item-card-list">
+          {{#each desvantagens as |item|}}
+            <article class="twbv-item-card">
+              <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
+              <div class="twbv-item-card-meta">Severidade: {{#if item.severity}}{{item.severity}}{{else}}-{{/if}}</div>
+              <label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-active" data-item-id="{{item.id}}" data-field="active" {{checked item.active}} /> Ativa</label>
+              {{#if item.effectsSummary}}<p class="twbv-item-effect">Efeitos: {{item.effectsSummary}}</p>{{/if}}
+            </article>
+          {{else}}<p class="twbv-adv-empty">Nenhuma desvantagem cadastrada.</p>{{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="tab" data-group="primary" data-tab="equipamento">
+      <div class="twbv-panel twbv-ornate">
+        <div class="twbv-item-tab-header"><h2>Equipamento</h2><div class="twbv-item-tab-adders"><button type="button" class="twbv-item-create" data-type="equipamento">Item</button><button type="button" class="twbv-item-create" data-type="arma">Arma</button><button type="button" class="twbv-item-create" data-type="armadura">Armadura</button></div></div>
+        {{#if activeBonuses.length}}<div class="twbv-active-bonuses"><h3>Bônus ativos</h3>{{#each activeBonuses as |bonus|}}<p><strong>{{bonus.name}}</strong>: {{bonus.summary}}</p>{{/each}}</div>{{/if}}
+        <div class="twbv-item-card-list">
+          {{#each equipamentos as |item|}}
+            <article class="twbv-item-card">
+              <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
+              <div class="twbv-item-card-meta">{{item.typeLabel}} • Qtd {{item.quantity}} • Peso {{item.weight}} • Custo {{item.cost}}</div>
+              <div class="twbv-item-toggle-row"><label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-active" data-item-id="{{item.id}}" data-field="active" {{checked item.active}} /> Ativo</label><label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-equipped" data-item-id="{{item.id}}" data-field="equipped" {{checked item.equipped}} /> Equipado</label></div>
+              {{#if item.damage}}<p class="twbv-item-effect">Dano {{item.damage}} | Alcance {{item.range}} | Bônus {{item.bonus}}</p>{{/if}}
+              {{#if item.protection}}<p class="twbv-item-effect">Proteção {{item.protection}} | Penalidade {{item.penalty}}</p>{{/if}}
+              {{#if item.effectsSummary}}<p class="twbv-item-effect">Efeitos: {{item.effectsSummary}}</p>{{/if}}
+            </article>
+          {{else}}<p class="twbv-adv-empty">Nenhum equipamento cadastrado.</p>{{/each}}
+        </div>
+      </div>
+    </div>
     <div class="tab" data-group="primary" data-tab="poderes"><div class="twbv-panel twbv-ornate"><h2>Poderes</h2><p>Em construção.</p></div></div>
     <div class="tab" data-group="primary" data-tab="historia"><div class="twbv-panel twbv-ornate"><h2>História</h2><p>Em construção.</p></div></div>
     <div class="tab" data-group="primary" data-tab="avancos">

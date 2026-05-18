@@ -1,6 +1,7 @@
 {
   "Actor": {
     "types": [
+      "personagem",
       "despertos",
       "semi-despertos",
       "sombras"
@@ -64,6 +65,73 @@
       "templates": [
         "base"
       ]
+    },
+    "personagem": {
+      "templates": [
+        "base"
+      ]
+    }
+  },
+  "Item": {
+    "types": [
+      "vantagem",
+      "desvantagem",
+      "equipamento",
+      "arma",
+      "armadura"
+    ],
+    "templates": {
+      "base": {
+        "active": true,
+        "description": "",
+        "effectsSummary": ""
+      },
+      "ranked": {
+        "tier": "",
+        "severity": ""
+      },
+      "inventory": {
+        "quantity": 1,
+        "weight": 0,
+        "cost": 0,
+        "equipped": false,
+        "tags": ""
+      }
+    },
+    "vantagem": {
+      "templates": [
+        "base",
+        "ranked"
+      ]
+    },
+    "desvantagem": {
+      "templates": [
+        "base",
+        "ranked"
+      ]
+    },
+    "equipamento": {
+      "templates": [
+        "base",
+        "inventory"
+      ]
+    },
+    "arma": {
+      "templates": [
+        "base",
+        "inventory"
+      ],
+      "damage": "",
+      "range": "",
+      "bonus": ""
+    },
+    "armadura": {
+      "templates": [
+        "base",
+        "inventory"
+      ],
+      "protection": "",
+      "penalty": ""
     }
   }
 }

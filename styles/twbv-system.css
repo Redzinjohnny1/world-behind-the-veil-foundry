@@ -1229,14 +1229,13 @@
   color: #f5e6b8;
 }
 
-/* Force WBTW skin only for Nova/Editar Vantagem dialog */
+/* Nova/Editar Vantagem dialog: force full WBTW theme and remove parchment/white wrappers */
 .window-app.wbtv-vantagem-dialog .window-content,
 .wbtv-vantagem-dialog .window-content,
 .wbtv-vantagem-dialog form,
 .wbtv-vantagem-dialog .dialog-content {
   background: linear-gradient(180deg, #1a1028 0%, #07040d 100%) !important;
   background-image: none !important;
-  background-color: transparent !important;
   color: #f4e6ba !important;
 }
 

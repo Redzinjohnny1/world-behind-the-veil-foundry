@@ -235,8 +235,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "destreza", label: "Destreza" },
       { key: "constituicao", label: "Constituição" },
       { key: "inteligencia", label: "Inteligência" },
-      { key: "intuicao", label: "Intuição" },
-      { key: "vontade", label: "Vontade" }
+      { key: "influencia", label: "Influência" },
+      { key: "intuicao", label: "Intuição" }
     ];
     context.skillAttributeOptions = SKILL_ATTRIBUTES;
     context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
@@ -366,7 +366,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
-    const keys = ["forca", "destreza", "constituicao", "inteligencia", "intuicao", "vontade"];
+    const keys = ["forca", "destreza", "constituicao", "inteligencia", "influencia", "intuicao"];
     for (const key of keys) {
       atributos[key] = atributos[key] ?? {};
       atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
@@ -467,23 +467,30 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
-      if (event.target?.matches?.('input[name="system.eco"]')) return;
       event.preventDefault();
+      if (event.shiftKey) {
+        await updateEcoValue(1);
+        return;
+      }
+      if (event.target?.matches?.('input[name="system.eco"]')) return;
       await updateEcoValue(-1, { triggerEffect: true });
     });
 
     html.find(".twbv-eco-spend-trigger").on("keydown", async (event) => {
+      if (event.shiftKey) return;
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
+      if (event.shiftKey) {
+        await updateEcoValue(1);
+        return;
+      }
       await updateEcoValue(-1, { triggerEffect: true });
     });
 
     const updateManaValue = async (delta) => {
       const manaInput = html.find('input[name="system.mana.value"]')[0];
       const manaAtual = Number(this.actor.system?.mana?.value ?? 0);
-      const manaMax = Number(this.actor.system?.mana?.max ?? 3);
-      const limitedMax = Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3;
-      const novoMana = Math.max(0, Math.min(limitedMax, manaAtual + delta));
+      const novoMana = Math.max(0, manaAtual + delta);
       if (novoMana === manaAtual) return;
       if (manaInput) manaInput.value = String(novoMana);
       await this.actor.update({ "system.mana.value": novoMana });
@@ -492,6 +499,25 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".mana-control").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
       await updateManaValue(adjust);
+    });
+
+    html.find(".twbv-mana-trigger").on("click", async (event) => {
+      event.preventDefault();
+      if (event.shiftKey) {
+        await updateManaValue(1);
+        return;
+      }
+      await updateManaValue(-1);
+    });
+
+    html.find(".twbv-mana-trigger").on("keydown", async (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      if (event.shiftKey) {
+        await updateManaValue(1);
+        return;
+      }
+      await updateManaValue(-1);
     });
 
     const openSkillRollDialog = async (event) => {
@@ -504,8 +530,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         { key: "destreza", label: "Destreza" },
         { key: "constituicao", label: "Constituição" },
         { key: "inteligencia", label: "Inteligência" },
-        { key: "intuicao", label: "Intuição" },
-        { key: "vontade", label: "Vontade" }
+        { key: "influencia", label: "Influência" },
+        { key: "intuicao", label: "Intuição" }
       ];
 
       const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
@@ -557,8 +583,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         destreza: "Destreza",
         constituicao: "Constituição",
         inteligencia: "Inteligência",
-        intuicao: "Intuição",
-        vontade: "Vontade"
+        influencia: "Influência",
+        intuicao: "Intuição"
       };
       const attributeKey = String(event.currentTarget.dataset.attr ?? "");
       if (!attributeKey) return;

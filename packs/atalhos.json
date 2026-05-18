@@ -1,0 +1,47 @@
+[
+  {
+    "_id": "atalhos-mana-eco",
+    "name": "Atalho: Mana e Eco (Shift)",
+    "type": "base",
+    "img": "icons/sundries/scrolls/scroll-bound-blue.webp",
+    "system": {},
+    "ownership": {
+      "default": 0
+    },
+    "flags": {},
+    "folder": null,
+    "sort": 0,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    },
+    "pages": [
+      {
+        "_id": "page-mana-eco",
+        "name": "Uso rápido de recursos",
+        "type": "text",
+        "title": {
+          "show": true,
+          "level": 1
+        },
+        "text": {
+          "format": 1,
+          "content": "<h2>Atalhos de Recursos</h2><p><strong>MANA</strong>: clique no nome <em>MANA</em> para reduzir 1 ponto de Mana.</p><p><strong>SHIFT + clique em MANA</strong>: adiciona 1 ponto de Mana.</p><p><strong>SHIFT + clique em ECO</strong>: adiciona 1 ponto de Mana.</p><p>Obs.: a Mana respeita limite mínimo 0 e máximo <code>system.mana.max</code>.</p>"
+        },
+        "image": {},
+        "video": {},
+        "src": null,
+        "system": {},
+        "ownership": {
+          "default": -1
+        },
+        "flags": {},
+        "sort": 0
+      }
+    ]
+  }
+]

@@ -914,12 +914,22 @@
 .wbtv-add-adv-dialog {
   border: 1px solid rgba(217, 183, 117, 0.82);
   border-radius: 14px;
-  overflow: hidden;
+  min-height: 360px;
+  overflow: visible;
   box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 26px rgba(149, 96, 224, 0.55), 0 16px 36px rgba(0, 0, 0, 0.7);
 }
 .wbtv-add-adv-dialog .window-header { background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)); border-bottom: 1px solid rgba(217, 183, 117, 0.68); color: #f7e7be; }
-.wbtv-add-adv-dialog .window-content { background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)); }
-.twbv-add-adv-dialog-content .form-group { margin-bottom: 10px; }
+.wbtv-add-adv-dialog .window-content,
+.wbtv-advance-dialog .window-content {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99));
+  overflow: visible;
+}
+.wbtv-add-adv-dialog form,
+.wbtv-advance-dialog form {
+  display: grid;
+  gap: 14px;
+  min-height: 100%;
+}
 .twbv-add-adv-dialog-content label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
 .twbv-add-adv-dialog-content select, .twbv-add-adv-dialog-content textarea { width: 100%; border-radius: 8px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 7px 9px; }
 .twbv-add-adv-dialog-content select:focus, .twbv-add-adv-dialog-content textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }
@@ -947,7 +957,7 @@
 
 .wbtv-advance-dialog textarea,
 .wbtv-add-adv-dialog textarea {
-  min-height: 90px;
+  min-height: 110px;
   resize: vertical;
   background: rgba(10, 7, 20, 0.98);
   color: #f8edcc;
@@ -962,3 +972,7 @@
 }
 
 .wbtv-add-adv-dialog .dialog-buttons button { border-radius: 8px; border: 1px solid rgba(217, 183, 117, 0.72); color: #ffedc5; background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)); }
+.wbtv-add-adv-dialog .dialog-buttons,
+.wbtv-advance-dialog .dialog-buttons {
+  margin-top: 12px;
+}

@@ -261,32 +261,38 @@ class TWBVPersonagemSheet extends ActorSheet {
           </div>
         </form>`;
 
-      const dialog = new Dialog({
-        title: "Adicionar avanço",
-        content: dialogContent,
-        buttons: {
-          confirm: {
-            label: "Confirmar",
-            callback: async (dialogHtml) => {
-              const root = resolveDialogRoot(dialogHtml);
-              const tipo = String(root?.querySelector('select[name="tipo"]')?.value ?? "").trim();
-              if (!tipo) {
-                ui.notifications?.warn("Selecione um tipo de avanço.");
-                return;
+      const dialog = new Dialog(
+        {
+          title: "Adicionar avanço",
+          content: dialogContent,
+          buttons: {
+            confirm: {
+              label: "Confirmar",
+              callback: async (dialogHtml) => {
+                const root = resolveDialogRoot(dialogHtml);
+                const tipo = String(root?.querySelector('select[name="tipo"]')?.value ?? "").trim();
+                if (!tipo) {
+                  ui.notifications?.warn("Selecione um tipo de avanço.");
+                  return;
+                }
+                const descricao = String(root?.querySelector('textarea[name="descricao"]')?.value ?? "").trim();
+                const avanços = Array.from(this.actor.system.avancos ?? []);
+                const numero = avanços.length + 1;
+                avanços.push({ numero, tipo, descricao });
+                await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
               }
-              const descricao = String(root?.querySelector('textarea[name="descricao"]')?.value ?? "").trim();
-              const avanços = Array.from(this.actor.system.avancos ?? []);
-              const numero = avanços.length + 1;
-              avanços.push({ numero, tipo, descricao });
-              await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
+            },
+            cancel: {
+              label: "Cancelar"
             }
           },
-          cancel: {
-            label: "Cancelar"
-          }
+          default: "confirm"
         },
-        default: "confirm"
-      });
+        {
+          width: 520,
+          height: "auto"
+        }
+      );
       dialog.render(true);
       Hooks.once("renderDialog", (app, renderedHtml) => {
         if (app === dialog) applyDialogWindowClass(renderedHtml?.[0] ?? renderedHtml, "wbtv-add-adv-dialog");

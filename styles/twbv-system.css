@@ -15,7 +15,7 @@
 .twbv.sheet.actor .window-content {
   background-image:
     linear-gradient(rgba(5,3,12,0.78), rgba(5,3,12,0.88)),
-    url("../assets/ui/sheet-background-veil.png");
+    url("/systems/world-behind-the-veil/assets/ui/sheet-background-veil.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

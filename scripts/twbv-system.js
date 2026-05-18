@@ -168,6 +168,9 @@ class TWBVPersonagemSheet extends ActorSheet {
   getData(options = {}) {
     const context = super.getData(options);
     context.system = this.actor?.system ?? context.system ?? {};
+    context.system.mana = context.system.mana ?? {};
+    context.system.mana.value = Number(context.system.mana.value ?? 0);
+    context.system.mana.max = Number(context.system.mana.max ?? 3);
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -319,6 +322,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       delete pericias[i].passo;
     }
 
+    const mana = this.actor.system.mana ?? {};
+    const manaValue = Number(mana.value ?? 0);
+    const manaMax = Number(mana.max ?? 3);
+    this.actor.system.mana = {
+      value: Number.isFinite(manaValue) ? Math.max(0, manaValue) : 0,
+      max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
+    };
+
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
@@ -434,6 +445,22 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
       await updateEcoValue(-1, { triggerEffect: true });
+    });
+
+    const updateManaValue = async (delta) => {
+      const manaInput = html.find('input[name="system.mana.value"]')[0];
+      const manaAtual = Number(this.actor.system?.mana?.value ?? 0);
+      const manaMax = Number(this.actor.system?.mana?.max ?? 3);
+      const limitedMax = Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3;
+      const novoMana = Math.max(0, Math.min(limitedMax, manaAtual + delta));
+      if (novoMana === manaAtual) return;
+      if (manaInput) manaInput.value = String(novoMana);
+      await this.actor.update({ "system.mana.value": novoMana });
+    };
+
+    html.find(".mana-control").on("click", async (event) => {
+      const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
+      await updateManaValue(adjust);
     });
 
     const openSkillRollDialog = async (event) => {

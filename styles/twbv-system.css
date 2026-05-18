@@ -15,8 +15,8 @@
 .twbv.sheet.actor .window-content {
   background:
     radial-gradient(circle at 50% -10%, rgba(115, 80, 178, 0.32), transparent 45%),
-    linear-gradient(rgba(8, 6, 15, 0.9), rgba(7, 5, 13, 0.96)),
-    url("../references/sheet-reference.jpg");
+    linear-gradient(rgba(3, 2, 8, 0.88), rgba(3, 2, 8, 0.93)),
+    url("../assets/actor-sheet-bg-dark-fantasy-16x9.svg");
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;

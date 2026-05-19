@@ -1159,6 +1159,12 @@
   letter-spacing: .08em;
   text-transform: uppercase;
 }
+
+.wbtv-add-skill-dialog .twbv-skill-level-chip.rank-novato { color: #8cc7ff; border-color: rgba(140, 199, 255, .45); background: rgba(23, 52, 86, .52); }
+.wbtv-add-skill-dialog .twbv-skill-level-chip.rank-treinado { color: #aaf8ba; border-color: rgba(126, 236, 151, .45); background: rgba(20, 72, 41, .52); }
+.wbtv-add-skill-dialog .twbv-skill-level-chip.rank-experiente { color: #d2adff; border-color: rgba(182, 125, 255, .45); background: rgba(56, 26, 90, .52); }
+.wbtv-add-skill-dialog .twbv-skill-level-chip.rank-especialista { color: #fce1a9; border-color: rgba(217, 183, 117, .58); background: rgba(84, 53, 20, .52); }
+.wbtv-add-skill-dialog .twbv-skill-level-chip.rank-mestre { color: #ff9ab2; border-color: rgba(255, 98, 149, .56); background: rgba(99, 25, 45, .56); }
 .wbtv-add-skill-dialog select option {
   background: #130d24;
   color: #f6e7c1;

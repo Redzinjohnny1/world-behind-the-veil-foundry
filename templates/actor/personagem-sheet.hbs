@@ -91,7 +91,10 @@
         <section class="twbv-panel twbv-ornate">
           <div class="twbv-pericias-header">
             <h2>Perícias</h2>
-            <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
+            <div class="twbv-pericias-actions">
+              <button type="button" class="twbv-sort-skills {{#if skillSortActive}}is-active{{/if}}" title="{{#if skillSortActive}}Restaurar ordem anterior{{else}}Ordenar perícias em ordem alfabética{{/if}}"><i class="fas fa-sort-alpha-down"></i></button>
+              <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
+            </div>
           </div>
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}

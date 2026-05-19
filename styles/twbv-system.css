@@ -648,17 +648,17 @@
   50% { transform: scale(1.03); filter: drop-shadow(0 0 12px rgba(217, 183, 117, 0.5)); }
 }
 
- .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 0; }
+ .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 2px; }
 .twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-skill-row {
   position: relative;
-  width: 100%;
+  width: 90%;
   aspect-ratio: 1536 / 1024;
   min-height: 0;
   height: auto;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   display: block;
   cursor: grab;
   background: url("../assets/background/pericias.png") center center / 100% 100% no-repeat !important;
@@ -705,7 +705,7 @@
   width: 11%;
   min-height: 0;
   height: 38%;
-  transform: scale(1.08);
+  transform: scale(0.92);
   transform-origin: center;
   border: 0;
   background: transparent;
@@ -715,8 +715,8 @@
 }
 .twbv-toggle-skill-lock, .twbv-remove-skill {
   top: 34%;
-  width: 3.4%;
-  height: 32%;
+  width: 3.1%;
+  height: 29%;
   border-radius: 6px;
   border: 0;
   background: transparent;
@@ -808,11 +808,11 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { aspect-ratio: 1536 / 1024; min-height: 0; height: auto; padding: 0; }
+  .twbv-skill-row { width: 90%; aspect-ratio: 1536 / 1024; min-height: 0; height: auto; padding: 0; margin: 0 auto; }
   .twbv-skill-roll { left: 2.4%; top: 22%; width: 10%; height: 56%; }
   .twbv-edit-skill-config { left: 13%; top: 15%; width: 52%; height: 70%; }
   .twbv-skill-name { font-size: 1.1rem; }
-  .twbv-edit-skill-roll { top: 32%; right: 16%; width: 12%; height: 36%; transform: scale(1.02); }
+  .twbv-edit-skill-roll { top: 32%; right: 16%; width: 12%; height: 36%; transform: scale(0.92); }
   .twbv-toggle-skill-lock { top: 35%; right: 8.4%; width: 4.4%; height: 30%; }
   .twbv-remove-skill { top: 35%; right: 2.8%; width: 4.4%; height: 30%; }
 

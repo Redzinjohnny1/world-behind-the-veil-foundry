@@ -1452,3 +1452,23 @@
 }
 
 @media (max-width: 900px) { .twbv-header-layout { grid-template-columns: 1fr; } .twbv-header-resources { grid-template-columns: 1fr 1fr; grid-template-rows:none; } }
+
+.twbv-attribute-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.twbv-attribute-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex: 0 0 34px;
+  border-radius: 6px;
+  filter: drop-shadow(0 0 6px rgba(217, 183, 117, 0.45));
+}
+
+.twbv-attribute-card--forca h3 {
+  display: flex;
+  align-items: center;
+}

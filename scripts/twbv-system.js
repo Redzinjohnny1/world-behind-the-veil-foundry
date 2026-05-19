@@ -535,16 +535,13 @@ class TWBVPersonagemSheet extends ActorSheet {
       ];
 
       const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
+      const bonusDieOptions = ['d4','d6','d8','d10','d12'].map((die) => `<option value="${die}">${die}</option>`).join("");
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
-        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><label>Bônus manual<input type="number" name="manualBonus" value="0" step="1" /></label></div>`,
-        classes: ["wbtv-roll-skill-dialog"],
-        render: (dialog, html) => {
-          applyDialogWindowClass(html ?? dialog, "wbtv-roll-skill-dialog");
-        },
+        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><div class="twbv-roll-inline"><label>Dado extra<select name="bonusDie"><option value="">Nenhum</option>${bonusDieOptions}</select></label><label>Bônus flat<input type="number" name="manualBonus" value="0" step="1" /></label></div></div>`,
         buttons: {
-          roll: {
-            label: "Rolar",
+          accept: {
+            label: "Aceitar",
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const attrKey = String(root?.querySelector('select[name="attr"]')?.value ?? "forca");
@@ -557,11 +554,11 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
-              const skillRank = getSkillRank(skillDie, skillBonus);
+              const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
+              const bonusDie = Number(bonusDieValue);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: attr.label,
-                subtitleClass: `twbv-roll-chat__attr-chip ${skillRank.cssClass}`,
+                subtitle: `${attr.label}${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,
@@ -572,16 +569,19 @@ class TWBVPersonagemSheet extends ActorSheet {
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
               });
+              if (Number.isFinite(bonusDie) && bonusDie > 0) {
+                const bonusRoll = await (new Roll(`1d${bonusDie}`)).evaluate();
+                await bonusRoll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: `Dado extra (${skill.nome || `Perícia ${index + 1}`})` });
+              }
             }
           },
           cancel: { label: "Cancelar" }
         },
-        default: "roll"
+        default: "accept"
       }).render(true);
     };
 
     html.find(".twbv-skill-roll").on("click", openSkillRollDialog);
-    html.find(".twbv-edit-skill-roll").on("click", openSkillRollDialog);
 
     html.find(".twbv-attr-roll").on("click", async (event) => {
       const labels = {

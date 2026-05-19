@@ -99,8 +99,10 @@
                 <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><img src="{{pericia.attributeMeta.iconPath}}" class="attribute-icon-img" alt="{{pericia.attributeMeta.label}}"></button>
                 <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">
                   <span class="twbv-skill-name">{{pericia.nome}}</span>
-                  <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}">{{pericia.attributeMeta.label}}</span>
-                  <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
+                  <span class="twbv-skill-meta-line">
+                    <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}">{{pericia.attributeMeta.label}}</span>
+                    <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
+                  </span>
                 </button>
                 <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>
                 <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}"><i class="fas {{#if pericia.locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></button>

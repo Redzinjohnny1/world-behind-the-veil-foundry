@@ -148,7 +148,22 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
+        <footer class="twbv-roll-chat__total" data-base-total="${total}">
+          <span>Resultado:</span>
+          <strong class="twbv-roll-total-base">${totalLabel}</strong>
+        </footer>
+        <div class="twbv-roll-adjust-controls" data-base-total="${total}">
+          <button type="button" class="twbv-roll-add-die" title="Adicionar dado extra">🎲＋</button>
+          <select class="twbv-roll-extra-die" aria-label="Escolher dado extra">
+            <option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option>
+          </select>
+          <input type="number" class="twbv-roll-flat-mod" value="0" step="1" aria-label="Modificador manual" />
+          <button type="button" class="twbv-roll-apply-mod" title="Aplicar modificador">±</button>
+        </div>
+        <div class="twbv-roll-adjust-result" hidden>
+          <div class="twbv-roll-adjust-breakdown"></div>
+          <div class="twbv-roll-adjust-total">Novo Resultado: <strong class="twbv-roll-total-final">${totalLabel}</strong></div>
+        </div>
       </section>`;
 
     const chatMessage = await ChatMessage.create({
@@ -1162,6 +1177,48 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 }
 
+
+
+function twbvApplyRollAdjustments(root) {
+  const card = root?.querySelector?.('.twbv-roll-chat');
+  if (!card) return;
+  const controls = root.querySelector('.twbv-roll-adjust-controls');
+  const baseEl = root.querySelector('.twbv-roll-total-base');
+  const breakdownEl = root.querySelector('.twbv-roll-adjust-breakdown');
+  const resultWrap = root.querySelector('.twbv-roll-adjust-result');
+  const finalEl = root.querySelector('.twbv-roll-total-final');
+  const addBtn = root.querySelector('.twbv-roll-add-die');
+  const dieSel = root.querySelector('.twbv-roll-extra-die');
+  const modInput = root.querySelector('.twbv-roll-flat-mod');
+  const modBtn = root.querySelector('.twbv-roll-apply-mod');
+  if (!controls || !baseEl || !breakdownEl || !resultWrap || !finalEl || !addBtn || !dieSel || !modInput || !modBtn) return;
+
+  const base = Number(controls.dataset.baseTotal ?? baseEl.textContent ?? 0) || 0;
+  let extraDie = 0;
+  let flatMod = 0;
+
+  const refresh = () => {
+    const final = base + extraDie + flatMod;
+    breakdownEl.textContent = `${base} ${extraDie ? `+ ${extraDie}` : '+ 0'} ${flatMod ? (flatMod > 0 ? `+ ${flatMod}` : `- ${Math.abs(flatMod)}`) : '+ 0'} = ${final}`;
+    finalEl.textContent = String(final);
+    resultWrap.hidden = false;
+  };
+
+  addBtn.addEventListener('click', async () => {
+    const die = Number(dieSel.value || 4);
+    const roll = await (new Roll(`1d${die}`)).evaluate();
+    extraDie = Number(roll.total ?? 0);
+    refresh();
+  });
+
+  const applyMod = () => {
+    flatMod = Number.isFinite(Number(modInput.value)) ? Number(modInput.value) : 0;
+    refresh();
+  };
+  modBtn.addEventListener('click', applyMod);
+  modInput.addEventListener('change', applyMod);
+}
+
 Hooks.once("init", () => {
   console.log("[TWBV] Inicializando sistema The World Behind the Veil");
 
@@ -1182,6 +1239,7 @@ Hooks.on("renderChatMessage", (message, html) => {
   if (!root || typeof root.querySelector !== "function") return;
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
+  twbvApplyRollAdjustments(root);
 });
 
 

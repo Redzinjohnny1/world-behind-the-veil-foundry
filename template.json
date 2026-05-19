@@ -23,24 +23,19 @@
         },
         "atributos": {
           "forca": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "destreza": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "constituicao": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "inteligencia": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "intuicao": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "vontade": {
             "passo": 4,

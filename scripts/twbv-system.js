@@ -623,15 +623,15 @@ class TWBVPersonagemSheet extends ActorSheet {
             <label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label>
           </div>
           <div class="twbv-add-skill-bottom-row">
-            <label>Nível de perícia<input type="text" name="skillLevelLabel" value="NOVATO" readonly /></label>
+            <label>Nível de perícia<input type="text" name="skillLevelLabel" class="twbv-skill-level-chip rank-novato" value="NOVATO" readonly /></label>
             <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>d4+0</strong></div>
           </div>
         </form>`,
         classes: ["wbtv-add-skill-dialog"],
         render: (dialog, html) => {
-          const root = html?.[0] ?? html;
+          const root = resolveDialogRoot(html ?? dialog);
           applyDialogWindowClass(root ?? dialog, "wbtv-add-skill-dialog");
-          const form = root?.querySelector?.(".twbv-skill-dialog-form");
+          const form = root?.querySelector?.(".twbv-skill-dialog-form") ?? root?.closest?.(".twbv-skill-dialog-form");
           if (!form) return;
           const skillLevelLabelEl = form.querySelector('input[name="skillLevelLabel"]');
           const dieEl = form.querySelector('select[name="skillDie"]');
@@ -643,7 +643,11 @@ class TWBVPersonagemSheet extends ActorSheet {
             const bonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : 0;
             if (previewEl) previewEl.textContent = buildDieLabel(die, bonus);
             const rank = getSkillRank(die, bonus);
-            if (skillLevelLabelEl) skillLevelLabelEl.value = rank.label;
+            if (skillLevelLabelEl) {
+              skillLevelLabelEl.value = rank.label;
+              skillLevelLabelEl.classList.remove("rank-novato", "rank-treinado", "rank-experiente", "rank-especialista", "rank-mestre");
+              skillLevelLabelEl.classList.add(rank.cssClass);
+            }
           };
 
           dieEl?.addEventListener("change", syncAll);

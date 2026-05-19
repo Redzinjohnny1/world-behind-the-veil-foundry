@@ -1154,6 +1154,11 @@
   font-weight: 700;
   text-align: center;
 }
+.wbtv-add-skill-dialog .twbv-skill-level-chip {
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
 .wbtv-add-skill-dialog select option {
   background: #130d24;
   color: #f6e7c1;

@@ -650,21 +650,56 @@
 
 /* SKILL HUD LOCKED BLOCK: perícias row mapped to pericias.png */
 .twbv.sheet.actor .twbv-skills-grid,
-.window-app.sheet.actor .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 2px; }
-.twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.window-app.sheet.actor .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 6px; }
+.twbv-pericias-header { display: grid; grid-template-columns: 1fr auto; align-items: center; margin-bottom: 8px; }
+.twbv-pericias-header h2 {
+  justify-self: center;
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #f4ddb0;
+  text-shadow: 0 0 10px rgba(217, 183, 117, 0.45), 0 0 14px rgba(154, 123, 255, 0.28);
+  padding: 2px 6px 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.twbv-pericias-actions { display: inline-flex; align-items: center; gap: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-sort-skills {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(158, 126, 225, 0.65);
+  background: radial-gradient(circle at 30% 25%, rgba(130, 86, 215, 0.58), rgba(24, 18, 44, 0.96));
+  color: #e8daf8;
+  font-size: .92rem;
+  box-shadow: 0 0 8px rgba(113, 75, 184, .42);
+}
+.twbv-sort-skills.is-active {
+  border-color: rgba(217, 183, 117, 0.78);
+  color: #ffe8b0;
+  box-shadow: 0 0 10px rgba(217, 183, 117, .42);
+}
 .twbv.sheet.actor .twbv-skill-row,
 .window-app.sheet.actor .twbv-skill-row {
   position: relative;
   width: 100%;
-  height: 178px;
-  min-height: 178px;
-  max-height: 178px;
+  height: 86px;
+  min-height: 86px;
+  max-height: 86px;
   padding: 0;
   margin: 0;
   display: block;
   cursor: grab;
-  background: url("../assets/background/pericias.png") center center / 100% 100% no-repeat !important;
+  background:
+    linear-gradient(120deg, rgba(130, 80, 210, 0.14), rgba(40, 24, 72, 0.08) 35%, rgba(11, 9, 24, 0.85) 100%),
+    rgba(9, 8, 24, 0.92) !important;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(138, 95, 211, 0.2), 0 0 12px rgba(62, 34, 104, 0.24);
   overflow: hidden;
 }
 .twbv-skill-row.is-dragging { opacity: .45; }
@@ -672,73 +707,90 @@
 .window-app.sheet.actor .twbv-skill-row > * { position: absolute; }
 .twbv.sheet.actor .twbv-skill-roll,
 .window-app.sheet.actor .twbv-skill-roll {
-  left: 2.2%;
-  top: 18%;
-  width: 11.8%;
-  height: 67%;
+  left: 1.8%;
+  top: 14%;
+  width: 8.2%;
+  height: 72%;
   border: 0;
   background: transparent;
-  border-radius: 50%;
+  border-radius: 10px;
   padding: 0;
+  background: radial-gradient(circle at center, rgba(132, 86, 210, 0.34), rgba(19, 14, 38, 0.84));
+  border: 1px solid rgba(140, 105, 204, 0.45);
 }
 .twbv-skill-roll .attribute-icon-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(195, 141, 255, 0.65)) brightness(1.1);
 }
 .twbv.sheet.actor .twbv-edit-skill-config,
 .window-app.sheet.actor .twbv-edit-skill-config {
-  left: 15%;
-  top: 16%;
-  width: 52%;
-  height: 68%;
-  text-align: left;
+  left: 11.6%;
+  top: 15%;
+  width: 55%;
+  height: 72%;
+  text-align: center;
   border: 0;
   background: transparent;
   color: var(--twbv-text);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 0;
+  gap: 3px;
+  padding: 9px 12px 7px;
+  border: 1px solid rgba(217, 183, 117, 0.34);
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(30, 22, 56, 0.75), rgba(17, 13, 34, 0.68));
 }
 .twbv.sheet.actor .twbv-skill-name,
-.window-app.sheet.actor .twbv-skill-name { font-size: 1.95rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
+.window-app.sheet.actor .twbv-skill-name { font-size: 1.12rem; font-weight: 700; color: #f7e9c4; line-height: 1.04; margin-top: 4px; }
+.twbv.sheet.actor .twbv-skill-meta,
+.window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; width: 100%; margin-top: 4px; justify-content: center; }
 .twbv.sheet.actor .twbv-skill-attr,
-.window-app.sheet.actor .twbv-skill-attr { font-size: 1.08rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
+.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 0; transform: none; }
 .twbv.sheet.actor .twbv-skill-rank,
-.window-app.sheet.actor .twbv-skill-rank { font-size: .94rem; font-weight: 700; letter-spacing: .09em; border-radius: 999px; padding: 2px 10px; border: 1px solid transparent; }
+.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: none; }
 .twbv.sheet.actor .twbv-edit-skill-roll,
 .window-app.sheet.actor .twbv-edit-skill-roll {
-  top: 29%;
-  right: 17.4%;
-  width: 12%;
+  top: 18%;
+  right: 14.7%;
+  width: 14%;
   min-height: 0;
-  height: 42%;
-  transform: scale(1.24);
+  height: 62%;
+  transform: scale(1);
   transform-origin: center;
-  border: 0;
-  background: transparent;
+  border: 1px solid rgba(217, 183, 117, 0.4);
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 35%, rgba(120, 72, 196, 0.6), rgba(35, 23, 68, 0.94) 68%, rgba(18, 12, 35, 0.96));
   color: #ffedc8;
   font-weight: 700;
-  letter-spacing: .03em;
+  font-size: 1.1rem;
+  letter-spacing: .02em;
+  box-shadow: 0 0 8px rgba(122, 82, 196, 0.4);
 }
 .twbv.sheet.actor .twbv-toggle-skill-lock, .twbv.sheet.actor .twbv-remove-skill,
 .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill {
-  top: 31%;
-  width: 4.2%;
-  height: 38%;
+  top: 18%;
+  width: 5%;
+  height: 62%;
   border-radius: 6px;
-  border: 0;
-  background: transparent;
+  border: 1px solid rgba(129, 102, 184, 0.45);
+  background: rgba(15, 12, 28, 0.82);
   color: #e8daf8;
-  font-size: 1.02rem;
+  font-size: .94rem;
 }
 .twbv.sheet.actor .twbv-toggle-skill-lock,
 .window-app.sheet.actor .twbv-toggle-skill-lock { right: 8.8%; }
 .twbv.sheet.actor .twbv-remove-skill,
 .window-app.sheet.actor .twbv-remove-skill { right: 3.2%; }
+.twbv-skill-levels-panel { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(217, 183, 117, 0.35); }
+.twbv-skill-levels-title { margin: 0 0 10px; text-align: center; font-size: 1.02rem; letter-spacing: .12em; color: #dcb66e; }
+.twbv-skill-levels-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.twbv-skill-level-card { border: 1px solid rgba(217, 183, 117, 0.35); border-radius: 10px; padding: 8px 6px; background: rgba(13, 10, 28, 0.75); text-align: center; }
+.twbv-skill-level-card h4 { margin: 0 0 6px; font-size: .9rem; letter-spacing: .05em; }
+.twbv-skill-level-card p { margin: 0; font-size: .72rem; color: #d8d2ea; line-height: 1.35; }
 .twbv-skills-empty {
   border: 1px dashed rgba(154, 123, 255, 0.45);
   border-radius: 8px;
@@ -823,17 +875,17 @@
 
 @media (max-width: 720px) {
   .twbv.sheet.actor .twbv-skill-row,
-  .window-app.sheet.actor .twbv-skill-row { height: 142px; min-height: 142px; max-height: 142px; padding: 0; }
+  .window-app.sheet.actor .twbv-skill-row { height: 92px; min-height: 92px; max-height: 92px; padding: 0; }
   .twbv.sheet.actor .twbv-skill-roll,
-  .window-app.sheet.actor .twbv-skill-roll { left: 2.3%; top: 18%; width: 11.6%; height: 67%; }
+  .window-app.sheet.actor .twbv-skill-roll { left: 2%; top: 14%; width: 10%; height: 72%; }
   .twbv.sheet.actor .twbv-edit-skill-config,
-  .window-app.sheet.actor .twbv-edit-skill-config { left: 15.2%; top: 16%; width: 51%; height: 68%; }
+  .window-app.sheet.actor .twbv-edit-skill-config { left: 12.8%; top: 14%; width: 54%; height: 72%; }
   .twbv.sheet.actor .twbv-skill-name,
-  .window-app.sheet.actor .twbv-skill-name { font-size: 1.5rem; }
+  .window-app.sheet.actor .twbv-skill-name { font-size: 1.02rem; }
   .twbv.sheet.actor .twbv-edit-skill-roll,
-  .window-app.sheet.actor .twbv-edit-skill-roll { top: 29%; right: 17%; width: 12.5%; height: 42%; transform: scale(1.12); }
+  .window-app.sheet.actor .twbv-edit-skill-roll { top: 18%; right: 14.8%; width: 13.8%; height: 62%; transform: scale(1); }
   .twbv.sheet.actor .twbv-toggle-skill-lock, .twbv.sheet.actor .twbv-remove-skill,
-  .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill { top: 31%; width: 4.5%; height: 38%; }
+  .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill { top: 18%; width: 5%; height: 62%; }
   .twbv.sheet.actor .twbv-toggle-skill-lock,
   .window-app.sheet.actor .twbv-toggle-skill-lock { right: 8.7%; }
   .twbv.sheet.actor .twbv-remove-skill,
@@ -1047,6 +1099,8 @@
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 26px rgba(149, 96, 224, 0.55), 0 16px 36px rgba(0, 0, 0, 0.7);
+  width: min(760px, 92vw);
+  min-width: 560px;
 }
 
 .wbtv-add-skill-dialog .window-header {
@@ -1071,6 +1125,7 @@
   box-shadow: inset 0 0 0 1px rgba(149, 96, 224, 0.2), inset 0 0 16px rgba(149, 96, 224, 0.14);
   display: grid;
   gap: 8px;
+  text-transform: uppercase;
 }
 
 .wbtv-add-skill-dialog label {
@@ -1078,6 +1133,8 @@
   font-weight: 600;
   display: grid;
   gap: 4px;
+  font-size: .96rem;
+  letter-spacing: .03em;
 }
 
 .wbtv-add-skill-dialog input,
@@ -1087,6 +1144,71 @@
   border: 1px solid rgba(149, 96, 224, 0.7);
   background: rgba(11, 8, 20, 0.96);
   color: #f8edcc;
+  font-size: 1.05rem;
+  padding: 6px 10px;
+}
+.wbtv-add-skill-dialog input[readonly] {
+  background: rgba(14, 10, 28, 0.98);
+  border-color: rgba(217, 183, 117, 0.6);
+  color: #f7e7be;
+  font-weight: 700;
+  text-align: center;
+}
+.wbtv-add-skill-dialog .twbv-skill-level-chip {
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.wbtv-add-skill-dialog select option {
+  background: #130d24;
+  color: #f6e7c1;
+}
+
+.wbtv-add-skill-dialog .twbv-add-skill-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.wbtv-add-skill-dialog .twbv-skill-preview {
+  margin-top: 0;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  min-height: 74px;
+}
+
+.wbtv-add-skill-dialog .twbv-skill-preview span {
+  color: #d8c39a;
+  font-size: .9rem;
+  letter-spacing: .08em;
+}
+
+.wbtv-add-skill-dialog .twbv-skill-preview strong {
+  min-width: 130px;
+  text-align: center;
+  font-size: 2rem;
+  color: #f9ebc6;
+  border: 1px solid rgba(160, 123, 230, 0.55);
+  border-radius: 12px;
+  padding: 4px 12px;
+  background: radial-gradient(circle at 50% 35%, rgba(121, 81, 199, 0.6), rgba(35, 23, 68, 0.94) 68%, rgba(18, 12, 35, 0.96));
+}
+.wbtv-add-skill-dialog .twbv-add-skill-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+.wbtv-add-skill-dialog .twbv-add-skill-bottom-row > label {
+  min-height: 74px;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  border-radius: 10px;
+  padding: 8px 10px;
+  align-content: center;
 }
 
 .wbtv-add-skill-dialog input:hover,

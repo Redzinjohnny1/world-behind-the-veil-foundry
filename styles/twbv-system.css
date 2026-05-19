@@ -1667,3 +1667,23 @@
   color: #f8edcc;
   padding: 6px 10px;
 }
+
+.wbtv-roll-adjust-dialog {
+  border: 1px solid rgba(217, 183, 117, 0.72);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.wbtv-roll-adjust-dialog .window-header {
+  background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99));
+  border-bottom: 1px solid rgba(217, 183, 117, 0.68);
+  color: #f7e7be;
+}
+.wbtv-roll-adjust-dialog select option {
+  background: #11091e;
+  color: #f8edcc;
+}
+.wbtv-roll-adjust-dialog select option:checked,
+.wbtv-roll-adjust-dialog select option:selected {
+  background: linear-gradient(180deg, rgba(88, 66, 176, 0.95), rgba(44, 74, 148, 0.96));
+  color: #fff2cc;
+}

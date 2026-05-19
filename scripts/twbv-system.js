@@ -1190,6 +1190,18 @@ function twbvApplyRollAdjustments(root) {
   if (!controls || !baseEl || !breakdownEl || !resultWrap || !finalEl || !addBtn) return;
 
   const base = Number(controls.dataset.baseTotal ?? baseEl.textContent ?? 0) || 0;
+  let extraTotal = Number(controls.dataset.extraTotal ?? 0) || 0;
+  let modTotal = Number(controls.dataset.modTotal ?? 0) || 0;
+
+  const refresh = () => {
+    const final = base + extraTotal + modTotal;
+    const modLabel = modTotal > 0 ? `+ ${modTotal}` : modTotal < 0 ? `- ${Math.abs(modTotal)}` : '+ 0';
+    breakdownEl.textContent = `${base} + ${extraTotal} ${modLabel} = ${final}`;
+    finalEl.textContent = String(final);
+    resultWrap.hidden = false;
+    controls.dataset.extraTotal = String(extraTotal);
+    controls.dataset.modTotal = String(modTotal);
+  };
 
   addBtn.addEventListener('click', () => {
     const dialogContent = `
@@ -1213,6 +1225,9 @@ function twbvApplyRollAdjustments(root) {
       title: 'Ajustar resultado da rolagem',
       content: dialogContent,
       classes: ['wbtv-roll-adjust-dialog'],
+      render: (dialog, html) => {
+        applyDialogWindowClass(html ?? dialog, 'wbtv-roll-adjust-dialog');
+      },
       buttons: {
         apply: {
           label: 'Aplicar',
@@ -1231,11 +1246,9 @@ function twbvApplyRollAdjustments(root) {
               }
             }
 
-            const final = base + extraDie + flatMod;
-            const modLabel = flatMod > 0 ? `+ ${flatMod}` : flatMod < 0 ? `- ${Math.abs(flatMod)}` : '+ 0';
-            breakdownEl.textContent = `${base} + ${extraDie} ${modLabel} = ${final}`;
-            finalEl.textContent = String(final);
-            resultWrap.hidden = false;
+            extraTotal += extraDie;
+            modTotal += flatMod;
+            refresh();
           }
         },
         cancel: { label: 'Cancelar' }

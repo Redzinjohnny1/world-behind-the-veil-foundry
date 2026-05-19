@@ -41,7 +41,7 @@
         </section>
 
         <section class="twbv-panel twbv-ornate mana-panel resource-panel">
-          <h2 class="twbv-mana-trigger" role="button" tabindex="0" aria-label="Gastar 1 Mana">MANA</h2>
+          <h2>MANA</h2>
           <div class="twbv-mana-controls">
             <button type="button" class="mana-control mana-control--minus" data-adjust="-1" aria-label="Reduzir Mana">-</button>
             <div class="mana-orb">
@@ -75,8 +75,8 @@
               <section class="twbv-attribute-card"><h3>Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="destreza" title="Rolar Destreza">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="constituicao" title="Rolar Constituição">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="inteligencia" title="Rolar Inteligência">🎲</button></section>
-              <section class="twbv-attribute-card"><h3>Influência</h3><label>Dado<select name="system.atributos.influencia.passo">{{#select system.atributos.influencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="influencia" title="Rolar Influência">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="intuicao" title="Rolar Intuição">🎲</button></section>
+              <section class="twbv-attribute-card"><h3>Vontade</h3><label>Dado<select name="system.atributos.vontade.passo">{{#select system.atributos.vontade.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="vontade" title="Rolar Vontade">🎲</button></section>
             </div>
           </div>
         </section>
@@ -96,17 +96,13 @@
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
               <div class="twbv-skill-row" data-index="{{i}}" draggable="true">
-                <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><img src="{{pericia.attributeMeta.iconPath}}" class="attribute-icon-img" alt="{{pericia.attributeMeta.label}}"></button>
-                <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">
-                  <span class="twbv-skill-name">{{pericia.nome}}</span>
-                  <span class="twbv-skill-meta-line">
-                    <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}">{{pericia.attributeMeta.label}}</span>
-                    <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
-                  </span>
-                </button>
+                <button type="button" class="twbv-skill-roll" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}">🎲</button>
+                <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">{{pericia.nome}}</button>
                 <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>
-                <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}"><i class="fas {{#if pericia.locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></button>
-                <button type="button" class="twbv-remove-skill" data-index="{{i}}" title="Remover perícia"><i class="fas fa-trash"></i></button>
+                <div class="twbv-skill-controls">
+                  <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}">{{#if pericia.locked}}🔒{{else}}🔓{{/if}}</button>
+                  <button type="button" class="twbv-remove-skill" data-index="{{i}}" title="Remover perícia"><i class="fas fa-trash"></i></button>
+                </div>
               </div>
             {{else}}
               <div class="twbv-skills-empty"></div>

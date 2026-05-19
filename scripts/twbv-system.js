@@ -50,30 +50,6 @@ const SKILL_LEVELS = [
   { dado: 10, bonus: 4 },
   { dado: 12, bonus: 5 }
 ];
-const SKILL_ATTRIBUTES = [
-  { key: "forca", label: "Força", iconPath: "systems/world-behind-the-veil/assets/icons/forca.png" },
-  { key: "destreza", label: "Destreza", iconPath: "systems/world-behind-the-veil/assets/icons/destreza.png" },
-  { key: "constituicao", label: "Constituição", iconPath: "systems/world-behind-the-veil/assets/icons/constituicao.png" },
-  { key: "inteligencia", label: "Inteligência", iconPath: "systems/world-behind-the-veil/assets/icons/inteligencia.png" },
-  { key: "intuicao", label: "Intuição", iconPath: "systems/world-behind-the-veil/assets/icons/intuicao.png" },
-  { key: "influencia", label: "Influência", iconPath: "systems/world-behind-the-veil/assets/icons/influencia.png" }
-];
-
-function getSkillRank(dado, bonus = 0) {
-  const die = SKILL_DICE.includes(Number(dado)) ? Number(dado) : 4;
-  const mod = Number.isFinite(Number(bonus)) ? Number(bonus) : 0;
-  if (die >= 12) return { label: "MESTRE", cssClass: "rank-mestre" };
-  if (die >= 10) return { label: "ESPECIALISTA", cssClass: "rank-especialista" };
-  if (die >= 8) return { label: "EXPERIENTE", cssClass: "rank-experiente" };
-  if (die >= 6) return { label: "TREINADO", cssClass: "rank-treinado" };
-  if (die === 4 && mod <= 1) return { label: "NOVATO", cssClass: "rank-novato" };
-  return { label: "NOVATO", cssClass: "rank-novato" };
-}
-
-function getSkillAttributeMeta(attributeKey) {
-  const fallback = SKILL_ATTRIBUTES[0];
-  return SKILL_ATTRIBUTES.find((attr) => attr.key === attributeKey) ?? fallback;
-}
 
 function buildDieLabel(die, bonus = 0) {
   return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
@@ -234,10 +210,9 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "destreza", label: "Destreza" },
       { key: "constituicao", label: "Constituição" },
       { key: "inteligencia", label: "Inteligência" },
-      { key: "influencia", label: "Influência" },
-      { key: "intuicao", label: "Intuição" }
+      { key: "intuicao", label: "Intuição" },
+      { key: "vontade", label: "Vontade" }
     ];
-    context.skillAttributeOptions = SKILL_ATTRIBUTES;
     context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
       value: index,
       label: buildDieLabel(level.dado, level.bonus),
@@ -258,14 +233,11 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       return {
         ...pericia,
-        atributo: String(pericia?.atributo ?? "forca").toLowerCase(),
         dado,
         bonus,
         locked: Boolean(pericia?.locked),
         levelIndex: SKILL_LEVELS.findIndex((level) => level.dado === dado && level.bonus === bonus),
-        rollLabel: buildDieLabel(dado, bonus),
-        rank: getSkillRank(dado, bonus),
-        attributeMeta: getSkillAttributeMeta(String(pericia?.atributo ?? "forca").toLowerCase())
+        rollLabel: buildDieLabel(dado, bonus)
       };
     });
 
@@ -347,8 +319,6 @@ class TWBVPersonagemSheet extends ActorSheet {
         pericias[i].bonus = closestLevel.bonus;
       }
       pericias[i].locked = Boolean(pericias[i].locked);
-      pericias[i].atributo = String(pericias[i].atributo ?? "forca").toLowerCase();
-      if (!SKILL_ATTRIBUTES.some((attr) => attr.key === pericias[i].atributo)) pericias[i].atributo = "forca";
       delete pericias[i].passo;
     }
 
@@ -365,7 +335,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
-    const keys = ["forca", "destreza", "constituicao", "inteligencia", "influencia", "intuicao"];
+    const keys = ["forca", "destreza", "constituicao", "inteligencia", "intuicao", "vontade"];
     for (const key of keys) {
       atributos[key] = atributos[key] ?? {};
       atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
@@ -466,30 +436,23 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".twbv-eco-spend-trigger").on("click", async (event) => {
-      event.preventDefault();
-      if (event.shiftKey) {
-        await updateEcoValue(1);
-        return;
-      }
       if (event.target?.matches?.('input[name="system.eco"]')) return;
+      event.preventDefault();
       await updateEcoValue(-1, { triggerEffect: true });
     });
 
     html.find(".twbv-eco-spend-trigger").on("keydown", async (event) => {
-      if (event.shiftKey) return;
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
-      if (event.shiftKey) {
-        await updateEcoValue(1);
-        return;
-      }
       await updateEcoValue(-1, { triggerEffect: true });
     });
 
     const updateManaValue = async (delta) => {
       const manaInput = html.find('input[name="system.mana.value"]')[0];
       const manaAtual = Number(this.actor.system?.mana?.value ?? 0);
-      const novoMana = Math.max(0, manaAtual + delta);
+      const manaMax = Number(this.actor.system?.mana?.max ?? 3);
+      const limitedMax = Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3;
+      const novoMana = Math.max(0, Math.min(limitedMax, manaAtual + delta));
       if (novoMana === manaAtual) return;
       if (manaInput) manaInput.value = String(novoMana);
       await this.actor.update({ "system.mana.value": novoMana });
@@ -498,25 +461,6 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".mana-control").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
       await updateManaValue(adjust);
-    });
-
-    html.find(".twbv-mana-trigger").on("click", async (event) => {
-      event.preventDefault();
-      if (event.shiftKey) {
-        await updateManaValue(1);
-        return;
-      }
-      await updateManaValue(-1);
-    });
-
-    html.find(".twbv-mana-trigger").on("keydown", async (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      event.preventDefault();
-      if (event.shiftKey) {
-        await updateManaValue(1);
-        return;
-      }
-      await updateManaValue(-1);
     });
 
     const openSkillRollDialog = async (event) => {
@@ -529,8 +473,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         { key: "destreza", label: "Destreza" },
         { key: "constituicao", label: "Constituição" },
         { key: "inteligencia", label: "Inteligência" },
-        { key: "influencia", label: "Influência" },
-        { key: "intuicao", label: "Intuição" }
+        { key: "intuicao", label: "Intuição" },
+        { key: "vontade", label: "Vontade" }
       ];
 
       const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
@@ -582,8 +526,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         destreza: "Destreza",
         constituicao: "Constituição",
         inteligencia: "Inteligência",
-        influencia: "Influência",
-        intuicao: "Intuição"
+        intuicao: "Intuição",
+        vontade: "Vontade"
       };
       const attributeKey = String(event.currentTarget.dataset.attr ?? "");
       if (!attributeKey) return;
@@ -612,7 +556,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
       new Dialog({
         title: "Adicionar perícia",
-        content: `<form class="twbv-skill-dialog-form"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === "forca" ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label><label>Dado base<select name="skillDie">${SKILL_DICE.map((die, index) => `<option value="${die}" ${index === 0 ? "selected" : ""}>d${die}</option>`).join("")}</select></label><label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label></form>`,
+        content: `<div><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Dado da perícia<select name="skillLevel">${SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === 0 ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("")}</select></label></div>`,
         classes: ["wbtv-add-skill-dialog"],
         render: (dialog, html) => {
           applyDialogWindowClass(html ?? dialog, "wbtv-add-skill-dialog");
@@ -623,10 +567,9 @@ class TWBVPersonagemSheet extends ActorSheet {
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const nome = String(root?.querySelector('input[name="nome"]')?.value ?? "").trim();
-              const atributo = String(root?.querySelector('select[name="atributo"]')?.value ?? "forca").toLowerCase();
-              const dado = SKILL_DICE.includes(Number(root?.querySelector('select[name="skillDie"]')?.value)) ? Number(root?.querySelector('select[name="skillDie"]')?.value) : 4;
-              const bonus = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? 0));
-              pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, atributo, dado, bonus, locked: false });
+              const skillLevel = Number(root?.querySelector('select[name="skillLevel"]')?.value ?? 0);
+              const selectedLevel = SKILL_LEVELS[skillLevel] ?? SKILL_LEVELS[0];
+              pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, dado: selectedLevel.dado, bonus: selectedLevel.bonus, locked: false });
               await this.actor.update({ "system.pericias": pericias });
             }
           },

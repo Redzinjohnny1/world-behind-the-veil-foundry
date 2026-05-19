@@ -317,7 +317,6 @@
     linear-gradient(160deg, rgba(9, 23, 48, 0.92), rgba(5, 10, 24, 0.98));
 }
 .mana-panel h2 { border:none; font-size:.8rem; margin-bottom:4px; color:#a7e6ff; text-shadow:0 0 14px rgba(98,182,255,.7); }
-.twbv-mana-trigger { cursor: pointer; }
 .mana-orb {
   width: 108px;
   height: 108px;
@@ -339,7 +338,6 @@
   border-radius: 50%;
   border: 1px solid rgba(172, 241, 255, 0.6);
   box-shadow: 0 0 14px rgba(106, 218, 255, 0.5);
-  pointer-events: none;
 }
 .mana-value {
   width: 52px;
@@ -648,83 +646,13 @@
   50% { transform: scale(1.03); filter: drop-shadow(0 0 12px rgba(217, 183, 117, 0.5)); }
 }
 
- .twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 2px; }
-.twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.twbv-skills-grid { display:grid; grid-template-columns: 1fr; gap: 8px; }
+.twbv-pericias-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .twbv-add-skill { width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: 700; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
-.twbv-skill-row {
-  position: relative;
-  width: 90%;
-  aspect-ratio: 1536 / 1024;
-  min-height: 0;
-  height: auto;
-  padding: 0;
-  margin: 0 auto;
-  display: block;
-  cursor: grab;
-  background: url("../assets/background/pericias.png") center center / 100% 100% no-repeat !important;
-}
+.twbv-skill-row { display: grid; grid-template-columns: 48px minmax(220px, 2fr) 120px auto; align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(154, 123, 255, 0.35); border-radius: 8px; cursor: grab; }
 .twbv-skill-row.is-dragging { opacity: .45; }
-.twbv-skill-row > * { position: absolute; }
-.twbv-skill-roll {
-  left: 2.4%;
-  top: 21%;
-  width: 9%;
-  height: 58%;
-  border: 0;
-  background: transparent;
-  border-radius: 50%;
-  padding: 0;
-}
-.twbv-skill-roll .attribute-icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.twbv-edit-skill-config {
-  left: 13.2%;
-  top: 16%;
-  width: 54%;
-  height: 68%;
-  text-align: left;
-  border: 0;
-  background: transparent;
-  color: var(--twbv-text);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 2px;
-  padding: 0;
-}
-.twbv-skill-name { font-size: 1.08rem; font-weight: 700; color: #f7e9c4; line-height: 1.02; }
-.twbv-skill-attr { display: inline-flex; align-items: center; margin-right: 4px; font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; line-height: 1; }
-.twbv-skill-rank { display: inline-flex; align-items: center; font-size: .64rem; font-weight: 700; letter-spacing: .05em; border-radius: 999px; padding: 1px 6px; border: 1px solid transparent; max-width: 100%; }
-.twbv-edit-skill-roll {
-  top: 31%;
-  right: 16.8%;
-  width: 11%;
-  min-height: 0;
-  height: 38%;
-  transform: scale(0.92);
-  transform-origin: center;
-  border: 0;
-  background: transparent;
-  color: #ffedc8;
-  font-weight: 700;
-  letter-spacing: .03em;
-}
-.twbv-toggle-skill-lock, .twbv-remove-skill {
-  top: 34%;
-  width: 3.1%;
-  height: 29%;
-  border-radius: 6px;
-  border: 0;
-  background: transparent;
-  color: #e8daf8;
-  font-size: .78rem;
-}
-.twbv-toggle-skill-lock { right: 8.2%; }
-.twbv-remove-skill { right: 2.8%; }
+.twbv-skill-roll { width: 44px; height: 34px; border: 1px solid rgba(217,183,117,.5); background: rgba(17,15,30,0.9); color: var(--twbv-text); border-radius: 6px; padding: 0; font-size: 1.1rem; }
+.twbv-edit-skill-roll { min-height: 34px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); font-weight: 600; }
 .twbv-skills-empty {
   border: 1px dashed rgba(154, 123, 255, 0.45);
   border-radius: 8px;
@@ -734,18 +662,10 @@
   justify-content: center;
   color: var(--twbv-muted);
 }
-.attribute-icon-img {
-  width: 36px;
-  height: 36px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 6px currentColor);
-}
-.twbv-attr-forca { color: #ffc57a; } .twbv-attr-destreza { color: #be91ff; } .twbv-attr-constituicao { color: #9ceaa9; } .twbv-attr-inteligencia { color: #8bc0ff; } .twbv-attr-intuicao { color: #8df7ff; } .twbv-attr-vontade { color: #ffb07f; }
-.rank-novato { color: #8cc7ff; border-color: rgba(140, 199, 255, .45); background: rgba(23, 52, 86, .52); }
-.rank-treinado { color: #aaf8ba; border-color: rgba(126, 236, 151, .45); background: rgba(20, 72, 41, .52); }
-.rank-experiente { color: #d2adff; border-color: rgba(182, 125, 255, .45); background: rgba(56, 26, 90, .52); }
-.rank-especialista { color: #fce1a9; border-color: rgba(217, 183, 117, .58); background: rgba(84, 53, 20, .52); }
-.rank-mestre { color: #ff9ab2; border-color: rgba(255, 98, 149, .56); background: rgba(99, 25, 45, .56); }
+.twbv-skill-controls { display: flex; gap: 6px; justify-content: flex-end; }
+.twbv-edit-skill-config { min-height: 34px; text-align: left; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-toggle-skill-lock { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
+.twbv-remove-skill { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--twbv-border-soft); background: rgba(21,20,36,.95); color: var(--twbv-text); }
 .twbv-attr-roll {
   position: relative;
   z-index: 1;
@@ -786,6 +706,7 @@
 .twbv-adv-empty { margin: 0; color: var(--twbv-muted); text-align: center; padding: 10px; border: 1px dashed rgba(154, 123, 255, 0.45); border-radius: 8px; }
 
 
+.twbv-skill-row input[type="text"] { min-width: 0; }
 
 .twbv-favorites-panel { min-height: 220px; }
 .twbv-favorites-placeholder {
@@ -808,13 +729,7 @@
 }
 
 @media (max-width: 720px) {
-  .twbv-skill-row { width: 90%; aspect-ratio: 1536 / 1024; min-height: 0; height: auto; padding: 0; margin: 0 auto; }
-  .twbv-skill-roll { left: 2.4%; top: 22%; width: 10%; height: 56%; }
-  .twbv-edit-skill-config { left: 13%; top: 15%; width: 52%; height: 70%; }
-  .twbv-skill-name { font-size: 1.1rem; }
-  .twbv-edit-skill-roll { top: 32%; right: 16%; width: 12%; height: 36%; transform: scale(0.92); }
-  .twbv-toggle-skill-lock { top: 35%; right: 8.4%; width: 4.4%; height: 30%; }
-  .twbv-remove-skill { top: 35%; right: 2.8%; width: 4.4%; height: 30%; }
+  .twbv-skill-row { grid-template-columns: 48px 1fr 112px auto; }
 
   .attributes-art-grid { grid-template-columns: 1fr; }
 }
@@ -1046,15 +961,11 @@
   padding: 12px;
   background: linear-gradient(165deg, rgba(18, 12, 33, 0.94), rgba(8, 6, 16, 0.96));
   box-shadow: inset 0 0 0 1px rgba(149, 96, 224, 0.2), inset 0 0 16px rgba(149, 96, 224, 0.14);
-  display: grid;
-  gap: 8px;
 }
 
 .wbtv-add-skill-dialog label {
   color: #f2dfb0;
   font-weight: 600;
-  display: grid;
-  gap: 4px;
 }
 
 .wbtv-add-skill-dialog input,

@@ -64,12 +64,23 @@
         <section class="twbv-panel twbv-ornate">
           <h2>Perícias</h2>
           <div class="twbv-skills-grid">
-            <label>Perícia 1<input type="text" name="system.pericias.0" value="{{system.pericias.[0]}}" /></label>
-            <label>Perícia 2<input type="text" name="system.pericias.1" value="{{system.pericias.[1]}}" /></label>
-            <label>Perícia 3<input type="text" name="system.pericias.2" value="{{system.pericias.[2]}}" /></label>
-            <label>Perícia 4<input type="text" name="system.pericias.3" value="{{system.pericias.[3]}}" /></label>
-            <label>Perícia 5<input type="text" name="system.pericias.4" value="{{system.pericias.[4]}}" /></label>
-            <label>Perícia 6<input type="text" name="system.pericias.5" value="{{system.pericias.[5]}}" /></label>
+            {{#each system.pericias as |pericia i|}}
+              <div class="twbv-skill-row" data-index="{{i}}" draggable="true">
+                <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><img src="{{pericia.attributeMeta.iconPath}}" class="attribute-icon-img" alt="{{pericia.attributeMeta.label}}"></button>
+                <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">
+                  <span class="twbv-skill-name">{{pericia.nome}}</span>
+                  <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}"><img src="{{pericia.attributeMeta.iconPath}}" class="attribute-icon-img" alt="{{pericia.attributeMeta.label}}"> {{pericia.attributeMeta.label}}</span>
+                  <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
+                </button>
+                <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>
+                <div class="twbv-skill-controls">
+                  <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}"><i class="fas {{#if pericia.locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></button>
+                  <button type="button" class="twbv-remove-skill" data-index="{{i}}" title="Remover perícia"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+            {{else}}
+              <div class="twbv-skills-empty"></div>
+            {{/each}}
           </div>
         </section>
       </div>

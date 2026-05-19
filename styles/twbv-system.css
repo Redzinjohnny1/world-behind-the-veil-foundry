@@ -715,13 +715,13 @@
   background: linear-gradient(90deg, rgba(30, 22, 56, 0.75), rgba(17, 13, 34, 0.68));
 }
 .twbv.sheet.actor .twbv-skill-name,
-.window-app.sheet.actor .twbv-skill-name { font-size: 1.12rem; font-weight: 700; color: #f7e9c4; line-height: 1.04; margin-top: 2px; }
+.window-app.sheet.actor .twbv-skill-name { font-size: 1.12rem; font-weight: 700; color: #f7e9c4; line-height: 1.04; margin-top: 4px; }
 .twbv.sheet.actor .twbv-skill-meta,
 .window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; width: 100%; margin-top: 4px; justify-content: center; }
 .twbv.sheet.actor .twbv-skill-attr,
-.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 2px; }
+.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 0; transform: translateX(-6px); }
 .twbv.sheet.actor .twbv-skill-rank,
-.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: translateX(-2px); }
+.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: translateX(4px); }
 .twbv.sheet.actor .twbv-edit-skill-roll,
 .window-app.sheet.actor .twbv-edit-skill-roll {
   top: 18%;

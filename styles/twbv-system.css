@@ -700,13 +700,13 @@
   top: 15%;
   width: 55%;
   height: 72%;
-  text-align: left;
+  text-align: center;
   border: 0;
   background: transparent;
   color: var(--twbv-text);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: 3px;
   padding: 9px 12px 7px;
@@ -719,9 +719,9 @@
 .twbv.sheet.actor .twbv-skill-meta,
 .window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; width: 100%; margin-top: 4px; justify-content: center; }
 .twbv.sheet.actor .twbv-skill-attr,
-.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 0; transform: translateX(-6px); }
+.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 0; transform: none; }
 .twbv.sheet.actor .twbv-skill-rank,
-.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: translateX(4px); }
+.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: none; }
 .twbv.sheet.actor .twbv-edit-skill-roll,
 .window-app.sheet.actor .twbv-edit-skill-roll {
   top: 18%;

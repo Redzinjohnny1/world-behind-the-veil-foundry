@@ -1145,6 +1145,10 @@
   font-size: 1.05rem;
   padding: 6px 10px;
 }
+.wbtv-add-skill-dialog select option {
+  background: #130d24;
+  color: #f6e7c1;
+}
 
 .wbtv-add-skill-dialog .twbv-add-skill-row {
   display: grid;
@@ -1153,12 +1157,14 @@
 }
 
 .wbtv-add-skill-dialog .twbv-skill-preview {
-  margin-top: 4px;
-  border-top: 1px solid rgba(217, 183, 117, 0.32);
-  padding-top: 10px;
+  margin-top: 0;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  border-radius: 10px;
+  padding: 8px 10px;
   display: grid;
   place-items: center;
   gap: 4px;
+  min-height: 74px;
 }
 
 .wbtv-add-skill-dialog .twbv-skill-preview span {
@@ -1168,7 +1174,7 @@
 }
 
 .wbtv-add-skill-dialog .twbv-skill-preview strong {
-  min-width: 120px;
+  min-width: 130px;
   text-align: center;
   font-size: 2rem;
   color: #f9ebc6;
@@ -1176,6 +1182,19 @@
   border-radius: 12px;
   padding: 4px 12px;
   background: radial-gradient(circle at 50% 35%, rgba(121, 81, 199, 0.6), rgba(35, 23, 68, 0.94) 68%, rgba(18, 12, 35, 0.96));
+}
+.wbtv-add-skill-dialog .twbv-add-skill-bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+.wbtv-add-skill-dialog .twbv-add-skill-bottom-row > label {
+  min-height: 74px;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  border-radius: 10px;
+  padding: 8px 10px;
+  align-content: center;
 }
 
 .wbtv-add-skill-dialog input:hover,

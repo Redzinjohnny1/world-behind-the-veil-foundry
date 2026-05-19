@@ -618,12 +618,14 @@ class TWBVPersonagemSheet extends ActorSheet {
         content: `<form class="twbv-skill-dialog-form">
           <label>Nome da perícia<input type="text" name="nome" placeholder="Ex.: Atletismo" autofocus /></label>
           <label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === "forca" ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label>
-          <label>Nível de perícia<select name="skillLevel">${levelOptions}</select></label>
           <div class="twbv-add-skill-row">
             <label>Dado base<select name="skillDie">${dieOptions}</select></label>
             <label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label>
           </div>
-          <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>d4+0</strong></div>
+          <div class="twbv-add-skill-bottom-row">
+            <label>Nível de perícia<select name="skillLevel">${levelOptions}</select></label>
+            <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>d4+0</strong></div>
+          </div>
         </form>`,
         classes: ["wbtv-add-skill-dialog"],
         render: (dialog, html) => {
@@ -659,6 +661,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           skillLevelEl?.addEventListener("change", syncFromLevel);
           dieEl?.addEventListener("change", syncLevelFromFields);
           bonusEl?.addEventListener("input", syncLevelFromFields);
+          bonusEl?.addEventListener("change", syncLevelFromFields);
           syncFromLevel();
         },
         buttons: {

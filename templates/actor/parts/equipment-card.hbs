@@ -1,0 +1,29 @@
+<div class="equipment-card item" data-item-id="{{item._id}}">
+  <div class="equipment-card-header">
+    <img class="equipment-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <div class="equipment-title-block">
+      <div class="equipment-name">{{item.name}}</div>
+      <div class="equipment-category">{{item.system.category}}</div>
+    </div>
+    <div class="equipment-actions-top">
+      <a class="item-toggle-favorite" title="Favorito">{{#if item.system.favorite}}<i class="fas fa-star"></i>{{else}}<i class="far fa-star"></i>{{/if}}</a>
+      <a class="item-edit" title="Editar"><i class="fas fa-edit"></i></a>
+      <a class="item-delete" title="Excluir"><i class="fas fa-trash"></i></a>
+    </div>
+  </div>
+  {{#ifEquals item.type "weapon"}}
+  <div class="weapon-stats"><span>Dano: {{item.system.damage}}</span><span>AP: {{item.system.ap}}</span><span>Alcance: {{item.system.range}}</span><span>CdT: {{item.system.rof}}</span></div>
+  <div class="ammo-row"><span>Munição</span><span>{{item.system.currentShots}} / {{item.system.shots}}</span></div>
+  <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.ammoPercent}}%;"></div></div>
+  <div class="weapon-buttons"><a class="weapon-roll"><i class="fas fa-dice-d20"></i> Atirar</a><a class="weapon-damage"><i class="fas fa-burst"></i> Dano</a><a class="weapon-reload"><i class="fas fa-rotate"></i> Reload</a></div>
+  <div class="weapon-mods">{{#each item.system.actions.additional as |mod key|}}<a class="weapon-mod" data-mod-key="{{key}}">{{mod.name}}</a>{{/each}}</div>
+  {{/ifEquals}}
+  {{#ifEquals item.type "consumable"}}
+  <div class="consumable-stats"><span>Qtd: {{item.system.quantity}}</span><span>Peso: {{item.system.weight}}</span><span>Preço: {{item.system.price}}</span></div>
+  {{#if item.system.charges.hasCharges}}
+  <div class="charges-row"><span>Cargas</span><span>{{item.system.mainCharge.value}} / {{item.system.mainCharge.max}}</span></div>
+  <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.chargePercent}}%;"></div></div>
+  {{/if}}
+  <div class="consumable-buttons"><a class="consumable-use"><i class="fas fa-hand"></i> Usar</a></div>
+  {{/ifEquals}}
+</div>

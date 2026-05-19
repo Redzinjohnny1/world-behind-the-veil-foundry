@@ -1,7 +1,6 @@
 {
   "Actor": {
     "types": [
-      "personagem",
       "despertos",
       "semi-despertos",
       "sombras"
@@ -24,35 +23,33 @@
         },
         "atributos": {
           "forca": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "destreza": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "constituicao": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "inteligencia": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "intuicao": {
-            "passo": 4,
-            "bonus": 0
+            "valor": 0
           },
           "vontade": {
             "passo": 4,
             "bonus": 0
           }
         },
-        "pericias": [],
-        "mana": {
-          "value": 0,
-          "max": 3
-        }
+        "pericias": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
       }
     },
     "despertos": {
@@ -69,86 +66,6 @@
       "templates": [
         "base"
       ]
-    },
-    "personagem": {
-      "templates": [
-        "base"
-      ]
-    }
-  },
-  "Item": {
-    "types": [
-      "vantagem",
-      "desvantagem",
-      "habilidadeEspecial",
-      "complicacao",
-      "equipamento",
-      "arma",
-      "armadura"
-    ],
-    "templates": {
-      "base": {
-        "active": true,
-        "description": "",
-        "effectsSummary": ""
-      },
-      "ranked": {
-        "tier": "",
-        "severity": ""
-      },
-      "inventory": {
-        "quantity": 1,
-        "weight": 0,
-        "cost": 0,
-        "equipped": false,
-        "tags": ""
-      }
-    },
-    "vantagem": {
-      "templates": [
-        "base",
-        "ranked"
-      ]
-    },
-    "desvantagem": {
-      "templates": [
-        "base",
-        "ranked"
-      ]
-    },
-    "habilidadeEspecial": {
-      "templates": [
-        "base"
-      ]
-    },
-    "complicacao": {
-      "templates": [
-        "base",
-        "ranked"
-      ]
-    },
-    "equipamento": {
-      "templates": [
-        "base",
-        "inventory"
-      ]
-    },
-    "arma": {
-      "templates": [
-        "base",
-        "inventory"
-      ],
-      "damage": "",
-      "range": "",
-      "bonus": ""
-    },
-    "armadura": {
-      "templates": [
-        "base",
-        "inventory"
-      ],
-      "protection": "",
-      "penalty": ""
     }
   }
 }

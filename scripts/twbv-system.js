@@ -2,19 +2,18 @@ const STAGES = [
   { name: "Novato", min: 0, max: 3 },
   { name: "Treinado", min: 4, max: 7 },
   { name: "Veterano", min: 8, max: 11 },
-  { name: "Elite", min: 12, max: 15 },
+  { name: "Elíte", min: 12, max: 15 },
   { name: "Mítico", min: 16, max: 19 },
   { name: "Lendário", min: 20, max: Infinity }
 ];
 
 const ADVANCEMENT_OPTIONS = [
-  "Aumentar um atributo",
-  "Aumentar uma perícia",
-  "Comprar uma vantagem",
-  "Remover uma desvantagem",
-  "Novo poder",
-  "Melhorar poder existente",
-  "Outro"
+  "Uma Nova Vantagem e uma Perícia",
+  "Três Péricias",
+  "Um Atributo e uma perícia",
+  "Remover uma Desvantagem",
+  "Duas novas mágias e 2 pontos de poder",
+  "5 pontos de poder e uma mágia"
 ];
 
 const TWBV_ITEM_TYPES = {
@@ -168,9 +167,6 @@ class TWBVPersonagemSheet extends ActorSheet {
   getData(options = {}) {
     const context = super.getData(options);
     context.system = this.actor?.system ?? context.system ?? {};
-    context.system.mana = context.system.mana ?? {};
-    context.system.mana.value = Number(context.system.mana.value ?? 0);
-    context.system.mana.max = Number(context.system.mana.max ?? 3);
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -347,88 +343,17 @@ class TWBVPersonagemSheet extends ActorSheet {
     super.activateListeners(html);
 
     html.find(".twbv-add-advancement").on("click", async () => {
-      const optionMarkup = ADVANCEMENT_OPTIONS.map((option) => `<option value="${option}">${option}</option>`).join("");
-      const dialogContent = `
-        <form class="twbv-add-adv-dialog-content">
-          <div class="form-group">
-            <label>Tipo de avanço</label>
-            <select name="tipo" required>
-              <option value="">Selecione...</option>
-              ${optionMarkup}
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Descrição / Anotações</label>
-            <textarea name="descricao" rows="4" placeholder="Descreva este avanço..."></textarea>
-          </div>
-        </form>`;
-
-      const dialog = new Dialog(
-        {
-          title: "Adicionar avanço",
-          content: dialogContent,
-          buttons: {
-            confirm: {
-              label: "Confirmar",
-              callback: async (dialogHtml) => {
-                const root = resolveDialogRoot(dialogHtml);
-                const tipo = String(root?.querySelector('select[name="tipo"]')?.value ?? "").trim();
-                if (!tipo) {
-                  ui.notifications?.warn("Selecione um tipo de avanço.");
-                  return;
-                }
-                const descricao = String(root?.querySelector('textarea[name="descricao"]')?.value ?? "").trim();
-                const avanços = Array.from(this.actor.system.avancos ?? []);
-                const numero = avanços.length + 1;
-                avanços.push({ numero, tipo, descricao });
-                await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
-              }
-            },
-            cancel: {
-              label: "Cancelar"
-            }
-          },
-          default: "confirm"
-        },
-        {
-          width: 520,
-          height: "auto"
-        }
-      );
-      dialog.render(true);
-      Hooks.once("renderDialog", (app, renderedHtml) => {
-        if (app === dialog) applyDialogWindowClass(renderedHtml?.[0] ?? renderedHtml, "wbtv-add-adv-dialog");
-      });
+      const avanços = Array.from(this.actor.system.avancos ?? []);
+      avanços.push({ tipo: "" });
+      await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
     });
 
     html.find(".twbv-remove-advancement").on("click", async (event) => {
       const index = Number(event.currentTarget.dataset.index);
       const avanços = Array.from(this.actor.system.avancos ?? []);
       avanços.splice(index, 1);
-      const normalizedAdvances = avanços.map((avanco, position) => ({ ...avanco, numero: position + 1 }));
-      await this.actor.update({ "system.avancos": normalizedAdvances, "system.avancosTotais": normalizedAdvances.length });
+      await this.actor.update({ "system.avancos": avanços, "system.avancosTotais": avanços.length });
     });
-
-    const triggerEcoSpendEffect = () => {
-      const effectNode = html.find(".twbv-eco-core")[0];
-      if (!effectNode) return;
-      effectNode.classList.remove("eco-spend-effect");
-      void effectNode.offsetWidth;
-      effectNode.classList.add("eco-spend-effect");
-      const cleanup = () => effectNode.classList.remove("eco-spend-effect");
-      effectNode.addEventListener("animationend", cleanup, { once: true });
-      window.setTimeout(cleanup, 700);
-    };
-
-    const updateEcoValue = async (delta, { triggerEffect = false } = {}) => {
-      const ecoInput = html.find('input[name="system.eco"]')[0];
-      const ecoAtual = Number(this.actor.system.eco ?? 0);
-      const novoEco = Math.max(0, ecoAtual + delta);
-      if (novoEco === ecoAtual) return;
-      if (ecoInput) ecoInput.value = String(novoEco);
-      if (triggerEffect && delta < 0) triggerEcoSpendEffect();
-      await this.actor.update({ "system.eco": novoEco });
-    };
 
     html.find(".twbv-eco-adjust").on("click", async (event) => {
       const adjust = Number(event.currentTarget.dataset.adjust ?? 0);
@@ -860,122 +785,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       await onSubmit();
     });
-    form.addEventListener("input", () => this._setCustomDialogValidationState(root));
-    this._setCustomDialogValidationState(root);
-  }
-
-  async _openCustomItemDialog(type, item = null, options = {}) {
-    const defaultsByType = {
-      vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
-      habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
-      complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
-    };
-    const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
-    const itemData = {
-      name: item?.name ?? "",
-      fonte: item?.system?.fonte ?? item?.system?.source ?? "",
-      categoria: item?.system?.categoria ?? item?.system?.category ?? "",
-      requisitos: item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
-      descricao: item?.system?.descricao ?? item?.system?.description ?? "",
-      severity: item?.system?.severity ?? defaults.severity,
-      isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
-      hasCharges: Boolean(item?.system?.hasCharges),
-      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
-    };
-    const content = this._buildCustomItemDialogContent(type, itemData);
-
-    const submitItemForm = async (root, dialogApp) => {
-      const form = root?.querySelector("form.twbv-custom-item-dialog");
-      const nameInput = form?.querySelector('input[name="name"]');
-      if (!form || !nameInput) return false;
-
-      const nome = String(nameInput.value ?? "").trim();
-      if (!nome) {
-        ui.notifications?.error("O nome da vantagem é obrigatório.");
-        nameInput.focus();
-        this._setCustomDialogValidationState(root);
-        return false;
-      }
-
-      const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
-      const isEmbeddedItem = item && typeof item.update === "function";
-      if (isEmbeddedItem) {
-        await item.update(payload);
-      } else {
-        const listKeyByType = {
-          vantagem: "vantagens",
-          habilidadeEspecial: "habilidadesEspeciais",
-          complicacao: "complicacoes"
-        };
-        const listKey = options.listKey ?? listKeyByType[type];
-        if (!listKey) return;
-        const currentList = Array.from(this.actor.system?.[listKey] ?? []);
-        const existingId = String(item?.id ?? "").trim();
-        const novoRegistro = {
-          id: existingId || foundry.utils.randomID(),
-          nome,
-          fonte: payload.system.fonte,
-          categoria: payload.system.categoria,
-          requisitos: payload.system.requisitos,
-          descricao: payload.system.descricao,
-          severity: payload.system.severity,
-          isArcaneBackground: payload.system.isArcaneBackground,
-          hasCharges: payload.system.hasCharges,
-          activeEffects: payload.system.activeEffects
-        };
-        const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);
-        if (existingIndex >= 0) currentList[existingIndex] = novoRegistro;
-        else currentList.push(novoRegistro);
-        await this.actor.update({ [`system.${listKey}`]: currentList });
-      }
-      await dialogApp.close();
-      await this.render(true);
-      if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
-    };
-
-    const dialog = new Dialog({
-      title: item ? `Editar ${item.name}` : defaults.title,
-      content,
-      render: (dialogApp, renderedHtml) => {
-        const root = resolveDialogRoot(renderedHtml);
-        if (!root) return;
-        this._bindCustomDialogUi(root);
-        this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
-        const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
-          ?? dialogApp?.element?.[0]
-          ?? root.closest?.(".window-app");
-        if (type === "vantagem") {
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog");
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog-window");
-          root.classList.add("wbtv-vantagem-dialog");
-          const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add("wbtv-vantagem-dialog");
-        }
-      },
-      buttons: {
-        save: {
-          label: "Salvar",
-          callback: async (dialogHtml) => {
-            const root = resolveDialogRoot(dialogHtml) ?? dialog.element?.[0];
-            await submitItemForm(root, dialog);
-            return false;
-          }
-        },
-        cancel: {
-          label: "Cancelar",
-          callback: async () => {
-            await dialog.close();
-          }
-        }
-      },
-      default: "save",
-      close: () => {
-        const root = dialog.element?.[0];
-        const nameInput = root?.querySelector('input[name="name"]');
-        if (nameInput) nameInput.setCustomValidity("");
-      }
-    }, { width: 520, height: "auto" });
-    dialog.render(true);
   }
 }
 
@@ -988,11 +797,4 @@ Hooks.once("init", () => {
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     makeDefault: true
   });
-});
-
-Hooks.on("renderChatMessage", (message, html) => {
-  const root = html?.[0] ?? html;
-  if (!root || typeof root.querySelector !== "function") return;
-  if (!root.querySelector(".twbv-roll-chat")) return;
-  root.classList.add("twbv-chat-message");
 });

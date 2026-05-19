@@ -248,15 +248,6 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.pericias = Array.from(context.system.pericias ?? []).map((pericia) => {
       const dado = SKILL_DICE.includes(Number(pericia?.dado)) ? Number(pericia.dado) : 4;
       let bonus = Number.isFinite(Number(pericia?.bonus)) ? Number(pericia.bonus) : 0;
-      const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === dado && level.bonus === bonus);
-      if (!normalizedLevel) {
-        const closestLevel = SKILL_LEVELS.reduce((best, level) => {
-          const bestDistance = Math.abs(best.dado - dado) + Math.abs(best.bonus - bonus);
-          const currentDistance = Math.abs(level.dado - dado) + Math.abs(level.bonus - bonus);
-          return currentDistance < bestDistance ? level : best;
-        }, SKILL_LEVELS[0]);
-        bonus = closestLevel.bonus;
-      }
       return {
         ...pericia,
         atributo: String(pericia?.atributo ?? "forca").toLowerCase(),
@@ -337,16 +328,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       pericias[i].dado = SKILL_DICE.includes(Number(pericias[i].dado)) ? Number(pericias[i].dado) : 4;
       pericias[i].bonus = Number.isFinite(Number(pericias[i].bonus)) ? Number(pericias[i].bonus) : 0;
-      const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === pericias[i].dado && level.bonus === pericias[i].bonus);
-      if (!normalizedLevel) {
-        const closestLevel = SKILL_LEVELS.reduce((best, level) => {
-          const bestDistance = Math.abs(best.dado - pericias[i].dado) + Math.abs(best.bonus - pericias[i].bonus);
-          const currentDistance = Math.abs(level.dado - pericias[i].dado) + Math.abs(level.bonus - pericias[i].bonus);
-          return currentDistance < bestDistance ? level : best;
-        }, SKILL_LEVELS[0]);
-        pericias[i].dado = closestLevel.dado;
-        pericias[i].bonus = closestLevel.bonus;
-      }
       pericias[i].locked = Boolean(pericias[i].locked);
       pericias[i].atributo = String(pericias[i].atributo ?? "forca").toLowerCase();
       if (!SKILL_ATTRIBUTES.some((attr) => attr.key === pericias[i].atributo)) pericias[i].atributo = "forca";

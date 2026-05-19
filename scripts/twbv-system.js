@@ -151,11 +151,11 @@ function renderDualDieResult({
         <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
       </section>`;
 
-    const inlineRoll = await new Roll(String(total)).toMessage({
+    const chatMessage = await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
-      flavor: content
+      content
     });
-    return inlineRoll;
+    return chatMessage;
   })();
 }
 

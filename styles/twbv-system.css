@@ -964,20 +964,28 @@
 .twbv-roll-card__value { font-size: 1.6rem; font-weight: 800; color: #fff3cf; }
 .twbv-roll-chat__total {
   margin-top: 10px;
-  color: #f3e8ca;
-  text-align: right;
-  border-top: 1px solid rgba(217, 183, 117, 0.32);
   padding-top: 8px;
+  border-top: 1px solid rgba(217, 183, 117, 0.32);
+  color: #ecdcb4;
+  font-weight: 700;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  text-align: center;
 }
 .twbv-roll-chat__total strong {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 3px 9px;
+  display: inline-grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  margin-left: 0;
   border-radius: 999px;
   color: #fff4ce;
-  border: 1px solid rgba(217, 183, 117, 0.75);
+  font-size: 2rem;
+  font-weight: 900;
+  border: 1px solid rgba(217, 183, 117, 0.85);
   background: linear-gradient(180deg, rgba(76, 52, 112, 0.95), rgba(24, 17, 38, 0.98));
-  box-shadow: 0 0 12px rgba(154, 123, 255, 0.35);
+  box-shadow: 0 0 16px rgba(154, 123, 255, 0.45);
 }
 
 /* Chat Message wrapper theme (only TWBV custom roll messages) */

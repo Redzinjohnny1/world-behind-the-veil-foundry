@@ -91,7 +91,10 @@
         <section class="twbv-panel twbv-ornate">
           <div class="twbv-pericias-header">
             <h2>Perícias</h2>
-            <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
+            <div class="twbv-pericias-actions">
+              <button type="button" class="twbv-sort-skills {{#if skillSortActive}}is-active{{/if}}" title="{{#if skillSortActive}}Restaurar ordem anterior{{else}}Ordenar perícias em ordem alfabética{{/if}}"><i class="fas fa-sort-alpha-down"></i></button>
+              <button type="button" class="twbv-add-skill" title="Adicionar perícia">+</button>
+            </div>
           </div>
           <div class="twbv-skills-grid">
             {{#each system.pericias as |pericia i|}}
@@ -99,8 +102,10 @@
                 <button type="button" class="twbv-skill-roll twbv-skill-icon" data-index="{{i}}" title="Rolar perícia {{pericia.nome}}"><img src="{{pericia.attributeMeta.iconPath}}" class="attribute-icon-img" alt="{{pericia.attributeMeta.label}}"></button>
                 <button type="button" class="twbv-edit-skill-config" data-index="{{i}}" title="Configurar perícia">
                   <span class="twbv-skill-name">{{pericia.nome}}</span>
-                  <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}">{{pericia.attributeMeta.label}}</span>
-                  <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
+                  <span class="twbv-skill-meta">
+                    <span class="twbv-skill-attr twbv-attr-{{pericia.atributo}}">{{pericia.attributeMeta.label}}</span>
+                    <span class="twbv-skill-rank {{pericia.rank.cssClass}}">{{pericia.rank.label}}</span>
+                  </span>
                 </button>
                 <button type="button" class="twbv-edit-skill-roll" data-index="{{i}}" title="Rolar com dado {{pericia.rollLabel}}">{{pericia.rollLabel}}</button>
                 <button type="button" class="twbv-toggle-skill-lock" data-index="{{i}}" title="{{#if pericia.locked}}Destravar perícia{{else}}Travar perícia{{/if}}"><i class="fas {{#if pericia.locked}}fa-lock{{else}}fa-lock-open{{/if}}"></i></button>
@@ -110,6 +115,16 @@
               <div class="twbv-skills-empty"></div>
             {{/each}}
           </div>
+          <section class="twbv-skill-levels-panel">
+            <h3 class="twbv-skill-levels-title">NÍVEIS DE PERÍCIA</h3>
+            <div class="twbv-skill-levels-grid">
+              <article class="twbv-skill-level-card rank-novato"><h4>NOVATO</h4><p>Pouca ou nenhuma experiência na área.</p></article>
+              <article class="twbv-skill-level-card rank-treinado"><h4>TREINADO</h4><p>Conhecimento básico e prática constante.</p></article>
+              <article class="twbv-skill-level-card rank-experiente"><h4>EXPERIENTE</h4><p>Ampla experiência e confiança.</p></article>
+              <article class="twbv-skill-level-card rank-especialista"><h4>ESPECIALISTA</h4><p>Domínio elevado e precisão notável.</p></article>
+              <article class="twbv-skill-level-card rank-mestre"><h4>MESTRE</h4><p>Excelência quase lendária.</p></article>
+            </div>
+          </section>
         </section>
       </div>
     </div>

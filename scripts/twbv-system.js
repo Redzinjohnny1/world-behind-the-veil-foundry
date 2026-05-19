@@ -701,25 +701,63 @@ class TWBVPersonagemSheet extends ActorSheet {
       const pericia = pericias[index];
       if (!pericia) return;
 
-      const currentLevelIndex = SKILL_LEVELS.findIndex((level) => level.dado === Number(pericia.dado) && level.bonus === Number(pericia.bonus));
-      const levelOptions = SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === (currentLevelIndex >= 0 ? currentLevelIndex : 0) ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("");
-      const content = `
-        <div class="twbv-edit-skill-dialog">
-          <label>Nome
-            <input type="text" name="nome" value="${pericia.nome ?? ""}" />
-          </label>
-          <label>Nível da perícia
-            <select name="skillLevel">${levelOptions}</select>
-          </label>
-        </div>
-      `;
+      const skillDie = SKILL_DICE.includes(Number(pericia.dado)) ? Number(pericia.dado) : 4;
+      const totalSkillBonus = Number.isFinite(Number(pericia.bonus)) ? Number(pericia.bonus) : 0;
+      const sameDieLevels = SKILL_LEVELS.filter((level) => level.dado === skillDie);
+      const baseLevel = (sameDieLevels.length ? sameDieLevels : SKILL_LEVELS).reduce((best, level) => {
+        const bestDistance = Math.abs(best.bonus - totalSkillBonus);
+        const currentDistance = Math.abs(level.bonus - totalSkillBonus);
+        return currentDistance < bestDistance ? level : best;
+      }, (sameDieLevels[0] ?? SKILL_LEVELS[0]));
+      const baseLevelIndex = SKILL_LEVELS.findIndex((level) => level.dado === baseLevel.dado && level.bonus === baseLevel.bonus);
+      const initialExtraBonus = Math.max(0, totalSkillBonus - baseLevel.bonus);
+      const dieOptions = SKILL_LEVELS.map((level, idx) => `<option value="${idx}" data-die="${level.dado}" data-bonus="${level.bonus}" ${idx === (baseLevelIndex >= 0 ? baseLevelIndex : 0) ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("");
+
+      const content = `<form class="twbv-skill-dialog-form">
+          <label>Nome da perícia<input type="text" name="nome" value="${pericia.nome ?? ""}" autofocus /></label>
+          <label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === String(pericia.atributo ?? "forca").toLowerCase() ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label>
+          <div class="twbv-add-skill-row">
+            <label>Dado base<select name="skillDie">${dieOptions}</select></label>
+            <label>Bônus extra<input type="number" name="bonus" value="${initialExtraBonus}" min="0" max="99" step="1" /></label>
+          </div>
+          <div class="twbv-add-skill-bottom-row">
+            <label>Nível de perícia<input type="text" name="skillLevelLabel" class="twbv-skill-level-chip rank-novato" value="NOVATO" readonly /></label>
+            <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>${buildDieLabel(skillDie, totalSkillBonus)}</strong></div>
+          </div>
+        </form>`;
 
       new Dialog({
         title: `Configurar perícia: ${pericia.nome || `Perícia ${index + 1}`}`,
         content,
-        classes: ["wbtv-skill-config-dialog"],
+        classes: ["wbtv-add-skill-dialog", "wbtv-skill-config-dialog"],
         render: (dialog, html) => {
-          applyDialogWindowClass(html ?? dialog, "wbtv-skill-config-dialog");
+          const root = resolveDialogRoot(html ?? dialog);
+          applyDialogWindowClass(root ?? dialog, "wbtv-add-skill-dialog");
+          applyDialogWindowClass(root ?? dialog, "wbtv-skill-config-dialog");
+          const form = root?.querySelector?.(".twbv-skill-dialog-form") ?? root?.closest?.(".twbv-skill-dialog-form");
+          if (!form) return;
+
+          const skillLevelLabelEl = form.querySelector('input[name="skillLevelLabel"]');
+          const dieEl = form.querySelector('select[name="skillDie"]');
+          const bonusEl = form.querySelector('input[name="bonus"]');
+          const previewEl = form.querySelector('.twbv-skill-preview strong');
+
+          const syncAll = () => {
+            const selectedLevel = SKILL_LEVELS[Number(dieEl?.value)] ?? SKILL_LEVELS[0];
+            const extraBonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : 0;
+            const finalBonus = selectedLevel.bonus + extraBonus;
+            if (previewEl) previewEl.textContent = buildDieLabel(selectedLevel.dado, finalBonus);
+            if (skillLevelLabelEl) {
+              skillLevelLabelEl.value = selectedLevel.rank;
+              skillLevelLabelEl.classList.remove("rank-novato", "rank-treinado", "rank-experiente", "rank-especialista", "rank-mestre");
+              skillLevelLabelEl.classList.add(selectedLevel.cssClass);
+            }
+          };
+
+          dieEl?.addEventListener("change", syncAll);
+          bonusEl?.addEventListener("input", syncAll);
+          bonusEl?.addEventListener("change", syncAll);
+          syncAll();
         },
         buttons: {
           save: {
@@ -727,11 +765,14 @@ class TWBVPersonagemSheet extends ActorSheet {
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const nome = String(root?.querySelector('input[name="nome"]')?.value ?? pericia.nome ?? "").trim();
-              const skillLevel = Number(root?.querySelector('select[name="skillLevel"]')?.value ?? currentLevelIndex ?? 0);
-              const selectedLevel = SKILL_LEVELS[skillLevel] ?? SKILL_LEVELS[0];
+              const atributo = String(root?.querySelector('select[name="atributo"]')?.value ?? pericia.atributo ?? "forca").toLowerCase();
+              const levelIndex = Number(root?.querySelector('select[name="skillDie"]')?.value ?? baseLevelIndex ?? 0);
+              const selectedLevel = SKILL_LEVELS[levelIndex] ?? SKILL_LEVELS[0];
+              const bonusInput = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? 0));
               pericias[index].nome = nome || pericia.nome || `Perícia ${index + 1}`;
+              pericias[index].atributo = atributo;
               pericias[index].dado = selectedLevel.dado;
-              pericias[index].bonus = selectedLevel.bonus;
+              pericias[index].bonus = selectedLevel.bonus + bonusInput;
               await this.actor.update({ "system.pericias": pericias });
             }
           },

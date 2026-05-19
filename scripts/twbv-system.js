@@ -153,12 +153,7 @@ function renderDualDieResult({
           <strong class="twbv-roll-total-base">${totalLabel}</strong>
         </footer>
         <div class="twbv-roll-adjust-controls" data-base-total="${total}">
-          <button type="button" class="twbv-roll-add-die" title="Adicionar dado extra">🎲＋</button>
-          <select class="twbv-roll-extra-die" aria-label="Escolher dado extra">
-            <option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option>
-          </select>
-          <input type="number" class="twbv-roll-flat-mod" value="0" step="1" aria-label="Modificador manual" />
-          <button type="button" class="twbv-roll-apply-mod" title="Aplicar modificador">±</button>
+          <button type="button" class="twbv-roll-add-die" title="Adicionar ajuste">🎲＋</button>
         </div>
         <div class="twbv-roll-adjust-result" hidden>
           <div class="twbv-roll-adjust-breakdown"></div>
@@ -538,7 +533,11 @@ class TWBVPersonagemSheet extends ActorSheet {
       const bonusDieOptions = ['d4','d6','d8','d10','d12'].map((die) => `<option value="${die}">${die}</option>`).join("");
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
-        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><div class="twbv-roll-inline"><label>Dado extra<select name="bonusDie"><option value="">Nenhum</option>${bonusDieOptions}</select></label><label>Bônus flat<input type="number" name="manualBonus" value="0" step="1" /></label></div></div>`,
+        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><label>Bônus manual<input type="number" name="manualBonus" value="0" step="1" /></label></div>`,
+        classes: ["wbtv-roll-skill-dialog"],
+        render: (dialog, html) => {
+          applyDialogWindowClass(html ?? dialog, "wbtv-roll-skill-dialog");
+        },
         buttons: {
           accept: {
             label: "Aceitar",
@@ -554,11 +553,11 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
-              const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
-              const bonusDie = Number(bonusDieValue);
+              const skillRank = getSkillRank(skillDie, skillBonus);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: `${attr.label}${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,
+                subtitle: attr.label,
+                subtitleClass: `twbv-roll-chat__attr-chip ${skillRank.cssClass}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,
@@ -1188,35 +1187,62 @@ function twbvApplyRollAdjustments(root) {
   const resultWrap = root.querySelector('.twbv-roll-adjust-result');
   const finalEl = root.querySelector('.twbv-roll-total-final');
   const addBtn = root.querySelector('.twbv-roll-add-die');
-  const dieSel = root.querySelector('.twbv-roll-extra-die');
-  const modInput = root.querySelector('.twbv-roll-flat-mod');
-  const modBtn = root.querySelector('.twbv-roll-apply-mod');
-  if (!controls || !baseEl || !breakdownEl || !resultWrap || !finalEl || !addBtn || !dieSel || !modInput || !modBtn) return;
+  if (!controls || !baseEl || !breakdownEl || !resultWrap || !finalEl || !addBtn) return;
 
   const base = Number(controls.dataset.baseTotal ?? baseEl.textContent ?? 0) || 0;
-  let extraDie = 0;
-  let flatMod = 0;
 
-  const refresh = () => {
-    const final = base + extraDie + flatMod;
-    breakdownEl.textContent = `${base} ${extraDie ? `+ ${extraDie}` : '+ 0'} ${flatMod ? (flatMod > 0 ? `+ ${flatMod}` : `- ${Math.abs(flatMod)}`) : '+ 0'} = ${final}`;
-    finalEl.textContent = String(final);
-    resultWrap.hidden = false;
-  };
+  addBtn.addEventListener('click', () => {
+    const dialogContent = `
+      <form class="twbv-roll-adjust-dialog">
+        <label>Dado adicional
+          <select name="extraDie">
+            <option value="" selected>Selecione...</option>
+            <option value="4">d4</option>
+            <option value="6">d6</option>
+            <option value="8">d8</option>
+            <option value="10">d10</option>
+            <option value="12">d12</option>
+          </select>
+        </label>
+        <label>Bônus manual
+          <input type="number" name="flatMod" value="" step="1" placeholder="0" />
+        </label>
+      </form>`;
 
-  addBtn.addEventListener('click', async () => {
-    const die = Number(dieSel.value || 4);
-    const roll = await (new Roll(`1d${die}`)).evaluate();
-    extraDie = Number(roll.total ?? 0);
-    refresh();
+    new Dialog({
+      title: 'Ajustar resultado da rolagem',
+      content: dialogContent,
+      classes: ['wbtv-roll-adjust-dialog'],
+      buttons: {
+        apply: {
+          label: 'Aplicar',
+          callback: async (dialogHtml) => {
+            const modalRoot = resolveDialogRoot(dialogHtml);
+            const dieValueRaw = String(modalRoot?.querySelector('select[name="extraDie"]')?.value ?? '').trim();
+            const flatRaw = String(modalRoot?.querySelector('input[name="flatMod"]')?.value ?? '').trim();
+            const flatMod = flatRaw === '' ? 0 : (Number.isFinite(Number(flatRaw)) ? Number(flatRaw) : 0);
+
+            let extraDie = 0;
+            if (dieValueRaw) {
+              const die = Number(dieValueRaw);
+              if (Number.isFinite(die) && [4, 6, 8, 10, 12].includes(die)) {
+                const roll = await (new Roll(`1d${die}`)).evaluate();
+                extraDie = Number(roll.total ?? 0);
+              }
+            }
+
+            const final = base + extraDie + flatMod;
+            const modLabel = flatMod > 0 ? `+ ${flatMod}` : flatMod < 0 ? `- ${Math.abs(flatMod)}` : '+ 0';
+            breakdownEl.textContent = `${base} + ${extraDie} ${modLabel} = ${final}`;
+            finalEl.textContent = String(final);
+            resultWrap.hidden = false;
+          }
+        },
+        cancel: { label: 'Cancelar' }
+      },
+      default: 'apply'
+    }).render(true);
   });
-
-  const applyMod = () => {
-    flatMod = Number.isFinite(Number(modInput.value)) ? Number(modInput.value) : 0;
-    refresh();
-  };
-  modBtn.addEventListener('click', applyMod);
-  modInput.addEventListener('change', applyMod);
 }
 
 Hooks.once("init", () => {

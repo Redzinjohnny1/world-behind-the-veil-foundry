@@ -619,7 +619,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === "forca" ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label>
           <div class="twbv-add-skill-row">
             <label>Dado base<select name="skillDie">${dieOptions}</select></label>
-            <label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label>
+            <label>Bônus extra<input type="number" name="bonus" value="0" min="0" max="99" step="1" /></label>
           </div>
           <div class="twbv-add-skill-bottom-row">
             <label>Nível de perícia<input type="text" name="skillLevelLabel" class="twbv-skill-level-chip rank-novato" value="NOVATO" readonly /></label>
@@ -639,17 +639,13 @@ class TWBVPersonagemSheet extends ActorSheet {
 
           const syncAll = () => {
             const selectedLevel = SKILL_LEVELS[Number(dieEl?.value)] ?? SKILL_LEVELS[0];
-            const typedBonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : selectedLevel.bonus;
-            const matchedLevelIndex = SKILL_LEVELS.findIndex((level) => level.dado === selectedLevel.dado && level.bonus === typedBonus);
-            const finalLevel = matchedLevelIndex >= 0 ? SKILL_LEVELS[matchedLevelIndex] : selectedLevel;
-            if (bonusEl && Number(bonusEl.value) !== Number(finalLevel.bonus)) bonusEl.value = String(finalLevel.bonus);
-            if (matchedLevelIndex >= 0 && dieEl && Number(dieEl.value) !== matchedLevelIndex) dieEl.value = String(matchedLevelIndex);
-            if (previewEl) previewEl.textContent = buildDieLabel(finalLevel.dado, finalLevel.bonus);
-            const rank = getSkillRank(finalLevel.dado, finalLevel.bonus);
+            const extraBonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : 0;
+            const finalBonus = selectedLevel.bonus + extraBonus;
+            if (previewEl) previewEl.textContent = buildDieLabel(selectedLevel.dado, finalBonus);
             if (skillLevelLabelEl) {
-              skillLevelLabelEl.value = rank.label;
+              skillLevelLabelEl.value = selectedLevel.rank;
               skillLevelLabelEl.classList.remove("rank-novato", "rank-treinado", "rank-experiente", "rank-especialista", "rank-mestre");
-              skillLevelLabelEl.classList.add(rank.cssClass);
+              skillLevelLabelEl.classList.add(selectedLevel.cssClass);
             }
           };
 
@@ -667,10 +663,9 @@ class TWBVPersonagemSheet extends ActorSheet {
               const atributo = String(root?.querySelector('select[name="atributo"]')?.value ?? "forca").toLowerCase();
               const levelIndex = Number(root?.querySelector('select[name="skillDie"]')?.value ?? 0);
               const selectedLevel = SKILL_LEVELS[levelIndex] ?? SKILL_LEVELS[0];
-              const bonusInput = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? selectedLevel.bonus));
-              const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === selectedLevel.dado && level.bonus === bonusInput) ?? selectedLevel;
-              const dado = normalizedLevel.dado;
-              const bonus = normalizedLevel.bonus;
+              const bonusInput = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? 0));
+              const dado = selectedLevel.dado;
+              const bonus = selectedLevel.bonus + bonusInput;
               pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, atributo, dado, bonus, locked: false });
               await this.actor.update({ "system.pericias": pericias });
             }

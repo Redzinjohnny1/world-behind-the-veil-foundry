@@ -657,9 +657,9 @@
 .window-app.sheet.actor .twbv-skill-row {
   position: relative;
   width: 100%;
-  height: 178px;
-  min-height: 178px;
-  max-height: 178px;
+  height: 150px;
+  min-height: 150px;
+  max-height: 150px;
   padding: 0;
   margin: 0;
   display: block;
@@ -673,9 +673,9 @@
 .twbv.sheet.actor .twbv-skill-roll,
 .window-app.sheet.actor .twbv-skill-roll {
   left: 2.2%;
-  top: 18%;
-  width: 11.8%;
-  height: 67%;
+  top: 19%;
+  width: 10.5%;
+  height: 62%;
   border: 0;
   background: transparent;
   border-radius: 50%;
@@ -685,13 +685,14 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(195, 141, 255, 0.65)) brightness(1.1);
 }
 .twbv.sheet.actor .twbv-edit-skill-config,
 .window-app.sheet.actor .twbv-edit-skill-config {
   left: 15%;
-  top: 16%;
+  top: 17%;
   width: 52%;
-  height: 68%;
+  height: 64%;
   text-align: left;
   border: 0;
   background: transparent;
@@ -704,19 +705,21 @@
   padding: 0;
 }
 .twbv.sheet.actor .twbv-skill-name,
-.window-app.sheet.actor .twbv-skill-name { font-size: 1.95rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
+.window-app.sheet.actor .twbv-skill-name { font-size: 1.6rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
+.twbv.sheet.actor .twbv-skill-meta,
+.window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .twbv.sheet.actor .twbv-skill-attr,
 .window-app.sheet.actor .twbv-skill-attr { font-size: 1.08rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
 .twbv.sheet.actor .twbv-skill-rank,
 .window-app.sheet.actor .twbv-skill-rank { font-size: .94rem; font-weight: 700; letter-spacing: .09em; border-radius: 999px; padding: 2px 10px; border: 1px solid transparent; }
 .twbv.sheet.actor .twbv-edit-skill-roll,
 .window-app.sheet.actor .twbv-edit-skill-roll {
-  top: 29%;
+  top: 30%;
   right: 17.4%;
-  width: 12%;
+  width: 11.5%;
   min-height: 0;
   height: 42%;
-  transform: scale(1.24);
+  transform: scale(1.1);
   transform-origin: center;
   border: 0;
   background: transparent;
@@ -726,9 +729,9 @@
 }
 .twbv.sheet.actor .twbv-toggle-skill-lock, .twbv.sheet.actor .twbv-remove-skill,
 .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill {
-  top: 31%;
+  top: 33%;
   width: 4.2%;
-  height: 38%;
+  height: 34%;
   border-radius: 6px;
   border: 0;
   background: transparent;

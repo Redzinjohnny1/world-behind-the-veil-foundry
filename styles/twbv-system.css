@@ -697,7 +697,7 @@
 .twbv.sheet.actor .twbv-edit-skill-config,
 .window-app.sheet.actor .twbv-edit-skill-config {
   left: 11.6%;
-  top: 14%;
+  top: 15%;
   width: 55%;
   height: 72%;
   text-align: left;
@@ -708,20 +708,20 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 4px;
-  padding: 8px 12px;
+  gap: 3px;
+  padding: 9px 12px 7px;
   border: 1px solid rgba(217, 183, 117, 0.34);
   border-radius: 10px;
   background: linear-gradient(90deg, rgba(30, 22, 56, 0.75), rgba(17, 13, 34, 0.68));
 }
 .twbv.sheet.actor .twbv-skill-name,
-.window-app.sheet.actor .twbv-skill-name { font-size: 1.12rem; font-weight: 700; color: #f7e9c4; line-height: 1.08; }
+.window-app.sheet.actor .twbv-skill-name { font-size: 1.12rem; font-weight: 700; color: #f7e9c4; line-height: 1.04; margin-top: 2px; }
 .twbv.sheet.actor .twbv-skill-meta,
-.window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 9px; flex-wrap: nowrap; width: 100%; margin-top: 3px; }
+.window-app.sheet.actor .twbv-skill-meta { display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap; width: 100%; margin-top: 4px; justify-content: center; }
 .twbv.sheet.actor .twbv-skill-attr,
-.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; line-height: 1.15; }
+.window-app.sheet.actor .twbv-skill-attr { font-size: .9rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.15; margin-right: 2px; }
 .twbv.sheet.actor .twbv-skill-rank,
-.window-app.sheet.actor .twbv-skill-rank { font-size: .82rem; font-weight: 700; letter-spacing: .09em; border-radius: 999px; padding: 3px 10px; border: 1px solid transparent; margin-left: auto; }
+.window-app.sheet.actor .twbv-skill-rank { font-size: .76rem; font-weight: 700; letter-spacing: .07em; border-radius: 999px; padding: 3px 9px; border: 1px solid transparent; margin-left: 0; transform: translateX(-2px); }
 .twbv.sheet.actor .twbv-edit-skill-roll,
 .window-app.sheet.actor .twbv-edit-skill-roll {
   top: 18%;

@@ -69,15 +69,13 @@
     <div class="tab" data-group="primary" data-tab="principal">
       <div class="twbv-principal-grid twbv-principal-main">
         <section class="twbv-panel twbv-ornate twbv-attributes-panel">
-          <div class="attributes-art-panel" role="group" aria-label="Atributos">
-            <div class="attributes-art-grid">
+          <div class="attributes-art-grid" role="group" aria-label="Atributos">
               <section class="twbv-attribute-card"><h3>Força</h3><label>Dado<select name="system.atributos.forca.passo">{{#select system.atributos.forca.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="forca" title="Rolar Força">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="destreza" title="Rolar Destreza">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="constituicao" title="Rolar Constituição">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="inteligencia" title="Rolar Inteligência">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Influência</h3><label>Dado<select name="system.atributos.influencia.passo">{{#select system.atributos.influencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="influencia" title="Rolar Influência">🎲</button></section>
               <section class="twbv-attribute-card"><h3>Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="intuicao" title="Rolar Intuição">🎲</button></section>
-            </div>
           </div>
         </section>
 
@@ -189,20 +187,60 @@
     </div>
     <div class="tab" data-group="primary" data-tab="equipamento">
       <div class="twbv-panel twbv-ornate">
-        <div class="twbv-item-tab-header"><h2>Equipamento</h2><div class="twbv-item-tab-adders"><button type="button" class="twbv-item-create" data-type="equipamento">Item</button><button type="button" class="twbv-item-create" data-type="arma">Arma</button><button type="button" class="twbv-item-create" data-type="armadura">Armadura</button></div></div>
-        {{#if activeBonuses.length}}<div class="twbv-active-bonuses"><h3>Bônus ativos</h3>{{#each activeBonuses as |bonus|}}<p><strong>{{bonus.name}}</strong>: {{bonus.summary}}</p>{{/each}}</div>{{/if}}
-        <div class="twbv-item-card-list">
-          {{#each equipamentos as |item|}}
-            <article class="twbv-item-card">
-              <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}"><i class="fas fa-trash"></i></button></div></div>
-              <div class="twbv-item-card-meta">{{item.typeLabel}} • Qtd {{item.quantity}} • Peso {{item.weight}} • Custo {{item.cost}}</div>
-              <div class="twbv-item-toggle-row"><label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-active" data-item-id="{{item.id}}" data-field="active" {{checked item.active}} /> Ativo</label><label class="twbv-item-toggle"><input type="checkbox" class="twbv-item-toggle-equipped" data-item-id="{{item.id}}" data-field="equipped" {{checked item.equipped}} /> Equipado</label></div>
-              {{#if item.damage}}<p class="twbv-item-effect">Dano {{item.damage}} | Alcance {{item.range}} | Bônus {{item.bonus}}</p>{{/if}}
-              {{#if item.protection}}<p class="twbv-item-effect">Proteção {{item.protection}} | Penalidade {{item.penalty}}</p>{{/if}}
-              {{#if item.effectsSummary}}<p class="twbv-item-effect">Efeitos: {{item.effectsSummary}}</p>{{/if}}
-            </article>
-          {{else}}<p class="twbv-adv-empty">Nenhum equipamento cadastrado.</p>{{/each}}
-        </div>
+        <section class="equipment-tab-wrap">
+          <header class="equipment-header">
+            <h2>Equipamentos</h2>
+            <div class="twbv-item-tab-adders">
+              <a class="item-create" data-type="weapon"><i class="fas fa-plus"></i> Arma</a>
+              <a class="item-create" data-type="consumable"><i class="fas fa-plus"></i> Consumível</a>
+            </div>
+          </header>
+
+          <section class="equipment-section favorites">
+            <h3>Favoritos</h3>
+            <div class="equipment-grid">
+              {{#each equipment.favorite as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+              {{/each}}
+            </div>
+          </section>
+
+          <section class="equipment-section weapons">
+            <h3>Armas</h3>
+            <div class="equipment-grid">
+              {{#each equipment.weapons as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+              {{/each}}
+            </div>
+          </section>
+
+          <section class="equipment-section magazines">
+            <h3>Carregadores</h3>
+            <div class="equipment-grid">
+              {{#each equipment.magazines as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+              {{/each}}
+            </div>
+          </section>
+
+          <section class="equipment-section consumables">
+            <h3>Consumíveis</h3>
+            <div class="equipment-grid">
+              {{#each equipment.consumables as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+              {{/each}}
+            </div>
+          </section>
+
+          <section class="equipment-section others">
+            <h3>Outros</h3>
+            <div class="equipment-grid">
+              {{#each equipment.others as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+              {{/each}}
+            </div>
+          </section>
+        </section>
       </div>
     </div>
     <div class="tab" data-group="primary" data-tab="poderes"><div class="twbv-panel twbv-ornate"><h2>Poderes</h2><p>Em construção.</p></div></div>

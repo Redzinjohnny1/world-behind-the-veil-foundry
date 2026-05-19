@@ -238,6 +238,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "intuicao", label: "Intuição" }
     ];
     context.skillAttributeOptions = SKILL_ATTRIBUTES;
+    context.skillSortActive = Boolean(this.actor.getFlag("world-behind-the-veil", "skillSortActive"));
     context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
       value: index,
       label: buildDieLabel(level.dado, level.bonus),
@@ -634,6 +635,37 @@ class TWBVPersonagemSheet extends ActorSheet {
         },
         default: "accept"
       }).render(true);
+    });
+
+    html.find(".twbv-sort-skills").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
+      const flagScope = "world-behind-the-veil";
+      const isActive = Boolean(this.actor.getFlag(flagScope, "skillSortActive"));
+      const currentSkills = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+
+      if (!isActive) {
+        const backup = foundry.utils.deepClone(currentSkills);
+        const sorted = foundry.utils.deepClone(currentSkills).sort((a, b) => {
+          const nameA = String(a?.nome ?? "").trim().toLocaleLowerCase("pt-BR");
+          const nameB = String(b?.nome ?? "").trim().toLocaleLowerCase("pt-BR");
+          return nameA.localeCompare(nameB, "pt-BR", { sensitivity: "base" });
+        });
+        await this.actor.update({ "system.pericias": sorted });
+        await this.actor.setFlag(flagScope, "skillSortBackup", backup);
+        await this.actor.setFlag(flagScope, "skillSortActive", true);
+        ui.notifications?.info("Perícias organizadas em ordem alfabética.");
+        return;
+      }
+
+      const backup = this.actor.getFlag(flagScope, "skillSortBackup");
+      if (Array.isArray(backup)) {
+        await this.actor.update({ "system.pericias": foundry.utils.deepClone(backup) });
+      }
+      await this.actor.unsetFlag(flagScope, "skillSortBackup");
+      await this.actor.setFlag(flagScope, "skillSortActive", false);
+      ui.notifications?.info("Ordem anterior das perícias restaurada.");
     });
 
     html.find(".twbv-edit-skill-config").on("click", async (event) => {

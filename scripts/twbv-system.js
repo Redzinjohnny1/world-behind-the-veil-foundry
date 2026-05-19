@@ -51,12 +51,12 @@ const SKILL_LEVELS = [
   { dado: 12, bonus: 5 }
 ];
 const SKILL_ATTRIBUTES = [
-  { key: "forca", label: "Força", iconPath: "systems/world-behind-the-veil/assets/icons/forca.png" },
-  { key: "destreza", label: "Destreza", iconPath: "systems/world-behind-the-veil/assets/icons/destreza.png" },
-  { key: "constituicao", label: "Constituição", iconPath: "systems/world-behind-the-veil/assets/icons/constituicao.png" },
-  { key: "inteligencia", label: "Inteligência", iconPath: "systems/world-behind-the-veil/assets/icons/inteligencia.png" },
-  { key: "intuicao", label: "Intuição", iconPath: "systems/world-behind-the-veil/assets/icons/intuicao.png" },
-  { key: "influencia", label: "Influência", iconPath: "systems/world-behind-the-veil/assets/icons/influencia.png" }
+  { key: "forca", label: "Força" },
+  { key: "destreza", label: "Destreza" },
+  { key: "constituicao", label: "Constituição" },
+  { key: "inteligencia", label: "Inteligência" },
+  { key: "intuicao", label: "Intuição" },
+  { key: "influencia", label: "Influência" }
 ];
 
 function getSkillRank(dado, bonus = 0) {

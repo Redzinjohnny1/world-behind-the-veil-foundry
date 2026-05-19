@@ -48,6 +48,7 @@ const SKILL_LEVELS = [
   { dado: 8, bonus: 3 },
   { dado: 10, bonus: 3 },
   { dado: 10, bonus: 4 },
+  { dado: 12, bonus: 4 },
   { dado: 12, bonus: 5 }
 ];
 const SKILL_ATTRIBUTES = [
@@ -611,7 +612,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
-      const levelOptions = SKILL_LEVELS.map((level, index) => `<option value="${index}" ${index === 0 ? "selected" : ""}>${getSkillRank(level.dado, level.bonus).label}</option>`).join("");
       const dieOptions = SKILL_DICE.map((die, index) => `<option value="${die}" ${index === 0 ? "selected" : ""}>d${die}</option>`).join("");
       new Dialog({
         title: "NOVA PERÍCIA",
@@ -623,7 +623,7 @@ class TWBVPersonagemSheet extends ActorSheet {
             <label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label>
           </div>
           <div class="twbv-add-skill-bottom-row">
-            <label>Nível de perícia<select name="skillLevel">${levelOptions}</select></label>
+            <label>Nível de perícia<input type="text" name="skillLevelLabel" value="NOVATO" readonly /></label>
             <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>d4+0</strong></div>
           </div>
         </form>`,
@@ -633,36 +633,23 @@ class TWBVPersonagemSheet extends ActorSheet {
           applyDialogWindowClass(root ?? dialog, "wbtv-add-skill-dialog");
           const form = root?.querySelector?.(".twbv-skill-dialog-form");
           if (!form) return;
-          const skillLevelEl = form.querySelector('select[name="skillLevel"]');
+          const skillLevelLabelEl = form.querySelector('input[name="skillLevelLabel"]');
           const dieEl = form.querySelector('select[name="skillDie"]');
           const bonusEl = form.querySelector('input[name="bonus"]');
           const previewEl = form.querySelector(".twbv-skill-preview strong");
 
-          const refreshPreview = () => {
+          const syncAll = () => {
             const die = SKILL_DICE.includes(Number(dieEl?.value)) ? Number(dieEl.value) : 4;
             const bonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : 0;
             if (previewEl) previewEl.textContent = buildDieLabel(die, bonus);
-          };
-          const syncFromLevel = () => {
-            const levelIndex = Number(skillLevelEl?.value ?? 0);
-            const level = SKILL_LEVELS[levelIndex] ?? SKILL_LEVELS[0];
-            if (dieEl) dieEl.value = String(level.dado);
-            if (bonusEl) bonusEl.value = String(level.bonus);
-            refreshPreview();
-          };
-          const syncLevelFromFields = () => {
-            const die = Number(dieEl?.value ?? 4);
-            const bonus = Number(bonusEl?.value ?? 0);
-            const idx = SKILL_LEVELS.findIndex((level) => level.dado === die && level.bonus === bonus);
-            if (idx >= 0 && skillLevelEl) skillLevelEl.value = String(idx);
-            refreshPreview();
+            const rank = getSkillRank(die, bonus);
+            if (skillLevelLabelEl) skillLevelLabelEl.value = rank.label;
           };
 
-          skillLevelEl?.addEventListener("change", syncFromLevel);
-          dieEl?.addEventListener("change", syncLevelFromFields);
-          bonusEl?.addEventListener("input", syncLevelFromFields);
-          bonusEl?.addEventListener("change", syncLevelFromFields);
-          syncFromLevel();
+          dieEl?.addEventListener("change", syncAll);
+          bonusEl?.addEventListener("input", syncAll);
+          bonusEl?.addEventListener("change", syncAll);
+          syncAll();
         },
         buttons: {
           accept: {

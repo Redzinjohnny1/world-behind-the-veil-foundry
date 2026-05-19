@@ -1099,6 +1099,8 @@
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 26px rgba(149, 96, 224, 0.55), 0 16px 36px rgba(0, 0, 0, 0.7);
+  width: min(760px, 92vw);
+  min-width: 560px;
 }
 
 .wbtv-add-skill-dialog .window-header {
@@ -1144,6 +1146,13 @@
   color: #f8edcc;
   font-size: 1.05rem;
   padding: 6px 10px;
+}
+.wbtv-add-skill-dialog input[readonly] {
+  background: rgba(14, 10, 28, 0.98);
+  border-color: rgba(217, 183, 117, 0.6);
+  color: #f7e7be;
+  font-weight: 700;
+  text-align: center;
 }
 .wbtv-add-skill-dialog select option {
   background: #130d24;

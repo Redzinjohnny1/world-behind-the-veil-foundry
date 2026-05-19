@@ -40,34 +40,34 @@ function summarizeItemActiveEffects(item) {
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
 const SKILL_LEVELS = [
-  { dado: 4, bonus: 0 },
-  { dado: 4, bonus: 1 },
-  { dado: 6, bonus: 1 },
-  { dado: 6, bonus: 2 },
-  { dado: 8, bonus: 2 },
-  { dado: 8, bonus: 3 },
-  { dado: 10, bonus: 3 },
-  { dado: 10, bonus: 4 },
-  { dado: 12, bonus: 5 }
+  { dado: 4, bonus: 0, rank: "NOVATO", cssClass: "rank-novato" },
+  { dado: 4, bonus: 1, rank: "NOVATO", cssClass: "rank-novato" },
+  { dado: 6, bonus: 1, rank: "TREINADO", cssClass: "rank-treinado" },
+  { dado: 6, bonus: 2, rank: "TREINADO", cssClass: "rank-treinado" },
+  { dado: 8, bonus: 2, rank: "EXPERIENTE", cssClass: "rank-experiente" },
+  { dado: 8, bonus: 3, rank: "EXPERIENTE", cssClass: "rank-experiente" },
+  { dado: 10, bonus: 3, rank: "ESPECIALISTA", cssClass: "rank-especialista" },
+  { dado: 10, bonus: 4, rank: "ESPECIALISTA", cssClass: "rank-especialista" },
+  { dado: 12, bonus: 4, rank: "MESTRE", cssClass: "rank-mestre" },
+  { dado: 12, bonus: 5, rank: "MESTRE", cssClass: "rank-mestre" }
 ];
 const SKILL_ATTRIBUTES = [
-  { key: "forca", label: "Força", iconPath: "systems/world-behind-the-veil/assets/icons/forca.png" },
-  { key: "destreza", label: "Destreza", iconPath: "systems/world-behind-the-veil/assets/icons/destreza.png" },
-  { key: "constituicao", label: "Constituição", iconPath: "systems/world-behind-the-veil/assets/icons/constituicao.png" },
-  { key: "inteligencia", label: "Inteligência", iconPath: "systems/world-behind-the-veil/assets/icons/inteligencia.png" },
-  { key: "intuicao", label: "Intuição", iconPath: "systems/world-behind-the-veil/assets/icons/intuicao.png" },
-  { key: "influencia", label: "Influência", iconPath: "systems/world-behind-the-veil/assets/icons/influencia.png" }
+  { key: "forca", label: "Força", iconPath: "icons/svg/d20-black.svg" },
+  { key: "destreza", label: "Destreza", iconPath: "icons/svg/d20-black.svg" },
+  { key: "constituicao", label: "Constituição", iconPath: "icons/svg/d20-black.svg" },
+  { key: "inteligencia", label: "Inteligência", iconPath: "icons/svg/d20-black.svg" },
+  { key: "intuicao", label: "Intuição", iconPath: "icons/svg/d20-black.svg" },
+  { key: "influencia", label: "Influência", iconPath: "icons/svg/d20-black.svg" }
 ];
 
 function getSkillRank(dado, bonus = 0) {
   const die = SKILL_DICE.includes(Number(dado)) ? Number(dado) : 4;
   const mod = Number.isFinite(Number(bonus)) ? Number(bonus) : 0;
-  if (die >= 12) return { label: "MESTRE", cssClass: "rank-mestre" };
-  if (die >= 10) return { label: "ESPECIALISTA", cssClass: "rank-especialista" };
-  if (die >= 8) return { label: "EXPERIENTE", cssClass: "rank-experiente" };
-  if (die >= 6) return { label: "TREINADO", cssClass: "rank-treinado" };
-  if (die === 4 && mod <= 1) return { label: "NOVATO", cssClass: "rank-novato" };
-  return { label: "NOVATO", cssClass: "rank-novato" };
+  const exact = SKILL_LEVELS.find((level) => level.dado === die && level.bonus === mod);
+  if (exact) return { label: exact.rank, cssClass: exact.cssClass };
+
+  const fallbackByDie = SKILL_LEVELS.filter((level) => level.dado === die).at(-1) ?? SKILL_LEVELS[0];
+  return { label: fallbackByDie.rank, cssClass: fallbackByDie.cssClass };
 }
 
 function getSkillAttributeMeta(attributeKey) {
@@ -238,6 +238,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       { key: "intuicao", label: "Intuição" }
     ];
     context.skillAttributeOptions = SKILL_ATTRIBUTES;
+    context.skillSortActive = Boolean(this.actor.getFlag("world-behind-the-veil", "skillSortActive"));
     context.skillDiceOptions = SKILL_LEVELS.map((level, index) => ({
       value: index,
       label: buildDieLabel(level.dado, level.bonus),
@@ -610,22 +611,66 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this._onSubmit(event, { preventClose: true, preventRender: true });
 
       const pericias = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+      const dieOptions = SKILL_LEVELS.map((level, index) => `<option value="${index}" data-die="${level.dado}" data-bonus="${level.bonus}" ${index === 0 ? "selected" : ""}>${buildDieLabel(level.dado, level.bonus)}</option>`).join("");
       new Dialog({
-        title: "Adicionar perícia",
-        content: `<form class="twbv-skill-dialog-form"><label>Nome da perícia<input type="text" name="nome" placeholder="Ex: Arcanismo" autofocus /></label><label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === "forca" ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label><label>Dado base<select name="skillDie">${SKILL_DICE.map((die, index) => `<option value="${die}" ${index === 0 ? "selected" : ""}>d${die}</option>`).join("")}</select></label><label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label></form>`,
+        title: "NOVA PERÍCIA",
+        content: `<form class="twbv-skill-dialog-form">
+          <label>Nome da perícia<input type="text" name="nome" placeholder="Ex.: Atletismo" autofocus /></label>
+          <label>Atributo associado<select name="atributo">${SKILL_ATTRIBUTES.map((attr) => `<option value="${attr.key}" ${attr.key === "forca" ? "selected" : ""}>${attr.label}</option>`).join("")}</select></label>
+          <div class="twbv-add-skill-row">
+            <label>Dado base<select name="skillDie">${dieOptions}</select></label>
+            <label>Bônus<input type="number" name="bonus" value="0" min="0" max="8" step="1" /></label>
+          </div>
+          <div class="twbv-add-skill-bottom-row">
+            <label>Nível de perícia<input type="text" name="skillLevelLabel" class="twbv-skill-level-chip rank-novato" value="NOVATO" readonly /></label>
+            <div class="twbv-skill-preview"><span>Pré-visualização</span><strong>d4+0</strong></div>
+          </div>
+        </form>`,
         classes: ["wbtv-add-skill-dialog"],
         render: (dialog, html) => {
-          applyDialogWindowClass(html ?? dialog, "wbtv-add-skill-dialog");
+          const root = resolveDialogRoot(html ?? dialog);
+          applyDialogWindowClass(root ?? dialog, "wbtv-add-skill-dialog");
+          const form = root?.querySelector?.(".twbv-skill-dialog-form") ?? root?.closest?.(".twbv-skill-dialog-form");
+          if (!form) return;
+          const skillLevelLabelEl = form.querySelector('input[name="skillLevelLabel"]');
+          const dieEl = form.querySelector('select[name="skillDie"]');
+          const bonusEl = form.querySelector('input[name="bonus"]');
+          const previewEl = form.querySelector(".twbv-skill-preview strong");
+
+          const syncAll = () => {
+            const selectedLevel = SKILL_LEVELS[Number(dieEl?.value)] ?? SKILL_LEVELS[0];
+            const typedBonus = Number.isFinite(Number(bonusEl?.value)) ? Number(bonusEl.value) : selectedLevel.bonus;
+            const matchedLevelIndex = SKILL_LEVELS.findIndex((level) => level.dado === selectedLevel.dado && level.bonus === typedBonus);
+            const finalLevel = matchedLevelIndex >= 0 ? SKILL_LEVELS[matchedLevelIndex] : selectedLevel;
+            if (bonusEl && Number(bonusEl.value) !== Number(finalLevel.bonus)) bonusEl.value = String(finalLevel.bonus);
+            if (matchedLevelIndex >= 0 && dieEl && Number(dieEl.value) !== matchedLevelIndex) dieEl.value = String(matchedLevelIndex);
+            if (previewEl) previewEl.textContent = buildDieLabel(finalLevel.dado, finalLevel.bonus);
+            const rank = getSkillRank(finalLevel.dado, finalLevel.bonus);
+            if (skillLevelLabelEl) {
+              skillLevelLabelEl.value = rank.label;
+              skillLevelLabelEl.classList.remove("rank-novato", "rank-treinado", "rank-experiente", "rank-especialista", "rank-mestre");
+              skillLevelLabelEl.classList.add(rank.cssClass);
+            }
+          };
+
+          dieEl?.addEventListener("change", syncAll);
+          bonusEl?.addEventListener("input", syncAll);
+          bonusEl?.addEventListener("change", syncAll);
+          syncAll();
         },
         buttons: {
           accept: {
-            label: "Aceitar",
+            label: "Adicionar",
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const nome = String(root?.querySelector('input[name="nome"]')?.value ?? "").trim();
               const atributo = String(root?.querySelector('select[name="atributo"]')?.value ?? "forca").toLowerCase();
-              const dado = SKILL_DICE.includes(Number(root?.querySelector('select[name="skillDie"]')?.value)) ? Number(root?.querySelector('select[name="skillDie"]')?.value) : 4;
-              const bonus = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? 0));
+              const levelIndex = Number(root?.querySelector('select[name="skillDie"]')?.value ?? 0);
+              const selectedLevel = SKILL_LEVELS[levelIndex] ?? SKILL_LEVELS[0];
+              const bonusInput = Math.max(0, Number(root?.querySelector('input[name="bonus"]')?.value ?? selectedLevel.bonus));
+              const normalizedLevel = SKILL_LEVELS.find((level) => level.dado === selectedLevel.dado && level.bonus === bonusInput) ?? selectedLevel;
+              const dado = normalizedLevel.dado;
+              const bonus = normalizedLevel.bonus;
               pericias.push({ nome: nome || `Perícia ${pericias.length + 1}`, atributo, dado, bonus, locked: false });
               await this.actor.update({ "system.pericias": pericias });
             }
@@ -634,6 +679,37 @@ class TWBVPersonagemSheet extends ActorSheet {
         },
         default: "accept"
       }).render(true);
+    });
+
+    html.find(".twbv-sort-skills").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+
+      const flagScope = "world-behind-the-veil";
+      const isActive = Boolean(this.actor.getFlag(flagScope, "skillSortActive"));
+      const currentSkills = foundry.utils.deepClone(this.actor.system.pericias ?? []);
+
+      if (!isActive) {
+        const backup = foundry.utils.deepClone(currentSkills);
+        const sorted = foundry.utils.deepClone(currentSkills).sort((a, b) => {
+          const nameA = String(a?.nome ?? "").trim().toLocaleLowerCase("pt-BR");
+          const nameB = String(b?.nome ?? "").trim().toLocaleLowerCase("pt-BR");
+          return nameA.localeCompare(nameB, "pt-BR", { sensitivity: "base" });
+        });
+        await this.actor.update({ "system.pericias": sorted });
+        await this.actor.setFlag(flagScope, "skillSortBackup", backup);
+        await this.actor.setFlag(flagScope, "skillSortActive", true);
+        ui.notifications?.info("Perícias organizadas em ordem alfabética.");
+        return;
+      }
+
+      const backup = this.actor.getFlag(flagScope, "skillSortBackup");
+      if (Array.isArray(backup)) {
+        await this.actor.update({ "system.pericias": foundry.utils.deepClone(backup) });
+      }
+      await this.actor.unsetFlag(flagScope, "skillSortBackup");
+      await this.actor.setFlag(flagScope, "skillSortActive", false);
+      ui.notifications?.info("Ordem anterior das perícias restaurada.");
     });
 
     html.find(".twbv-edit-skill-config").on("click", async (event) => {

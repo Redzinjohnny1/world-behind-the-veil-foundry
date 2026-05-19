@@ -51,12 +51,12 @@ const SKILL_LEVELS = [
   { dado: 12, bonus: 5 }
 ];
 const SKILL_ATTRIBUTES = [
-  { key: "forca", label: "Força", iconPath: "systems/world-behind-the-veil/assets/icons/forca.png" },
-  { key: "destreza", label: "Destreza", iconPath: "systems/world-behind-the-veil/assets/icons/destreza.png" },
-  { key: "constituicao", label: "Constituição", iconPath: "systems/world-behind-the-veil/assets/icons/constituicao.png" },
-  { key: "inteligencia", label: "Inteligência", iconPath: "systems/world-behind-the-veil/assets/icons/inteligencia.png" },
-  { key: "intuicao", label: "Intuição", iconPath: "systems/world-behind-the-veil/assets/icons/intuicao.png" },
-  { key: "influencia", label: "Influência", iconPath: "systems/world-behind-the-veil/assets/icons/influencia.png" }
+  { key: "forca", label: "Força", iconPath: "icons/svg/d20-black.svg" },
+  { key: "destreza", label: "Destreza", iconPath: "icons/svg/d20-black.svg" },
+  { key: "constituicao", label: "Constituição", iconPath: "icons/svg/d20-black.svg" },
+  { key: "inteligencia", label: "Inteligência", iconPath: "icons/svg/d20-black.svg" },
+  { key: "intuicao", label: "Intuição", iconPath: "icons/svg/d20-black.svg" },
+  { key: "influencia", label: "Influência", iconPath: "icons/svg/d20-black.svg" }
 ];
 
 function getSkillRank(dado, bonus = 0) {

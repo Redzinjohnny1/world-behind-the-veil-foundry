@@ -107,7 +107,8 @@ function renderDualDieResult({
   dieDisplayA,
   dieDisplayB,
   actor,
-  subtitle = ""
+  subtitle = "",
+  subtitleClass = ""
 }) {
   return (async () => {
     const rollA = await new Roll(`1d${dieA}`).evaluate();
@@ -141,7 +142,7 @@ function renderDualDieResult({
       <section class="twbv-roll-chat">
         <header class="twbv-roll-chat__header">
           <h3>${title}</h3>
-          ${subtitle ? `<p>${subtitle}</p>` : ""}
+          ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
@@ -522,6 +523,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
         content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><label>Bônus manual<input type="number" name="manualBonus" value="0" step="1" /></label></div>`,
+        classes: ["wbtv-roll-skill-dialog"],
+        render: (dialog, html) => {
+          applyDialogWindowClass(html ?? dialog, "wbtv-roll-skill-dialog");
+        },
         buttons: {
           roll: {
             label: "Rolar",
@@ -537,9 +542,11 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
+              const skillRank = getSkillRank(skillDie, skillBonus);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
                 subtitle: attr.label,
+                subtitleClass: `twbv-roll-chat__attr-chip ${skillRank.cssClass}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,

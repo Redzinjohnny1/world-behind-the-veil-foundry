@@ -894,6 +894,47 @@
   .attributes-art-grid { grid-template-columns: 1fr; }
 }
 
+
+.wbtv-roll-skill-dialog {
+  border: 1px solid rgba(217, 183, 117, 0.82);
+  border-radius: 14px;
+  min-width: 520px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 24px rgba(149, 96, 224, 0.5), 0 10px 30px rgba(0, 0, 0, 0.65);
+}
+.wbtv-roll-skill-dialog .window-content {
+  background: radial-gradient(circle at top, rgba(56, 30, 92, 0.35), rgba(10, 7, 18, 0.98));
+}
+.wbtv-roll-skill-dialog .twbv-roll-skill-dialog {
+  border: 1px solid rgba(217, 183, 117, 0.5);
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(165deg, rgba(18, 12, 33, 0.94), rgba(8, 6, 16, 0.96));
+}
+.wbtv-roll-skill-dialog .twbv-roll-skill-dialog select,
+.wbtv-roll-skill-dialog .twbv-roll-skill-dialog input {
+  min-height: 38px;
+  font-size: 1.05rem;
+  border-radius: 9px;
+}
+.wbtv-roll-skill-dialog .dialog-buttons button {
+  min-height: 40px;
+  font-size: 1.15rem;
+}
+
+.twbv-roll-chat__header .twbv-roll-chat__attr-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0 10px;
+  padding: 6px 12px;
+  border: 1px solid rgba(149, 96, 224, 0.6);
+  border-radius: 999px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: .82rem;
+  font-weight: 800;
+}
 .twbv-roll-chat {
   border: 1px solid rgba(217, 183, 117, 0.78);
   border-radius: 14px;

@@ -147,17 +147,45 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
+    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
-    const inlineRoll = await new Roll(String(total)).toMessage({
+    const persistedMessage = await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
-      flavor: content
+      content: contentWithAdjust,
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      rolls: [rollA, rollB],
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
     });
-    return inlineRoll;
+    return persistedMessage;
   })();
 }
 
+
+function buildRollAdjustSection(baseTotal, chain = []) {
+  let running = Number(baseTotal ?? 0);
+  const rows = chain.map((entry) => {
+    const diePart = entry.die ? `${entry.roll} (d${entry.die})` : "0";
+    const flat = Number(entry.flat ?? 0);
+    const delta = Number(entry.delta ?? 0);
+    running += delta;
+    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
+  }).join("");
+  return `<section class="twbv-adjust-stack"><div class="twbv-adjust-results">${rows || ""}</div></section>`;
+}
+
+async function openRollAdjustDialog(message) {
+  const state = foundry.utils.deepClone(message.getFlag("world-behind-the-veil", "rollAdjust") ?? {});
+  const chain = Array.isArray(state.chain) ? state.chain : [];
+  const baseTotal = Number(state.baseTotal ?? 0);
+  const content = `<div class="twbv-roll-adjust-dialog"><label>Dado adicional<select name="die"><option value="">Nenhum</option><option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option></select></label><label>Bônus manual<input type="number" name="flat" value="0" step="1" /></label></div>`;
+  new Dialog({ title: "Ajustar resultado da rolagem", content, buttons:{ apply:{label:"Aplicar", callback: async (html)=>{ const root=resolveDialogRoot(html); const die=Number(root?.querySelector('select[name="die"]')?.value||0); const flat=Number(root?.querySelector('input[name="flat"]')?.value||0); let roll=0; if(die>0){ roll=Number((await new Roll(`1d${die}`).evaluate()).total ?? 0);} const delta=roll+(Number.isFinite(flat)?flat:0); chain.push({die,roll,flat,delta}); const all = message.content; const marker='<!--TWBV_ADJUST-->';
+      const baseContent = state.baseContent || (all.includes(marker)?all.split(marker)[0]:all);
+      const newContent = `${baseContent}${marker}${buildRollAdjustSection(baseTotal, chain)}`;
+      await message.update({content:newContent, 'flags.world-behind-the-veil.rollAdjust': {baseTotal, chain, baseContent}});
+    }}, cancel:{label:"Cancelar"}}, default:'apply'}).render(true);
+}
 function resolveDialogRoot(dialog) {
   if (!dialog) return null;
   if (typeof dialog.querySelector === "function") return dialog;
@@ -314,6 +342,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.habilidadesEspeciais = Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
     context.complicacoes = Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
     context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
+    const weapons=actorItems.filter(i=>i.type==="weapon"); const consumables=actorItems.filter(i=>i.type==="consumable"); const magazines=consumables.filter(i=>i.system?.subtype==="magazine"); const normalConsumables=consumables.filter(i=>i.system?.subtype!=="magazine");
+    for (const item of [...weapons,...consumables]) { const sys=item.system; if(item.type==="weapon"){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
+    context.equipment={favorite:actorItems.filter(i=>i.system?.favorite),weapons,magazines,consumables:normalConsumables,others:actorItems.filter(i=>!["weapon","consumable"].includes(i.type))};
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
       .map((item) => ({
@@ -534,13 +565,15 @@ class TWBVPersonagemSheet extends ActorSheet {
         { key: "intuicao", label: "Intuição" }
       ];
 
-      const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
+      const skillAttrKey = String(skill?.atributo ?? "forca").toLowerCase();
+      const options = attributes.map((attr) => `<option value="${attr.key}" ${attr.key === skillAttrKey ? "selected" : ""}>${attr.label}</option>`).join("");
+      const bonusDieOptions = ['d4','d6','d8','d10','d12'].map((die) => `<option value="${die}">${die}</option>`).join("");
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
-        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><label>Bônus manual<input type="number" name="manualBonus" value="0" step="1" /></label></div>`,
+        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><div class="twbv-roll-inline"><label>Dado extra<select name="bonusDie"><option value="">Nenhum</option>${bonusDieOptions}</select></label><label>Bônus flat<input type="number" name="manualBonus" value="0" step="1" /></label></div></div>`,
         buttons: {
-          roll: {
-            label: "Rolar",
+          accept: {
+            label: "Aceitar",
             callback: async (dialogHtml) => {
               const root = resolveDialogRoot(dialogHtml);
               const attrKey = String(root?.querySelector('select[name="attr"]')?.value ?? "forca");
@@ -553,9 +586,11 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
+              const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
+              const bonusDie = Number(bonusDieValue);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: attr.label,
+                subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,
@@ -566,16 +601,19 @@ class TWBVPersonagemSheet extends ActorSheet {
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
               });
+              if (Number.isFinite(bonusDie) && bonusDie > 0) {
+                const bonusRoll = await (new Roll(`1d${bonusDie}`)).evaluate();
+                await bonusRoll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: `Dado extra (${skill.nome || `Perícia ${index + 1}`})` });
+              }
             }
           },
           cancel: { label: "Cancelar" }
         },
-        default: "roll"
+        default: "accept"
       }).render(true);
     };
 
     html.find(".twbv-skill-roll").on("click", openSkillRollDialog);
-    html.find(".twbv-edit-skill-roll").on("click", openSkillRollDialog);
 
     html.find(".twbv-attr-roll").on("click", async (event) => {
       const labels = {
@@ -596,7 +634,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
       await renderDualDieResult({
         title: labels[attributeKey] ?? attributeKey,
-        subtitle: `Atributo vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}`,
+        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}`,
         dieA: attrDie,
         labelA: "Atributo",
         dieB: awakenedDie,
@@ -857,6 +895,16 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
     });
 
+    html.find(".item-create").on("click", this._onItemCreate?.bind(this) ?? (async()=>{}));
+    html.find(".item-edit").on("click", (e)=>{e.preventDefault(); const i=this.actor.items.get(e.currentTarget.closest(".item")?.dataset.itemId); if(i) i.sheet.render(true);});
+    html.find(".item-delete").on("click", async (e)=>{e.preventDefault(); const id=e.currentTarget.closest(".item")?.dataset.itemId; if(id) await this.actor.deleteEmbeddedDocuments("Item",[id]);});
+    html.find(".item-toggle-favorite").on("click", this._onToggleFavorite.bind(this));
+    html.find(".weapon-roll").on("click", this._onWeaponRoll.bind(this));
+    html.find(".weapon-damage").on("click", this._onWeaponDamage.bind(this));
+    html.find(".weapon-mod").on("click", this._onWeaponMod.bind(this));
+    html.find(".weapon-reload").on("click", this._onWeaponReload.bind(this));
+    html.find(".consumable-use").on("click", this._onConsumableUse.bind(this));
+
     html.find(".twbv-item-toggle-active, .twbv-item-toggle-equipped").on("change", async (event) => {
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
       const field = String(event.currentTarget.dataset.field ?? "active");
@@ -878,6 +926,19 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
     });
   }
+
+
+
+  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,price:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
+  _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,price:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
+  async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
+  async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(item.system.damage||'1d4')).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
+  async _onWeaponRoll(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const c=Number(item.system.currentShots??0),max=Number(item.system.shots??0); if(max>0&&c<=0) return ui.notifications.warn(`${item.name} está sem munição.`); if(max>0) await item.update({'system.currentShots':Math.max(c-1,0)}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p><strong>${item.name}</strong> atacou. Munição: ${Math.max(c-1,0)}/${max}</p>`});}
+  async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){const roll=await (new Roll(`${item.system.damage||'1d4'}${mod.modifier||''}`)).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name} - ${mod.name}`});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
+  async _onWeaponReload(event){event.preventDefault(); const weapon=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!weapon) return; const ammoName=weapon.system.ammo; const max=Number(weapon.system.shots??0), cur=Number(weapon.system.currentShots??0); const mag=this.actor.items.find(i=>i.type==='consumable'&&i.name===ammoName&&i.system.subtype==='magazine'); if(!mag) return ui.notifications.warn(`Nenhum carregador compatível encontrado: ${ammoName}`); const k=Object.keys(mag.system.charges?.charges??{})[0]; const ch=mag.system.charges?.charges?.[k]; const avail=Number(ch?.value??0); const load=Math.min(max-cur,avail); if(load<=0) return; await weapon.update({'system.currentShots':cur+load}); await mag.update({[`system.charges.charges.${k}.value`]: avail-load});}
+  async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
+
+  async _onItemCreate(event){event.preventDefault(); const type=event.currentTarget.dataset.type; const itemData={name:type==='weapon'?'Nova Arma':'Novo Consumível', type, system:type==='weapon'?this._buildWeaponDefaults():this._buildConsumableDefaults()}; await this.actor.createEmbeddedDocuments('Item',[itemData]);}
 
   _buildCustomItemDialogContent(type, itemData = {}) {
     const fieldsByType = {
@@ -1117,7 +1178,11 @@ Hooks.once("init", () => {
 
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
+  Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
   Actors.unregisterSheet("core", ActorSheet);
+  Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     makeDefault: true
   });
@@ -1128,4 +1193,9 @@ Hooks.on("renderChatMessage", (message, html) => {
   if (!root || typeof root.querySelector !== "function") return;
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
+  root.querySelectorAll(".twbv-roll-adjust").forEach((btn)=> btn.addEventListener("click", ()=> openRollAdjustDialog(message)));
 });
+
+
+class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
+class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}

@@ -95,6 +95,25 @@ function resolveAwakenedDie(attributeDie) {
   return 8;
 }
 
+
+async function rollVeuDie(die) {
+  const safeDie = Number(die);
+  if (!Number.isFinite(safeDie) || safeDie < 2) return { total: 0, rolls: [] };
+  const rolls = [];
+  let current = 0;
+  do {
+    current = Number((await (new Roll(`1d${safeDie}`)).evaluate()).total ?? 0);
+    rolls.push(current);
+  } while (current === safeDie);
+  return { total: rolls.reduce((sum, value) => sum + value, 0), rolls };
+}
+
+function applyVeuToFormula(formula) {
+  const text = String(formula ?? '').trim();
+  if (!text) return '1d4x';
+  return text.replace(/(\d*)d(\d+)(?![a-zA-Z])/gi, (match, count, faces) => `${count || 1}d${faces}x`);
+}
+
 function renderDualDieResult({
   title,
   dieA,
@@ -111,10 +130,12 @@ function renderDualDieResult({
   subtitleClass = ""
 }) {
   return (async () => {
-    const rollA = await new Roll(`1d${dieA}`).evaluate();
-    const rollB = await new Roll(`1d${dieB}`).evaluate();
-    const valueA = Number(rollA.total ?? 0);
-    const valueB = Number(rollB.total ?? 0);
+    const rollAData = await rollVeuDie(dieA);
+    const rollBData = await rollVeuDie(dieB);
+    const rollA = await new Roll(rollAData.rolls.map(()=>`1d${dieA}`).join("+") || `1d${dieA}`).evaluate({async: true});
+    const rollB = await new Roll(rollBData.rolls.map(()=>`1d${dieB}`).join("+") || `1d${dieB}`).evaluate({async: true});
+    const valueA = Number(rollAData.total ?? 0);
+    const valueB = Number(rollBData.total ?? 0);
     const effectiveBonusA = Number.isFinite(Number(bonusA)) ? Number(bonusA) : Number(bonus ?? 0);
     const effectiveBonusB = Number.isFinite(Number(bonusB)) ? Number(bonusB) : Number(bonus ?? 0);
 
@@ -126,9 +147,10 @@ function renderDualDieResult({
     const awakenedTotal = awakenedDieResult + effectiveBonusB;
 
     const total = Math.max(skillTotal, awakenedTotal);
-    const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected) => {
+    const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
-      const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
+      const veil = Array.isArray(selectedRolls) && selectedRolls.length > 1 ? ` (${selectedRolls.join(' + ')})` : "";
+      const valueLabel = effectiveBonus === 0 ? `${value}${veil}` : `${value}${veil}${bonusLabel} = ${modified}`;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
@@ -145,8 +167,8 @@ function renderDualDieResult({
           ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
-          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total)}
+          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
+          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
         <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
@@ -950,9 +972,9 @@ class TWBVPersonagemSheet extends ActorSheet {
   _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,price:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
   _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,price:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
   async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
-  async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(item.system.damage||'1d4')).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
+  async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(applyVeuToFormula(item.system.damage||'1d4'))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
   async _onWeaponRoll(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const c=Number(item.system.currentShots??0),max=Number(item.system.shots??0); if(max>0&&c<=0) return ui.notifications.warn(`${item.name} está sem munição.`); if(max>0) await item.update({'system.currentShots':Math.max(c-1,0)}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p><strong>${item.name}</strong> atacou. Munição: ${Math.max(c-1,0)}/${max}</p>`});}
-  async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){const roll=await (new Roll(`${item.system.damage||'1d4'}${mod.modifier||''}`)).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name} - ${mod.name}`});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
+  async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){const roll=await (new Roll(applyVeuToFormula(`${item.system.damage||'1d4'}${mod.modifier||''}`))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name} - ${mod.name}`});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
   async _onWeaponReload(event){event.preventDefault(); const weapon=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!weapon) return; const ammoName=weapon.system.ammo; const max=Number(weapon.system.shots??0), cur=Number(weapon.system.currentShots??0); const mag=this.actor.items.find(i=>i.type==='consumable'&&i.name===ammoName&&i.system.subtype==='magazine'); if(!mag) return ui.notifications.warn(`Nenhum carregador compatível encontrado: ${ammoName}`); const k=Object.keys(mag.system.charges?.charges??{})[0]; const ch=mag.system.charges?.charges?.[k]; const avail=Number(ch?.value??0); const load=Math.min(max-cur,avail); if(load<=0) return; await weapon.update({'system.currentShots':cur+load}); await mag.update({[`system.charges.charges.${k}.value`]: avail-load});}
   async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
 
@@ -1295,3 +1317,98 @@ Hooks.on("renderChatMessage", (message, html) => {
 
 class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
 class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
+
+
+function twbvEnhanceDiceTray(root) {
+  const doc = root?.ownerDocument ?? document;
+  const container = (root?.querySelector?.('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons'))
+    ?? doc.querySelector('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons');
+  const chatForm = doc.querySelector("#chat-form, .chat-form");
+  if (chatForm) chatForm.classList.add("twbv-dice-tray-root");
+  if (!container) return;
+  container.classList.add("twbv-dice-tray-themed");
+  root?.classList?.add("twbv-chat-themed");
+  const wildLabel = Array.from(doc.querySelectorAll('button, span, div')).find((el) => /selvagem/i.test(el.textContent || ''));
+  if (wildLabel) wildLabel.textContent = 'Desperto';
+  const asLabel = Array.from(doc.querySelectorAll('button, span, div')).find((el) => /^\s*as\s*$/i.test(el.textContent || ''));
+  if (asLabel) asLabel.textContent = 'Véu';
+}
+
+function twbvInjectCustomDiceTray(root) {
+  const doc = root?.ownerDocument ?? document;
+  if (doc.querySelector(".twbv-custom-dice-tray")) return;
+  const chatMessage = doc.querySelector("#chat-message, textarea[name='message'], #chat textarea");
+  const chatForm = chatMessage?.closest?.("form, #chat-form, .chat-form, #chat") ?? doc.querySelector("#chat-form, .chat-form, #chat");
+  if (!chatForm) return;
+
+  const tray = doc.createElement("div");
+  tray.className = "twbv-custom-dice-tray";
+  tray.innerHTML = `
+    <div class="twbv-custom-dice-tray__row twbv-custom-dice-tray__dice">
+      ${[4, 6, 8, 10, 12].map((d) => `<button type="button" data-die="${d}" class="twbv-die-btn">d${d}</button>`).join("")}
+    </div>
+    <div class="twbv-custom-dice-tray__row">
+      <button type="button" data-op="minus">−</button>
+      <span class="twbv-custom-dice-tray__mod" data-mod>0</span>
+      <button type="button" data-op="plus">+</button>
+      <button type="button" data-op="desperto" class="twbv-tag-btn">Desperto</button>
+      <button type="button" data-op="veu" class="twbv-tag-btn">Véu</button>
+      <button type="button" data-op="roll" class="twbv-roll-btn">Rolar</button>
+    </div>`;
+  if (chatMessage?.insertAdjacentElement) chatMessage.insertAdjacentElement("afterend", tray);
+  else chatForm.appendChild(tray);
+
+  const state = { dice: [], mod: 0, desperto: false, veu: true };
+  const sync = () => {
+    tray.querySelector("[data-mod]").textContent = String(state.mod);
+    tray.querySelectorAll(".twbv-die-btn").forEach((btn) => btn.classList.toggle("is-active", state.dice.includes(Number(btn.dataset.die))));
+    tray.querySelector('[data-op="desperto"]')?.classList.toggle("is-active", state.desperto);
+    tray.querySelector('[data-op="veu"]')?.classList.toggle("is-active", state.veu);
+  };
+  sync();
+
+  tray.addEventListener("click", async (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    const die = Number(btn.dataset.die);
+    if (die) {
+      if (state.dice.includes(die)) state.dice = state.dice.filter((d) => d !== die);
+      else state.dice.push(die);
+      sync();
+      return;
+    }
+    const op = btn.dataset.op;
+    if (op === "minus") state.mod -= 1;
+    if (op === "plus") state.mod += 1;
+    if (op === "desperto") state.desperto = !state.desperto;
+    if (op === "veu") state.veu = !state.veu;
+    if (op === "roll") {
+      if (!state.dice.length) return ui.notifications?.warn("Selecione ao menos um dado.");
+      const base = state.dice.map((d) => `1d${d}${state.veu ? "x" : ""}`).join(" + ");
+      const desperto = state.desperto ? ` + 1d6${state.veu ? "x" : ""}` : "";
+      const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
+      const formula = `${base}${desperto}${mod}`;
+      const roll = await (new Roll(formula)).evaluate();
+      await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: `Rolagem de Bandeja${state.desperto ? " • Desperto" : ""}${state.veu ? " • Véu" : ""}` });
+    }
+    sync();
+  });
+}
+
+Hooks.on('renderChatLog', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? html));
+Hooks.on('renderChatLog', (app, html) => twbvInjectCustomDiceTray(html?.[0] ?? html));
+Hooks.on('renderChatPopout', (app, html) => {
+  twbvEnhanceDiceTray(html?.[0] ?? html);
+  twbvInjectCustomDiceTray(html?.[0] ?? html);
+});
+Hooks.on('renderSidebarTab', (app, html) => {
+  if (app?.tabName !== "chat") return;
+  twbvEnhanceDiceTray(html?.[0] ?? html);
+  twbvInjectCustomDiceTray(html?.[0] ?? html);
+});
+Hooks.on("ready", () => {
+  setTimeout(() => twbvEnhanceDiceTray(document), 200);
+  setTimeout(() => twbvEnhanceDiceTray(document), 1200);
+  setTimeout(() => twbvInjectCustomDiceTray(document), 300);
+  setTimeout(() => twbvInjectCustomDiceTray(document), 1300);
+});

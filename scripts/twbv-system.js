@@ -530,12 +530,9 @@ class TWBVPersonagemSheet extends ActorSheet {
 
       const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
       const bonusDieOptions = ['d4','d6','d8','d10','d12'].map((die) => `<option value="${die}">${die}</option>`).join("");
-      const rollPrefs = foundry.utils.deepClone(this.actor.getFlag("world-behind-the-veil", "skillRollPrefs") ?? {});
-      const prefKey = String(skill.id ?? skill.nome ?? index);
-      const currentPref = rollPrefs[prefKey] ?? { attr: String(skill.atributo ?? 'forca'), bonusDie: '', manualBonus: 0 };
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,
-        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${attributes.map((a)=>`<option value="${a.key}" ${a.key===currentPref.attr?"selected":""}>${a.label}</option>`).join("")}</select></label><div class="twbv-roll-inline"><label>Dado extra<select name="bonusDie"><option value="">Nenhum</option>${["d4","d6","d8","d10","d12"].map((die)=>`<option value="${die}" ${die===currentPref.bonusDie?"selected":""}>${die}</option>`).join("")}</select></label><label>Bônus flat<input type="number" name="manualBonus" value="${Number(currentPref.manualBonus ?? 0)}" step="1" /></label></div></div>`,
+        content: `<div class="twbv-roll-skill-dialog"><label>Atributo<select name="attr">${options}</select></label><div class="twbv-roll-inline"><label>Dado extra<select name="bonusDie"><option value="">Nenhum</option>${bonusDieOptions}</select></label><label>Bônus flat<input type="number" name="manualBonus" value="0" step="1" /></label></div></div>`,
         buttons: {
           accept: {
             label: "Aceitar",
@@ -551,11 +548,8 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
-              const bonusDieRaw = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '');
-              const bonusDieValue = bonusDieRaw.replace('d','');
+              const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
-              rollPrefs[prefKey] = { attr: attr.key, bonusDie: bonusDieRaw, manualBonus: Number.isFinite(manualBonus) ? manualBonus : 0 };
-              await this.actor.setFlag("world-behind-the-veil", "skillRollPrefs", rollPrefs);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
                 subtitle: `${attr.label}${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,

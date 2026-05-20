@@ -1433,7 +1433,21 @@ function twbvInjectCustomDiceTray(root) {
       const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
       const formula = `${base}${desperto}${mod}`;
       const roll = await (new Roll(formula)).evaluate();
-      await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: `Rolagem de Bandeja${state.desperto ? " • Desperto" : ""}${state.veu ? " • Véu" : ""}` });
+      const total = Number(roll.total ?? 0);
+      const content = `
+        <section class="twbv-roll-chat">
+          <header class="twbv-roll-chat__header">
+            <h3>Rolagem de Bandeja${state.desperto ? " • Desperto" : ""}${state.veu ? " • Véu" : ""}</h3>
+            <p>${formula}</p>
+          </header>
+          <footer class="twbv-roll-chat__total">Resultado: <strong>${total}</strong></footer>
+        </section>`;
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker(),
+        content,
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+        rolls: [roll]
+      });
     }
     sync();
   });

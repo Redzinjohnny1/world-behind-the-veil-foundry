@@ -1480,6 +1480,7 @@
     radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%),
     linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99));
   color: #f3e3ba;
+  overflow-y: auto;
 }
 
 .wbtv-skill-config-dialog form {
@@ -1502,7 +1503,16 @@
   border: 1px solid rgba(149, 96, 224, 0.7);
   background: rgba(11, 8, 20, 0.96);
   color: #f8edcc;
+  line-height: 1.2;
 }
+
+.wbtv-skill-config-dialog select.twbv-attr-forca { color: #ffc57a; }
+.wbtv-skill-config-dialog select.twbv-attr-destreza { color: #be91ff; }
+.wbtv-skill-config-dialog select.twbv-attr-constituicao { color: #9ceaa9; }
+.wbtv-skill-config-dialog select.twbv-attr-inteligencia { color: #8bc0ff; }
+.wbtv-skill-config-dialog select.twbv-attr-influencia { color: #ffb07f; }
+.wbtv-skill-config-dialog select.twbv-attr-intuicao { color: #8df7ff; }
+.wbtv-skill-config-dialog select.twbv-attr-vontade { color: #ffb07f; }
 
 .wbtv-skill-config-dialog input:hover,
 .wbtv-skill-config-dialog select:hover,

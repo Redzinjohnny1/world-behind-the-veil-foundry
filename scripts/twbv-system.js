@@ -1352,18 +1352,28 @@ function twbvInjectCustomDiceTray(root) {
       <button type="button" data-op="minus">−</button>
       <span class="twbv-custom-dice-tray__mod" data-mod>0</span>
       <button type="button" data-op="plus">+</button>
-      <button type="button" data-op="desperto" class="twbv-tag-btn">Desperto</button>
+      <button type="button" data-op="desperto" class="twbv-tag-btn">Desperto d6</button>
       <button type="button" data-op="veu" class="twbv-tag-btn">Véu</button>
       <button type="button" data-op="roll" class="twbv-roll-btn">Rolar</button>
     </div>`;
-  chatForm.appendChild(tray);
+  chatForm.insertAdjacentElement("afterend", tray);
 
-  const state = { dice: [], mod: 0, desperto: false, veu: true };
+  const state = { dice: [], mod: 0, desperto: false, despertoDie: 6, veu: true };
   const sync = () => {
     tray.querySelector("[data-mod]").textContent = String(state.mod);
     tray.querySelectorAll(".twbv-die-btn").forEach((btn) => btn.classList.toggle("is-active", state.dice.includes(Number(btn.dataset.die))));
-    tray.querySelector('[data-op="desperto"]')?.classList.toggle("is-active", state.desperto);
+    const despertoBtn = tray.querySelector('[data-op="desperto"]');
+    if (despertoBtn) despertoBtn.textContent = `Desperto d${state.despertoDie}`;
+    despertoBtn?.classList.toggle("is-active", state.desperto);
     tray.querySelector('[data-op="veu"]')?.classList.toggle("is-active", state.veu);
+    if (chatMessage) {
+      const diceText = state.dice.map((d)=>`d${d}`).join(" + ");
+      const despertoText = state.desperto ? ` + Desperto(d${state.despertoDie})` : "";
+      const veuText = state.veu ? " + Véu" : "";
+      const modText = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
+      chatMessage.value = `${diceText}${despertoText}${veuText}${modText}`.trim();
+      chatMessage.dispatchEvent(new Event("input", { bubbles: true }));
+    }
   };
   sync();
 
@@ -1380,12 +1390,33 @@ function twbvInjectCustomDiceTray(root) {
     const op = btn.dataset.op;
     if (op === "minus") state.mod -= 1;
     if (op === "plus") state.mod += 1;
-    if (op === "desperto") state.desperto = !state.desperto;
+    if (op === "desperto") {
+      const options = [4, 6, 8, 10, 12].map((d) => `<option value="${d}" ${d === state.despertoDie ? "selected" : ""}>d${d}</option>`).join("");
+      new Dialog({
+        title: "Configurar Desperto",
+        content: `<div class="twbv-roll-adjust-dialog"><label>Dado Desperto<select name="despertoDie">${options}</select></label></div>`,
+        buttons: {
+          apply: {
+            label: "Aplicar",
+            callback: (html) => {
+              const rootEl = resolveDialogRoot(html);
+              const die = Number(rootEl?.querySelector('select[name="despertoDie"]')?.value ?? 6);
+              if (Number.isFinite(die) && [4, 6, 8, 10, 12].includes(die)) state.despertoDie = die;
+              state.desperto = !state.desperto;
+              sync();
+            }
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "apply"
+      }).render(true);
+      return;
+    }
     if (op === "veu") state.veu = !state.veu;
     if (op === "roll") {
       if (!state.dice.length) return ui.notifications?.warn("Selecione ao menos um dado.");
       const base = state.dice.map((d) => `1d${d}${state.veu ? "x" : ""}`).join(" + ");
-      const desperto = state.desperto ? ` + 1d6${state.veu ? "x" : ""}` : "";
+      const desperto = state.desperto ? ` + 1d${state.despertoDie}${state.veu ? "x" : ""}` : "";
       const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
       const formula = `${base}${desperto}${mod}`;
       const roll = await (new Roll(formula)).evaluate();

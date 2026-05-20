@@ -1700,3 +1700,16 @@
 .twbv-roll-chat .twbv-roll-apply-mod {
   display: none !important;
 }
+
+.wbtv-roll-adjust-dialog .dialog-buttons button {
+  background: #ffffff !important;
+  color: #1b1230 !important;
+  border: 1px solid #ffffff !important;
+  font-weight: 800;
+}
+.wbtv-roll-adjust-dialog .dialog-buttons button:hover,
+.wbtv-roll-adjust-dialog .dialog-buttons button:focus-visible {
+  background: #f3f3f3 !important;
+  color: #120b21 !important;
+  border-color: #ffffff !important;
+}

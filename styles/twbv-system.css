@@ -1627,8 +1627,12 @@
   min-height: 32px;
 }
 .twbv-roll-add-die { padding: 0 10px; font-weight: 800; }
-.twbv-roll-adjust-result {
+.twbv-roll-adjust-history {
   margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+.twbv-roll-adjust-result {
   border: 1px solid rgba(217,183,117,.42);
   border-radius: 10px;
   padding: 8px;
@@ -1638,11 +1642,13 @@
 .twbv-roll-adjust-total strong {
   display: inline-grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
+  width: 72px;
+  height: 72px;
   border-radius: 999px;
   margin-left: 6px;
   border: 1px solid rgba(217,183,117,.8);
+  background: linear-gradient(180deg, rgba(76, 52, 112, 0.95), rgba(24, 17, 38, 0.98));
+  box-shadow: 0 0 16px rgba(154, 123, 255, 0.45);
 }
 
 .wbtv-roll-adjust-dialog .window-content {

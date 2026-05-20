@@ -155,10 +155,7 @@ function renderDualDieResult({
         <div class="twbv-roll-adjust-controls" data-base-total="${total}">
           <button type="button" class="twbv-roll-add-die" title="Adicionar ajuste">🎲＋</button>
         </div>
-        <div class="twbv-roll-adjust-result" hidden>
-          <div class="twbv-roll-adjust-breakdown"></div>
-          <div class="twbv-roll-adjust-total">Novo Resultado: <strong class="twbv-roll-total-final">${totalLabel}</strong></div>
-        </div>
+        <div class="twbv-roll-adjust-history"></div>
       </section>`;
 
     const chatMessage = await ChatMessage.create({
@@ -1183,25 +1180,11 @@ function twbvApplyRollAdjustments(root) {
   if (!card) return;
   const controls = root.querySelector('.twbv-roll-adjust-controls');
   const baseEl = root.querySelector('.twbv-roll-total-base');
-  const breakdownEl = root.querySelector('.twbv-roll-adjust-breakdown');
-  const resultWrap = root.querySelector('.twbv-roll-adjust-result');
-  const finalEl = root.querySelector('.twbv-roll-total-final');
+  const historyEl = root.querySelector('.twbv-roll-adjust-history');
   const addBtn = root.querySelector('.twbv-roll-add-die');
-  if (!controls || !baseEl || !breakdownEl || !resultWrap || !finalEl || !addBtn) return;
+  if (!controls || !baseEl || !historyEl || !addBtn) return;
 
   const base = Number(controls.dataset.baseTotal ?? baseEl.textContent ?? 0) || 0;
-  let extraTotal = Number(controls.dataset.extraTotal ?? 0) || 0;
-  let modTotal = Number(controls.dataset.modTotal ?? 0) || 0;
-
-  const refresh = () => {
-    const final = base + extraTotal + modTotal;
-    const modLabel = modTotal > 0 ? `+ ${modTotal}` : modTotal < 0 ? `- ${Math.abs(modTotal)}` : '+ 0';
-    breakdownEl.textContent = `${base} + ${extraTotal} ${modLabel} = ${final}`;
-    finalEl.textContent = String(final);
-    resultWrap.hidden = false;
-    controls.dataset.extraTotal = String(extraTotal);
-    controls.dataset.modTotal = String(modTotal);
-  };
 
   addBtn.addEventListener('click', () => {
     const dialogContent = `
@@ -1238,17 +1221,23 @@ function twbvApplyRollAdjustments(root) {
             const flatMod = flatRaw === '' ? 0 : (Number.isFinite(Number(flatRaw)) ? Number(flatRaw) : 0);
 
             let extraDie = 0;
+            let dieLabel = 'dado';
             if (dieValueRaw) {
               const die = Number(dieValueRaw);
               if (Number.isFinite(die) && [4, 6, 8, 10, 12].includes(die)) {
                 const roll = await (new Roll(`1d${die}`)).evaluate();
                 extraDie = Number(roll.total ?? 0);
+                dieLabel = `d${die}`;
               }
             }
 
-            extraTotal += extraDie;
-            modTotal += flatMod;
-            refresh();
+            const final = base + extraDie + flatMod;
+            const modLabel = flatMod > 0 ? ` + ${flatMod}` : flatMod < 0 ? ` - ${Math.abs(flatMod)}` : '';
+            const breakdown = `${base} + ${dieLabel}(${extraDie})${modLabel} = ${final}`;
+            const item = document.createElement('div');
+            item.className = 'twbv-roll-adjust-result';
+            item.innerHTML = `<div class="twbv-roll-adjust-breakdown">${breakdown}</div><div class="twbv-roll-adjust-total">Novo Resultado: <strong class="twbv-roll-total-final">${final}</strong></div>`;
+            historyEl.appendChild(item);
           }
         },
         cancel: { label: 'Cancelar' }

@@ -1392,6 +1392,14 @@
   color: #f6e7c1;
 }
 
+.wbtv-add-skill-dialog select.twbv-attr-forca { color: #ffc57a; }
+.wbtv-add-skill-dialog select.twbv-attr-destreza { color: #be91ff; }
+.wbtv-add-skill-dialog select.twbv-attr-constituicao { color: #9ceaa9; }
+.wbtv-add-skill-dialog select.twbv-attr-inteligencia { color: #8bc0ff; }
+.wbtv-add-skill-dialog select.twbv-attr-influencia { color: #ffb07f; }
+.wbtv-add-skill-dialog select.twbv-attr-intuicao { color: #8df7ff; }
+.wbtv-add-skill-dialog select.twbv-attr-vontade { color: #ffb07f; }
+
 .wbtv-add-skill-dialog .twbv-add-skill-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

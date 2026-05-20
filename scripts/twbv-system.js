@@ -171,7 +171,7 @@ function buildRollAdjustSection(baseTotal, chain = []) {
     const flat = Number(entry.flat ?? 0);
     const delta = Number(entry.delta ?? 0);
     running += delta;
-    return `<div class="twbv-adjust-row"><span>${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span>= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
+    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
   }).join("");
   return `<section class="twbv-adjust-stack"><div class="twbv-adjust-results">${rows || ""}</div></section>`;
 }

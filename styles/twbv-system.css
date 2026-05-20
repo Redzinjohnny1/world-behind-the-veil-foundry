@@ -1681,3 +1681,10 @@
   color:#fff;
   box-shadow:0 0 12px rgba(126,90,204,.42)
 }
+
+.twbv-roll-chat__header h3{font-size:1.18rem;text-align:center;}
+.twbv-roll-chat__header p{text-align:center;font-size:.95rem;}
+.twbv-adjust-row{display:grid;grid-template-columns:1fr auto;align-items:center;text-align:center;font-size:17px;font-weight:700;}
+.twbv-adjust-left{justify-self:center;}
+.twbv-adjust-right{justify-self:end;}
+.twbv-adjust-circle{font-size:2.15rem;}

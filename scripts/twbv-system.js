@@ -678,6 +678,22 @@ class TWBVPersonagemSheet extends ActorSheet {
           const dieEl = form.querySelector('select[name="skillDie"]');
           const bonusEl = form.querySelector('input[name="bonus"]');
           const previewEl = form.querySelector(".twbv-skill-preview strong");
+          const attributeEl = form.querySelector('select[name="atributo"]');
+
+          const syncAttributeTint = () => {
+            if (!attributeEl) return;
+            const attrKey = String(attributeEl.value ?? 'forca').toLowerCase();
+            attributeEl.classList.remove(
+              'twbv-attr-forca',
+              'twbv-attr-destreza',
+              'twbv-attr-constituicao',
+              'twbv-attr-inteligencia',
+              'twbv-attr-influencia',
+              'twbv-attr-intuicao',
+              'twbv-attr-vontade'
+            );
+            attributeEl.classList.add(`twbv-attr-${attrKey}`);
+          };
 
           const syncAll = () => {
             const selectedLevel = SKILL_LEVELS[Number(dieEl?.value)] ?? SKILL_LEVELS[0];
@@ -694,6 +710,8 @@ class TWBVPersonagemSheet extends ActorSheet {
           dieEl?.addEventListener("change", syncAll);
           bonusEl?.addEventListener("input", syncAll);
           bonusEl?.addEventListener("change", syncAll);
+          attributeEl?.addEventListener("change", syncAttributeTint);
+          syncAttributeTint();
           syncAll();
         },
         buttons: {
@@ -799,6 +817,22 @@ class TWBVPersonagemSheet extends ActorSheet {
           const dieEl = form.querySelector('select[name="skillDie"]');
           const bonusEl = form.querySelector('input[name="bonus"]');
           const previewEl = form.querySelector('.twbv-skill-preview strong');
+          const attributeEl = form.querySelector('select[name="atributo"]');
+
+          const syncAttributeTint = () => {
+            if (!attributeEl) return;
+            const attrKey = String(attributeEl.value ?? 'forca').toLowerCase();
+            attributeEl.classList.remove(
+              'twbv-attr-forca',
+              'twbv-attr-destreza',
+              'twbv-attr-constituicao',
+              'twbv-attr-inteligencia',
+              'twbv-attr-influencia',
+              'twbv-attr-intuicao',
+              'twbv-attr-vontade'
+            );
+            attributeEl.classList.add(`twbv-attr-${attrKey}`);
+          };
 
           const syncAll = () => {
             const selectedLevel = SKILL_LEVELS[Number(dieEl?.value)] ?? SKILL_LEVELS[0];
@@ -815,6 +849,8 @@ class TWBVPersonagemSheet extends ActorSheet {
           dieEl?.addEventListener("change", syncAll);
           bonusEl?.addEventListener("input", syncAll);
           bonusEl?.addEventListener("change", syncAll);
+          attributeEl?.addEventListener("change", syncAttributeTint);
+          syncAttributeTint();
           syncAll();
         },
         buttons: {

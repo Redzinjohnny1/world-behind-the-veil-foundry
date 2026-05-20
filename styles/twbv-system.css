@@ -1129,6 +1129,11 @@
 #chat .chat-form {
   display: flex;
   flex-direction: column;
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  background: rgba(8, 7, 16, 0.92);
+  padding-top: 6px;
 }
 
 /* Keep chat visible and ensure composer matches dice tray width */
@@ -1148,10 +1153,18 @@
 #sidebar #chat textarea#chat-message {
   width: 100%;
   box-sizing: border-box;
+  order: 1;
 }
 .twbv-custom-dice-tray {
   width: 100%;
   box-sizing: border-box;
+  order: 2;
+  margin-top: 6px;
+}
+
+#chat-log,
+#sidebar #chat #chat-log {
+  padding-bottom: 8px;
 }
 .twbv-custom-dice-tray__row {
   display: grid;

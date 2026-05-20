@@ -1334,13 +1334,78 @@ function twbvEnhanceDiceTray(root) {
   if (asLabel) asLabel.textContent = 'Véu';
 }
 
+function twbvInjectCustomDiceTray(root) {
+  const doc = root?.ownerDocument ?? document;
+  const chatForm = doc.querySelector("#chat-form");
+  if (!chatForm || chatForm.querySelector(".twbv-custom-dice-tray")) return;
+
+  const tray = doc.createElement("div");
+  tray.className = "twbv-custom-dice-tray";
+  tray.innerHTML = `
+    <div class="twbv-custom-dice-tray__row twbv-custom-dice-tray__dice">
+      ${[4, 6, 8, 10, 12].map((d) => `<button type="button" data-die="${d}" class="twbv-die-btn">d${d}</button>`).join("")}
+    </div>
+    <div class="twbv-custom-dice-tray__row">
+      <button type="button" data-op="minus">−</button>
+      <span class="twbv-custom-dice-tray__mod" data-mod>0</span>
+      <button type="button" data-op="plus">+</button>
+      <button type="button" data-op="desperto" class="twbv-tag-btn">Desperto</button>
+      <button type="button" data-op="veu" class="twbv-tag-btn">Véu</button>
+      <button type="button" data-op="roll" class="twbv-roll-btn">Rolar</button>
+    </div>`;
+  chatForm.appendChild(tray);
+
+  const state = { dice: [], mod: 0, desperto: false, veu: true };
+  const sync = () => {
+    tray.querySelector("[data-mod]").textContent = String(state.mod);
+    tray.querySelectorAll(".twbv-die-btn").forEach((btn) => btn.classList.toggle("is-active", state.dice.includes(Number(btn.dataset.die))));
+    tray.querySelector('[data-op="desperto"]')?.classList.toggle("is-active", state.desperto);
+    tray.querySelector('[data-op="veu"]')?.classList.toggle("is-active", state.veu);
+  };
+  sync();
+
+  tray.addEventListener("click", async (ev) => {
+    const btn = ev.target.closest("button");
+    if (!btn) return;
+    const die = Number(btn.dataset.die);
+    if (die) {
+      if (state.dice.includes(die)) state.dice = state.dice.filter((d) => d !== die);
+      else state.dice.push(die);
+      sync();
+      return;
+    }
+    const op = btn.dataset.op;
+    if (op === "minus") state.mod -= 1;
+    if (op === "plus") state.mod += 1;
+    if (op === "desperto") state.desperto = !state.desperto;
+    if (op === "veu") state.veu = !state.veu;
+    if (op === "roll") {
+      if (!state.dice.length) return ui.notifications?.warn("Selecione ao menos um dado.");
+      const base = state.dice.map((d) => `1d${d}${state.veu ? "x" : ""}`).join(" + ");
+      const desperto = state.desperto ? ` + 1d6${state.veu ? "x" : ""}` : "";
+      const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
+      const formula = `${base}${desperto}${mod}`;
+      const roll = await (new Roll(formula)).evaluate();
+      await roll.toMessage({ speaker: ChatMessage.getSpeaker(), flavor: `Rolagem de Bandeja${state.desperto ? " • Desperto" : ""}${state.veu ? " • Véu" : ""}` });
+    }
+    sync();
+  });
+}
+
 Hooks.on('renderChatLog', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? html));
-Hooks.on('renderChatPopout', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? html));
+Hooks.on('renderChatLog', (app, html) => twbvInjectCustomDiceTray(html?.[0] ?? html));
+Hooks.on('renderChatPopout', (app, html) => {
+  twbvEnhanceDiceTray(html?.[0] ?? html);
+  twbvInjectCustomDiceTray(html?.[0] ?? html);
+});
 Hooks.on('renderSidebarTab', (app, html) => {
   if (app?.tabName !== "chat") return;
   twbvEnhanceDiceTray(html?.[0] ?? html);
+  twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
+  setTimeout(() => twbvInjectCustomDiceTray(document), 300);
+  setTimeout(() => twbvInjectCustomDiceTray(document), 1300);
 });

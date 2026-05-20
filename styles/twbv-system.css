@@ -1626,7 +1626,7 @@
   color: #f8edcc;
   min-height: 32px;
 }
-.twbv-roll-add-die, .twbv-roll-apply-mod { padding: 0 10px; font-weight: 800; }
+.twbv-roll-add-die { padding: 0 10px; font-weight: 800; }
 .twbv-roll-adjust-result {
   margin-top: 8px;
   border: 1px solid rgba(217,183,117,.42);
@@ -1686,4 +1686,11 @@
 .wbtv-roll-adjust-dialog select option:selected {
   background: linear-gradient(180deg, rgba(88, 66, 176, 0.95), rgba(44, 74, 148, 0.96));
   color: #fff2cc;
+}
+
+/* Hide legacy inline adjust controls from old messages */
+.twbv-roll-chat .twbv-roll-extra-die,
+.twbv-roll-chat .twbv-roll-flat-mod,
+.twbv-roll-chat .twbv-roll-apply-mod {
+  display: none !important;
 }

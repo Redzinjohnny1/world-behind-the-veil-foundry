@@ -157,17 +157,44 @@ function renderDualDieResult({
         </div>
         <div class="twbv-roll-adjust-history"></div>
       </section>`;
+    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
     const persistedMessage = await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
-      content,
+      content: contentWithAdjust,
       type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      rolls: [rollA, rollB]
+      rolls: [rollA, rollB],
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
     });
     return persistedMessage;
   })();
 }
 
+
+function buildRollAdjustSection(baseTotal, chain = []) {
+  let running = Number(baseTotal ?? 0);
+  const rows = chain.map((entry) => {
+    const diePart = entry.die ? `${entry.roll} (d${entry.die})` : "0";
+    const flat = Number(entry.flat ?? 0);
+    const delta = Number(entry.delta ?? 0);
+    running += delta;
+    return `<div class="twbv-adjust-row"><span>${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span>= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
+  }).join("");
+  return `<section class="twbv-adjust-stack"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button><div class="twbv-adjust-results">${rows || ""}</div></section>`;
+    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+}
+
+async function openRollAdjustDialog(message) {
+  const state = foundry.utils.deepClone(message.getFlag("world-behind-the-veil", "rollAdjust") ?? {});
+  const chain = Array.isArray(state.chain) ? state.chain : [];
+  const baseTotal = Number(state.baseTotal ?? 0);
+  const content = `<div class="twbv-roll-adjust-dialog"><label>Dado adicional<select name="die"><option value="">Nenhum</option><option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option></select></label><label>Bônus manual<input type="number" name="flat" value="0" step="1" /></label></div>`;
+  new Dialog({ title: "Ajustar resultado da rolagem", content, buttons:{ apply:{label:"Aplicar", callback: async (html)=>{ const root=resolveDialogRoot(html); const die=Number(root?.querySelector('select[name="die"]')?.value||0); const flat=Number(root?.querySelector('input[name="flat"]')?.value||0); let roll=0; if(die>0){ roll=Number((await new Roll(`1d${die}`).evaluate()).total ?? 0);} const delta=roll+(Number.isFinite(flat)?flat:0); chain.push({die,roll,flat,delta}); const all = message.content; const marker='<!--TWBV_ADJUST-->';
+      const baseContent = state.baseContent || (all.includes(marker)?all.split(marker)[0]:all);
+      const newContent = `${baseContent}${marker}${buildRollAdjustSection(baseTotal, chain)}`;
+      await message.update({content:newContent, 'flags.world-behind-the-veil.rollAdjust': {baseTotal, chain, baseContent}});
+    }}, cancel:{label:"Cancelar"}}, default:'apply'}).render(true);
+}
 function resolveDialogRoot(dialog) {
   if (!dialog) return null;
   if (typeof dialog.querySelector === "function") return dialog;
@@ -1269,7 +1296,7 @@ Hooks.on("renderChatMessage", (message, html) => {
   if (!root || typeof root.querySelector !== "function") return;
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
-  twbvApplyRollAdjustments(root);
+  root.querySelectorAll(".twbv-roll-adjust").forEach((btn)=> btn.addEventListener("click", ()=> openRollAdjustDialog(message)));
 });
 
 

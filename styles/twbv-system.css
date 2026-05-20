@@ -1110,29 +1110,32 @@
 }
 
 .twbv-custom-dice-tray {
-  margin-top: 8px;
+  margin-top: 6px;
   display: grid;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
-  padding: 2px 0;
+  padding: 0;
+  max-width: 100%;
 }
 .twbv-custom-dice-tray__row {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 4px;
+  gap: 2px;
 }
 .twbv-custom-dice-tray__dice {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 .twbv-custom-dice-tray button,
 .twbv-custom-dice-tray__mod {
-  min-height: 28px;
-  border-radius: 4px;
+  min-height: 24px;
+  border-radius: 3px;
   border: 1px solid rgba(217,183,117,.55);
   background: linear-gradient(180deg, rgba(34, 27, 47, 0.95), rgba(16, 13, 26, 0.98));
   color: var(--twbv-text);
   font-weight: 700;
   text-align: center;
+  font-size: .84rem;
+  padding: 0 4px;
 }
 .twbv-custom-dice-tray__mod {
   display: grid;

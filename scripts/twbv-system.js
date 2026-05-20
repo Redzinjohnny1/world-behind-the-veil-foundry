@@ -1336,9 +1336,10 @@ function twbvEnhanceDiceTray(root) {
 
 function twbvInjectCustomDiceTray(root) {
   const doc = root?.ownerDocument ?? document;
+  if (doc.querySelector(".twbv-custom-dice-tray")) return;
   const chatMessage = doc.querySelector("#chat-message, textarea[name='message'], #chat textarea");
   const chatForm = chatMessage?.closest?.("form, #chat-form, .chat-form, #chat") ?? doc.querySelector("#chat-form, .chat-form, #chat");
-  if (!chatForm || chatForm.querySelector(".twbv-custom-dice-tray")) return;
+  if (!chatForm) return;
 
   const tray = doc.createElement("div");
   tray.className = "twbv-custom-dice-tray";
@@ -1354,8 +1355,8 @@ function twbvInjectCustomDiceTray(root) {
       <button type="button" data-op="veu" class="twbv-tag-btn">Véu</button>
       <button type="button" data-op="roll" class="twbv-roll-btn">Rolar</button>
     </div>`;
-  const anchor = chatMessage?.parentElement ?? chatForm;
-  anchor.appendChild(tray);
+  if (chatMessage?.insertAdjacentElement) chatMessage.insertAdjacentElement("afterend", tray);
+  else chatForm.appendChild(tray);
 
   const state = { dice: [], mod: 0, desperto: false, veu: true };
   const sync = () => {

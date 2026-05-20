@@ -1356,8 +1356,7 @@ function twbvInjectCustomDiceTray(root) {
       <button type="button" data-op="veu" class="twbv-tag-btn">Véu</button>
       <button type="button" data-op="roll" class="twbv-roll-btn">Rolar</button>
     </div>`;
-  if (chatMessage?.insertAdjacentElement) chatMessage.insertAdjacentElement("afterend", tray);
-  else chatForm.appendChild(tray);
+  chatForm.appendChild(tray);
 
   const state = { dice: [], mod: 0, desperto: false, veu: true };
   const sync = () => {

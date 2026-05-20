@@ -1320,15 +1320,17 @@ class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ retur
 
 
 function twbvEnhanceDiceTray(root) {
-  const container = root?.querySelector?.('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons');
+  const doc = root?.ownerDocument ?? document;
+  const container = (root?.querySelector?.('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons'))
+    ?? doc.querySelector('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons');
+  const chatForm = doc.querySelector("#chat-form, .chat-form");
+  if (chatForm) chatForm.classList.add("twbv-dice-tray-root");
   if (!container) return;
   container.classList.add("twbv-dice-tray-themed");
-  root.classList?.add("twbv-chat-themed");
-  const trayRoot = container.closest?.("#chat-form, .sidebar-tab, .chat-form") ?? root;
-  trayRoot?.classList?.add("twbv-dice-tray-root");
-  const wildLabel = Array.from(root.querySelectorAll('button, span, div')).find((el) => /selvagem/i.test(el.textContent || ''));
+  root?.classList?.add("twbv-chat-themed");
+  const wildLabel = Array.from(doc.querySelectorAll('button, span, div')).find((el) => /selvagem/i.test(el.textContent || ''));
   if (wildLabel) wildLabel.textContent = 'Desperto';
-  const asLabel = Array.from(root.querySelectorAll('button, span, div')).find((el) => /^\s*as\s*$/i.test(el.textContent || ''));
+  const asLabel = Array.from(doc.querySelectorAll('button, span, div')).find((el) => /^\s*as\s*$/i.test(el.textContent || ''));
   if (asLabel) asLabel.textContent = 'Véu';
 }
 
@@ -1337,4 +1339,8 @@ Hooks.on('renderChatPopout', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? htm
 Hooks.on('renderSidebarTab', (app, html) => {
   if (app?.tabName !== "chat") return;
   twbvEnhanceDiceTray(html?.[0] ?? html);
+});
+Hooks.on("ready", () => {
+  setTimeout(() => twbvEnhanceDiceTray(document), 200);
+  setTimeout(() => twbvEnhanceDiceTray(document), 1200);
 });

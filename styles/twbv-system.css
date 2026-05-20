@@ -1048,6 +1048,9 @@
 
 /* Chat log/theme for regular text messages and composer */
 #chat-log .chat-message,
+#chat .chat-message,
+#sidebar #chat .chat-message,
+#sidebar .chat-sidebar .chat-message,
 #chat-popout #chat-log .chat-message {
   border-radius: 10px;
   border: 1px solid rgba(217, 183, 117, 0.35);
@@ -1068,6 +1071,8 @@
 }
 
 #chat-form textarea,
+#chat textarea#chat-message,
+#sidebar #chat textarea,
 #chat-popout #chat-form textarea {
   border-radius: 8px;
   border: 1px solid rgba(217, 183, 117, 0.58);
@@ -1084,8 +1089,14 @@
 
 /* Dice tray (module) force-visible and themed */
 #chat-form .dice-tray,
+#chat .dice-tray,
+#sidebar #chat .dice-tray,
 #chat-form .dice-calculator,
+#chat .dice-calculator,
+#sidebar #chat .dice-calculator,
 #chat-form .dice-tray__stacked,
+#chat .dice-tray__stacked,
+#sidebar #chat .dice-tray__stacked,
 #chat-form .dice-tray__buttons {
   display: grid !important;
   visibility: visible !important;
@@ -1093,8 +1104,14 @@
 }
 
 #chat-form .dice-tray button,
+#chat .dice-tray button,
+#sidebar #chat .dice-tray button,
 #chat-form .dice-calculator button,
+#chat .dice-calculator button,
+#sidebar #chat .dice-calculator button,
 #chat-form .dice-tray__stacked button,
+#chat .dice-tray__stacked button,
+#sidebar #chat .dice-tray__stacked button,
 #chat-form .dice-tray__buttons button {
   border: 1px solid rgba(217, 183, 117, 0.5) !important;
   background: linear-gradient(180deg, rgba(34, 27, 47, 0.95), rgba(16, 13, 26, 0.98)) !important;
@@ -1103,6 +1120,8 @@
 }
 
 #chat-form .dice-tray .roll,
+#chat .dice-tray .roll,
+#sidebar #chat .dice-tray .roll,
 #chat-form .dice-calculator .roll {
   font-weight: 800;
   background: linear-gradient(180deg, rgba(108, 72, 166, 0.95), rgba(37, 23, 61, 0.98)) !important;

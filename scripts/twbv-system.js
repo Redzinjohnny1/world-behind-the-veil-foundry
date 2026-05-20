@@ -1322,6 +1322,10 @@ class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ retur
 function twbvEnhanceDiceTray(root) {
   const container = root?.querySelector?.('.dice-tray, .dice-calculator, .dice-tray__stacked, .dice-tray__buttons');
   if (!container) return;
+  container.classList.add("twbv-dice-tray-themed");
+  root.classList?.add("twbv-chat-themed");
+  const trayRoot = container.closest?.("#chat-form, .sidebar-tab, .chat-form") ?? root;
+  trayRoot?.classList?.add("twbv-dice-tray-root");
   const wildLabel = Array.from(root.querySelectorAll('button, span, div')).find((el) => /selvagem/i.test(el.textContent || ''));
   if (wildLabel) wildLabel.textContent = 'Desperto';
   const asLabel = Array.from(root.querySelectorAll('button, span, div')).find((el) => /^\s*as\s*$/i.test(el.textContent || ''));
@@ -1330,3 +1334,7 @@ function twbvEnhanceDiceTray(root) {
 
 Hooks.on('renderChatLog', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? html));
 Hooks.on('renderChatPopout', (app, html) => twbvEnhanceDiceTray(html?.[0] ?? html));
+Hooks.on('renderSidebarTab', (app, html) => {
+  if (app?.tabName !== "chat") return;
+  twbvEnhanceDiceTray(html?.[0] ?? html);
+});

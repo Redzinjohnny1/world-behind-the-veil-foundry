@@ -1358,16 +1358,24 @@ function twbvInjectCustomDiceTray(root) {
     </div>`;
   chatForm.insertAdjacentElement("afterend", tray);
 
-  const state = { dice: [], mod: 0, desperto: false, despertoDie: 6, veu: true };
+  const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: true };
   const sync = () => {
     tray.querySelector("[data-mod]").textContent = String(state.mod);
-    tray.querySelectorAll(".twbv-die-btn").forEach((btn) => btn.classList.toggle("is-active", state.dice.includes(Number(btn.dataset.die))));
+    tray.querySelectorAll(".twbv-die-btn").forEach((btn) => {
+      const die = Number(btn.dataset.die);
+      const qty = Number(state.dice?.[die] ?? 0);
+      btn.classList.toggle("is-active", qty > 0);
+      btn.textContent = qty > 0 ? `${qty}d${die}` : `d${die}`;
+    });
     const despertoBtn = tray.querySelector('[data-op="desperto"]');
     if (despertoBtn) despertoBtn.textContent = `Desperto d${state.despertoDie}`;
     despertoBtn?.classList.toggle("is-active", state.desperto);
     tray.querySelector('[data-op="veu"]')?.classList.toggle("is-active", state.veu);
     if (chatMessage) {
-      const diceText = state.dice.map((d)=>`d${d}`).join(" + ");
+      const diceText = Object.entries(state.dice)
+        .filter(([, qty]) => Number(qty) > 0)
+        .map(([die, qty]) => `${qty}d${die}`)
+        .join(" + ");
       const despertoText = state.desperto ? ` + Desperto(d${state.despertoDie})` : "";
       const veuText = state.veu ? " + Véu" : "";
       const modText = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
@@ -1382,8 +1390,7 @@ function twbvInjectCustomDiceTray(root) {
     if (!btn) return;
     const die = Number(btn.dataset.die);
     if (die) {
-      if (state.dice.includes(die)) state.dice = state.dice.filter((d) => d !== die);
-      else state.dice.push(die);
+      state.dice[die] = Number(state.dice?.[die] ?? 0) + 1;
       sync();
       return;
     }
@@ -1414,8 +1421,11 @@ function twbvInjectCustomDiceTray(root) {
     }
     if (op === "veu") state.veu = !state.veu;
     if (op === "roll") {
-      if (!state.dice.length) return ui.notifications?.warn("Selecione ao menos um dado.");
-      const base = state.dice.map((d) => `1d${d}${state.veu ? "x" : ""}`).join(" + ");
+      const baseTerms = Object.entries(state.dice)
+        .filter(([, qty]) => Number(qty) > 0)
+        .map(([die, qty]) => `${qty}d${die}${state.veu ? "x" : ""}`);
+      if (!baseTerms.length) return ui.notifications?.warn("Selecione ao menos um dado.");
+      const base = baseTerms.join(" + ");
       const desperto = state.desperto ? ` + 1d${state.despertoDie}${state.veu ? "x" : ""}` : "";
       const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
       const formula = `${base}${desperto}${mod}`;

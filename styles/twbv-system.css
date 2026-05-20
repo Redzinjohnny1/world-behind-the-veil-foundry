@@ -888,6 +888,8 @@
   .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill { top: 18%; width: 5%; height: 62%; }
   .twbv.sheet.actor .twbv-toggle-skill-lock,
   .window-app.sheet.actor .twbv-toggle-skill-lock { right: 8.7%; }
+
+  .twbv-skill-die{left:67.2%;top:18%;width:12%;height:62%;}
   .twbv.sheet.actor .twbv-remove-skill,
   .window-app.sheet.actor .twbv-remove-skill { right: 3.1%; }
 
@@ -1706,4 +1708,4 @@
 .twbv-attribute-card h3.twbv-attr-inteligencia{color:#8bc0ff;text-shadow:0 0 8px rgba(139,192,255,.55)}
 .twbv-attribute-card h3.twbv-attr-influencia{color:#ffb07f;text-shadow:0 0 8px rgba(255,176,127,.55)}
 .twbv-attribute-card h3.twbv-attr-intuicao{color:#8df7ff;text-shadow:0 0 8px rgba(141,247,255,.55)}
-.twbv-skill-die{display:inline-flex;align-items:center;justify-content:center;min-width:74px;height:72%;border:1px solid rgba(217,183,117,.45);border-radius:10px;background:linear-gradient(180deg, rgba(15,11,26,.96), rgba(10,8,19,.98));color:#f7e9c8;font-weight:800;letter-spacing:.04em}
+.twbv-skill-die{display:inline-flex;align-items:center;justify-content:center;position:absolute;left:67.6%;top:18%;width:12%;height:62%;border:1px solid rgba(217,183,117,.45);border-radius:10px;background:linear-gradient(180deg, rgba(15,11,26,.96), rgba(10,8,19,.98));color:#f7e9c8;font-weight:800;letter-spacing:.04em;box-shadow:inset 0 0 0 1px rgba(106,82,153,.28),0 0 10px rgba(90,58,146,.24)}

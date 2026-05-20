@@ -208,8 +208,8 @@ class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["twbv", "sheet", "actor", "personagem"],
-      width: 960,
-      height: 800,
+      width: 1056,
+      height: 880,
       tabs: [{ navSelector: ".twbv-tabs", contentSelector: ".twbv-tab-content", initial: "principal" }]
     });
   }

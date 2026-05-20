@@ -1358,7 +1358,7 @@ function twbvInjectCustomDiceTray(root) {
     </div>`;
   chatForm.insertAdjacentElement("afterend", tray);
 
-  const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: true };
+  const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: false, touched: false };
   const sync = () => {
     tray.querySelector("[data-mod]").textContent = String(state.mod);
     tray.querySelectorAll(".twbv-die-btn").forEach((btn) => {
@@ -1371,7 +1371,7 @@ function twbvInjectCustomDiceTray(root) {
     if (despertoBtn) despertoBtn.textContent = `Desperto d${state.despertoDie}`;
     despertoBtn?.classList.toggle("is-active", state.desperto);
     tray.querySelector('[data-op="veu"]')?.classList.toggle("is-active", state.veu);
-    if (chatMessage) {
+    if (chatMessage && state.touched) {
       const diceText = Object.entries(state.dice)
         .filter(([, qty]) => Number(qty) > 0)
         .map(([die, qty]) => `${qty}d${die}`)
@@ -1379,7 +1379,8 @@ function twbvInjectCustomDiceTray(root) {
       const despertoText = state.desperto ? ` + Desperto(d${state.despertoDie})` : "";
       const veuText = state.veu ? " + Véu" : "";
       const modText = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
-      chatMessage.value = `${diceText}${despertoText}${veuText}${modText}`.trim();
+      const composed = `${diceText}${despertoText}${veuText}${modText}`.trim();
+      chatMessage.value = composed;
       chatMessage.dispatchEvent(new Event("input", { bubbles: true }));
     }
   };
@@ -1390,14 +1391,16 @@ function twbvInjectCustomDiceTray(root) {
     if (!btn) return;
     const die = Number(btn.dataset.die);
     if (die) {
+      state.touched = true;
       state.dice[die] = Number(state.dice?.[die] ?? 0) + 1;
       sync();
       return;
     }
     const op = btn.dataset.op;
-    if (op === "minus") state.mod -= 1;
-    if (op === "plus") state.mod += 1;
+    if (op === "minus") { state.mod -= 1; state.touched = true; }
+    if (op === "plus") { state.mod += 1; state.touched = true; }
     if (op === "desperto") {
+      state.touched = true;
       const options = [4, 6, 8, 10, 12].map((d) => `<option value="${d}" ${d === state.despertoDie ? "selected" : ""}>d${d}</option>`).join("");
       new Dialog({
         title: "Configurar Desperto",
@@ -1419,7 +1422,7 @@ function twbvInjectCustomDiceTray(root) {
       }).render(true);
       return;
     }
-    if (op === "veu") state.veu = !state.veu;
+    if (op === "veu") { state.veu = !state.veu; state.touched = true; }
     if (op === "roll") {
       const baseTerms = Object.entries(state.dice)
         .filter(([, qty]) => Number(qty) > 0)

@@ -1116,6 +1116,9 @@
   width: 100%;
   padding: 0;
   max-width: 100%;
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
 }
 .twbv-custom-dice-tray__row {
   display: grid;
@@ -1136,6 +1139,7 @@
   text-align: center;
   font-size: .84rem;
   padding: 0 4px;
+  pointer-events: auto;
 }
 .twbv-custom-dice-tray__mod {
   display: grid;

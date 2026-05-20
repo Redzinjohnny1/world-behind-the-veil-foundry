@@ -1337,8 +1337,9 @@ function twbvEnhanceDiceTray(root) {
 function twbvInjectCustomDiceTray(root) {
   const doc = root?.ownerDocument ?? document;
   if (doc.querySelector(".twbv-custom-dice-tray")) return;
-  const chatMessage = doc.querySelector("#chat-message, textarea[name='message'], #chat textarea");
-  const chatForm = chatMessage?.closest?.("form, #chat-form, .chat-form, #chat") ?? doc.querySelector("#chat-form, .chat-form, #chat");
+  const chatWindow = doc.querySelector("#sidebar #chat, #chat");
+  const chatMessage = chatWindow?.querySelector?.("#chat-message, textarea[name='message'], textarea") ?? doc.querySelector("#chat-message, textarea[name='message']");
+  const chatForm = chatMessage?.closest?.("form, #chat-form, .chat-form") ?? chatWindow?.querySelector?.("form, #chat-form, .chat-form") ?? doc.querySelector("#chat-form, .chat-form");
   if (!chatForm) return;
 
   const tray = doc.createElement("div");

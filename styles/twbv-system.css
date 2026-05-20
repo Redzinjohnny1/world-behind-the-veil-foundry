@@ -1506,6 +1506,14 @@
   line-height: 1.2;
 }
 
+.wbtv-skill-config-dialog select.twbv-attr-forca { color: #ffc57a; }
+.wbtv-skill-config-dialog select.twbv-attr-destreza { color: #be91ff; }
+.wbtv-skill-config-dialog select.twbv-attr-constituicao { color: #9ceaa9; }
+.wbtv-skill-config-dialog select.twbv-attr-inteligencia { color: #8bc0ff; }
+.wbtv-skill-config-dialog select.twbv-attr-influencia { color: #ffb07f; }
+.wbtv-skill-config-dialog select.twbv-attr-intuicao { color: #8df7ff; }
+.wbtv-skill-config-dialog select.twbv-attr-vontade { color: #ffb07f; }
+
 .wbtv-skill-config-dialog input:hover,
 .wbtv-skill-config-dialog select:hover,
 .wbtv-skill-config-dialog input:focus,

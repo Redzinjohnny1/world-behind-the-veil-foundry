@@ -1070,6 +1070,20 @@
   color: var(--twbv-text);
 }
 
+/* Hard override for Foundry chat readability */
+#chat .chat-message,
+#chat .chat-message .message-header,
+#chat .chat-message .message-sender,
+#chat .chat-message .message-metadata,
+#chat .chat-message .message-content,
+#sidebar #chat .chat-message,
+#sidebar #chat .chat-message .message-header,
+#sidebar #chat .chat-message .message-sender,
+#sidebar #chat .chat-message .message-metadata,
+#sidebar #chat .chat-message .message-content {
+  color: var(--twbv-text) !important;
+}
+
 #chat-form textarea,
 #chat textarea#chat-message,
 #sidebar #chat textarea,
@@ -1079,6 +1093,14 @@
   background: linear-gradient(180deg, rgba(10, 8, 22, 0.98), rgba(6, 5, 14, 0.98));
   color: var(--twbv-text);
   box-shadow: inset 0 0 0 1px rgba(126, 90, 204, 0.28), 0 0 10px rgba(97, 64, 156, 0.25);
+}
+
+#chat textarea,
+#chat textarea#chat-message,
+#sidebar #chat textarea,
+#sidebar #chat textarea#chat-message {
+  color: var(--twbv-text) !important;
+  caret-color: var(--twbv-text) !important;
 }
 
 #chat-form textarea::placeholder,
@@ -1091,6 +1113,8 @@
   margin-top: 8px;
   display: grid;
   gap: 6px;
+  width: 100%;
+  padding: 2px 0;
 }
 .twbv-custom-dice-tray__row {
   display: grid;

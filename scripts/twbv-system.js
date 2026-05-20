@@ -148,14 +148,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total)}
         </div>
-        <footer class="twbv-roll-chat__total" data-base-total="${total}">
-          <span>Resultado:</span>
-          <strong class="twbv-roll-total-base">${totalLabel}</strong>
-        </footer>
-        <div class="twbv-roll-adjust-controls" data-base-total="${total}">
-          <button type="button" class="twbv-roll-add-die" title="Adicionar ajuste">🎲＋</button>
-        </div>
-        <div class="twbv-roll-adjust-history"></div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
@@ -180,8 +173,7 @@ function buildRollAdjustSection(baseTotal, chain = []) {
     running += delta;
     return `<div class="twbv-adjust-row"><span>${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span>= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
   }).join("");
-  return `<section class="twbv-adjust-stack"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button><div class="twbv-adjust-results">${rows || ""}</div></section>`;
-    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+  return `<section class="twbv-adjust-stack"><div class="twbv-adjust-results">${rows || ""}</div></section>`;
 }
 
 async function openRollAdjustDialog(message) {

@@ -1046,6 +1046,196 @@
   color: #cfd5ff;
 }
 
+/* Chat log/theme for regular text messages and composer */
+#chat-log .chat-message,
+#chat .chat-message,
+#sidebar #chat .chat-message,
+#sidebar .chat-sidebar .chat-message,
+#chat-popout #chat-log .chat-message {
+  border-radius: 10px;
+  border: 1px solid rgba(217, 183, 117, 0.35);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(107, 70, 172, 0.18), transparent 48%),
+    linear-gradient(170deg, rgba(20, 14, 34, 0.92), rgba(11, 9, 20, 0.98));
+  box-shadow: inset 0 0 0 1px rgba(105, 74, 159, 0.2), 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+#chat-log .chat-message .message-header,
+#chat-log .chat-message .message-content {
+  color: var(--twbv-text);
+}
+
+#chat-log .chat-message .message-metadata,
+#chat-log .chat-message .message-sender {
+  color: var(--twbv-text);
+}
+
+/* Hard override for Foundry chat readability */
+#chat .chat-message,
+#chat .chat-message .message-header,
+#chat .chat-message .message-sender,
+#chat .chat-message .message-metadata,
+#chat .chat-message .message-content,
+#sidebar #chat .chat-message,
+#sidebar #chat .chat-message .message-header,
+#sidebar #chat .chat-message .message-sender,
+#sidebar #chat .chat-message .message-metadata,
+#sidebar #chat .chat-message .message-content {
+  color: var(--twbv-text) !important;
+}
+
+#chat-form textarea,
+#chat textarea#chat-message,
+#sidebar #chat textarea,
+#chat-popout #chat-form textarea {
+  border-radius: 8px;
+  border: 1px solid rgba(217, 183, 117, 0.58);
+  background: linear-gradient(180deg, rgba(10, 8, 22, 0.98), rgba(6, 5, 14, 0.98));
+  color: var(--twbv-text);
+  box-shadow: inset 0 0 0 1px rgba(126, 90, 204, 0.28), 0 0 10px rgba(97, 64, 156, 0.25);
+  min-height: 82px !important;
+  margin-bottom: 6px;
+}
+
+#chat textarea,
+#chat textarea#chat-message,
+#sidebar #chat textarea,
+#sidebar #chat textarea#chat-message {
+  color: var(--twbv-text) !important;
+  caret-color: var(--twbv-text) !important;
+}
+
+#chat-form textarea::placeholder,
+#chat-popout #chat-form textarea::placeholder {
+  color: var(--twbv-text);
+  opacity: 1;
+}
+
+.twbv-custom-dice-tray {
+  margin-top: 6px;
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 0;
+  max-width: 100%;
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
+  align-self: stretch;
+}
+
+#chat-form,
+#sidebar #chat #chat-form,
+#chat .chat-form {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  bottom: auto;
+  z-index: auto;
+  background: transparent;
+  padding-top: 0;
+}
+
+/* Keep chat visible and ensure composer matches dice tray width */
+#sidebar {
+  min-width: 300px;
+}
+#sidebar #chat,
+#chat {
+  min-width: 340px;
+}
+#chat-form,
+#sidebar #chat #chat-form,
+#chat .chat-form {
+  width: 100%;
+}
+#chat textarea#chat-message,
+#sidebar #chat textarea#chat-message {
+  width: 100%;
+  box-sizing: border-box;
+  order: 1;
+  min-height: 96px !important;
+  display: block !important;
+  visibility: visible !important;
+}
+.twbv-custom-dice-tray {
+  width: 100%;
+  box-sizing: border-box;
+  order: 2;
+  margin-top: 6px;
+}
+.twbv-custom-dice-tray__row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2px;
+}
+.twbv-custom-dice-tray__dice {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.twbv-custom-dice-tray button,
+.twbv-custom-dice-tray__mod {
+  min-height: 24px;
+  border-radius: 3px;
+  border: 1px solid rgba(217,183,117,.55);
+  background: linear-gradient(180deg, rgba(34, 27, 47, 0.95), rgba(16, 13, 26, 0.98));
+  color: var(--twbv-text);
+  font-weight: 700;
+  text-align: center;
+  font-size: .84rem;
+  padding: 0 4px;
+  pointer-events: auto;
+}
+.twbv-custom-dice-tray__mod {
+  display: grid;
+  place-items: center;
+}
+.twbv-custom-dice-tray button.is-active {
+  box-shadow: 0 0 0 1px rgba(154,123,255,.65), 0 0 10px rgba(154,123,255,.45);
+}
+.twbv-custom-dice-tray .twbv-roll-btn {
+  background: linear-gradient(180deg, rgba(108,72,166,.95), rgba(37,23,61,.98));
+}
+
+/* Dice tray (module) force-visible and themed */
+#chat-form .dice-tray,
+#chat .dice-tray,
+#sidebar #chat .dice-tray,
+#chat-form .dice-calculator,
+#chat .dice-calculator,
+#sidebar #chat .dice-calculator,
+#chat-form .dice-tray__stacked,
+#chat .dice-tray__stacked,
+#sidebar #chat .dice-tray__stacked,
+#chat-form .dice-tray__buttons {
+  display: grid !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#chat-form .dice-tray button,
+#chat .dice-tray button,
+#sidebar #chat .dice-tray button,
+#chat-form .dice-calculator button,
+#chat .dice-calculator button,
+#sidebar #chat .dice-calculator button,
+#chat-form .dice-tray__stacked button,
+#chat .dice-tray__stacked button,
+#sidebar #chat .dice-tray__stacked button,
+#chat-form .dice-tray__buttons button {
+  border: 1px solid rgba(217, 183, 117, 0.5) !important;
+  background: linear-gradient(180deg, rgba(34, 27, 47, 0.95), rgba(16, 13, 26, 0.98)) !important;
+  color: #f2dfb7 !important;
+  text-shadow: 0 0 6px rgba(149, 96, 224, 0.5);
+}
+
+#chat-form .dice-tray .roll,
+#chat .dice-tray .roll,
+#sidebar #chat .dice-tray .roll,
+#chat-form .dice-calculator .roll {
+  font-weight: 800;
+  background: linear-gradient(180deg, rgba(108, 72, 166, 0.95), rgba(37, 23, 61, 0.98)) !important;
+}
+
 /* Skill Roll Dialog Redesign */
 .window-app.dialog:has(.twbv-roll-skill-dialog) {
   border: 1px solid rgba(217, 183, 117, 0.72);

@@ -1698,3 +1698,12 @@
 .twbv-roll-chat__header p .twbv-attr-inteligencia{color:#8bc0ff;text-shadow:0 0 8px rgba(139,192,255,.55)}
 .twbv-roll-chat__header p .twbv-attr-influencia{color:#ffb07f;text-shadow:0 0 8px rgba(255,176,127,.55)}
 .twbv-roll-chat__header p .twbv-attr-intuicao{color:#8df7ff;text-shadow:0 0 8px rgba(141,247,255,.55)}
+
+
+.twbv-attribute-card h3.twbv-attr-forca{color:#ffc57a;text-shadow:0 0 8px rgba(255,197,122,.55)}
+.twbv-attribute-card h3.twbv-attr-destreza{color:#be91ff;text-shadow:0 0 8px rgba(190,145,255,.55)}
+.twbv-attribute-card h3.twbv-attr-constituicao{color:#9ceaa9;text-shadow:0 0 8px rgba(156,234,169,.55)}
+.twbv-attribute-card h3.twbv-attr-inteligencia{color:#8bc0ff;text-shadow:0 0 8px rgba(139,192,255,.55)}
+.twbv-attribute-card h3.twbv-attr-influencia{color:#ffb07f;text-shadow:0 0 8px rgba(255,176,127,.55)}
+.twbv-attribute-card h3.twbv-attr-intuicao{color:#8df7ff;text-shadow:0 0 8px rgba(141,247,255,.55)}
+.twbv-skill-die{display:inline-flex;align-items:center;justify-content:center;min-width:74px;height:72%;border:1px solid rgba(217,183,117,.45);border-radius:10px;background:linear-gradient(180deg, rgba(15,11,26,.96), rgba(10,8,19,.98));color:#f7e9c8;font-weight:800;letter-spacing:.04em}

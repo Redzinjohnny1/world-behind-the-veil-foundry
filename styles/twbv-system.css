@@ -1143,11 +1143,16 @@
 #sidebar #chat,
 #chat {
   min-width: 340px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 #chat-form,
 #sidebar #chat #chat-form,
 #chat .chat-form {
   width: 100%;
+  flex: 0 0 auto;
 }
 #chat textarea#chat-message,
 #sidebar #chat textarea#chat-message {
@@ -1163,6 +1168,15 @@
   box-sizing: border-box;
   order: 2;
   margin-top: 6px;
+}
+
+/* Ensure chat log uses remaining space and does not push composer out of view */
+#chat-log,
+#sidebar #chat #chat-log {
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .twbv-custom-dice-tray__row {
   display: grid;

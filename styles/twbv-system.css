@@ -806,7 +806,7 @@
   object-fit: contain;
   filter: drop-shadow(0 0 6px currentColor);
 }
-.twbv-attr-forca { color: #ffc57a; } .twbv-attr-destreza { color: #be91ff; } .twbv-attr-constituicao { color: #9ceaa9; } .twbv-attr-inteligencia { color: #8bc0ff; } .twbv-attr-intuicao { color: #8df7ff; } .twbv-attr-vontade { color: #ffb07f; }
+.twbv-attr-forca { color: #ffc57a; } .twbv-attr-destreza { color: #be91ff; } .twbv-attr-constituicao { color: #9ceaa9; } .twbv-attr-inteligencia { color: #8bc0ff; } .twbv-attr-influencia { color: #ffb07f; } .twbv-attr-intuicao { color: #8df7ff; } .twbv-attr-vontade { color: #ffb07f; }
 .rank-novato { color: #8cc7ff; border-color: rgba(140, 199, 255, .45); background: rgba(23, 52, 86, .52); }
 .rank-treinado { color: #aaf8ba; border-color: rgba(126, 236, 151, .45); background: rgba(20, 72, 41, .52); }
 .rank-experiente { color: #d2adff; border-color: rgba(182, 125, 255, .45); background: rgba(56, 26, 90, .52); }
@@ -888,6 +888,8 @@
   .window-app.sheet.actor .twbv-toggle-skill-lock, .window-app.sheet.actor .twbv-remove-skill { top: 18%; width: 5%; height: 62%; }
   .twbv.sheet.actor .twbv-toggle-skill-lock,
   .window-app.sheet.actor .twbv-toggle-skill-lock { right: 8.7%; }
+
+  .twbv-skill-die{left:67.2%;top:18%;width:12%;height:62%;}
   .twbv.sheet.actor .twbv-remove-skill,
   .window-app.sheet.actor .twbv-remove-skill { right: 3.1%; }
 
@@ -1559,3 +1561,113 @@
 
 @media (max-width: 900px) { .twbv-header-layout { grid-template-columns: 1fr; } .twbv-header-resources { grid-template-columns: 1fr 1fr; grid-template-rows:none; } }
 
+
+.equipment-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.equipment-section { margin-bottom:16px; }
+.equipment-section h3 { margin:8px 0; padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,.15); text-transform:uppercase; letter-spacing:1px; }
+.equipment-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+.equipment-card { background:rgba(20,20,24,.88); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px; color:#eee; box-shadow:0 0 12px rgba(0,0,0,.35); }
+.equipment-card-header { display:flex; align-items:center; gap:8px; }
+.equipment-img { width:48px; height:48px; object-fit:cover; border-radius:8px; }
+.equipment-title-block { flex:1; min-width:0; }
+.equipment-name { font-weight:700; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.weapon-stats,.consumable-stats { display:grid; grid-template-columns:repeat(2,1fr); gap:4px; margin-top:8px; font-size:12px; }
+.ammo-row,.charges-row { display:flex; justify-content:space-between; margin-top:8px; font-size:12px; }
+.ammo-bar { height:7px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden; margin-top:4px; }
+.ammo-fill { height:100%; background:linear-gradient(90deg,#a67c2d,#e0c16c); }
+.weapon-buttons,.consumable-buttons,.weapon-mods { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.weapon-buttons a,.consumable-buttons a,.weapon-mods a,.equipment-actions-top a,.item-create { padding:4px 8px; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.16); font-size:12px; cursor:pointer; }
+.mod-row { display:grid; grid-template-columns:1.4fr 1fr .7fr .7fr auto; gap:6px; align-items:center; margin-bottom:6px; }
+
+.twbv-roll-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+.window-app.dialog:has(.twbv-roll-adjust-dialog){border:1px solid rgba(217,183,117,.72);border-radius:12px;overflow:hidden;box-shadow:0 0 20px rgba(101,73,166,.45)}
+.window-app.dialog:has(.twbv-roll-adjust-dialog) .window-content{background:radial-gradient(circle at top, rgba(112,74,172,.34), transparent 52%),linear-gradient(165deg, rgba(12,8,21,.98), rgba(7,5,14,.99));}
+.twbv-roll-adjust-dialog{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px}
+.twbv-roll-adjust-dialog label{display:flex;flex-direction:column;color:#f0dfb8;font-size:.72rem;text-transform:uppercase}
+.twbv-roll-adjust-dialog select,.twbv-roll-adjust-dialog input{min-height:34px;border-radius:7px;border:1px solid rgba(217,183,117,.58);background:rgba(12,9,22,.96);color:#f6eeff;padding:6px 9px}
+.twbv-adjust-stack{margin-top:10px;display:grid;gap:8px}
+.twbv-roll-adjust{width:max-content;padding:6px 10px;border-radius:8px;border:1px solid rgba(217,183,117,.6);background:rgba(23,16,40,.9);color:#ffe9be}
+.twbv-adjust-results{display:grid;gap:6px}
+.twbv-adjust-row{display:flex;justify-content:space-between;color:#e9ddff;font-size:13px}
+.twbv-adjust-circle{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(217,183,117,.85);background:radial-gradient(circle at 30% 30%, rgba(110,78,188,.55), rgba(36,20,62,.95));font-weight:700;color:#fff;box-shadow:0 0 12px rgba(126,90,204,.42)}
+
+.twbv-roll-chat__top-adjust{display:flex;justify-content:flex-start;margin-top:10px;}
+.twbv-roll-chat__top-adjust .twbv-roll-adjust{padding:6px 10px;border-radius:8px;border:1px solid rgba(217,183,117,.6);background:rgba(23,16,40,.9);color:#ffe9be;}
+
+
+.window-app.dialog:has(.twbv-roll-adjust-dialog) .dialog-buttons { margin-top: 8px; gap: 10px; }
+.window-app.dialog:has(.twbv-roll-adjust-dialog) .dialog-buttons button {
+  border-radius: 10px;
+  border: 1px solid rgba(217, 183, 117, 0.82) !important;
+  color: #ffedc5 !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  box-shadow: inset 0 0 10px rgba(154, 123, 255, 0.24), 0 0 10px rgba(93, 64, 143, 0.35);
+}
+.window-app.dialog:has(.twbv-roll-adjust-dialog) .dialog-buttons button:hover,
+.window-app.dialog:has(.twbv-roll-adjust-dialog) .dialog-buttons button:focus-visible {
+  border-color: rgba(217, 183, 117, 1) !important;
+  box-shadow: 0 0 14px rgba(217, 183, 117, 0.35), 0 0 16px rgba(154, 123, 255, 0.38);
+}
+.twbv-roll-adjust-dialog select option {
+  background: #10081c;
+  color: #f5e6b8;
+}
+.twbv-adjust-results{display:grid;gap:8px}
+.twbv-adjust-circle{
+  width:84px;
+  height:84px;
+  margin: 2px auto 10px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(217,183,117,.85);
+  background:radial-gradient(circle at 30% 30%, rgba(110,78,188,.55), rgba(36,20,62,.95));
+  font-weight:800;
+  font-size: 2rem;
+  color:#fff;
+  box-shadow:0 0 12px rgba(126,90,204,.42)
+}
+
+.twbv-roll-chat__header h3{font-size:1.18rem;text-align:center;}
+.twbv-roll-chat__header p{text-align:center;font-size:.95rem;}
+.twbv-adjust-row{display:grid;grid-template-columns:1fr auto;align-items:center;text-align:center;font-size:17px;font-weight:700;}
+.twbv-adjust-left{justify-self:center;}
+.twbv-adjust-right{justify-self:end;}
+.twbv-adjust-circle{font-size:2.15rem;}
+
+.twbv-roll-chat__header p{color:#f3e2b8 !important;text-shadow:0 0 8px rgba(217,183,117,.45),0 0 2px rgba(154,123,255,.55);font-weight:700;letter-spacing:.03em;}
+
+.twbv-roll-chat__header p .twbv-skill-attr{font-size:1.02rem;font-weight:800;letter-spacing:.05em}
+.twbv-roll-chat__header p .twbv-attr-forca{color:#ffc57a;text-shadow:0 0 8px rgba(255,197,122,.55)}
+.twbv-roll-chat__header p .twbv-attr-destreza{color:#be91ff;text-shadow:0 0 8px rgba(190,145,255,.55)}
+.twbv-roll-chat__header p .twbv-attr-constituicao{color:#9ceaa9;text-shadow:0 0 8px rgba(156,234,169,.55)}
+.twbv-roll-chat__header p .twbv-attr-inteligencia{color:#8bc0ff;text-shadow:0 0 8px rgba(139,192,255,.55)}
+.twbv-roll-chat__header p .twbv-attr-influencia{color:#ffb07f;text-shadow:0 0 8px rgba(255,176,127,.55)}
+.twbv-roll-chat__header p .twbv-attr-intuicao{color:#8df7ff;text-shadow:0 0 8px rgba(141,247,255,.55)}
+
+
+.twbv-attribute-card h3.twbv-attr-forca{color:#ffc57a;text-shadow:0 0 8px rgba(255,197,122,.55)}
+.twbv-attribute-card h3.twbv-attr-destreza{color:#be91ff;text-shadow:0 0 8px rgba(190,145,255,.55)}
+.twbv-attribute-card h3.twbv-attr-constituicao{color:#9ceaa9;text-shadow:0 0 8px rgba(156,234,169,.55)}
+.twbv-attribute-card h3.twbv-attr-inteligencia{color:#8bc0ff;text-shadow:0 0 8px rgba(139,192,255,.55)}
+.twbv-attribute-card h3.twbv-attr-influencia{color:#ffb07f;text-shadow:0 0 8px rgba(255,176,127,.55)}
+.twbv-attribute-card h3.twbv-attr-intuicao{color:#8df7ff;text-shadow:0 0 8px rgba(141,247,255,.55)}
+.twbv-skill-die{display:inline-flex;align-items:center;justify-content:center;position:absolute;left:67.6%;top:18%;width:12%;height:62%;border:1px solid rgba(217,183,117,.45);border-radius:10px;background:linear-gradient(180deg, rgba(15,11,26,.96), rgba(10,8,19,.98));color:#f7e9c8;font-weight:800;letter-spacing:.04em;box-shadow:inset 0 0 0 1px rgba(106,82,153,.28),0 0 10px rgba(90,58,146,.24)}
+
+
+.twbv.sheet.actor .twbv-skill-rank,
+.window-app.sheet.actor .twbv-skill-rank {
+  text-shadow: none;
+  box-shadow: none;
+  line-height: 1.05;
+  filter: none;
+}
+.rank-novato,
+.rank-treinado,
+.rank-experiente,
+.rank-especialista,
+.rank-mestre {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+}

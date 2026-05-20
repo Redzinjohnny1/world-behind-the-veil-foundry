@@ -84,7 +84,9 @@
       "complicacao",
       "equipamento",
       "arma",
-      "armadura"
+      "armadura",
+      "weapon",
+      "consumable"
     ],
     "templates": {
       "base": {
@@ -149,6 +151,79 @@
       ],
       "protection": "",
       "penalty": ""
+    },
+    "weapon": {
+      "templates": [
+        "base",
+        "inventory"
+      ],
+      "description": "",
+      "notes": "",
+      "source": "",
+      "swid": "arma",
+      "equippable": true,
+      "equipStatus": 1,
+      "favorite": false,
+      "category": "",
+      "damage": "",
+      "range": "",
+      "rangeType": 1,
+      "rof": 1,
+      "ap": 0,
+      "parry": 0,
+      "minStr": "",
+      "shots": 0,
+      "currentShots": 0,
+      "ammo": "",
+      "reloadType": "magazine",
+      "isHeavyWeapon": false,
+      "mods": 0,
+      "actions": {
+        "trait": "Atirar",
+        "traitMod": "",
+        "dmgMod": "",
+        "additional": {}
+      },
+      "bonusDamageDie": 6,
+      "bonusDamageDice": 1,
+      "templatesData": {
+        "cone": false,
+        "stream": false,
+        "small": false,
+        "medium": false,
+        "large": false,
+        "scone": false
+      }
+    },
+    "consumable": {
+      "templates": [
+        "base",
+        "inventory"
+      ],
+      "description": "",
+      "notes": "",
+      "source": "",
+      "swid": "consumivel",
+      "equippable": false,
+      "equipStatus": 1,
+      "favorite": false,
+      "category": "",
+      "subtype": "regular",
+      "charges": {
+        "hasCharges": false,
+        "charges": {
+          "main": {
+            "id": "main",
+            "value": 1,
+            "max": 1,
+            "sort": 0,
+            "name": "Cargas",
+            "rechargeType": "finite"
+          }
+        }
+      },
+      "messageOnUse": true,
+      "destroyOnEmpty": false
     }
   }
 }

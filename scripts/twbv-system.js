@@ -1359,6 +1359,14 @@ function twbvInjectCustomDiceTray(root) {
   chatForm.insertAdjacentElement("afterend", tray);
 
   const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: false, touched: false, history: [], historyIndex: -1 };
+  const resetTrayState = () => {
+    state.dice = {};
+    state.mod = 0;
+    state.desperto = false;
+    state.despertoDie = 6;
+    state.veu = false;
+    state.touched = false;
+  };
   const buildFormula = () => {
     const baseTerms = Object.entries(state.dice)
       .filter(([, qty]) => Number(qty) > 0)
@@ -1412,7 +1420,8 @@ function twbvInjectCustomDiceTray(root) {
       chatMessage.value = "";
       chatMessage.dispatchEvent(new Event("input", { bubbles: true }));
     }
-    state.touched = false;
+    resetTrayState();
+    sync();
   };
   const sync = () => {
     tray.querySelector("[data-mod]").textContent = String(state.mod);

@@ -1185,6 +1185,7 @@ function twbvApplyRollAdjustments(root) {
   if (!controls || !baseEl || !historyEl || !addBtn) return;
 
   const base = Number(controls.dataset.baseTotal ?? baseEl.textContent ?? 0) || 0;
+  let runningTotal = Number(controls.dataset.runningTotal ?? base) || base;
 
   addBtn.addEventListener('click', () => {
     const dialogContent = `
@@ -1231,9 +1232,12 @@ function twbvApplyRollAdjustments(root) {
               }
             }
 
-            const final = base + extraDie + flatMod;
+            const previousTotal = runningTotal;
+            const final = previousTotal + extraDie + flatMod;
+            runningTotal = final;
+            controls.dataset.runningTotal = String(runningTotal);
             const modLabel = flatMod > 0 ? ` + ${flatMod}` : flatMod < 0 ? ` - ${Math.abs(flatMod)}` : '';
-            const breakdown = `${base} + ${dieLabel}(${extraDie})${modLabel} = ${final}`;
+            const breakdown = `${previousTotal} + ${dieLabel}(${extraDie})${modLabel} = ${final}`;
             const item = document.createElement('div');
             item.className = 'twbv-roll-adjust-result';
             item.innerHTML = `<div class="twbv-roll-adjust-breakdown">${breakdown}</div><div class="twbv-roll-adjust-total">Novo Resultado: <strong class="twbv-roll-total-final">${final}</strong></div>`;

@@ -547,7 +547,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         { key: "intuicao", label: "Intuição" }
       ];
 
-      const options = attributes.map((attr) => `<option value="${attr.key}">${attr.label}</option>`).join("");
+      const skillAttrKey = String(skill?.atributo ?? "forca").toLowerCase();
+      const options = attributes.map((attr) => `<option value="${attr.key}" ${attr.key === skillAttrKey ? "selected" : ""}>${attr.label}</option>`).join("");
       const bonusDieOptions = ['d4','d6','d8','d10','d12'].map((die) => `<option value="${die}">${die}</option>`).join("");
       new Dialog({
         title: `Rolar perícia: ${skill.nome || `Perícia ${index + 1}`}`,

@@ -1130,6 +1130,12 @@
   display: flex;
   flex-direction: column;
 }
+
+/* Increase chat panel to fit composer + dice tray elegantly */
+#sidebar {
+  min-width: 440px;
+  width: 440px;
+}
 .twbv-custom-dice-tray__row {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));

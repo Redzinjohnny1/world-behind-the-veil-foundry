@@ -1441,12 +1441,15 @@ function twbvInjectCustomDiceTray(root) {
             <p>${formula}</p>
           </header>
           <footer class="twbv-roll-chat__total">Resultado: <strong>${total}</strong></footer>
+          <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Adicionar dado">🎲 +</button></div>
         </section>`;
+      const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
       await ChatMessage.create({
         speaker: ChatMessage.getSpeaker(),
-        content,
+        content: contentWithAdjust,
         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-        rolls: [roll]
+        rolls: [roll],
+        flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
       });
     }
     sync();

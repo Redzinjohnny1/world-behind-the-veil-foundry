@@ -1727,13 +1727,20 @@
 }
 
 
-.rank-novato,
-.rank-treinado,
-.rank-experiente,
-.rank-especialista,
-.rank-mestre {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+
+
+.twbv.sheet.actor .twbv-skill-rank.rank-novato,
+.twbv.sheet.actor .twbv-skill-rank.rank-treinado,
+.twbv.sheet.actor .twbv-skill-rank.rank-experiente,
+.twbv.sheet.actor .twbv-skill-rank.rank-especialista,
+.twbv.sheet.actor .twbv-skill-rank.rank-mestre,
+.window-app.sheet.actor .twbv-skill-rank.rank-novato,
+.window-app.sheet.actor .twbv-skill-rank.rank-treinado,
+.window-app.sheet.actor .twbv-skill-rank.rank-experiente,
+.window-app.sheet.actor .twbv-skill-rank.rank-especialista,
+.window-app.sheet.actor .twbv-skill-rank.rank-mestre {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
 }

@@ -1358,7 +1358,62 @@ function twbvInjectCustomDiceTray(root) {
     </div>`;
   chatForm.insertAdjacentElement("afterend", tray);
 
-  const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: false, touched: false };
+  const state = { dice: {}, mod: 0, desperto: false, despertoDie: 6, veu: false, touched: false, history: [], historyIndex: -1 };
+  const buildFormula = () => {
+    const baseTerms = Object.entries(state.dice)
+      .filter(([, qty]) => Number(qty) > 0)
+      .map(([die, qty]) => `${qty}d${die}${state.veu ? "x" : ""}`);
+    if (!baseTerms.length) return "";
+    const base = baseTerms.join(" + ");
+    const desperto = state.desperto ? ` + 1d${state.despertoDie}${state.veu ? "x" : ""}` : "";
+    const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
+    return `${base}${desperto}${mod}`;
+  };
+  const submitTrayRoll = async () => {
+    const formula = buildFormula();
+    if (!formula) return ui.notifications?.warn("Selecione ao menos um dado.");
+    const roll = await (new Roll(formula)).evaluate();
+    const total = Number(roll.total ?? 0);
+    const commonFormula = Object.entries(state.dice)
+      .filter(([, qty]) => Number(qty) > 0)
+      .map(([die, qty]) => `${qty}d${die}${state.veu ? "x" : ""}`)
+      .join(" + ");
+    const despertoFormula = state.desperto ? `1d${state.despertoDie}${state.veu ? "x" : ""}` : "—";
+    const content = `
+      <section class="twbv-roll-chat">
+        <header class="twbv-roll-chat__header">
+          <h3>Rolagem de Bandeja${state.veu ? " • Véu" : ""}</h3>
+        </header>
+        <div class="twbv-roll-chat__grid">
+          <div class="twbv-roll-card">
+            <div class="twbv-roll-card__label">Dados Comuns</div>
+            <div class="twbv-roll-card__die">${commonFormula || "—"}</div>
+          </div>
+          <div class="twbv-roll-card">
+            <div class="twbv-roll-card__label">Desperto</div>
+            <div class="twbv-roll-card__die">${despertoFormula}</div>
+          </div>
+        </div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${total}</strong></footer>
+        <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Adicionar dado">🎲 +</button></div>
+      </section>`;
+    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker(),
+      content: contentWithAdjust,
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      rolls: [roll],
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
+    });
+    state.history.unshift(chatMessage?.value ?? formula);
+    state.history = state.history.slice(0, 50);
+    state.historyIndex = -1;
+    if (chatMessage) {
+      chatMessage.value = "";
+      chatMessage.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    state.touched = false;
+  };
   const sync = () => {
     tray.querySelector("[data-mod]").textContent = String(state.mod);
     tray.querySelectorAll(".twbv-die-btn").forEach((btn) => {
@@ -1423,36 +1478,23 @@ function twbvInjectCustomDiceTray(root) {
       return;
     }
     if (op === "veu") { state.veu = !state.veu; state.touched = true; }
-    if (op === "roll") {
-      const baseTerms = Object.entries(state.dice)
-        .filter(([, qty]) => Number(qty) > 0)
-        .map(([die, qty]) => `${qty}d${die}${state.veu ? "x" : ""}`);
-      if (!baseTerms.length) return ui.notifications?.warn("Selecione ao menos um dado.");
-      const base = baseTerms.join(" + ");
-      const desperto = state.desperto ? ` + 1d${state.despertoDie}${state.veu ? "x" : ""}` : "";
-      const mod = state.mod ? ` ${state.mod > 0 ? "+" : "-"} ${Math.abs(state.mod)}` : "";
-      const formula = `${base}${desperto}${mod}`;
-      const roll = await (new Roll(formula)).evaluate();
-      const total = Number(roll.total ?? 0);
-      const content = `
-        <section class="twbv-roll-chat">
-          <header class="twbv-roll-chat__header">
-            <h3>Rolagem de Bandeja${state.desperto ? " • Desperto" : ""}${state.veu ? " • Véu" : ""}</h3>
-            <p>${formula}</p>
-          </header>
-          <footer class="twbv-roll-chat__total">Resultado: <strong>${total}</strong></footer>
-          <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Adicionar dado">🎲 +</button></div>
-        </section>`;
-      const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
-      await ChatMessage.create({
-        speaker: ChatMessage.getSpeaker(),
-        content: contentWithAdjust,
-        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-        rolls: [roll],
-        flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
-      });
-    }
+    if (op === "roll") await submitTrayRoll();
     sync();
+  });
+
+  chatMessage?.addEventListener("keydown", async (ev) => {
+    if (ev.key === "Enter" && !ev.shiftKey) {
+      ev.preventDefault();
+      await submitTrayRoll();
+      return;
+    }
+    if (ev.key === "ArrowUp") {
+      if (!state.history.length) return;
+      ev.preventDefault();
+      state.historyIndex = Math.min(state.historyIndex + 1, state.history.length - 1);
+      chatMessage.value = state.history[state.historyIndex] ?? "";
+      chatMessage.dispatchEvent(new Event("input", { bubbles: true }));
+    }
   });
 }
 

@@ -357,7 +357,16 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.movimentoDieLabel = `d${atletismoDie}`;
     context.movimentoTooltip = "Movimento básico: 5 + bônus de Atletismo (somente o bônus após o +).";
     context.movimentoDieTooltip = `Dado de corrida usa o dado da perícia Atletismo: ${context.movimentoDieLabel}.`;
-    context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
+    const ferimentosNivel = Number(context.system.ferimentos ?? 0);
+    if (ferimentosNivel <= 0) {
+      context.penaltyFerimentosLabel = "Sem ferimentos (0)";
+    } else if (ferimentosNivel === 1) {
+      context.penaltyFerimentosLabel = "Machucado (-1)";
+    } else if (ferimentosNivel === 2) {
+      context.penaltyFerimentosLabel = "Muito ferido (-2)";
+    } else {
+      context.penaltyFerimentosLabel = "Gravemente ferido (-3)";
+    }
     context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
     context.inconsciente = context.system.fadiga >= 3 || context.system.ferimentos >= 4;
     context.advancementOptions = ADVANCEMENT_OPTIONS;

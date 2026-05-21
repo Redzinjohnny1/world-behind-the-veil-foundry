@@ -52,6 +52,12 @@
         "mana": {
           "value": 0,
           "max": 3
+        },
+        "fadiga": 0,
+        "condicoes": [],
+        "defesa": {
+          "aparar": 0,
+          "resistencia": 0
         }
       }
     },

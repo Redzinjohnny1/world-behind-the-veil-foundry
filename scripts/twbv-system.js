@@ -88,6 +88,13 @@ function normalizeAttributeStep(value) {
 
 
 
+function getFerimentosRollPenalty(actorSystem) {
+  const ferimentos = Math.max(0, Math.min(4, Number(actorSystem?.ferimentos ?? 0)));
+  if (ferimentos <= 0) return { value: 0, label: "" };
+  const applied = Math.min(ferimentos, 3);
+  return { value: -applied, label: `Ferimento -${applied}` };
+}
+
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;
@@ -613,12 +620,13 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
-              const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
+              const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
+              const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0) + ferimentoPenalty.value;
               const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,
+                subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ''}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,
@@ -657,12 +665,13 @@ class TWBVPersonagemSheet extends ActorSheet {
       const attrData = this.actor.system.atributos?.[attributeKey] ?? {};
       const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
       const awakenedDie = resolveAwakenedDie(attrDie);
-      const totalBonus = Number(attrData.bonus ?? 0);
+      const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
+      const totalBonus = Number(attrData.bonus ?? 0) + ferimentoPenalty.value;
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
 
       await renderDualDieResult({
         title: labels[attributeKey] ?? attributeKey,
-        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}`,
+        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
         dieA: attrDie,
         labelA: "Atributo",
         dieB: awakenedDie,

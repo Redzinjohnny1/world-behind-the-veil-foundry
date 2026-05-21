@@ -81,7 +81,7 @@
 
         <div class="twbv-right-column">
           <section class="twbv-panel twbv-ornate twbv-defense-panel">
-            <h2 class="twbv-condition-title">Defesa</h2>
+            <h2 class="twbv-condition-title twbv-defense-title">Defesa</h2>
             <div class="twbv-defense-grid">
               <article class="twbv-defense-box" data-tooltip="{{defesaApararTooltip}}">
                 <h3>Aparar</h3>
@@ -101,33 +101,19 @@
               </article>
             </div>
             <div class="twbv-size-move-grid">
-              <article class="twbv-size-move-box" data-tooltip="{{movimentoTooltip}}">
-                <h3>Tamanho</h3>
-                <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
-              </article>
-              <article class="twbv-size-move-box" data-tooltip="{{movimentoTooltip}}">
-                <h3>Mov.</h3>
-                <div class="twbv-mov-row">
-                  <input type="number" value="{{movimentoTotal}}" disabled />
-                  <div class="twbv-move-die-wrap" data-tooltip="{{movimentoDieTooltip}}">
-                    <button type="button" class="twbv-move-roll" title="Rolar corrida (dado de Atletismo)">🎲 {{movimentoDieLabel}}</button>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </section>
-
-          <section class="twbv-panel twbv-ornate twbv-size-move-panel">
-            <div class="twbv-size-move-grid">
               <article class="twbv-size-move-box">
                 <h3>Tamanho</h3>
                 <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
               </article>
-              <article class="twbv-size-move-box" data-tooltip="Movimento básico: 5 + bônus de Atletismo (somente o bônus após o +).">
+              <article class="twbv-size-move-box">
                 <h3>Mov.</h3>
                 <div class="twbv-mov-row">
-                  <input type="number" value="{{movimentoTotal}}" disabled />
-                  <button type="button" class="twbv-move-roll" title="Rolar corrida (dado de Atletismo)">🎲 {{movimentoDieLabel}}</button>
+                  <div class="twbv-mov-flat-wrap" data-tooltip="{{movimentoTooltip}}">
+                    <input type="number" value="{{movimentoTotal}}" disabled />
+                  </div>
+                  <div class="twbv-move-die-wrap" data-tooltip="{{movimentoDieTooltip}}">
+                    <button type="button" class="twbv-move-roll" title="Rolar corrida (dado de Atletismo)">🎲 {{movimentoDieLabel}}</button>
+                  </div>
                 </div>
               </article>
             </div>

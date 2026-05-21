@@ -120,10 +120,23 @@ function normalizeAttributeStep(value) {
 
 
 function getFerimentosRollPenalty(actorSystem) {
-  const ferimentos = Math.max(0, Math.min(4, Number(actorSystem?.ferimentos ?? 0)));
+  const ferimentos = Math.max(0, Math.min(5, Number(actorSystem?.ferimentos ?? 0)));
   if (ferimentos <= 0) return { value: 0, label: "" };
-  const applied = Math.min(ferimentos, 3);
-  return { value: -applied, label: `Ferimento -${applied}` };
+  return { value: -ferimentos, label: `Ferimento -${ferimentos}` };
+}
+
+function getFadigaRollPenalty(actorSystem) {
+  const fadiga = Math.max(0, Math.min(4, Number(actorSystem?.fadiga ?? 0)));
+  if (fadiga <= 0) return { value: 0, label: "" };
+  return { value: -fadiga, label: `Fadiga -${fadiga}` };
+}
+
+function getGlobalRollPenalty(actorSystem) {
+  const ferimentos = getFerimentosRollPenalty(actorSystem);
+  const fadiga = getFadigaRollPenalty(actorSystem);
+  const value = ferimentos.value + fadiga.value;
+  const label = [ferimentos.label, fadiga.label].filter(Boolean).join(" • ");
+  return { value, label };
 }
 
 function getFadigaRollPenalty(actorSystem) {

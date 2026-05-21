@@ -120,10 +120,23 @@ function normalizeAttributeStep(value) {
 
 
 function getFerimentosRollPenalty(actorSystem) {
-  const ferimentos = Math.max(0, Math.min(4, Number(actorSystem?.ferimentos ?? 0)));
+  const ferimentos = Math.max(0, Math.min(5, Number(actorSystem?.ferimentos ?? 0)));
   if (ferimentos <= 0) return { value: 0, label: "" };
-  const applied = Math.min(ferimentos, 3);
-  return { value: -applied, label: `Ferimento -${applied}` };
+  return { value: -ferimentos, label: `Ferimento -${ferimentos}` };
+}
+
+function getFadigaRollPenalty(actorSystem) {
+  const fadiga = Math.max(0, Math.min(4, Number(actorSystem?.fadiga ?? 0)));
+  if (fadiga <= 0) return { value: 0, label: "" };
+  return { value: -fadiga, label: `Fadiga -${fadiga}` };
+}
+
+function getGlobalRollPenalty(actorSystem) {
+  const ferimentos = getFerimentosRollPenalty(actorSystem);
+  const fadiga = getFadigaRollPenalty(actorSystem);
+  const value = ferimentos.value + fadiga.value;
+  const label = [ferimentos.label, fadiga.label].filter(Boolean).join(" • ");
+  return { value, label };
 }
 
 function getFadigaRollPenalty(actorSystem) {
@@ -360,7 +373,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens}) = ${resistenciaTotal}`;
     context.defesaDesviarTooltip = `4 (padrão) + Talento (${desviarTalento}) + Itens (${desviarItens}) + Magias (${desviarMagias}) = ${desviarTotal}`;
     context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
-    context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
+    context.system.ferimentos = Math.max(0, Math.min(5, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(4, Number(context.system.fadiga ?? 0)));
     context.system.tamanho = Number.isFinite(Number(context.system.tamanho)) ? Number(context.system.tamanho) : 0;
     const atletismo = findSkillByName(context.system, "ATLETISMO");
@@ -378,8 +391,12 @@ class TWBVPersonagemSheet extends ActorSheet {
       context.penaltyFerimentosLabel = "Machucado (-1)";
     } else if (ferimentosNivel === 2) {
       context.penaltyFerimentosLabel = "Muito ferido (-2)";
-    } else {
+    } else if (ferimentosNivel === 3) {
       context.penaltyFerimentosLabel = "Gravemente ferido (-3)";
+    } else if (ferimentosNivel === 4) {
+      context.penaltyFerimentosLabel = "Criticamente ferido (-4)";
+    } else {
+      context.penaltyFerimentosLabel = "Mortalmente ferido (-5)";
     }
     if (context.system.fadiga <= 0) {
       context.penaltyFadigaLabel = "Sem fadiga (0)";
@@ -392,7 +409,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     } else {
       context.penaltyFadigaLabel = "Inconsciente (-4)";
     }
-    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 4;
+    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 5;
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -543,12 +560,12 @@ class TWBVPersonagemSheet extends ActorSheet {
       max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
     };
 
-    this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
+    this.actor.system.ferimentos = Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)));
     this.actor.system.fadiga = Math.max(0, Math.min(4, Number(this.actor.system.fadiga ?? 0)));
     this.actor.system.tamanho = Number.isFinite(Number(this.actor.system.tamanho)) ? Number(this.actor.system.tamanho) : 0;
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
-    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 4;
+    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 5;
     if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
     if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
 

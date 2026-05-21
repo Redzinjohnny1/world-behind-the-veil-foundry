@@ -81,7 +81,7 @@
 
         <div class="twbv-right-column">
           <section class="twbv-panel twbv-ornate twbv-defense-panel">
-            <h2 class="twbv-condition-title">Defesa</h2>
+            <h2 class="twbv-condition-title twbv-defense-title">Defesa</h2>
             <div class="twbv-defense-grid">
               <article class="twbv-defense-box" data-tooltip="{{defesaApararTooltip}}">
                 <h3>Aparar</h3>
@@ -100,6 +100,23 @@
                 <input type="number" name="system.defesa.resistenciaMagica" value="{{system.defesa.resistenciaMagica}}" min="0" />
               </article>
             </div>
+            <div class="twbv-size-move-grid">
+              <article class="twbv-size-move-box">
+                <h3>Tamanho</h3>
+                <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
+              </article>
+              <article class="twbv-size-move-box">
+                <h3>Mov.</h3>
+                <div class="twbv-mov-row">
+                  <div class="twbv-mov-flat-wrap" data-mov-tooltip="{{movimentoTooltip}}">
+                    <input type="number" value="{{movimentoTotal}}" disabled />
+                  </div>
+                  <div class="twbv-move-die-wrap" data-mov-tooltip="{{movimentoDieTooltip}}">
+                    <button type="button" class="twbv-move-roll">🎲 {{movimentoDieLabel}}</button>
+                  </div>
+                </div>
+              </article>
+            </div>
           </section>
 
           <section class="twbv-panel twbv-ornate twbv-utility-panel">
@@ -115,7 +132,7 @@
                   </div>
                   <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="4" data-adjust="1" aria-label="Aumentar ferimentos">+</button>
                 </div>
-                <p class="twbv-condition-penalty">Penalidade global: {{penaltyFerimentosLabel}}</p>
+                <p class="twbv-condition-penalty">{{penaltyFerimentosLabel}}</p>
               </article>
 
               <article class="twbv-condition-meter twbv-condition-meter--fatigue fadiga-nivel-{{system.fadiga}}">

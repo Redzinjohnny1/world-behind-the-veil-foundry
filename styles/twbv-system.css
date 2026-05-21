@@ -2000,3 +2000,5 @@
   justify-content:center;
   text-align:center;
 }
+
+.twbv-defense-box small{display:block;margin-bottom:6px;color:#c9b78b;font-size:.66rem;letter-spacing:.05em;}

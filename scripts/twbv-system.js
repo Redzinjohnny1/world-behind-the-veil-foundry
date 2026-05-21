@@ -60,6 +60,15 @@ const SKILL_ATTRIBUTES = [
   { key: "influencia", label: "Influência", iconPath: "icons/svg/d20-black.svg" }
 ];
 
+function getSkillHalfForDefense(actorSystem, skillName) {
+  const target = String(skillName ?? "").trim().toUpperCase();
+  const skills = Array.from(actorSystem?.pericias ?? []);
+  const skill = skills.find((entry) => String(entry?.nome ?? "").trim().toUpperCase() === target);
+  if (!skill) return 0;
+  const die = SKILL_DICE.includes(Number(skill?.dado)) ? Number(skill.dado) : 4;
+  return Math.floor(die / 2);
+}
+
 function getSkillRank(dado, bonus = 0) {
   const die = SKILL_DICE.includes(Number(dado)) ? Number(dado) : 4;
   const mod = Number.isFinite(Number(bonus)) ? Number(bonus) : 0;
@@ -285,8 +294,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
     context.system.defesa = context.system.defesa ?? {};
-    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? 0));
-    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? 0));
+    const apararBase = 2 + getSkillHalfForDefense(context.system, "LUTAR");
+    const resistenciaBase = 2 + getSkillHalfForDefense(context.system, "RESISTENCIA");
+    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? apararBase));
+    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? resistenciaBase));
+    context.defesaApararBase = apararBase;
+    context.defesaResistenciaBase = resistenciaBase;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
@@ -451,8 +464,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
 
     this.actor.system.defesa = this.actor.system.defesa ?? {};
-    this.actor.system.defesa.aparar = Math.max(0, Number(this.actor.system.defesa.aparar ?? 0));
-    this.actor.system.defesa.resistencia = Math.max(0, Number(this.actor.system.defesa.resistencia ?? 0));
+    const apararBase = 2 + getSkillHalfForDefense(this.actor.system, "LUTAR");
+    const resistenciaBase = 2 + getSkillHalfForDefense(this.actor.system, "RESISTENCIA");
+    const apararRaw = this.actor.system.defesa.aparar;
+    const resistenciaRaw = this.actor.system.defesa.resistencia;
+    this.actor.system.defesa.aparar = Math.max(0, Number(apararRaw ?? apararBase));
+    this.actor.system.defesa.resistencia = Math.max(0, Number(resistenciaRaw ?? resistenciaBase));
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];

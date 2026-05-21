@@ -864,6 +864,10 @@
   padding: 8px;
   background: linear-gradient(180deg, rgba(42, 8, 12, 0.9), rgba(19, 5, 9, 0.94));
 }
+
+.fadiga-nivel-0 { border-color: rgba(214, 180, 98, 0.42); background: linear-gradient(180deg, rgba(44, 35, 12, 0.86), rgba(24, 18, 6, 0.92)); }
+.fadiga-nivel-0 h3, .fadiga-nivel-0 .twbv-condition-penalty { color:#f4dfab; }
+.fadiga-nivel-0 .twbv-condition-core { border-color: rgba(196, 151, 70, 0.72); box-shadow: inset 0 0 6px rgba(119, 88, 27, 0.22), 0 0 7px rgba(215, 177, 101, 0.28); }
 .twbv-condition-meter h3,
 .twbv-condition-state h3 { margin:0 0 6px; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: #ffd4d4; }
 .twbv-condition-controls { display:grid; grid-template-columns: 32px 1fr 32px; align-items:center; gap:6px; }

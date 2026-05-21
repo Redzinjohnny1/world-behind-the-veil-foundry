@@ -310,12 +310,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     const apararItens = Math.max(0, Number(context.system?.defesa?.apararItens ?? 0));
     const resistenciaTalento = Math.max(0, Number(context.system?.defesa?.resistenciaTalento ?? 0));
     const resistenciaItens = Math.max(0, Number(context.system?.defesa?.resistenciaItens ?? 0));
-    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? (apararBase + apararTalento + apararItens)));
-    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? (resistenciaBase + resistenciaTalento + resistenciaItens)));
-    context.defesaApararBase = apararBase;
-    context.defesaResistenciaBase = resistenciaBase;
-    context.defesaApararTooltip = `2 (padrão) + Lutar (${apararLutarHalf}) + Talento (${apararTalento}) + Itens (${apararItens})`;
-    context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens})`;
+    const apararTotal = Math.max(0, apararBase + apararTalento + apararItens);
+    const resistenciaTotal = Math.max(0, resistenciaBase + resistenciaTalento + resistenciaItens);
+    context.system.defesa.aparar = apararTotal;
+    context.system.defesa.resistencia = resistenciaTotal;
+    context.defesaApararTooltip = `2 (padrão) + Lutar (${apararLutarHalf}) + Talento (${apararTalento}) + Itens (${apararItens}) = ${apararTotal}`;
+    context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens}) = ${resistenciaTotal}`;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";

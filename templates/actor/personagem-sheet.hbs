@@ -100,6 +100,21 @@
                 <input type="number" name="system.defesa.resistenciaMagica" value="{{system.defesa.resistenciaMagica}}" min="0" />
               </article>
             </div>
+            <div class="twbv-size-move-grid">
+              <article class="twbv-size-move-box" data-tooltip="{{movimentoTooltip}}">
+                <h3>Tamanho</h3>
+                <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
+              </article>
+              <article class="twbv-size-move-box" data-tooltip="{{movimentoTooltip}}">
+                <h3>Mov.</h3>
+                <div class="twbv-mov-row">
+                  <input type="number" value="{{movimentoTotal}}" disabled />
+                  <div class="twbv-move-die-wrap" data-tooltip="{{movimentoDieTooltip}}">
+                    <button type="button" class="twbv-move-roll" title="Rolar corrida (dado de Atletismo)">🎲 {{movimentoDieLabel}}</button>
+                  </div>
+                </div>
+              </article>
+            </div>
           </section>
 
           <section class="twbv-panel twbv-ornate twbv-utility-panel">

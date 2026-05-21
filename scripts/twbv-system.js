@@ -100,6 +100,12 @@ function getSkillAttributeMeta(attributeKey) {
   return SKILL_ATTRIBUTES.find((attr) => attr.key === attributeKey) ?? fallback;
 }
 
+function findSkillByName(actorSystem, skillName) {
+  const target = String(skillName ?? "").trim().toUpperCase();
+  const skills = Array.from(actorSystem?.pericias ?? []);
+  return skills.find((entry) => String(entry?.nome ?? "").trim().toUpperCase() === target) ?? null;
+}
+
 function buildDieLabel(die, bonus = 0) {
   return `d${die}${bonus > 0 ? `+${bonus}` : bonus < 0 ? `${bonus}` : ""}`;
 }
@@ -342,6 +348,15 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
+    context.system.tamanho = Number.isFinite(Number(context.system.tamanho)) ? Number(context.system.tamanho) : 0;
+    const atletismo = findSkillByName(context.system, "ATLETISMO");
+    const atletismoBonus = Number.isFinite(Number(atletismo?.bonus)) ? Number(atletismo.bonus) : 0;
+    const atletismoDie = SKILL_DICE.includes(Number(atletismo?.dado)) ? Number(atletismo.dado) : 4;
+    context.movimentoTotal = 5 + atletismoBonus;
+    context.movimentoDie = atletismoDie;
+    context.movimentoDieLabel = `d${atletismoDie}`;
+    context.movimentoTooltip = "Movimento básico: 5 + bônus de Atletismo (somente o bônus após o +).";
+    context.movimentoDieTooltip = `Dado de corrida usa o dado da perícia Atletismo: ${context.movimentoDieLabel}.`;
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
     context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
     context.inconsciente = context.system.fadiga >= 3 || context.system.ferimentos >= 4;
@@ -497,6 +512,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
     this.actor.system.fadiga = Math.max(0, Math.min(3, Number(this.actor.system.fadiga ?? 0)));
+    this.actor.system.tamanho = Number.isFinite(Number(this.actor.system.tamanho)) ? Number(this.actor.system.tamanho) : 0;
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
     const shouldBeUnconscious = this.actor.system.fadiga >= 3 || this.actor.system.ferimentos >= 4;
@@ -751,6 +767,17 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
 
     html.find(".twbv-skill-roll").on("click", openSkillRollDialog);
+
+    html.find(".twbv-move-roll").on("click", async () => {
+      const atletismo = findSkillByName(this.actor.system, "ATLETISMO");
+      const die = SKILL_DICE.includes(Number(atletismo?.dado)) ? Number(atletismo.dado) : 4;
+      const roll = await (new Roll(`1d${die}`)).evaluate({ async: true });
+      if (game?.dice3d?.showForRoll) await game.dice3d.showForRoll(roll, game.user, true);
+      await roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        flavor: `Corrida (${atletismo?.nome || "Atletismo"}): d${die}`
+      });
+    });
 
     html.find(".twbv-attr-roll").on("click", async (event) => {
       const labels = {

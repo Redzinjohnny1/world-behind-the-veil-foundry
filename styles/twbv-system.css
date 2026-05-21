@@ -468,7 +468,7 @@
   background: rgba(18, 24, 42, 0.5);
 }
 
-.twbv-right-column { display: grid; grid-template-rows: minmax(360px, auto) minmax(220px, auto); gap: 10px; min-height: 100%; }
+.twbv-right-column { display: grid; grid-template-rows: auto minmax(220px, auto); gap: 10px; min-height: 100%; }
 
 .twbv-attribute-card {
   position: relative;
@@ -855,7 +855,7 @@
 
 
 
-.twbv-defense-panel { min-height: 360px; }
+.twbv-defense-panel { min-height: 0; height: fit-content; align-self: start; }
 .twbv-defense-title { font-size: 1.08rem; letter-spacing: .14em; }
 .twbv-defense-grid { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
 .twbv-defense-box { border:1px solid rgba(217,183,117,.45); border-radius:10px; padding:7px; background: linear-gradient(180deg, rgba(20,12,34,.96), rgba(10,8,18,.98)); text-align:center; }

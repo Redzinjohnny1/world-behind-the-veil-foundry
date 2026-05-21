@@ -66,7 +66,15 @@ function getSkillHalfForDefense(actorSystem, skillName) {
   const skill = skills.find((entry) => String(entry?.nome ?? "").trim().toUpperCase() === target);
   if (!skill) return 0;
   const die = SKILL_DICE.includes(Number(skill?.dado)) ? Number(skill.dado) : 4;
-  return Math.floor(die / 2);
+  const bonus = Number.isFinite(Number(skill?.bonus)) ? Number(skill.bonus) : 0;
+  return Math.floor((die + bonus) / 2);
+}
+
+function getConstituicaoHalfForResistencia(actorSystem) {
+  const attr = actorSystem?.atributos?.constituicao ?? {};
+  const die = normalizeAttributeStep(attr?.passo ?? 4);
+  const bonus = Number.isFinite(Number(attr?.bonus)) ? Number(attr.bonus) : 0;
+  return Math.floor((die + bonus) / 2);
 }
 
 function getSkillRank(dado, bonus = 0) {
@@ -294,12 +302,20 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
     context.system.defesa = context.system.defesa ?? {};
-    const apararBase = 2 + getSkillHalfForDefense(context.system, "LUTAR");
-    const resistenciaBase = 2 + getSkillHalfForDefense(context.system, "RESISTENCIA");
-    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? apararBase));
-    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? resistenciaBase));
+    const apararLutarHalf = getSkillHalfForDefense(context.system, "LUTAR");
+    const resistenciaConHalf = getConstituicaoHalfForResistencia(context.system);
+    const apararBase = 2 + apararLutarHalf;
+    const resistenciaBase = 2 + resistenciaConHalf;
+    const apararTalento = Math.max(0, Number(context.system?.defesa?.apararTalento ?? 0));
+    const apararItens = Math.max(0, Number(context.system?.defesa?.apararItens ?? 0));
+    const resistenciaTalento = Math.max(0, Number(context.system?.defesa?.resistenciaTalento ?? 0));
+    const resistenciaItens = Math.max(0, Number(context.system?.defesa?.resistenciaItens ?? 0));
+    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? (apararBase + apararTalento + apararItens)));
+    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? (resistenciaBase + resistenciaTalento + resistenciaItens)));
     context.defesaApararBase = apararBase;
     context.defesaResistenciaBase = resistenciaBase;
+    context.defesaApararTooltip = `2 (padrão) + Lutar (${apararLutarHalf}) + Talento (${apararTalento}) + Itens (${apararItens})`;
+    context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens})`;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
@@ -465,7 +481,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     this.actor.system.defesa = this.actor.system.defesa ?? {};
     const apararBase = 2 + getSkillHalfForDefense(this.actor.system, "LUTAR");
-    const resistenciaBase = 2 + getSkillHalfForDefense(this.actor.system, "RESISTENCIA");
+    const resistenciaBase = 2 + getConstituicaoHalfForResistencia(this.actor.system);
     const apararRaw = this.actor.system.defesa.aparar;
     const resistenciaRaw = this.actor.system.defesa.resistencia;
     this.actor.system.defesa.aparar = Math.max(0, Number(apararRaw ?? apararBase));

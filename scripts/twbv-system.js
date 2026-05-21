@@ -88,6 +88,13 @@ function normalizeAttributeStep(value) {
 
 
 
+function getFerimentosRollPenalty(actorSystem) {
+  const ferimentos = Math.max(0, Math.min(4, Number(actorSystem?.ferimentos ?? 0)));
+  if (ferimentos <= 0) return { value: 0, label: "" };
+  const applied = Math.min(ferimentos, 3);
+  return { value: -applied, label: `Ferimento -${applied}` };
+}
+
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;
@@ -127,7 +134,9 @@ function renderDualDieResult({
   dieDisplayB,
   actor,
   subtitle = "",
-  subtitleClass = ""
+  subtitleClass = "",
+  finalModifier = 0,
+  finalModifierLabel = ""
 }) {
   return (async () => {
     const rollAData = await rollVeuDie(dieA);
@@ -146,11 +155,12 @@ function renderDualDieResult({
     const awakenedDieResult = valueB;
     const awakenedTotal = awakenedDieResult + effectiveBonusB;
 
-    const total = Math.max(skillTotal, awakenedTotal);
+    const baseTotal = Math.max(skillTotal, awakenedTotal);
+    const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
+    const total = baseTotal + appliedModifier;
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
-      const veil = Array.isArray(selectedRolls) && selectedRolls.length > 1 ? ` (${selectedRolls.join(' + ')})` : "";
-      const valueLabel = effectiveBonus === 0 ? `${value}${veil}` : `${value}${veil}${bonusLabel} = ${modified}`;
+      const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
@@ -170,7 +180,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong>${appliedModifier !== 0 ? `<span class="twbv-roll-chat__modifier"> Base ${baseTotal} • Ferimentos ${appliedModifier}</span>` : ""}</footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
@@ -246,6 +256,11 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.mana = context.system.mana ?? {};
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
+    context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
+    context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
+    context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
+    context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
+    context.inconsciente = context.system.fadiga >= 3 || context.system.ferimentos >= 4;
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -396,6 +411,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
     };
 
+    this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
+    this.actor.system.fadiga = Math.max(0, Math.min(3, Number(this.actor.system.fadiga ?? 0)));
+
+    if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
+    const shouldBeUnconscious = this.actor.system.fadiga >= 3 || this.actor.system.ferimentos >= 4;
+    if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
+    if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
+
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
@@ -411,6 +434,17 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+
+    html.find(".twbv-condition-adjust").on("click", async (event) => {
+      const button = event.currentTarget;
+      const path = button.dataset.path;
+      const adjust = Number(button.dataset.adjust ?? 0);
+      const min = Number(button.dataset.min ?? 0);
+      const max = Number(button.dataset.max ?? 99);
+      const current = Number(foundry.utils.getProperty(this.actor.system, path.replace(/^system\./, "")) ?? 0);
+      const next = Math.max(min, Math.min(max, current + adjust));
+      await this.actor.update({ [path]: next });
+    });
 
     html.find(".twbv-add-advancement").on("click", async () => {
       const optionMarkup = ADVANCEMENT_OPTIONS.map((option) => `<option value="${option}">${option}</option>`).join("");
@@ -589,18 +623,22 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
+              const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
-                subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}`,
+                subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ''}`,
                 dieA: skillDie,
                 labelA: "Perícia",
                 dieB: awakenedDie,
                 labelB: "Desperto",
                 bonusA: totalBonus,
                 bonusB: 0,
+                finalModifier: ferimentoPenalty.value,
+        finalModifierLabel: ferimentoPenalty.label,
+                finalModifierLabel: ferimentoPenalty.label,
                 dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
@@ -633,17 +671,20 @@ class TWBVPersonagemSheet extends ActorSheet {
       const attrData = this.actor.system.atributos?.[attributeKey] ?? {};
       const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
       const awakenedDie = resolveAwakenedDie(attrDie);
+      const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
       const totalBonus = Number(attrData.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
 
       await renderDualDieResult({
         title: labels[attributeKey] ?? attributeKey,
-        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}`,
+        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
         dieA: attrDie,
         labelA: "Atributo",
         dieB: awakenedDie,
         labelB: "Desperto",
         bonus: totalBonus,
+        finalModifier: ferimentoPenalty.value,
+        finalModifierLabel: ferimentoPenalty.label,
         actor: this.actor
       });
     });

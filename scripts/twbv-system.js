@@ -161,10 +161,11 @@ function renderDualDieResult({
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
       const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
+      const veuAtivado = Array.isArray(selectedRolls) && selectedRolls.length > 1;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
-        <div class="twbv-roll-card__die">${dieDisplay}</div>
+        <div class="twbv-roll-card__die">${dieDisplay}${veuAtivado ? ' • Véu' : ''}</div>
         <div class="twbv-roll-card__value">${valueLabel}</div>
       </div>`;
     };

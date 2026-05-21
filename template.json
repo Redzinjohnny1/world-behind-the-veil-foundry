@@ -57,7 +57,9 @@
         "condicoes": [],
         "defesa": {
           "aparar": 0,
-          "resistencia": 0
+          "resistencia": 0,
+          "desviar": 4,
+          "resistenciaMagica": 0
         }
       }
     },

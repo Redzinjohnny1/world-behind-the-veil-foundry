@@ -77,6 +77,14 @@ function getConstituicaoHalfForResistencia(actorSystem) {
   return Math.floor((die + bonus) / 2);
 }
 
+
+function getInfluenciaHalfForResistenciaMagica(actorSystem) {
+  const attr = actorSystem?.atributos?.influencia ?? {};
+  const die = normalizeAttributeStep(attr?.passo ?? 4);
+  const bonus = Number.isFinite(Number(attr?.bonus)) ? Number(attr.bonus) : 0;
+  return Math.floor((die + bonus) / 2);
+}
+
 function getSkillRank(dado, bonus = 0) {
   const die = SKILL_DICE.includes(Number(dado)) ? Number(dado) : 4;
   const mod = Number.isFinite(Number(bonus)) ? Number(bonus) : 0;
@@ -310,12 +318,28 @@ class TWBVPersonagemSheet extends ActorSheet {
     const apararItens = Math.max(0, Number(context.system?.defesa?.apararItens ?? 0));
     const resistenciaTalento = Math.max(0, Number(context.system?.defesa?.resistenciaTalento ?? 0));
     const resistenciaItens = Math.max(0, Number(context.system?.defesa?.resistenciaItens ?? 0));
+    const desviarTalento = Math.max(0, Number(context.system?.defesa?.desviarTalento ?? 0));
+    const desviarItens = Math.max(0, Number(context.system?.defesa?.desviarItens ?? 0));
+    const desviarMagias = Math.max(0, Number(context.system?.defesa?.desviarMagias ?? 0));
+    const resistenciaMagicaTalento = Math.max(0, Number(context.system?.defesa?.resistenciaMagicaTalento ?? 0));
+    const resistenciaMagicaItens = Math.max(0, Number(context.system?.defesa?.resistenciaMagicaItens ?? 0));
+    const resistenciaMagicaMagias = Math.max(0, Number(context.system?.defesa?.resistenciaMagicaMagias ?? 0));
+    const resistenciaMagicaInfluHalf = getInfluenciaHalfForResistenciaMagica(context.system);
+
     const apararTotal = Math.max(0, apararBase + apararTalento + apararItens);
     const resistenciaTotal = Math.max(0, resistenciaBase + resistenciaTalento + resistenciaItens);
+    const desviarTotal = Math.max(0, 4 + desviarTalento + desviarItens + desviarMagias);
+    const resistenciaMagicaTotal = Math.max(0, 2 + resistenciaMagicaInfluHalf + resistenciaMagicaTalento + resistenciaMagicaItens + resistenciaMagicaMagias);
+
     context.system.defesa.aparar = apararTotal;
     context.system.defesa.resistencia = resistenciaTotal;
+    context.system.defesa.desviar = desviarTotal;
+    context.system.defesa.resistenciaMagica = resistenciaMagicaTotal;
+
     context.defesaApararTooltip = `2 (padrão) + Lutar (${apararLutarHalf}) + Talento (${apararTalento}) + Itens (${apararItens}) = ${apararTotal}`;
     context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens}) = ${resistenciaTotal}`;
+    context.defesaDesviarTooltip = `4 (padrão) + Talento (${desviarTalento}) + Itens (${desviarItens}) + Magias (${desviarMagias}) = ${desviarTotal}`;
+    context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
@@ -486,6 +510,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     const resistenciaRaw = this.actor.system.defesa.resistencia;
     this.actor.system.defesa.aparar = Math.max(0, Number(apararRaw ?? apararBase));
     this.actor.system.defesa.resistencia = Math.max(0, Number(resistenciaRaw ?? resistenciaBase));
+    this.actor.system.defesa.desviar = Math.max(0, Number(this.actor.system.defesa.desviar ?? 4));
+    const resistenciaMagicaBase = 2 + getInfluenciaHalfForResistenciaMagica(this.actor.system);
+    this.actor.system.defesa.resistenciaMagica = Math.max(0, Number(this.actor.system.defesa.resistenciaMagica ?? resistenciaMagicaBase));
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];

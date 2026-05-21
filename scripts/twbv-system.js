@@ -103,31 +103,26 @@ function resolveAwakenedDie(attributeDie) {
 }
 
 
-async function rollVeuDie(die, actor = null) {
+async function rollSingleDie(die) {
+  return (new Roll(`1d${Number(die)}`)).evaluate({ async: true });
+}
+
+async function showDice3dRoll(roll) {
+  if (!game?.dice3d?.showForRoll) return;
+  await game.dice3d.showForRoll(roll, game.user, true);
+}
+
+async function rollVeuExtrasFromFirst(die, firstValue) {
   const safeDie = Number(die);
-  if (!Number.isFinite(safeDie) || safeDie < 2) return { total: 0, rolls: [] };
   const rolls = [];
-  const showRoll = async (roll) => {
-    if (game?.dice3d?.showForRoll) {
-      await game.dice3d.showForRoll(roll, game.user, true);
-      await new Promise((resolve) => setTimeout(resolve, 200));
-    }
-  };
-
-  const firstRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
-  await showRoll(firstRoll);
-  let current = Number(firstRoll.total ?? 0);
-  rolls.push(current);
-
+  let current = Number(firstValue ?? 0);
   while (current === safeDie) {
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    const extraRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
-    await showRoll(extraRoll);
+    const extraRoll = await rollSingleDie(safeDie);
+    await showDice3dRoll(extraRoll);
     current = Number(extraRoll.total ?? 0);
     rolls.push(current);
   }
-
-  return { total: rolls.reduce((sum, value) => sum + value, 0), rolls };
+  return rolls;
 }
 
 
@@ -157,29 +152,23 @@ function renderDualDieResult({
   return (async () => {
     const safeDieA = Number(dieA);
     const safeDieB = Number(dieB);
-    const baseA = await (new Roll(`1d${safeDieA}`)).evaluate({ async: true });
-    const baseB = await (new Roll(`1d${safeDieB}`)).evaluate({ async: true });
-    if (game?.dice3d?.showForRoll) {
-      await game.dice3d.showForRoll(baseA, game.user, true);
-      await game.dice3d.showForRoll(baseB, game.user, true);
-      await new Promise((resolve) => setTimeout(resolve, 220));
-    }
+
+    const [baseA, baseB] = await Promise.all([rollSingleDie(safeDieA), rollSingleDie(safeDieB)]);
+    await Promise.all([showDice3dRoll(baseA), showDice3dRoll(baseB)]);
+
     const rollAData = { total: Number(baseA.total ?? 0), rolls: [Number(baseA.total ?? 0)] };
     const rollBData = { total: Number(baseB.total ?? 0), rolls: [Number(baseB.total ?? 0)] };
 
-    if (Number(baseA.total ?? 0) === safeDieA) {
-      const extraA = await rollVeuDie(safeDieA, actor);
-      rollAData.rolls.push(...extraA.rolls.slice(1));
-      rollAData.total += extraA.rolls.slice(1).reduce((sum, value) => sum + value, 0);
+    const extraA = await rollVeuExtrasFromFirst(safeDieA, rollAData.rolls[0]);
+    const extraB = await rollVeuExtrasFromFirst(safeDieB, rollBData.rolls[0]);
+    if (extraA.length) {
+      rollAData.rolls.push(...extraA);
+      rollAData.total += extraA.reduce((sum, value) => sum + value, 0);
     }
-    if (Number(baseB.total ?? 0) === safeDieB) {
-      const extraB = await rollVeuDie(safeDieB, actor);
-      rollBData.rolls.push(...extraB.rolls.slice(1));
-      rollBData.total += extraB.rolls.slice(1).reduce((sum, value) => sum + value, 0);
+    if (extraB.length) {
+      rollBData.rolls.push(...extraB);
+      rollBData.total += extraB.reduce((sum, value) => sum + value, 0);
     }
-
-    const rollA = await new Roll(rollAData.rolls.map(()=>`1d${safeDieA}`).join("+") || `1d${safeDieA}`).evaluate({async: true});
-    const rollB = await new Roll(rollBData.rolls.map(()=>`1d${safeDieB}`).join("+") || `1d${safeDieB}`).evaluate({async: true});
     const valueA = Number(rollAData.total ?? 0);
     const valueB = Number(rollBData.total ?? 0);
     const effectiveBonusA = Number.isFinite(Number(bonusA)) ? Number(bonusA) : Number(bonus ?? 0);
@@ -227,8 +216,7 @@ function renderDualDieResult({
     const persistedMessage = await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: contentWithAdjust,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      rolls: [rollA, rollB],
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
       flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
     });
     return persistedMessage;

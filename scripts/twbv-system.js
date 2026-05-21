@@ -135,7 +135,8 @@ function renderDualDieResult({
   actor,
   subtitle = "",
   subtitleClass = "",
-  finalModifier = 0
+  finalModifier = 0,
+  finalModifierLabel = ""
 }) {
   return (async () => {
     const rollAData = await rollVeuDie(dieA);
@@ -179,7 +180,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong>${appliedModifier !== 0 ? `<span class="twbv-roll-chat__modifier"> (Base ${baseTotal} ${appliedModifier > 0 ? "+" : ""}${appliedModifier})</span>` : ""}</footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong>${appliedModifier !== 0 ? `<span class="twbv-roll-chat__modifier"> (Base ${baseTotal} ${appliedModifier > 0 ? "+" : ""}${appliedModifier}${finalModifierLabel ? ` ${finalModifierLabel}` : ""})</span>` : ""}</footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
@@ -636,6 +637,8 @@ class TWBVPersonagemSheet extends ActorSheet {
                 bonusA: totalBonus,
                 bonusB: 0,
                 finalModifier: ferimentoPenalty.value,
+        finalModifierLabel: ferimentoPenalty.label,
+                finalModifierLabel: ferimentoPenalty.label,
                 dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
@@ -681,6 +684,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         labelB: "Desperto",
         bonus: totalBonus,
         finalModifier: ferimentoPenalty.value,
+        finalModifierLabel: ferimentoPenalty.label,
         actor: this.actor
       });
     });

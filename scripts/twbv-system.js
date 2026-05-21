@@ -246,6 +246,11 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.mana = context.system.mana ?? {};
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
+    context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
+    context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
+    context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
+    context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
+    context.inconsciente = context.system.fadiga >= 3;
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -396,6 +401,13 @@ class TWBVPersonagemSheet extends ActorSheet {
       max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
     };
 
+    this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
+    this.actor.system.fadiga = Math.max(0, Math.min(3, Number(this.actor.system.fadiga ?? 0)));
+
+    if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
+    if (this.actor.system.fadiga >= 3 && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
+    if (this.actor.system.fadiga < 3) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
+
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
@@ -411,6 +423,17 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+
+    html.find(".twbv-condition-adjust").on("click", async (event) => {
+      const button = event.currentTarget;
+      const path = button.dataset.path;
+      const adjust = Number(button.dataset.adjust ?? 0);
+      const min = Number(button.dataset.min ?? 0);
+      const max = Number(button.dataset.max ?? 99);
+      const current = Number(foundry.utils.getProperty(this.actor.system, path.replace(/^system\./, "")) ?? 0);
+      const next = Math.max(min, Math.min(max, current + adjust));
+      await this.actor.update({ [path]: next });
+    });
 
     html.find(".twbv-add-advancement").on("click", async () => {
       const optionMarkup = ADVANCEMENT_OPTIONS.map((option) => `<option value="${option}">${option}</option>`).join("");

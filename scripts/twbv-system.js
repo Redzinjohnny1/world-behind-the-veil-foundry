@@ -107,19 +107,29 @@ async function rollVeuDie(die, actor = null) {
   const safeDie = Number(die);
   if (!Number.isFinite(safeDie) || safeDie < 2) return { total: 0, rolls: [] };
   const rolls = [];
-  let current = 0;
-  do {
-    const singleRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
+  const showRoll = async (roll) => {
     if (game?.dice3d?.showForRoll) {
-      await game.dice3d.showForRoll(singleRoll, game.user, true);
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await game.dice3d.showForRoll(roll, game.user, true);
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
-    current = Number(singleRoll.total ?? 0);
+  };
+
+  const firstRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
+  await showRoll(firstRoll);
+  let current = Number(firstRoll.total ?? 0);
+  rolls.push(current);
+
+  while (current === safeDie) {
+    await new Promise((resolve) => setTimeout(resolve, 350));
+    const extraRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
+    await showRoll(extraRoll);
+    current = Number(extraRoll.total ?? 0);
     rolls.push(current);
-    if (current === safeDie) await new Promise((resolve) => setTimeout(resolve, 500));
-  } while (current === safeDie);
+  }
+
   return { total: rolls.reduce((sum, value) => sum + value, 0), rolls };
 }
+
 
 function applyVeuToFormula(formula) {
   const text = String(formula ?? '').trim();
@@ -145,10 +155,31 @@ function renderDualDieResult({
   finalModifierLabel = ""
 }) {
   return (async () => {
-    const rollAData = await rollVeuDie(dieA, actor);
-    const rollBData = await rollVeuDie(dieB, actor);
-    const rollA = await new Roll(rollAData.rolls.map(()=>`1d${dieA}`).join("+") || `1d${dieA}`).evaluate({async: true});
-    const rollB = await new Roll(rollBData.rolls.map(()=>`1d${dieB}`).join("+") || `1d${dieB}`).evaluate({async: true});
+    const safeDieA = Number(dieA);
+    const safeDieB = Number(dieB);
+    const baseA = await (new Roll(`1d${safeDieA}`)).evaluate({ async: true });
+    const baseB = await (new Roll(`1d${safeDieB}`)).evaluate({ async: true });
+    if (game?.dice3d?.showForRoll) {
+      await game.dice3d.showForRoll(baseA, game.user, true);
+      await game.dice3d.showForRoll(baseB, game.user, true);
+      await new Promise((resolve) => setTimeout(resolve, 220));
+    }
+    const rollAData = { total: Number(baseA.total ?? 0), rolls: [Number(baseA.total ?? 0)] };
+    const rollBData = { total: Number(baseB.total ?? 0), rolls: [Number(baseB.total ?? 0)] };
+
+    if (Number(baseA.total ?? 0) === safeDieA) {
+      const extraA = await rollVeuDie(safeDieA, actor);
+      rollAData.rolls.push(...extraA.rolls.slice(1));
+      rollAData.total += extraA.rolls.slice(1).reduce((sum, value) => sum + value, 0);
+    }
+    if (Number(baseB.total ?? 0) === safeDieB) {
+      const extraB = await rollVeuDie(safeDieB, actor);
+      rollBData.rolls.push(...extraB.rolls.slice(1));
+      rollBData.total += extraB.rolls.slice(1).reduce((sum, value) => sum + value, 0);
+    }
+
+    const rollA = await new Roll(rollAData.rolls.map(()=>`1d${safeDieA}`).join("+") || `1d${safeDieA}`).evaluate({async: true});
+    const rollB = await new Roll(rollBData.rolls.map(()=>`1d${safeDieB}`).join("+") || `1d${safeDieB}`).evaluate({async: true});
     const valueA = Number(rollAData.total ?? 0);
     const valueB = Number(rollBData.total ?? 0);
     const effectiveBonusA = Number.isFinite(Number(bonusA)) ? Number(bonusA) : Number(bonus ?? 0);

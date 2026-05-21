@@ -154,11 +154,12 @@ function renderDualDieResult({
     const awakenedDieResult = valueB;
     const awakenedTotal = awakenedDieResult + effectiveBonusB;
 
-    const total = Math.max(skillTotal, awakenedTotal) + (Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0);
+    const baseTotal = Math.max(skillTotal, awakenedTotal);
+    const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
+    const total = baseTotal + appliedModifier;
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
-      const veil = Array.isArray(selectedRolls) && selectedRolls.length > 1 ? ` (${selectedRolls.join(' + ')})` : "";
-      const valueLabel = effectiveBonus === 0 ? `${value}${veil}` : `${value}${veil}${bonusLabel} = ${modified}`;
+      const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
@@ -178,7 +179,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <footer class="twbv-roll-chat__total">Resultado: <strong>${totalLabel}</strong>${appliedModifier !== 0 ? `<span class="twbv-roll-chat__modifier"> (Base ${baseTotal} ${appliedModifier > 0 ? "+" : ""}${appliedModifier})</span>` : ""}</footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 

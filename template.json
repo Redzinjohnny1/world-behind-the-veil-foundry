@@ -54,6 +54,7 @@
           "max": 3
         },
         "fadiga": 0,
+        "tamanho": 0,
         "condicoes": [],
         "defesa": {
           "aparar": 0,

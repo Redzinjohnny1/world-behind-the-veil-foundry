@@ -134,7 +134,8 @@ function renderDualDieResult({
   dieDisplayB,
   actor,
   subtitle = "",
-  subtitleClass = ""
+  subtitleClass = "",
+  finalModifier = 0
 }) {
   return (async () => {
     const rollAData = await rollVeuDie(dieA);
@@ -153,7 +154,7 @@ function renderDualDieResult({
     const awakenedDieResult = valueB;
     const awakenedTotal = awakenedDieResult + effectiveBonusB;
 
-    const total = Math.max(skillTotal, awakenedTotal);
+    const total = Math.max(skillTotal, awakenedTotal) + (Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0);
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
       const veil = Array.isArray(selectedRolls) && selectedRolls.length > 1 ? ` (${selectedRolls.join(' + ')})` : "";
@@ -621,7 +622,7 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
               const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
-              const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0) + ferimentoPenalty.value;
+              const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
               await renderDualDieResult({
@@ -632,7 +633,8 @@ class TWBVPersonagemSheet extends ActorSheet {
                 dieB: awakenedDie,
                 labelB: "Desperto",
                 bonusA: totalBonus,
-                bonusB: ferimentoPenalty.value,
+                bonusB: 0,
+                finalModifier: ferimentoPenalty.value,
                 dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
@@ -666,7 +668,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
       const awakenedDie = resolveAwakenedDie(attrDie);
       const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
-      const totalBonus = Number(attrData.bonus ?? 0) + ferimentoPenalty.value;
+      const totalBonus = Number(attrData.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
 
       await renderDualDieResult({
@@ -677,6 +679,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         dieB: awakenedDie,
         labelB: "Desperto",
         bonus: totalBonus,
+        finalModifier: ferimentoPenalty.value,
         actor: this.actor
       });
     });

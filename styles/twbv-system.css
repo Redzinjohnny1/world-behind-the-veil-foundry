@@ -854,12 +854,84 @@
 
 
 
+
+.twbv-defense-panel { min-height: 122px; }
+.twbv-defense-grid { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+.twbv-defense-box { border:1px solid rgba(217,183,117,.45); border-radius:10px; padding:8px; background: linear-gradient(180deg, rgba(20,12,34,.96), rgba(10,8,18,.98)); text-align:center; }
+.twbv-defense-box h3 { margin:0 0 6px; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:#f1ddb0; }
+.twbv-defense-box input { width:100%; min-height:34px; text-align:center; font-size:1.3rem; font-weight:700; border-radius:8px; border:1px solid rgba(154,123,255,.5); color:#f7eccf; background: rgba(10,9,20,.94); }
+
 .twbv-utility-panel { min-height: 190px; }
-.twbv-utility-placeholder {
-  min-height: 120px;
-  border: 1px dashed rgba(154, 123, 255, 0.45);
+.twbv-condition-title { text-align:center; font-size: .98rem; letter-spacing:.12em; }
+.twbv-condition-board { display:grid; gap:8px; }
+.twbv-condition-meter,
+.twbv-condition-state {
+  border: 1px solid rgba(255, 121, 121, 0.35);
   border-radius: 10px;
-  background: rgba(8, 8, 20, 0.25);
+  padding: 8px;
+  background: linear-gradient(180deg, rgba(42, 8, 12, 0.9), rgba(19, 5, 9, 0.94));
+}
+
+.fadiga-nivel-0 { border-color: rgba(214, 180, 98, 0.42); background: linear-gradient(180deg, rgba(44, 35, 12, 0.86), rgba(24, 18, 6, 0.92)); }
+.fadiga-nivel-0 h3, .fadiga-nivel-0 .twbv-condition-penalty { color:#f4dfab; }
+.fadiga-nivel-0 .twbv-condition-core { border-color: rgba(196, 151, 70, 0.72); box-shadow: inset 0 0 6px rgba(119, 88, 27, 0.22), 0 0 7px rgba(215, 177, 101, 0.28); }
+.twbv-condition-meter h3,
+.twbv-condition-state h3 { margin:0 0 6px; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; color: #ffd4d4; }
+.twbv-condition-controls { display:grid; grid-template-columns: 32px 1fr 32px; align-items:center; gap:6px; }
+.twbv-condition-core {
+  min-height: 36px;
+  border: 2px solid rgba(166, 18, 34, 0.95);
+  border-radius: 999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  background: radial-gradient(circle at center, rgba(255, 238, 238, 0.95), rgba(255, 231, 231, 0.75));
+  box-shadow: inset 0 0 8px rgba(110, 10, 19, 0.26), 0 0 8px rgba(218, 46, 64, 0.4);
+}
+.twbv-condition-core input { width: 40px; border: none; background: transparent; text-align:right; font-size: 1.5rem; color:#2e1010; font-weight:700; }
+.twbv-condition-core span { color:#4a1717; font-size: 1.05rem; font-weight:700; }
+.twbv-condition-adjust { min-height: 34px; border-radius: 8px; border: 1px solid rgba(255, 148, 148, 0.56); background: rgba(59, 11, 16, 0.94); color: #ffd8d8; font-size: 1.2rem; font-weight:700; }
+.twbv-condition-penalty { margin: 6px 0 0; font-size: .72rem; color: #ffc6c6; text-align:center; }
+.twbv-condition-state p { margin:0; font-size:.85rem; color:#ffd8d8; text-align:center; }
+.twbv-condition-state.is-active { border-color: rgba(255, 90, 90, 0.95); box-shadow: 0 0 14px rgba(255, 78, 78, 0.42); background: radial-gradient(circle at top, rgba(179, 8, 31, 0.46), rgba(40, 8, 12, 0.96)); }
+
+.ferimentos-nivel-1 .twbv-condition-core { box-shadow: inset 0 0 8px rgba(110, 10, 19, 0.3), 0 0 10px rgba(224, 50, 68, 0.5); }
+.ferimentos-nivel-2 .twbv-condition-core { box-shadow: inset 0 0 10px rgba(138, 7, 22, 0.36), 0 0 14px rgba(235, 53, 72, 0.62); }
+.ferimentos-nivel-3 .twbv-condition-core { box-shadow: inset 0 0 12px rgba(150, 6, 22, 0.4), 0 0 18px rgba(245, 43, 66, 0.72); animation: twbv-blood-pulse 1.2s infinite; }
+.ferimentos-nivel-4 .twbv-condition-core { box-shadow: inset 0 0 14px rgba(175, 4, 21, 0.45), 0 0 24px rgba(255, 35, 60, 0.9); animation: twbv-blood-pulse .75s infinite; }
+
+
+.ferimentos-nivel-1 { border-color: rgba(255, 95, 95, 0.52); }
+.ferimentos-nivel-1 h3, .ferimentos-nivel-1 .twbv-condition-penalty { color:#ffd0d0; }
+.ferimentos-nivel-2 { border-color: rgba(255, 82, 82, 0.68); background: linear-gradient(180deg, rgba(60, 8, 13, 0.94), rgba(29, 4, 8, 0.97)); }
+.ferimentos-nivel-2 h3, .ferimentos-nivel-2 .twbv-condition-penalty { color:#ffc0c0; }
+.ferimentos-nivel-3 { border-color: rgba(255, 61, 61, 0.82); background: linear-gradient(180deg, rgba(75, 7, 12, 0.97), rgba(38, 4, 8, 0.98)); box-shadow: 0 0 12px rgba(255, 64, 64, 0.28); }
+.ferimentos-nivel-3 h3, .ferimentos-nivel-3 .twbv-condition-penalty { color:#ffaaaa; text-shadow: 0 0 7px rgba(255,95,95,.55); }
+.ferimentos-nivel-4 { border-color: rgba(255, 30, 30, 0.95); background: linear-gradient(180deg, rgba(96, 4, 10, 0.99), rgba(48, 2, 6, 0.99)); box-shadow: 0 0 18px rgba(255, 25, 25, 0.45); }
+.ferimentos-nivel-4 h3, .ferimentos-nivel-4 .twbv-condition-penalty { color:#ff8e8e; text-shadow: 0 0 10px rgba(255,75,75,.75); }
+
+
+.fadiga-nivel-1 { border-color: rgba(255, 210, 95, 0.52); background: linear-gradient(180deg, rgba(58, 41, 8, 0.9), rgba(26, 18, 5, 0.95)); }
+.fadiga-nivel-1 h3, .fadiga-nivel-1 .twbv-condition-penalty { color:#ffe6a8; }
+.fadiga-nivel-1 .twbv-condition-core { border-color: rgba(230, 168, 34, 0.9); box-shadow: inset 0 0 8px rgba(149, 106, 18, 0.28), 0 0 10px rgba(244, 200, 75, 0.45); }
+
+.fadiga-nivel-2 { border-color: rgba(255, 201, 64, 0.75); background: linear-gradient(180deg, rgba(79, 55, 9, 0.95), rgba(36, 25, 5, 0.98)); box-shadow: 0 0 12px rgba(255, 205, 86, 0.24); }
+.fadiga-nivel-2 h3, .fadiga-nivel-2 .twbv-condition-penalty { color:#ffd978; text-shadow: 0 0 6px rgba(255,216,115,.42); }
+.fadiga-nivel-2 .twbv-condition-core { border-color: rgba(243, 182, 39, 0.98); box-shadow: inset 0 0 10px rgba(164, 117, 16, 0.35), 0 0 14px rgba(255, 214, 102, 0.62); }
+
+.fadiga-nivel-3 { border-color: rgba(255, 193, 20, 0.95); background: linear-gradient(180deg, rgba(98, 67, 7, 0.98), rgba(45, 30, 4, 0.99)); box-shadow: 0 0 18px rgba(255, 202, 42, 0.45); }
+.fadiga-nivel-3 h3, .fadiga-nivel-3 .twbv-condition-penalty { color:#ffcf52; text-shadow: 0 0 10px rgba(255,212,88,.75); }
+.fadiga-nivel-3 .twbv-condition-core { border-color: rgba(255, 187, 24, 1); box-shadow: inset 0 0 12px rgba(176, 123, 10, 0.45), 0 0 22px rgba(255, 210, 73, 0.88); animation: twbv-fatigue-pulse .95s infinite; }
+
+@keyframes twbv-fatigue-pulse {
+  0%,100% { transform: scale(1); filter: saturate(1); }
+  50% { transform: scale(1.025); filter: saturate(1.18); }
+}
+
+@keyframes twbv-blood-pulse {
+  0%,100% { transform: scale(1); filter: saturate(1); }
+  50% { transform: scale(1.03); filter: saturate(1.25); }
 }
 
 
@@ -1928,3 +2000,5 @@
   justify-content:center;
   text-align:center;
 }
+
+.twbv-defense-box small{display:block;margin-bottom:6px;color:#c9b78b;font-size:.66rem;letter-spacing:.05em;}

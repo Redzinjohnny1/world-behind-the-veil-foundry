@@ -54,7 +54,11 @@
           "max": 3
         },
         "fadiga": 0,
-        "condicoes": []
+        "condicoes": [],
+        "defesa": {
+          "aparar": 0,
+          "resistencia": 0
+        }
       }
     },
     "despertos": {

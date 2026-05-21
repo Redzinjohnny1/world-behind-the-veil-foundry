@@ -854,6 +854,13 @@
 
 
 
+
+.twbv-defense-panel { min-height: 122px; }
+.twbv-defense-grid { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+.twbv-defense-box { border:1px solid rgba(217,183,117,.45); border-radius:10px; padding:8px; background: linear-gradient(180deg, rgba(20,12,34,.96), rgba(10,8,18,.98)); text-align:center; }
+.twbv-defense-box h3 { margin:0 0 6px; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:#f1ddb0; }
+.twbv-defense-box input { width:100%; min-height:34px; text-align:center; font-size:1.3rem; font-weight:700; border-radius:8px; border:1px solid rgba(154,123,255,.5); color:#f7eccf; background: rgba(10,9,20,.94); }
+
 .twbv-utility-panel { min-height: 190px; }
 .twbv-condition-title { text-align:center; font-size: .98rem; letter-spacing:.12em; }
 .twbv-condition-board { display:grid; gap:8px; }

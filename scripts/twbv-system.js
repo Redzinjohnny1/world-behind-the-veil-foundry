@@ -284,6 +284,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.system.mana = context.system.mana ?? {};
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
+    context.system.defesa = context.system.defesa ?? {};
+    context.system.defesa.aparar = Math.max(0, Number(context.system.defesa.aparar ?? 0));
+    context.system.defesa.resistencia = Math.max(0, Number(context.system.defesa.resistencia ?? 0));
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
@@ -446,6 +449,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     const shouldBeUnconscious = this.actor.system.fadiga >= 3 || this.actor.system.ferimentos >= 4;
     if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
     if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
+
+    this.actor.system.defesa = this.actor.system.defesa ?? {};
+    this.actor.system.defesa.aparar = Math.max(0, Number(this.actor.system.defesa.aparar ?? 0));
+    this.actor.system.defesa.resistencia = Math.max(0, Number(this.actor.system.defesa.resistencia ?? 0));
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];

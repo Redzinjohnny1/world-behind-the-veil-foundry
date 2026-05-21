@@ -138,14 +138,14 @@
               <article class="twbv-condition-meter twbv-condition-meter--fatigue fadiga-nivel-{{system.fadiga}}">
                 <h3>Fadiga</h3>
                 <div class="twbv-condition-controls">
-                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="3" data-adjust="-1" aria-label="Reduzir fadiga">−</button>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="4" data-adjust="-1" aria-label="Reduzir fadiga">−</button>
                   <div class="twbv-condition-core">
-                    <input type="number" name="system.fadiga" value="{{system.fadiga}}" min="0" max="3" />
-                    <span>/3</span>
+                    <input type="number" name="system.fadiga" value="{{system.fadiga}}" min="0" max="4" />
+                    <span>/4</span>
                   </div>
-                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="3" data-adjust="1" aria-label="Aumentar fadiga">+</button>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="4" data-adjust="1" aria-label="Aumentar fadiga">+</button>
                 </div>
-                <p class="twbv-condition-penalty">Penalidade global: {{penaltyFadigaLabel}}</p>
+                <p class="twbv-condition-penalty">{{penaltyFadigaLabel}}</p>
               </article>
 
               <article class="twbv-condition-state {{#if inconsciente}}is-active{{/if}}">

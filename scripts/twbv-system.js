@@ -126,6 +126,20 @@ function getFerimentosRollPenalty(actorSystem) {
   return { value: -applied, label: `Ferimento -${applied}` };
 }
 
+function getFadigaRollPenalty(actorSystem) {
+  const fadiga = Math.max(0, Math.min(4, Number(actorSystem?.fadiga ?? 0)));
+  if (fadiga <= 0) return { value: 0, label: "" };
+  return { value: -fadiga, label: `Fadiga -${fadiga}` };
+}
+
+function getGlobalRollPenalty(actorSystem) {
+  const ferimentos = getFerimentosRollPenalty(actorSystem);
+  const fadiga = getFadigaRollPenalty(actorSystem);
+  const value = ferimentos.value + fadiga.value;
+  const label = [ferimentos.label, fadiga.label].filter(Boolean).join(" • ");
+  return { value, label };
+}
+
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;
@@ -347,7 +361,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.defesaDesviarTooltip = `4 (padrão) + Talento (${desviarTalento}) + Itens (${desviarItens}) + Magias (${desviarMagias}) = ${desviarTotal}`;
     context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
     context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
-    context.system.fadiga = Math.max(0, Math.min(3, Number(context.system.fadiga ?? 0)));
+    context.system.fadiga = Math.max(0, Math.min(4, Number(context.system.fadiga ?? 0)));
     context.system.tamanho = Number.isFinite(Number(context.system.tamanho)) ? Number(context.system.tamanho) : 0;
     const atletismo = findSkillByName(context.system, "ATLETISMO");
     const atletismoBonus = Number.isFinite(Number(atletismo?.bonus)) ? Number(atletismo.bonus) : 0;
@@ -367,8 +381,18 @@ class TWBVPersonagemSheet extends ActorSheet {
     } else {
       context.penaltyFerimentosLabel = "Gravemente ferido (-3)";
     }
-    context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
-    context.inconsciente = context.system.fadiga >= 3 || context.system.ferimentos >= 4;
+    if (context.system.fadiga <= 0) {
+      context.penaltyFadigaLabel = "Sem fadiga (0)";
+    } else if (context.system.fadiga === 1) {
+      context.penaltyFadigaLabel = "Cansado (-1)";
+    } else if (context.system.fadiga === 2) {
+      context.penaltyFadigaLabel = "Debilitado (-2)";
+    } else if (context.system.fadiga === 3) {
+      context.penaltyFadigaLabel = "Exausto (-3)";
+    } else {
+      context.penaltyFadigaLabel = "Inconsciente (-4)";
+    }
+    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 4;
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -520,11 +544,11 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
 
     this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
-    this.actor.system.fadiga = Math.max(0, Math.min(3, Number(this.actor.system.fadiga ?? 0)));
+    this.actor.system.fadiga = Math.max(0, Math.min(4, Number(this.actor.system.fadiga ?? 0)));
     this.actor.system.tamanho = Number.isFinite(Number(this.actor.system.tamanho)) ? Number(this.actor.system.tamanho) : 0;
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
-    const shouldBeUnconscious = this.actor.system.fadiga >= 3 || this.actor.system.ferimentos >= 4;
+    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 4;
     if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
     if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
 
@@ -743,7 +767,7 @@ class TWBVPersonagemSheet extends ActorSheet {
               const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
               const skillBonus = Number(skill.bonus ?? 0);
               const manualBonus = Number(root?.querySelector('input[name="manualBonus"]')?.value ?? 0);
-              const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
+              const ferimentoPenalty = getGlobalRollPenalty(this.actor.system);
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
@@ -802,7 +826,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const attrData = this.actor.system.atributos?.[attributeKey] ?? {};
       const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
       const awakenedDie = resolveAwakenedDie(attrDie);
-      const ferimentoPenalty = getFerimentosRollPenalty(this.actor.system);
+      const ferimentoPenalty = getGlobalRollPenalty(this.actor.system);
       const totalBonus = Number(attrData.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
 

@@ -938,6 +938,10 @@
 .fadiga-nivel-3 h3, .fadiga-nivel-3 .twbv-condition-penalty { color:#ffcf52; text-shadow: 0 0 10px rgba(255,212,88,.75); }
 .fadiga-nivel-3 .twbv-condition-core { border-color: rgba(255, 187, 24, 1); box-shadow: inset 0 0 12px rgba(176, 123, 10, 0.45), 0 0 22px rgba(255, 210, 73, 0.88); animation: twbv-fatigue-pulse .95s infinite; }
 
+.fadiga-nivel-4 { border-color: rgba(255, 168, 18, 1); background: linear-gradient(180deg, rgba(120, 80, 8, 0.99), rgba(56, 35, 4, 1)); box-shadow: 0 0 22px rgba(255, 194, 35, 0.58); }
+.fadiga-nivel-4 h3, .fadiga-nivel-4 .twbv-condition-penalty { color:#ffbf33; text-shadow: 0 0 12px rgba(255,191,51,.9); }
+.fadiga-nivel-4 .twbv-condition-core { border-color: rgba(255, 175, 10, 1); box-shadow: inset 0 0 14px rgba(191, 130, 8, 0.55), 0 0 24px rgba(255, 198, 54, 0.95); animation: twbv-fatigue-pulse .7s infinite; }
+
 @keyframes twbv-fatigue-pulse {
   0%,100% { transform: scale(1); filter: saturate(1); }
   50% { transform: scale(1.025); filter: saturate(1.18); }

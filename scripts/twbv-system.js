@@ -103,15 +103,20 @@ function resolveAwakenedDie(attributeDie) {
 }
 
 
-async function rollVeuDie(die) {
+async function rollVeuDie(die, actor = null) {
   const safeDie = Number(die);
   if (!Number.isFinite(safeDie) || safeDie < 2) return { total: 0, rolls: [] };
   const rolls = [];
   let current = 0;
   do {
-    current = Number((await (new Roll(`1d${safeDie}`)).evaluate({async: true})).total ?? 0);
+    const singleRoll = await (new Roll(`1d${safeDie}`)).evaluate({ async: true });
+    if (game?.dice3d?.showForRoll) {
+      await game.dice3d.showForRoll(singleRoll, game.user, true);
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+    current = Number(singleRoll.total ?? 0);
     rolls.push(current);
-    if (current === safeDie) await new Promise((resolve) => setTimeout(resolve, 450));
+    if (current === safeDie) await new Promise((resolve) => setTimeout(resolve, 500));
   } while (current === safeDie);
   return { total: rolls.reduce((sum, value) => sum + value, 0), rolls };
 }
@@ -140,8 +145,8 @@ function renderDualDieResult({
   finalModifierLabel = ""
 }) {
   return (async () => {
-    const rollAData = await rollVeuDie(dieA);
-    const rollBData = await rollVeuDie(dieB);
+    const rollAData = await rollVeuDie(dieA, actor);
+    const rollBData = await rollVeuDie(dieB, actor);
     const rollA = await new Roll(rollAData.rolls.map(()=>`1d${dieA}`).join("+") || `1d${dieA}`).evaluate({async: true});
     const rollB = await new Roll(rollBData.rolls.map(()=>`1d${dieB}`).join("+") || `1d${dieB}`).evaluate({async: true});
     const valueA = Number(rollAData.total ?? 0);

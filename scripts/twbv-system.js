@@ -209,6 +209,20 @@ function getGlobalRollPenalty(actorSystem) {
   return { value, label };
 }
 
+function getFadigaRollPenalty(actorSystem) {
+  const fadiga = Math.max(0, Math.min(4, Number(actorSystem?.fadiga ?? 0)));
+  if (fadiga <= 0) return { value: 0, label: "" };
+  return { value: -fadiga, label: `Fadiga -${fadiga}` };
+}
+
+function getGlobalRollPenalty(actorSystem) {
+  const ferimentos = getFerimentosRollPenalty(actorSystem);
+  const fadiga = getFadigaRollPenalty(actorSystem);
+  const value = ferimentos.value + fadiga.value;
+  const label = [ferimentos.label, fadiga.label].filter(Boolean).join(" • ");
+  return { value, label };
+}
+
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;

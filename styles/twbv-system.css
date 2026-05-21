@@ -468,7 +468,7 @@
   background: rgba(18, 24, 42, 0.5);
 }
 
-.twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) minmax(220px, auto); gap: 10px; min-height: 100%; }
+.twbv-right-column { display: grid; grid-template-rows: minmax(160px, auto) auto minmax(220px, auto); gap: 10px; min-height: 100%; }
 
 .twbv-attribute-card {
   position: relative;

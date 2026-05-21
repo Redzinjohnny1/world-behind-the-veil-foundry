@@ -117,6 +117,22 @@
             </div>
           </section>
 
+          <section class="twbv-panel twbv-ornate twbv-size-move-panel">
+            <div class="twbv-size-move-grid">
+              <article class="twbv-size-move-box">
+                <h3>Tamanho</h3>
+                <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
+              </article>
+              <article class="twbv-size-move-box" data-tooltip="Movimento básico: 5 + bônus de Atletismo (somente o bônus após o +).">
+                <h3>Mov.</h3>
+                <div class="twbv-mov-row">
+                  <input type="number" value="{{movimentoTotal}}" disabled />
+                  <button type="button" class="twbv-move-roll" title="Rolar corrida (dado de Atletismo)">🎲 {{movimentoDieLabel}}</button>
+                </div>
+              </article>
+            </div>
+          </section>
+
           <section class="twbv-panel twbv-ornate twbv-utility-panel">
             <h2 class="twbv-condition-title">Condições</h2>
             <div class="twbv-condition-board">

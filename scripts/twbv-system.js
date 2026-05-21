@@ -632,7 +632,7 @@ class TWBVPersonagemSheet extends ActorSheet {
                 dieB: awakenedDie,
                 labelB: "Desperto",
                 bonusA: totalBonus,
-                bonusB: 0,
+                bonusB: ferimentoPenalty.value,
                 dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor

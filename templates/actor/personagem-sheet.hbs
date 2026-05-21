@@ -80,9 +80,54 @@
         </section>
 
         <div class="twbv-right-column">
+          <section class="twbv-panel twbv-ornate twbv-defense-panel">
+            <h2 class="twbv-condition-title">Defesa</h2>
+            <div class="twbv-defense-grid">
+              <article class="twbv-defense-box" data-tooltip="{{defesaApararTooltip}}">
+                <h3>Aparar</h3>
+                                <input type="number" name="system.defesa.aparar" value="{{system.defesa.aparar}}" min="0" />
+              </article>
+              <article class="twbv-defense-box" data-tooltip="{{defesaResistenciaTooltip}}">
+                <h3>Resistência</h3>
+                                <input type="number" name="system.defesa.resistencia" value="{{system.defesa.resistencia}}" min="0" />
+              </article>
+            </div>
+          </section>
+
           <section class="twbv-panel twbv-ornate twbv-utility-panel">
-            <h2>Quadro</h2>
-            <div class="twbv-utility-placeholder"></div>
+            <h2 class="twbv-condition-title">Condições</h2>
+            <div class="twbv-condition-board">
+              <article class="twbv-condition-meter twbv-condition-meter--wounds ferimentos-nivel-{{system.ferimentos}}">
+                <h3>Ferimentos</h3>
+                <div class="twbv-condition-controls">
+                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="4" data-adjust="-1" aria-label="Reduzir ferimentos">−</button>
+                  <div class="twbv-condition-core">
+                    <input type="number" name="system.ferimentos" value="{{system.ferimentos}}" min="0" max="4" />
+                    <span>/4</span>
+                  </div>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="4" data-adjust="1" aria-label="Aumentar ferimentos">+</button>
+                </div>
+                <p class="twbv-condition-penalty">Penalidade global: {{penaltyFerimentosLabel}}</p>
+              </article>
+
+              <article class="twbv-condition-meter twbv-condition-meter--fatigue fadiga-nivel-{{system.fadiga}}">
+                <h3>Fadiga</h3>
+                <div class="twbv-condition-controls">
+                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="3" data-adjust="-1" aria-label="Reduzir fadiga">−</button>
+                  <div class="twbv-condition-core">
+                    <input type="number" name="system.fadiga" value="{{system.fadiga}}" min="0" max="3" />
+                    <span>/3</span>
+                  </div>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="3" data-adjust="1" aria-label="Aumentar fadiga">+</button>
+                </div>
+                <p class="twbv-condition-penalty">Penalidade global: {{penaltyFadigaLabel}}</p>
+              </article>
+
+              <article class="twbv-condition-state {{#if inconsciente}}is-active{{/if}}">
+                <h3>Condição</h3>
+                <p>{{#if inconsciente}}Inconsciente{{else}}Consciente{{/if}}</p>
+              </article>
+            </div>
           </section>
           <section class="twbv-panel twbv-ornate twbv-favorites-panel">
             <h2>Favoritos</h2>

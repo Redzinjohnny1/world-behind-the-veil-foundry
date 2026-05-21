@@ -355,6 +355,8 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.movimentoTotal = 5 + atletismoBonus;
     context.movimentoDie = atletismoDie;
     context.movimentoDieLabel = `d${atletismoDie}`;
+    context.movimentoTooltip = "Movimento básico: 5 + bônus de Atletismo (somente o bônus após o +).";
+    context.movimentoDieTooltip = `Dado de corrida usa o dado da perícia Atletismo: ${context.movimentoDieLabel}.`;
     context.penaltyFerimentosLabel = context.system.ferimentos > 0 ? `-${context.system.ferimentos}` : "0";
     context.penaltyFadigaLabel = context.system.fadiga > 0 ? `-${context.system.fadiga}` : "0";
     context.inconsciente = context.system.fadiga >= 3 || context.system.ferimentos >= 4;

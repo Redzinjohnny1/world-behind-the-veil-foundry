@@ -900,6 +900,24 @@
 .ferimentos-nivel-4 { border-color: rgba(255, 30, 30, 0.95); background: linear-gradient(180deg, rgba(96, 4, 10, 0.99), rgba(48, 2, 6, 0.99)); box-shadow: 0 0 18px rgba(255, 25, 25, 0.45); }
 .ferimentos-nivel-4 h3, .ferimentos-nivel-4 .twbv-condition-penalty { color:#ff8e8e; text-shadow: 0 0 10px rgba(255,75,75,.75); }
 
+
+.fadiga-nivel-1 { border-color: rgba(255, 210, 95, 0.52); background: linear-gradient(180deg, rgba(58, 41, 8, 0.9), rgba(26, 18, 5, 0.95)); }
+.fadiga-nivel-1 h3, .fadiga-nivel-1 .twbv-condition-penalty { color:#ffe6a8; }
+.fadiga-nivel-1 .twbv-condition-core { border-color: rgba(230, 168, 34, 0.9); box-shadow: inset 0 0 8px rgba(149, 106, 18, 0.28), 0 0 10px rgba(244, 200, 75, 0.45); }
+
+.fadiga-nivel-2 { border-color: rgba(255, 201, 64, 0.75); background: linear-gradient(180deg, rgba(79, 55, 9, 0.95), rgba(36, 25, 5, 0.98)); box-shadow: 0 0 12px rgba(255, 205, 86, 0.24); }
+.fadiga-nivel-2 h3, .fadiga-nivel-2 .twbv-condition-penalty { color:#ffd978; text-shadow: 0 0 6px rgba(255,216,115,.42); }
+.fadiga-nivel-2 .twbv-condition-core { border-color: rgba(243, 182, 39, 0.98); box-shadow: inset 0 0 10px rgba(164, 117, 16, 0.35), 0 0 14px rgba(255, 214, 102, 0.62); }
+
+.fadiga-nivel-3 { border-color: rgba(255, 193, 20, 0.95); background: linear-gradient(180deg, rgba(98, 67, 7, 0.98), rgba(45, 30, 4, 0.99)); box-shadow: 0 0 18px rgba(255, 202, 42, 0.45); }
+.fadiga-nivel-3 h3, .fadiga-nivel-3 .twbv-condition-penalty { color:#ffcf52; text-shadow: 0 0 10px rgba(255,212,88,.75); }
+.fadiga-nivel-3 .twbv-condition-core { border-color: rgba(255, 187, 24, 1); box-shadow: inset 0 0 12px rgba(176, 123, 10, 0.45), 0 0 22px rgba(255, 210, 73, 0.88); animation: twbv-fatigue-pulse .95s infinite; }
+
+@keyframes twbv-fatigue-pulse {
+  0%,100% { transform: scale(1); filter: saturate(1); }
+  50% { transform: scale(1.025); filter: saturate(1.18); }
+}
+
 @keyframes twbv-blood-pulse {
   0%,100% { transform: scale(1); filter: saturate(1); }
   50% { transform: scale(1.03); filter: saturate(1.25); }

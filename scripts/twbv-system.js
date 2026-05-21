@@ -109,8 +109,9 @@ async function rollVeuDie(die) {
   const rolls = [];
   let current = 0;
   do {
-    current = Number((await (new Roll(`1d${safeDie}`)).evaluate()).total ?? 0);
+    current = Number((await (new Roll(`1d${safeDie}`)).evaluate({async: true})).total ?? 0);
     rolls.push(current);
+    if (current === safeDie) await new Promise((resolve) => setTimeout(resolve, 450));
   } while (current === safeDie);
   return { total: rolls.reduce((sum, value) => sum + value, 0), rolls };
 }
@@ -162,11 +163,13 @@ function renderDualDieResult({
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
       const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
       const veuAtivado = Array.isArray(selectedRolls) && selectedRolls.length > 1;
+      const rollBreakdown = Array.isArray(selectedRolls) && selectedRolls.length ? selectedRolls.join(' + ') : `${value}`;
+      const hoverText = `Rolagens: ${rollBreakdown}${effectiveBonus !== 0 ? ` | Bônus: ${effectiveBonus > 0 ? '+' : ''}${effectiveBonus}` : ''} | Total: ${modified}`;
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
         <div class="twbv-roll-card__die">${dieDisplay}${veuAtivado ? ' • Véu' : ''}</div>
-        <div class="twbv-roll-card__value">${valueLabel}</div>
+        <div class="twbv-roll-card__value" title="${hoverText}">${valueLabel}</div>
       </div>`;
     };
     const totalLabel = `${total}`;
@@ -678,7 +681,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
       await renderDualDieResult({
         title: labels[attributeKey] ?? attributeKey,
-        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span> vs. Desperto${bonusTerm ? ` • bônus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
+        subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span>${bonusTerm ? ` • bônus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
         dieA: attrDie,
         labelA: "Atributo",
         dieB: awakenedDie,

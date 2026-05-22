@@ -148,9 +148,9 @@
                 <p class="twbv-condition-penalty">{{penaltyFadigaLabel}}</p>
               </article>
 
-              <article class="twbv-condition-state {{#if inconsciente}}is-active{{/if}}">
+              <article class="twbv-condition-state {{conditionStateClass}}">
                 <h3>Condição</h3>
-                <p>{{#if inconsciente}}Inconsciente{{else}}Consciente{{/if}}</p>
+                <p>{{condicaoAtual}}</p>
               </article>
             </div>
           </section>

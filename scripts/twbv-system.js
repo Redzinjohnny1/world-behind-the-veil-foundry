@@ -244,6 +244,10 @@ function renderDualDieResult({
     };
     const totalLabel = `${total}`;
 
+    const modifierDetails = appliedModifier !== 0
+      ? `<span class="twbv-roll-chat__modifier"> Dado ${baseTotal}${finalModifierLabel ? ` • ${finalModifierLabel}` : ` • Mod ${appliedModifier > 0 ? "+" : ""}${appliedModifier}`}</span>`
+      : "";
+
     const content = `
       <section class="twbv-roll-chat">
         <header class="twbv-roll-chat__header">
@@ -254,7 +258,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado:${appliedModifier !== 0 ? `<span class="twbv-roll-chat__modifier"> Base ${baseTotal} • Ferimentos ${appliedModifier}</span>` : ""}<strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
@@ -781,7 +785,6 @@ class TWBVPersonagemSheet extends ActorSheet {
                 bonusA: totalBonus,
                 bonusB: 0,
                 finalModifier: ferimentoPenalty.value,
-        finalModifierLabel: ferimentoPenalty.label,
                 finalModifierLabel: ferimentoPenalty.label,
                 dieDisplayA: buildDieLabel(skillDie, skillBonus),
                 dieDisplayB: `d${awakenedDie}`,

@@ -408,6 +408,8 @@ class TWBVPersonagemSheet extends ActorSheet {
     }
     context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 5;
     context.condicaoAtual = context.inconsciente ? "Inconsciente" : context.condicaoFerimentosLabel;
+    context.condicaoFerimentosResumo = context.penaltyFerimentosLabel;
+    context.condicaoFadigaResumo = context.penaltyFadigaLabel;
     context.conditionStateClass = context.system.ferimentos > 0 || context.inconsciente ? "is-active" : "";
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 

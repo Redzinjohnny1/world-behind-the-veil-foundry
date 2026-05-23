@@ -61,7 +61,7 @@
 
   <nav class="sheet-tabs tabs twbv-tabs" data-group="primary">
     <a class="item" data-tab="principal">Principal</a>
-    <a class="item" data-tab="vantagens">Vantagens</a>
+    <a class="item" data-tab="vantagens">Vant/Hab. Esp</a>
     <a class="item" data-tab="desvantagens">Desvantagens</a>
     <a class="item" data-tab="equipamento">Equipamento</a>
     <a class="item" data-tab="poderes">Poderes</a>
@@ -213,7 +213,7 @@
     <div class="tab" data-group="primary" data-tab="vantagens">
       <div class="twbv-panel twbv-ornate">
         <div class="twbv-item-section">
-          <div class="twbv-item-tab-header"><h2>VANTAGENS</h2><button type="button" class="twbv-item-create twbv-item-create--fancy" data-type="vantagem" data-label="Vantagem"><i class="fas fa-plus"></i> Adicionar vantagem</button></div>
+          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Vantagens</h2><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="vantagem" data-label="Vantagem"><i class="fas fa-plus"></i> Adicionar vantagem</button></div>
           <div class="twbv-item-card-list">
             {{#each vantagens as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy">
@@ -230,7 +230,7 @@
           </div>
         </div>
         <div class="twbv-item-section">
-          <div class="twbv-item-tab-header"><h2>HABILIDADES ESPECIAIS</h2><button type="button" class="twbv-item-create twbv-item-create--fancy" data-type="habilidadeEspecial" data-label="Habilidade Especial"><i class="fas fa-plus"></i> Adicionar habilidade especial</button></div>
+          <div class="twbv-item-tab-header twbv-item-tab-header--habilidades"><h2>Habilidades especiais</h2><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--habilidades" data-type="habilidadeEspecial" data-label="Habilidade Especial"><i class="fas fa-plus"></i> Adicionar habilidade</button></div>
           <div class="twbv-item-card-list">
             {{#each habilidadesEspeciais as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy">

@@ -1309,9 +1309,11 @@ class TWBVPersonagemSheet extends ActorSheet {
   _buildCustomItemDialogContent(type, itemData = {}) {
     const fieldsByType = {
       vantagem: `
-        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
-        <div class="form-group"><label>Requisitos</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>`,
-      habilidadeEspecial: `<div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+      habilidadeEspecial: `
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
       complicacao: `
         <div class="form-group">
           <label>Severidade</label>
@@ -1339,8 +1341,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
         </nav>
         <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
-          <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
+          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
           ${fieldsByType[type] ?? ""}
           <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
         </section>
@@ -1427,7 +1428,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
-      habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
+      habilidadeEspecial: { title: "Nova Habilidade", severity: "", tierLabel: "" },
       complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
     };
     const defaults = defaultsByType[type] ?? defaultsByType.vantagem;

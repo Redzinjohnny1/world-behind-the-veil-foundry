@@ -526,6 +526,44 @@
   background: linear-gradient(170deg, rgba(111, 74, 166, 0.92), rgba(57, 31, 92, 0.96));
   box-shadow: inset 0 0 0 1px rgba(236, 208, 146, 0.2), 0 4px 12px rgba(7, 4, 14, 0.35);
 }
+
+.twbv-item-tab-header--vantagens h2 {
+  margin: 0;
+  color: #a32a20;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: none;
+}
+
+.twbv-item-create--vantagens {
+  width: auto;
+  min-width: 0;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.twbv-item-tab-header--habilidades h2 {
+  margin: 0;
+  color: #a32a20;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: none;
+}
+
+.twbv-item-create--habilidades {
+  width: auto;
+  min-width: 0;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+
 .twbv-item-create--fancy:hover,
 .twbv-item-create--fancy:focus {
   color: #fff4d2;

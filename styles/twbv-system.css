@@ -305,14 +305,16 @@
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 6px;
-  background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(180deg, rgba(4, 8, 16, 0.44), rgba(2, 6, 12, 0.58)),
+    url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
   box-shadow: none;
 }
 .twbv-header-status input[disabled] {
-  background: transparent;
+  background: rgba(3, 7, 15, 0.3);
   border-color: transparent;
   box-shadow: none;
 }

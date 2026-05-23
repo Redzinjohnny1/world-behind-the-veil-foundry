@@ -362,6 +362,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const context = super.getData(options);
     context.system = this.actor?.system ?? context.system ?? {};
     context.system.mana = context.system.mana ?? {};
+    context.system.codinome = String(context.system.codinome ?? "").trim();
     context.system.mana.value = Number(context.system.mana.value ?? 0);
     context.system.mana.max = Number(context.system.mana.max ?? 3);
     context.system.defesa = context.system.defesa ?? {};

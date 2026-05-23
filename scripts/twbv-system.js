@@ -146,11 +146,11 @@ function getConditionVisualStyle(ferimentos, fadiga) {
   const fatigue = Math.max(0, Math.min(4, Number(fadiga ?? 0)));
   const woundColors = [
     [70, 190, 110],
-    [224, 50, 68],
-    [235, 53, 72],
-    [245, 43, 66],
-    [255, 35, 60],
-    [255, 20, 45]
+    [168, 205, 72],
+    [240, 204, 68],
+    [238, 126, 58],
+    [228, 58, 46],
+    [210, 18, 28]
   ];
   const fatigueColors = [
     [70, 190, 110],

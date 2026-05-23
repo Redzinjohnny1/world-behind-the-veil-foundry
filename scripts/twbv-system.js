@@ -1315,7 +1315,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     if (["vantagem", "habilidadeEspecial"].includes(type)) {
       return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
-        <div class="twbv-custom-item-iconbox"><i class="fas fa-medal"></i></div>
+        <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
           <div class="twbv-custom-item-grid2">
@@ -1555,7 +1555,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
-    }, { width: 520, height: "auto" });
+    }, { width: 760, height: "auto" });
     dialog.render(true);
   }
 }

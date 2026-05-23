@@ -312,8 +312,9 @@
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 40%, transparent), inset 0 0 24px var(--twbv-status-glow, rgba(255, 78, 78, 0.45));
 }
 .twbv-header-status input[disabled] {
+  background: rgba(0, 0, 0, 0.08);
   border-color: color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 55%, rgba(154,123,255,.5));
-  box-shadow: inset 0 0 8px color-mix(in srgb, var(--twbv-status-glow, rgba(255,78,78,.4)) 55%, transparent);
+  box-shadow: inset 0 0 8px color-mix(in srgb, var(--twbv-status-glow, rgba(255,78,78,.4)) 45%, transparent);
 }
 .twbv-header-identity { display:flex; flex-direction:column; justify-content:center; }
 .twbv-header-identity h2 { margin: 0 0 8px; }

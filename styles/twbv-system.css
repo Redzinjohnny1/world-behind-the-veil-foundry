@@ -305,8 +305,11 @@
   border: 1px solid var(--twbv-status-edge, rgba(255, 121, 121, 0.45));
   border-radius: 8px;
   padding: 6px;
-  background: linear-gradient(180deg, var(--twbv-status-mid, rgba(42, 8, 12, 0.9)), var(--twbv-status-deep, rgba(19, 5, 9, 0.94)));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 40%, transparent), inset 0 0 20px var(--twbv-status-glow, rgba(255, 78, 78, 0.35));
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--twbv-status-mid, rgba(42, 8, 12, 0.9)) 82%, transparent), color-mix(in srgb, var(--twbv-status-deep, rgba(19, 5, 9, 0.94)) 90%, transparent)), url("https://i.pinimg.com/originals/a8/4e/6a/a84e6a249ebe57083b49db3d923a597f.gif");
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 40%, transparent), inset 0 0 24px var(--twbv-status-glow, rgba(255, 78, 78, 0.45));
 }
 .twbv-header-status input[disabled] {
   border-color: color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 55%, rgba(154,123,255,.5));

@@ -1322,7 +1322,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
           <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
-          <div class="form-group"><label>Carac. Adicionais</label><textarea name="extraNotes" rows="9">${itemData.extraNotes ?? ""}</textarea></div>
         </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
@@ -1492,7 +1491,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       requisitos: item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
       descricao: item?.system?.descricao ?? item?.system?.description ?? "",
       icon: item?.system?.icon ?? item?.icon ?? "",
-      extraNotes: item?.system?.extraNotes ?? item?.extraNotes ?? "",
       severity: item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
@@ -1535,7 +1533,6 @@ class TWBVPersonagemSheet extends ActorSheet {
           requisitos: payload.system.requisitos,
           descricao: payload.system.descricao,
           icon: payload.system.icon,
-          extraNotes: payload.system.extraNotes,
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
@@ -1592,7 +1589,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
-    }, { width: 760, height: "auto" });
+    }, { width: 920, height: "auto" });
     dialog.render(true);
   }
 }

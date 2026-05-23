@@ -25,7 +25,7 @@
         <label>Avanço
           <input type="number" value="{{system.avancosTotais}}" disabled />
         </label>
-        <label>Condição
+        <label>Status Atual
           <input type="text" value="{{condicaoAtual}}" disabled />
         </label>
       </section>
@@ -148,8 +148,8 @@
                 </div>
               </article>
 
-              <article class="twbv-condition-state {{conditionStateClass}}">
-                <h3>Condição</h3>
+              <article class="twbv-condition-state ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}">
+                <h3>Status Atual</h3>
                 <p>{{condicaoAtual}}</p>
                 <p class="twbv-condition-state__detail">Ferimentos: {{condicaoFerimentosResumo}}</p>
                 <p class="twbv-condition-state__detail">Fadiga: {{condicaoFadigaResumo}}</p>

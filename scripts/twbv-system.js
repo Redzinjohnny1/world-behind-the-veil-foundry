@@ -378,7 +378,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const ferimentosNivel = Number(context.system.ferimentos ?? 0);
     if (ferimentosNivel <= 0) {
       context.penaltyFerimentosLabel = "Sem ferimentos (0)";
-      context.condicaoFerimentosLabel = "Consciente";
+      context.condicaoFerimentosLabel = "Saudável";
     } else if (ferimentosNivel === 1) {
       context.penaltyFerimentosLabel = "Machucado (-1)";
       context.condicaoFerimentosLabel = "Machucado";
@@ -392,8 +392,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       context.penaltyFerimentosLabel = "Gravemente ferido (-3)";
       context.condicaoFerimentosLabel = "Gravemente ferido";
     } else {
-      context.penaltyFerimentosLabel = "Inconsciente (-3)";
-      context.condicaoFerimentosLabel = "Inconsciente";
+      context.penaltyFerimentosLabel = "Morrendo (-3)";
+      context.condicaoFerimentosLabel = "Morrendo";
     }
     if (context.system.fadiga <= 0) {
       context.penaltyFadigaLabel = "Sem fadiga (0)";
@@ -407,7 +407,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       context.penaltyFadigaLabel = "Inconsciente (-4)";
     }
     context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 5;
-    context.condicaoAtual = context.inconsciente ? "Inconsciente" : context.condicaoFerimentosLabel;
+    context.condicaoAtual = context.inconsciente ? "Morrendo" : context.condicaoFerimentosLabel;
     context.condicaoFerimentosResumo = context.penaltyFerimentosLabel;
     context.condicaoFadigaResumo = context.penaltyFadigaLabel;
     context.conditionStateClass = context.system.ferimentos > 0 || context.inconsciente ? "is-active" : "";
@@ -567,12 +567,12 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
     const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 5;
-    const woundConditionByLevel = ["", "Machucado", "Ferido", "Muito ferido", "Gravemente ferido", "Inconsciente"];
+    const woundConditionByLevel = ["", "Machucado", "Ferido", "Muito ferido", "Gravemente ferido", "Morrendo"];
     const woundCondition = woundConditionByLevel[Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)))];
     const woundStates = new Set(woundConditionByLevel.filter(Boolean));
     this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => !woundStates.has(c));
     if (woundCondition) this.actor.system.condicoes.push(woundCondition);
-    if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
+    if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Morrendo")) this.actor.system.condicoes.push("Morrendo");
 
     this.actor.system.defesa = this.actor.system.defesa ?? {};
     const apararBase = 2 + getSkillHalfForDefense(this.actor.system, "LUTAR");

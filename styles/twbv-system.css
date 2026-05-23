@@ -545,6 +545,25 @@
   white-space: nowrap;
 }
 
+.twbv-item-tab-header--habilidades h2 {
+  margin: 0;
+  color: #a32a20;
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: none;
+}
+
+.twbv-item-create--habilidades {
+  width: auto;
+  min-width: 0;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+
 .twbv-item-create--fancy:hover,
 .twbv-item-create--fancy:focus {
   color: #fff4d2;

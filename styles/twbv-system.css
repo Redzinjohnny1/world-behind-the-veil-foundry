@@ -1836,7 +1836,7 @@
 }
 .wbtv-custom-item-dialog { border-radius: 12px; overflow: hidden; border: 1px solid rgba(217, 183, 117, 0.55); }
 .wbtv-custom-item-dialog .window-header { background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)); border-bottom: 1px solid rgba(217, 183, 117, 0.68); color: #f7e7be; }
-.wbtv-custom-item-dialog .window-content { background: radial-gradient(circle at top, rgba(52, 30, 90, 0.95), rgba(9, 7, 17, 0.98)); }
+.wbtv-custom-item-dialog .window-content { background: linear-gradient(180deg, rgba(232, 226, 210, 0.98), rgba(213, 206, 191, 0.98)); }
 .window-app.wbtv-custom-item-dialog {
   border: 1px solid rgba(217, 183, 117, 0.82);
   border-radius: 14px;
@@ -1861,6 +1861,7 @@
 }
 .twbv-custom-item-main { display: grid; gap: 12px; }
 .twbv-custom-item-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.twbv-custom-item-grid2--header .form-group { margin-bottom: 2px; }
 .twbv-custom-item-dialog label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
 .twbv-custom-item-dialog input, .twbv-custom-item-dialog select, .twbv-custom-item-dialog textarea { width: 100%; border-radius: 10px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 9px 11px; }
 .twbv-custom-item-dialog input:focus, .twbv-custom-item-dialog select:focus, .twbv-custom-item-dialog textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }
@@ -1879,8 +1880,10 @@
   color: #f7e8c1;
 }
 .dialog .twbv-custom-item-dialog {
-  background: radial-gradient(circle at top, rgba(56, 30, 92, 0.36), rgba(10, 7, 18, 0.95));
-  border: 1px solid rgba(217, 183, 117, 0.42);
+  background:
+    radial-gradient(circle at 20% 15%, rgba(155, 130, 90, 0.12), transparent 45%),
+    linear-gradient(180deg, rgba(238, 233, 220, 0.98), rgba(219, 212, 198, 0.98));
+  border: 1px solid rgba(167, 140, 96, 0.55);
   border-radius: 10px;
   padding: 14px;
 }
@@ -1904,19 +1907,20 @@
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button {
   min-height: 38px;
   border-radius: 10px;
-  border: 1px solid rgba(217, 183, 117, 0.85) !important;
-  color: #ffefc9 !important;
-  background: linear-gradient(180deg, rgba(96, 62, 146, 0.96), rgba(34, 20, 54, 0.99)) !important;
+  border: 1px solid rgba(162, 146, 118, 0.9) !important;
+  color: #222018 !important;
+  background: linear-gradient(180deg, rgba(245, 241, 232, 0.99), rgba(218, 211, 196, 0.99)) !important;
 }
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button:hover,
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button:focus-visible {
   box-shadow: 0 0 0 1px rgba(236, 208, 146, 0.4), 0 0 14px rgba(145, 102, 214, 0.4);
 }
 .twbv-custom-tabs { display: flex; gap: 8px; margin-bottom: 4px; }
-.twbv-tab-button { border: 1px solid rgba(217, 183, 117, 0.72); border-radius: 8px; padding: 6px 10px; color: #ffedc5; background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)); cursor: pointer; }
-.twbv-tab-button.is-active { box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.45), 0 0 12px rgba(149, 96, 224, 0.38); }
+.twbv-custom-tabs--sheet { margin-top: 2px; }
+.twbv-tab-button { border: 1px solid rgba(173, 152, 120, 0.8); border-radius: 10px 10px 0 0; padding: 7px 14px; color: #23211d; background: linear-gradient(180deg, rgba(246, 241, 229, 0.96), rgba(223, 216, 200, 0.96)); cursor: pointer; font-weight: 700; }
+.twbv-tab-button.is-active { color: #9a2a1f; border-bottom-color: rgba(246,241,229,0.96); box-shadow: inset 0 -1px 0 rgba(246,241,229,0.96); }
 .twbv-custom-tab-pane { display: none; gap: 10px; }
-.twbv-custom-tab-pane.is-active { display: grid; }
+.twbv-custom-tab-pane.is-active { display: grid; border: 1px solid rgba(173, 152, 120, 0.62); border-radius: 0 10px 10px 10px; padding: 10px; background: rgba(244, 239, 227, 0.75); }
 .twbv-property-checkboxes { display: grid; gap: 8px; }
 .twbv-property-checkboxes label { display: flex; align-items: center; gap: 8px; }
 .twbv-property-checkboxes input[type="checkbox"] { width: auto; accent-color: #d9b775; }

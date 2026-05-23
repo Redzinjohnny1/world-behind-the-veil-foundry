@@ -1318,11 +1318,24 @@ class TWBVPersonagemSheet extends ActorSheet {
         <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
-          <div class="twbv-custom-item-grid2">
+          <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
           </div>
-          <div class="form-group"><label>Descrição</label><textarea name="description" rows="6">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+          <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
+            <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+            <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
+            <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+          </nav>
+          <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
+            <div class="form-group"><label>Descrição</label><textarea name="description" rows="7">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+          </section>
+          <section class="twbv-custom-tab-pane" data-tab="propriedades">
+            <p class="twbv-tab-empty">Ajustaremos propriedades em seguida.</p>
+          </section>
+          <section class="twbv-custom-tab-pane" data-tab="efeitos">
+            <p class="twbv-tab-empty">Ajustaremos efeitos em seguida.</p>
+          </section>
         </div>
       </form>`;
     }

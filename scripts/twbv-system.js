@@ -1324,7 +1324,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
         </div>
         <div class="twbv-custom-item-main">
-          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
@@ -1342,13 +1342,10 @@ class TWBVPersonagemSheet extends ActorSheet {
             <div class="form-group"><textarea name="description" rows="11" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
-            <div class="twbv-property-checkboxes">
-              <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
-              <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
-            </div>
+            <p class="twbv-tab-empty">Sem propriedades por enquanto.</p>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="efeitos">
-            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> ADICIONAR</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
         </div>

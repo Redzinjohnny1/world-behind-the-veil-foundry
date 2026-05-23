@@ -352,6 +352,8 @@
 }
 .ferimentos-nivel-0.twbv-header-status input[disabled] { color: #b8ffd2; }
 
+.twbv-header-status-gif.ferimentos-nivel-0,
+.twbv-header-status-gif.ferimentos-nivel-1,
 .twbv-header-status-gif.ferimentos-nivel-2,
 .twbv-header-status-gif.ferimentos-nivel-3,
 .twbv-header-status-gif.ferimentos-nivel-4,

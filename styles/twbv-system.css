@@ -1841,6 +1841,11 @@
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
   display: flex;
   flex-direction: column;
+  padding: 0 !important;
+}
+.window-app.wbtv-custom-item-dialog .dialog-content,
+.window-app.wbtv-custom-item-dialog form.twbv-custom-item-dialog {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
 .window-app.wbtv-custom-item-dialog {
   border: 1px solid rgba(217, 183, 117, 0.82);
@@ -1927,6 +1932,7 @@
   padding: 8px 10px 10px;
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99));
   border-top: 1px solid rgba(217, 183, 117, 0.42);
+  margin: 0 !important;
 }
 .window-app.wbtv-custom-item-dialog .window-content .dialog-buttons,
 .window-app.wbtv-custom-item-dialog .window-content > .dialog-buttons,

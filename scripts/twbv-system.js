@@ -140,6 +140,37 @@ var getGlobalRollPenalty = globalThis.getGlobalRollPenalty || function getGlobal
   return { value, label };
 };
 
+
+function getConditionVisualStyle(ferimentos, fadiga) {
+  const wound = Math.max(0, Math.min(5, Number(ferimentos ?? 0)));
+  const fatigue = Math.max(0, Math.min(4, Number(fadiga ?? 0)));
+  const woundColors = [
+    [70, 190, 110],
+    [224, 50, 68],
+    [235, 53, 72],
+    [245, 43, 66],
+    [255, 35, 60],
+    [255, 20, 45]
+  ];
+  const fatigueColors = [
+    [70, 190, 110],
+    [244, 200, 75],
+    [255, 214, 102],
+    [255, 210, 73],
+    [255, 198, 54]
+  ];
+  const wc = woundColors[wound];
+  const fc = fatigueColors[fatigue];
+  const woundWeight = wound / 5;
+  const fatigueWeight = fatigue / 4;
+  const total = Math.max(0.0001, woundWeight + fatigueWeight);
+  const mix = [0,1,2].map((i)=> Math.round((wc[i]*woundWeight + fc[i]*fatigueWeight)/total));
+  const edge = `rgba(${mix[0]}, ${mix[1]}, ${mix[2]}, 0.95)`;
+  const glow = `rgba(${mix[0]}, ${mix[1]}, ${mix[2]}, 0.62)`;
+  const deep = `rgba(${Math.max(8,mix[0]-140)}, ${Math.max(8,mix[1]-140)}, ${Math.max(8,mix[2]-140)}, 0.95)`;
+  const mid = `rgba(${Math.max(10,mix[0]-95)}, ${Math.max(10,mix[1]-95)}, ${Math.max(10,mix[2]-95)}, 0.98)`;
+  return `--twbv-status-edge:${edge};--twbv-status-glow:${glow};--twbv-status-deep:${deep};--twbv-status-mid:${mid};`;
+}
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;
@@ -410,6 +441,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.condicaoAtual = context.inconsciente ? "Morrendo" : context.condicaoFerimentosLabel;
     context.condicaoFerimentosResumo = context.penaltyFerimentosLabel;
     context.condicaoFadigaResumo = context.penaltyFadigaLabel;
+    context.conditionStateStyle = getConditionVisualStyle(context.system.ferimentos, context.system.fadiga);
     context.conditionStateClass = context.system.ferimentos > 0 || context.inconsciente ? "is-active" : "";
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 

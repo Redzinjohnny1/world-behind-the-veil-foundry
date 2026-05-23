@@ -1339,7 +1339,7 @@ class TWBVPersonagemSheet extends ActorSheet {
             <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
           </nav>
           <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-            <div class="form-group"><label>Descrição</label><textarea name="description" rows="7">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+            <div class="form-group"><textarea name="description" rows="11" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
             <div class="twbv-property-checkboxes">
@@ -1589,7 +1589,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
-    }, { width: 920, height: "auto" });
+    }, { width: 980, height: 720 });
     dialog.render(true);
   }
 }

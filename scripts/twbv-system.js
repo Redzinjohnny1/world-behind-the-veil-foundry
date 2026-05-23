@@ -1562,6 +1562,12 @@ class TWBVPersonagemSheet extends ActorSheet {
           root.classList.add("wbtv-vantagem-dialog");
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
           formRoot?.classList?.add("wbtv-vantagem-dialog");
+
+          const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons");
+          footer?.classList?.add("twbv-vantagem-footer");
+          footer?.querySelectorAll?.("button, .dialog-button")?.forEach((btn) => {
+            btn.classList.add("twbv-vantagem-action");
+          });
         }
       },
       buttons: {

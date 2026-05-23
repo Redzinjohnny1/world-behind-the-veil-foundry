@@ -977,14 +977,6 @@
   padding: 8px;
   background: linear-gradient(180deg, rgba(20,12,34,.96), rgba(10,8,18,.98));
 }
-.twbv-condition-checklist h3 {
-  margin: 0 0 8px;
-  text-align: center;
-  font-size: .98rem;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: #f1ddb0;
-}
 .twbv-condition-checklist-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

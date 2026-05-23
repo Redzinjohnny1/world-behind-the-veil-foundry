@@ -1586,7 +1586,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
-    }, { width: 900, height: 820 });
+    }, { width: 900, height: "auto" });
     dialog.render(true);
   }
 }

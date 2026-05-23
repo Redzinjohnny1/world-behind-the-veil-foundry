@@ -1313,6 +1313,10 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _buildCustomItemDialogContent(type, itemData = {}) {
     if (["vantagem", "habilidadeEspecial"].includes(type)) {
+      const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
+      const effectsMarkup = effects.length
+        ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
+        : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
@@ -1331,10 +1335,14 @@ class TWBVPersonagemSheet extends ActorSheet {
             <div class="form-group"><label>Descrição</label><textarea name="description" rows="7">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
-            <p class="twbv-tab-empty">Ajustaremos propriedades em seguida.</p>
+            <div class="twbv-property-checkboxes">
+              <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
+              <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
+            </div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="efeitos">
-            <p class="twbv-tab-empty">Ajustaremos efeitos em seguida.</p>
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+            <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
         </div>
       </form>`;

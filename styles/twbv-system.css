@@ -300,23 +300,34 @@
 }
 .twbv-header-portrait { display:flex; align-items:stretch; justify-content:center; }
 
+.twbv-header-status-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 8px;
+  align-items: stretch;
+}
 .twbv-header-status {
   margin-top: 2px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(120, 92, 220, 0.32);
   border-radius: 8px;
   padding: 6px;
-  background-image:
-    linear-gradient(180deg, rgba(4, 8, 16, 0.44), rgba(2, 6, 12, 0.58)),
-    url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
-  box-shadow: none;
+  background: linear-gradient(180deg, rgba(5, 8, 18, 0.9), rgba(4, 7, 15, 0.95));
+  box-shadow: inset 0 0 0 1px rgba(154,123,255,.16);
 }
 .twbv-header-status input[disabled] {
-  background: rgba(3, 7, 15, 0.3);
+  background: transparent;
   border-color: transparent;
   box-shadow: none;
+}
+.twbv-header-status-gif {
+  margin-top: 2px;
+  border-radius: 8px;
+  border: 1px solid rgba(120, 92, 220, 0.32);
+  background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 54px;
 }
 .twbv-header-identity { display:flex; flex-direction:column; justify-content:center; }
 .twbv-header-identity h2 { margin: 0 0 8px; }

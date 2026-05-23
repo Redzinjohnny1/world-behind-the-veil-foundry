@@ -302,7 +302,7 @@
 
 .twbv-header-status-row {
   display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
+  grid-template-columns: 165px minmax(0, 1fr);
   gap: 8px;
   align-items: stretch;
 }
@@ -324,9 +324,11 @@
   border-radius: 8px;
   border: 1px solid rgba(120, 92, 220, 0.32);
   background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: rgba(4, 10, 22, 0.92);
+  overflow: hidden;
   min-height: 54px;
 }
 .twbv-header-identity { display:flex; flex-direction:column; justify-content:center; }

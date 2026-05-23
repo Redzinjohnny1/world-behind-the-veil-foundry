@@ -26,10 +26,10 @@
           <input type="number" value="{{system.avancosTotais}}" disabled />
         </label>
         <div class="twbv-header-status-row">
-          <label class="twbv-header-status">Status Atual
+          <label class="twbv-header-status ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}">Status Atual
             <input type="text" value="{{condicaoAtual}}" disabled />
           </label>
-          <div class="twbv-header-status-gif ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}" aria-hidden="true"></div>
+          <div class="twbv-header-status-gif ferimentos-nivel-{{system.ferimentos}}" aria-hidden="true"></div>
         </div>
       </section>
 

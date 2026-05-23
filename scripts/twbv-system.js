@@ -581,6 +581,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const mapSystemEntry = (entry, fallbackType) => ({
       id: String(entry?.id ?? foundry.utils.randomID()),
       name: String(entry?.nome ?? entry?.name ?? "").trim(),
+      icon: String(entry?.icon ?? "").trim(),
       type: fallbackType,
       typeLabel: TWBV_ITEM_TYPES[fallbackType] ?? fallbackType,
       fonte: String(entry?.fonte ?? entry?.source ?? "").trim(),
@@ -1319,12 +1320,19 @@ class TWBVPersonagemSheet extends ActorSheet {
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
-        <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
+        <div class="twbv-custom-item-side">
+          <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
+          <div class="form-group"><label>Carac. Adicionais</label><textarea name="extraNotes" rows="9">${itemData.extraNotes ?? ""}</textarea></div>
+        </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
+          </div>
+          <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
+            <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
+            <div class="form-group"><label>Ícone (URL)</label><input type="text" name="icon" value="${itemData.icon ?? ""}" placeholder="https://..." /></div>
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
             <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
@@ -1418,9 +1426,11 @@ class TWBVPersonagemSheet extends ActorSheet {
   _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {
     const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
     const fonte = String(root?.querySelector('input[name="source"]')?.value ?? "").trim();
+    const icon = String(root?.querySelector('input[name="icon"]')?.value ?? "").trim();
     const categoria = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
     const requisitos = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
     const descricao = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+    const extraNotes = String(root?.querySelector('textarea[name="extraNotes"]')?.value ?? "").trim();
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
     const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
@@ -1433,9 +1443,11 @@ class TWBVPersonagemSheet extends ActorSheet {
         requisitos,
         descricao,
         source: fonte,
+        icon,
         category: categoria,
         requirements: requisitos,
         description: descricao,
+        extraNotes,
         severity,
         isArcaneBackground,
         hasCharges,
@@ -1479,6 +1491,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       categoria: item?.system?.categoria ?? item?.system?.category ?? "",
       requisitos: item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
       descricao: item?.system?.descricao ?? item?.system?.description ?? "",
+      icon: item?.system?.icon ?? item?.icon ?? "",
+      extraNotes: item?.system?.extraNotes ?? item?.extraNotes ?? "",
       severity: item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
@@ -1520,6 +1534,8 @@ class TWBVPersonagemSheet extends ActorSheet {
           categoria: payload.system.categoria,
           requisitos: payload.system.requisitos,
           descricao: payload.system.descricao,
+          icon: payload.system.icon,
+          extraNotes: payload.system.extraNotes,
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,

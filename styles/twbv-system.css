@@ -1844,9 +1844,10 @@
 }
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
 .twbv-custom-item-dialog--sheetlike {
-  grid-template-columns: 104px 1fr;
+  grid-template-columns: 180px 1fr;
   gap: 14px 16px;
 }
+.twbv-custom-item-side { display: grid; gap: 10px; align-content: start; }
 .twbv-custom-item-iconbox {
   width: 104px;
   height: 104px;
@@ -1862,6 +1863,7 @@
 .twbv-custom-item-main { display: grid; gap: 12px; }
 .twbv-custom-item-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .twbv-custom-item-grid2--header .form-group { margin-bottom: 2px; }
+.twbv-item-card-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 7px; display: block; }
 .twbv-custom-item-dialog label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
 .twbv-custom-item-dialog input, .twbv-custom-item-dialog select, .twbv-custom-item-dialog textarea { width: 100%; border-radius: 10px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 9px 11px; }
 .twbv-custom-item-dialog input:focus, .twbv-custom-item-dialog select:focus, .twbv-custom-item-dialog textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }

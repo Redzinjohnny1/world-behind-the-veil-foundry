@@ -1429,6 +1429,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const categoria = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
     const requisitos = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
     const descricao = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+    const extraNotes = String(root?.querySelector('textarea[name="extraNotes"]')?.value ?? "").trim();
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
     const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
@@ -1445,6 +1446,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         category: categoria,
         requirements: requisitos,
         description: descricao,
+        extraNotes,
         severity,
         isArcaneBackground,
         hasCharges,

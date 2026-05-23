@@ -1853,6 +1853,13 @@
   box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.32), 0 0 24px rgba(149, 96, 224, 0.45), 0 14px 32px rgba(0, 0, 0, 0.55);
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
+.window-app.wbtv-custom-item-dialog,
+.window-app.wbtv-custom-item-dialog .app,
+.window-app.wbtv-custom-item-dialog .window-content,
+.window-app.wbtv-custom-item-dialog .dialog-content,
+.window-app.wbtv-custom-item-dialog .window-resizable-handle {
+  background-color: #090612 !important;
+}
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
 .twbv-custom-item-dialog--sheetlike {
   grid-template-columns: 120px 1fr;
@@ -1929,10 +1936,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  padding: 8px 10px 10px;
+  padding: 10px;
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99));
   border-top: 1px solid rgba(217, 183, 117, 0.42);
   margin: 0 !important;
+  border-radius: 0 0 12px 12px;
 }
 .window-app.wbtv-custom-item-dialog .window-content .dialog-buttons,
 .window-app.wbtv-custom-item-dialog .window-content > .dialog-buttons,
@@ -1956,6 +1964,9 @@
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button:hover,
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button:focus-visible {
   box-shadow: 0 0 0 1px rgba(236, 208, 146, 0.4), 0 0 14px rgba(145, 102, 214, 0.4);
+}
+.window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button {
+  min-height: 42px;
 }
 .twbv-custom-tabs { display: flex; gap: 8px; margin-bottom: 4px; }
 .twbv-custom-tabs--sheet { margin-top: 2px; }

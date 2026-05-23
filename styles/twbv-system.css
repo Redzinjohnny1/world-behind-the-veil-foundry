@@ -1918,11 +1918,18 @@
 .window-app.wbtv-vantagem-dialog-window .window-content { color: #f7e8c1; }
 
 .window-app.wbtv-vantagem-dialog-window,
+.window-app.wbtv-vantagem-dialog-window .app,
 .window-app.wbtv-vantagem-dialog-window .window-content,
+.window-app.wbtv-vantagem-dialog-window .dialog-content,
+.window-app.wbtv-vantagem-dialog-window .window-resizable-handle,
+.window-app.wbtv-vantagem-dialog-window footer,
 .window-app.wbtv-vantagem-dialog-window > footer.dialog-buttons,
-.window-app.wbtv-vantagem-dialog-window .window-content + footer.dialog-buttons {
+.window-app.wbtv-vantagem-dialog-window .window-content + footer.dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .window-content + footer.dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) > footer.dialog-buttons {
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
+
 .dialog .twbv-custom-item-dialog {
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(20, 12, 34, 0.98), rgba(8, 7, 18, 0.99));
   border: 1px solid rgba(217, 183, 117, 0.62);

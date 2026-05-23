@@ -120,7 +120,7 @@ function normalizeAttributeStep(value) {
 
 
 var getFerimentosRollPenalty = globalThis.getFerimentosRollPenalty || function getFerimentosRollPenalty(actorSystem) {
-  const ferimentos = Math.max(0, Math.min(4, Number(actorSystem?.ferimentos ?? 0)));
+  const ferimentos = Math.max(0, Math.min(5, Number(actorSystem?.ferimentos ?? 0)));
   if (ferimentos <= 0) return { value: 0, label: "" };
   const applied = Math.min(ferimentos, 3);
   return { value: -applied, label: `Ferimento -${applied}` };
@@ -140,6 +140,37 @@ var getGlobalRollPenalty = globalThis.getGlobalRollPenalty || function getGlobal
   return { value, label };
 };
 
+
+function getConditionVisualStyle(ferimentos, fadiga) {
+  const wound = Math.max(0, Math.min(5, Number(ferimentos ?? 0)));
+  const fatigue = Math.max(0, Math.min(4, Number(fadiga ?? 0)));
+  const woundColors = [
+    [70, 190, 110],
+    [168, 205, 72],
+    [240, 204, 68],
+    [238, 126, 58],
+    [228, 58, 46],
+    [210, 18, 28]
+  ];
+  const fatigueColors = [
+    [70, 190, 110],
+    [244, 200, 75],
+    [255, 214, 102],
+    [255, 210, 73],
+    [255, 198, 54]
+  ];
+  const wc = woundColors[wound];
+  const fc = fatigueColors[fatigue];
+  const woundWeight = wound / 5;
+  const fatigueWeight = fatigue / 4;
+  const total = Math.max(0.0001, woundWeight + fatigueWeight);
+  const mix = [0,1,2].map((i)=> Math.round((wc[i]*woundWeight + fc[i]*fatigueWeight)/total));
+  const edge = `rgba(${mix[0]}, ${mix[1]}, ${mix[2]}, 0.95)`;
+  const glow = `rgba(${mix[0]}, ${mix[1]}, ${mix[2]}, 0.62)`;
+  const deep = `rgba(${Math.max(8,mix[0]-140)}, ${Math.max(8,mix[1]-140)}, ${Math.max(8,mix[2]-140)}, 0.95)`;
+  const mid = `rgba(${Math.max(10,mix[0]-95)}, ${Math.max(10,mix[1]-95)}, ${Math.max(10,mix[2]-95)}, 0.98)`;
+  return `--twbv-status-edge:${edge};--twbv-status-glow:${glow};--twbv-status-deep:${deep};--twbv-status-mid:${mid};`;
+}
 function resolveAwakenedDie(attributeDie) {
   const die = normalizeAttributeStep(attributeDie);
   if (die <= 6) return 4;
@@ -364,7 +395,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens}) = ${resistenciaTotal}`;
     context.defesaDesviarTooltip = `4 (padrão) + Talento (${desviarTalento}) + Itens (${desviarItens}) + Magias (${desviarMagias}) = ${desviarTotal}`;
     context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
-    context.system.ferimentos = Math.max(0, Math.min(4, Number(context.system.ferimentos ?? 0)));
+    context.system.ferimentos = Math.max(0, Math.min(5, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(4, Number(context.system.fadiga ?? 0)));
     context.system.tamanho = Number.isFinite(Number(context.system.tamanho)) ? Number(context.system.tamanho) : 0;
     const atletismo = findSkillByName(context.system, "ATLETISMO");
@@ -378,12 +409,22 @@ class TWBVPersonagemSheet extends ActorSheet {
     const ferimentosNivel = Number(context.system.ferimentos ?? 0);
     if (ferimentosNivel <= 0) {
       context.penaltyFerimentosLabel = "Sem ferimentos (0)";
+      context.condicaoFerimentosLabel = "Saudável";
     } else if (ferimentosNivel === 1) {
       context.penaltyFerimentosLabel = "Machucado (-1)";
+      context.condicaoFerimentosLabel = "Machucado";
     } else if (ferimentosNivel === 2) {
-      context.penaltyFerimentosLabel = "Muito ferido (-2)";
-    } else {
+      context.penaltyFerimentosLabel = "Ferido (-2)";
+      context.condicaoFerimentosLabel = "Ferido";
+    } else if (ferimentosNivel === 3) {
+      context.penaltyFerimentosLabel = "Muito ferido (-3)";
+      context.condicaoFerimentosLabel = "Muito ferido";
+    } else if (ferimentosNivel === 4) {
       context.penaltyFerimentosLabel = "Gravemente ferido (-3)";
+      context.condicaoFerimentosLabel = "Gravemente ferido";
+    } else {
+      context.penaltyFerimentosLabel = "Morrendo (-3)";
+      context.condicaoFerimentosLabel = "Morrendo";
     }
     if (context.system.fadiga <= 0) {
       context.penaltyFadigaLabel = "Sem fadiga (0)";
@@ -396,7 +437,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     } else {
       context.penaltyFadigaLabel = "Inconsciente (-4)";
     }
-    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 4;
+    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 5;
+    context.condicaoAtual = context.inconsciente ? "Morrendo" : context.condicaoFerimentosLabel;
+    context.condicaoFerimentosResumo = context.penaltyFerimentosLabel;
+    context.condicaoFadigaResumo = context.penaltyFadigaLabel;
+    context.conditionStateStyle = getConditionVisualStyle(context.system.ferimentos, context.system.fadiga);
+    context.conditionStateClass = context.system.ferimentos > 0 || context.inconsciente ? "is-active" : "";
     context.advancementOptions = ADVANCEMENT_OPTIONS;
 
     const advances = Number(context.system.avancosTotais ?? 0);
@@ -547,14 +593,18 @@ class TWBVPersonagemSheet extends ActorSheet {
       max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
     };
 
-    this.actor.system.ferimentos = Math.max(0, Math.min(4, Number(this.actor.system.ferimentos ?? 0)));
+    this.actor.system.ferimentos = Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)));
     this.actor.system.fadiga = Math.max(0, Math.min(4, Number(this.actor.system.fadiga ?? 0)));
     this.actor.system.tamanho = Number.isFinite(Number(this.actor.system.tamanho)) ? Number(this.actor.system.tamanho) : 0;
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
-    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 4;
-    if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Inconsciente")) this.actor.system.condicoes.push("Inconsciente");
-    if (!shouldBeUnconscious) this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => c !== "Inconsciente");
+    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 5;
+    const woundConditionByLevel = ["", "Machucado", "Ferido", "Muito ferido", "Gravemente ferido", "Morrendo"];
+    const woundCondition = woundConditionByLevel[Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)))];
+    const woundStates = new Set(woundConditionByLevel.filter(Boolean));
+    this.actor.system.condicoes = this.actor.system.condicoes.filter((c) => !woundStates.has(c));
+    if (woundCondition) this.actor.system.condicoes.push(woundCondition);
+    if (shouldBeUnconscious && !this.actor.system.condicoes.includes("Morrendo")) this.actor.system.condicoes.push("Morrendo");
 
     this.actor.system.defesa = this.actor.system.defesa ?? {};
     const apararBase = 2 + getSkillHalfForDefense(this.actor.system, "LUTAR");
@@ -1637,7 +1687,7 @@ function twbvInjectCustomDiceTray(root) {
             <div class="twbv-roll-card__die">${despertoFormula}</div>
           </div>
         </div>
-        <footer class="twbv-roll-chat__total">Resultado: <strong>${total}</strong></footer>
+        <footer class="twbv-roll-chat__total">Resultado: <strong title="Dados comuns: ${commonFormula || "—"} | Desperto: ${despertoFormula} | Modificador: ${state.mod >= 0 ? "+" : ""}${state.mod}">${total}</strong></footer>
         <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Adicionar dado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;

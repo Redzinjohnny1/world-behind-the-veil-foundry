@@ -10,8 +10,7 @@
       </section>
 
       <section class="twbv-header-identity twbv-panel twbv-ornate">
-        <h2>Identidade</h2>
-        <label>Nome
+                <label>Codinome
           <input type="text" value="{{actor.name}}" disabled />
         </label>
         <label>Conceito
@@ -132,7 +131,6 @@
                   </div>
                   <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="5" data-adjust="1" aria-label="Aumentar ferimentos">+</button>
                 </div>
-                <p class="twbv-condition-penalty">{{penaltyFerimentosLabel}}</p>
               </article>
 
               <article class="twbv-condition-meter twbv-condition-meter--fatigue fadiga-nivel-{{system.fadiga}}">
@@ -145,12 +143,13 @@
                   </div>
                   <button type="button" class="twbv-condition-adjust" data-path="system.fadiga" data-min="0" data-max="4" data-adjust="1" aria-label="Aumentar fadiga">+</button>
                 </div>
-                <p class="twbv-condition-penalty">{{penaltyFadigaLabel}}</p>
               </article>
 
-              <article class="twbv-condition-state {{#if inconsciente}}is-active{{/if}}">
-                <h3>Condição</h3>
-                <p>{{#if inconsciente}}Inconsciente{{else}}Consciente{{/if}}</p>
+              <article class="twbv-condition-state ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}">
+                <h3>Status Atual</h3>
+                <p>{{condicaoAtual}}</p>
+                <p class="twbv-condition-state__detail">{{condicaoFerimentosResumo}}</p>
+                <p class="twbv-condition-state__detail">{{condicaoFadigaResumo}}</p>
               </article>
             </div>
           </section>

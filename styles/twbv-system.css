@@ -581,6 +581,9 @@
 .twbv-item-card-layout { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; }
 .twbv-item-card-icon { width: 32px; height: 32px; border-radius: 8px; background: radial-gradient(circle at 30% 30%, rgba(247, 224, 161, 0.28), rgba(62, 32, 102, 0.9)); color: #f5dfac; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(217, 183, 117, 0.5); }
 .twbv-item-card-content .twbv-item-effect { margin-top: 6px; color: #e9d4a2; }
+.twbv-item-card--collapsible .twbv-item-card-head--toggle { cursor: pointer; }
+.twbv-item-card--collapsible.is-collapsed .twbv-item-card-meta,
+.twbv-item-card--collapsible.is-collapsed .twbv-item-effect { display: none; }
 .twbv-active-bonuses {
   margin-top: 8px;
   border: 1px solid rgba(121, 196, 255, 0.45);
@@ -1835,6 +1838,23 @@
 .wbtv-custom-item-dialog .window-header { background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)); border-bottom: 1px solid rgba(217, 183, 117, 0.68); color: #f7e7be; }
 .wbtv-custom-item-dialog .window-content { background: radial-gradient(circle at top, rgba(52, 30, 90, 0.95), rgba(9, 7, 17, 0.98)); }
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
+.twbv-custom-item-dialog--sheetlike {
+  grid-template-columns: 78px 1fr;
+  gap: 10px 12px;
+}
+.twbv-custom-item-iconbox {
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
+  border: 1px solid rgba(217, 183, 117, 0.65);
+  background: radial-gradient(circle at 35% 25%, rgba(247, 224, 161, 0.24), rgba(62, 32, 102, 0.92));
+  display: grid;
+  place-items: center;
+  color: #f5dfac;
+  font-size: 2rem;
+}
+.twbv-custom-item-main { display: grid; gap: 8px; }
+.twbv-custom-item-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .twbv-custom-item-dialog label { display: block; margin-bottom: 4px; color: #f2dfb0; font-weight: 600; }
 .twbv-custom-item-dialog input, .twbv-custom-item-dialog select, .twbv-custom-item-dialog textarea { width: 100%; border-radius: 8px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 7px 9px; }
 .twbv-custom-item-dialog input:focus, .twbv-custom-item-dialog select:focus, .twbv-custom-item-dialog textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }

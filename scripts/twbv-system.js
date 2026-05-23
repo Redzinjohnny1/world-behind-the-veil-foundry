@@ -1261,6 +1261,11 @@ class TWBVPersonagemSheet extends ActorSheet {
       await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
     });
 
+    html.find(".twbv-item-card-head--toggle").on("click", (event) => {
+      if (event.target.closest(".twbv-item-card-actions")) return;
+      event.currentTarget.closest(".twbv-item-card--collapsible")?.classList.toggle("is-collapsed");
+    });
+
     html.find(".item-create").on("click", this._onItemCreate?.bind(this) ?? (async()=>{}));
     html.find(".item-edit").on("click", (e)=>{e.preventDefault(); const i=this.actor.items.get(e.currentTarget.closest(".item")?.dataset.itemId); if(i) i.sheet.render(true);});
     html.find(".item-delete").on("click", async (e)=>{e.preventDefault(); const id=e.currentTarget.closest(".item")?.dataset.itemId; if(id) await this.actor.deleteEmbeddedDocuments("Item",[id]);});
@@ -1307,11 +1312,49 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _onItemCreate(event){event.preventDefault(); const type=event.currentTarget.dataset.type; const itemData={name:type==='weapon'?'Nova Arma':'Novo Consumível', type, system:type==='weapon'?this._buildWeaponDefaults():this._buildConsumableDefaults()}; await this.actor.createEmbeddedDocuments('Item',[itemData]);}
 
   _buildCustomItemDialogContent(type, itemData = {}) {
+    if (["vantagem", "habilidadeEspecial"].includes(type)) {
+      const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
+      const effectsMarkup = effects.length
+        ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
+        : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
+      return `
+      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
+        <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
+        <div class="twbv-custom-item-main">
+          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
+            <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+            <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
+          </div>
+          <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
+            <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+            <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
+            <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+          </nav>
+          <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
+            <div class="form-group"><label>Descrição</label><textarea name="description" rows="7">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+          </section>
+          <section class="twbv-custom-tab-pane" data-tab="propriedades">
+            <div class="twbv-property-checkboxes">
+              <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
+              <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
+            </div>
+          </section>
+          <section class="twbv-custom-tab-pane" data-tab="efeitos">
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+            <div class="twbv-effects-list">${effectsMarkup}</div>
+          </section>
+        </div>
+      </form>`;
+    }
+
     const fieldsByType = {
       vantagem: `
-        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
-        <div class="form-group"><label>Requisitos</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>`,
-      habilidadeEspecial: `<div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+      habilidadeEspecial: `
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
       complicacao: `
         <div class="form-group">
           <label>Severidade</label>
@@ -1339,8 +1382,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
         </nav>
         <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
-          <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
+          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
           ${fieldsByType[type] ?? ""}
           <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
         </section>
@@ -1427,7 +1469,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
-      habilidadeEspecial: { title: "Nova Habilidade Especial", severity: "", tierLabel: "" },
+      habilidadeEspecial: { title: "Nova Habilidade", severity: "", tierLabel: "" },
       complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
     };
     const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
@@ -1534,7 +1576,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
-    }, { width: 520, height: "auto" });
+    }, { width: 760, height: "auto" });
     dialog.render(true);
   }
 }

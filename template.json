@@ -56,6 +56,12 @@
         "fadiga": 0,
         "tamanho": 0,
         "condicoes": [],
+        "condicao1": false,
+        "condicao2": false,
+        "condicao3": false,
+        "condicao4": false,
+        "condicao5": false,
+        "condicao6": false,
         "defesa": {
           "aparar": 0,
           "resistencia": 0,

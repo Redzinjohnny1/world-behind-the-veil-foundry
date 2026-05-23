@@ -958,7 +958,7 @@
 .twbv-condition-penalty { margin: 6px 0 0; font-size: .72rem; color: #ffc6c6; text-align:center; }
 .twbv-condition-state p { margin:0; font-size:.85rem; color:#ffd8d8; text-align:center; }
 .twbv-condition-state__detail { margin-top: 2px !important; font-size:.7rem !important; color:#ffcdcd !important; opacity:.95; line-height:1.15; }
-.twbv-condition-state.is-active { border-color: var(--twbv-status-edge, rgba(255, 90, 90, 0.95)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 55%, transparent), inset 0 0 26px var(--twbv-status-glow, rgba(255, 78, 78, 0.42)); background-image: linear-gradient(180deg, color-mix(in srgb, var(--twbv-status-mid, rgba(75, 7, 12, 0.92)) 82%, transparent), color-mix(in srgb, var(--twbv-status-deep, rgba(24, 7, 10, 0.97)) 90%, transparent)), url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif"); background-size: cover, cover; background-position: center, center; background-repeat: no-repeat, no-repeat; }
+.twbv-condition-state.is-active { border-color: var(--twbv-status-edge, rgba(255, 90, 90, 0.95)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 55%, transparent), inset 0 0 26px var(--twbv-status-glow, rgba(255, 78, 78, 0.42)); background-image: linear-gradient(180deg, color-mix(in srgb, var(--twbv-status-mid, rgba(75, 7, 12, 0.92)) 82%, transparent), color-mix(in srgb, var(--twbv-status-deep, rgba(24, 7, 10, 0.97)) 90%, transparent)); }
 
 .twbv-condition-state { box-shadow: 0 0 18px rgba(255, 78, 78, 0.26); }
 .ferimentos-nivel-0.twbv-condition-state {

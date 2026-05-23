@@ -282,7 +282,10 @@ function renderDualDieResult({
     const winnerRolls = winnerIsSkill ? rollAData.rolls : rollBData.rolls;
     const winnerDie = winnerIsSkill ? safeDieA : safeDieB;
     const winnerBonus = winnerIsSkill ? skillBonus : effectiveBonusB;
-    const winnerExpr = `${winnerLabel} ${formatVeuChainText(winnerDie, winnerRolls)}${winnerBonus ? `+Bonus(${winnerBonus})` : ""}=${winnerIsSkill ? skillTotal : awakenedTotal}`;
+    const winnerSegments = [`${winnerLabel} ${formatVeuChainText(winnerDie, winnerRolls)}`];
+    if (winnerBonus) winnerSegments.push(`+Bonus(${winnerBonus})`);
+    winnerSegments.push(`= ${winnerIsSkill ? skillTotal : awakenedTotal}`);
+    const winnerExpr = winnerSegments.join(" | ");
     const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
     const total = baseTotal + appliedModifier;
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {

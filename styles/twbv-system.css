@@ -311,6 +311,10 @@
   border: 1px solid rgba(120, 92, 220, 0.32);
   border-radius: 8px;
   padding: 6px;
+  min-height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   text-align: center;
   background: linear-gradient(180deg, rgba(5, 8, 18, 0.9), rgba(4, 7, 15, 0.95));

@@ -25,9 +25,12 @@
         <label>Avanço
           <input type="number" value="{{system.avancosTotais}}" disabled />
         </label>
-        <label class="twbv-header-status ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}">Status Atual
-          <input type="text" value="{{condicaoAtual}}" disabled />
-        </label>
+        <div class="twbv-header-status-row">
+          <label class="twbv-header-status">Status Atual
+            <input type="text" value="{{condicaoAtual}}" disabled />
+          </label>
+          <div class="twbv-header-status-gif ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}" aria-hidden="true"></div>
+        </div>
       </section>
 
       <section class="twbv-header-resources">

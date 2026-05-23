@@ -311,6 +311,11 @@
   border: 1px solid rgba(120, 92, 220, 0.32);
   border-radius: 8px;
   padding: 6px;
+  box-sizing: border-box;
+  height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   text-align: center;
   background: linear-gradient(180deg, rgba(5, 8, 18, 0.9), rgba(4, 7, 15, 0.95));
@@ -344,7 +349,8 @@
   background-repeat: no-repeat;
   background-color: rgba(4, 10, 22, 0.92);
   overflow: hidden;
-  min-height: 54px;
+  box-sizing: border-box;
+  height: 54px;
 }
 .twbv-header-identity { display:flex; flex-direction:column; justify-content:center; }
 .twbv-header-identity h2 { margin: 0 0 8px; }

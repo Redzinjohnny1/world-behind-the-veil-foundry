@@ -341,9 +341,17 @@ function buildRollAdjustSection(baseTotal, chain = []) {
     const delta = Number(entry.delta ?? 0);
     const rollParts = Array.isArray(entry.rollParts) ? entry.rollParts : [Number(entry.roll ?? 0)];
     const dieText = die > 0 ? formatVeuChainText(die, rollParts) : "";
-    const detail = `Resultado Anterior ${running}${dieText ? `+${dieText}` : ""}${flat ? `${flat > 0 ? '+' : ''}${flat}` : ""}=${running + delta}`;
+    const detailParts = [`Resultado Anterior ${running}`];
+    if (dieText) {
+      const [firstDiePart, ...veuParts] = String(dieText).split("+VÉU ");
+      if (firstDiePart) detailParts.push(`+ ${firstDiePart}`);
+      for (const veuPart of veuParts) detailParts.push(`+ VÉU ${veuPart}`);
+    }
+    if (flat) detailParts.push(`${flat > 0 ? "+" : ""}${flat}`);
+    detailParts.push(`= ${running + delta}`);
+    const detail = detailParts.join(" | ");
     running += delta;
-    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${dieText || "Sem dado"} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle-wrap"><div class="twbv-adjust-circle" title="${escapeHtmlAttr(detail.split("+").join(" | "))}">${running}</div><button type="button" class="twbv-adjust-remove" data-adjust-index="${index}" title="Remover este ajuste">🗑️</button></div>`;
+    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${dieText || "Sem dado"} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle-wrap"><div class="twbv-adjust-circle" title="${escapeHtmlAttr(detail)}">${running}</div><button type="button" class="twbv-adjust-remove" data-adjust-index="${index}" title="Remover este ajuste">🗑️</button></div>`;
   }).join("");
   return `<section class="twbv-adjust-stack"><div class="twbv-adjust-results">${rows || ""}</div></section>`;
 }

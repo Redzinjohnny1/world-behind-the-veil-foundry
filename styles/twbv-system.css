@@ -1916,6 +1916,20 @@
 }
 .window-app.wbtv-custom-item-dialog .window-content,
 .window-app.wbtv-vantagem-dialog-window .window-content { color: #f7e8c1; }
+
+.window-app.wbtv-vantagem-dialog-window,
+.window-app.wbtv-vantagem-dialog-window .app,
+.window-app.wbtv-vantagem-dialog-window .window-content,
+.window-app.wbtv-vantagem-dialog-window .dialog-content,
+.window-app.wbtv-vantagem-dialog-window .window-resizable-handle,
+.window-app.wbtv-vantagem-dialog-window footer,
+.window-app.wbtv-vantagem-dialog-window > footer.dialog-buttons,
+.window-app.wbtv-vantagem-dialog-window .window-content + footer.dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .window-content + footer.dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) > footer.dialog-buttons {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+}
+
 .dialog .twbv-custom-item-dialog {
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(20, 12, 34, 0.98), rgba(8, 7, 18, 0.99));
   border: 1px solid rgba(217, 183, 117, 0.62);
@@ -1976,6 +1990,27 @@
 }
 .window-app.wbtv-custom-item-dialog .dialog-buttons .dialog-button {
   min-height: 42px;
+}
+
+
+.window-app.wbtv-vantagem-dialog-window .dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+  padding: 10px !important;
+  margin: 0 !important;
+}
+
+.window-app.wbtv-vantagem-dialog-window .dialog-buttons button,
+.window-app.wbtv-vantagem-dialog-window .dialog-buttons .dialog-button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons .dialog-button {
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  color: #f8edcc !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  box-shadow: inset 0 0 0 1px rgba(236, 208, 146, 0.1);
 }
 .twbv-custom-tabs { display: flex; gap: 8px; margin-bottom: 4px; }
 .twbv-custom-tabs--sheet { margin-top: 2px; }
@@ -2305,3 +2340,21 @@
 .twbv-adjust-circle-wrap{display:flex;align-items:center;justify-content:center;gap:8px}
 .twbv-adjust-remove{width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;border:1px solid rgba(217,183,117,.6);background:rgba(36,20,62,.9);color:#ffd6d6;cursor:pointer}
 .twbv-adjust-remove:hover,.twbv-adjust-remove:focus-visible{background:rgba(78,32,54,.95);border-color:rgba(255,132,132,.8);box-shadow:0 0 10px rgba(255,99,132,.35)}
+
+/* Hard override: vantagem footer and action buttons */
+.window-app .twbv-vantagem-footer {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+  padding: 10px !important;
+  margin: 0 !important;
+}
+
+.window-app .twbv-vantagem-footer .twbv-vantagem-action,
+.window-app .twbv-vantagem-action {
+  min-height: 42px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  color: #f8edcc !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  box-shadow: inset 0 0 0 1px rgba(236, 208, 146, 0.1) !important;
+}

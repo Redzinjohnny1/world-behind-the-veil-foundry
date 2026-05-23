@@ -295,6 +295,21 @@
   align-items: stretch;
 }
 .twbv-header-portrait,
+
+.twbv-header-status-gif.ferimentos-nivel-0 {
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/3/3f/Fine_%28Green%29_RE3.gif/revision/latest?cb=20250910200209");
+}
+.twbv-header-status-gif.ferimentos-nivel-1 {
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/e/e5/Fine_%28Light_Green%29_RE3.gif/revision/latest?cb=20250910200438");
+}
+.twbv-header-status-gif.ferimentos-nivel-2,
+.twbv-header-status-gif.ferimentos-nivel-3 {
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/c/cd/Caution_%28Yellow%29_RE3.gif/revision/latest?cb=20250910200651");
+}
+.twbv-header-status-gif.ferimentos-nivel-4,
+.twbv-header-status-gif.ferimentos-nivel-5 {
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/a/a6/Danger_%28Red%29_RE3.gif/revision/latest?cb=20250910200817");
+}
 .twbv-header-identity {
   padding: 10px;
 }
@@ -311,11 +326,6 @@
   border: 1px solid rgba(120, 92, 220, 0.32);
   border-radius: 8px;
   padding: 6px;
-  box-sizing: border-box;
-  height: 54px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
   background: linear-gradient(180deg, rgba(5, 8, 18, 0.9), rgba(4, 7, 15, 0.95));
@@ -343,14 +353,13 @@
   margin-top: 2px;
   border-radius: 8px;
   border: 1px solid rgba(120, 92, 220, 0.32);
-  background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/3/3f/Fine_%28Green%29_RE3.gif/revision/latest?cb=20250910200209");
   background-size: 125% 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-color: rgba(4, 10, 22, 0.92);
   overflow: hidden;
-  box-sizing: border-box;
-  height: 54px;
+  min-height: 54px;
 }
 .twbv-header-identity { display:flex; flex-direction:column; justify-content:center; }
 .twbv-header-identity h2 { margin: 0 0 8px; }

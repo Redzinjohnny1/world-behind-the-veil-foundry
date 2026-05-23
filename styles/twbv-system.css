@@ -884,6 +884,8 @@
   border-radius: 10px;
   padding: 8px;
   background: linear-gradient(180deg, rgba(42, 8, 12, 0.9), rgba(19, 5, 9, 0.94));
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .fadiga-nivel-0 { border-color: rgba(214, 180, 98, 0.42); background: linear-gradient(180deg, rgba(44, 35, 12, 0.86), rgba(24, 18, 6, 0.92)); }
@@ -909,7 +911,7 @@
 .twbv-condition-penalty { margin: 6px 0 0; font-size: .72rem; color: #ffc6c6; text-align:center; }
 .twbv-condition-state p { margin:0; font-size:.85rem; color:#ffd8d8; text-align:center; }
 .twbv-condition-state__detail { margin-top: 2px !important; font-size:.7rem !important; color:#ffcdcd !important; opacity:.95; line-height:1.15; }
-.twbv-condition-state.is-active { border-color: var(--twbv-status-edge, rgba(255, 90, 90, 0.95)); box-shadow: 0 0 18px var(--twbv-status-glow, rgba(255, 78, 78, 0.42)); background: linear-gradient(180deg, var(--twbv-status-mid, rgba(75, 7, 12, 0.92)), var(--twbv-status-deep, rgba(24, 7, 10, 0.97))); }
+.twbv-condition-state.is-active { border-color: var(--twbv-status-edge, rgba(255, 90, 90, 0.95)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--twbv-status-edge, rgba(255,90,90,.95)) 55%, transparent), inset 0 0 26px var(--twbv-status-glow, rgba(255, 78, 78, 0.42)); background: linear-gradient(180deg, var(--twbv-status-mid, rgba(75, 7, 12, 0.92)), var(--twbv-status-deep, rgba(24, 7, 10, 0.97))); }
 
 .twbv-condition-state { box-shadow: 0 0 18px rgba(255, 78, 78, 0.26); }
 .ferimentos-nivel-0.twbv-condition-state {
@@ -919,37 +921,20 @@
 }
 .ferimentos-nivel-0.twbv-condition-state h3,
 .ferimentos-nivel-0.twbv-condition-state p { color: #b8ffd2; }
-.ferimentos-nivel-1.twbv-condition-state { box-shadow: 0 0 18px rgba(224, 50, 68, 0.44); }
-.ferimentos-nivel-2.twbv-condition-state { box-shadow: 0 0 22px rgba(235, 53, 72, 0.58); }
-.ferimentos-nivel-3.twbv-condition-state { box-shadow: 0 0 26px rgba(245, 43, 66, 0.72); }
-.ferimentos-nivel-4.twbv-condition-state { box-shadow: 0 0 30px rgba(255, 35, 60, 0.86); }
+.ferimentos-nivel-1.twbv-condition-state { box-shadow: inset 0 0 18px rgba(224, 50, 68, 0.30); }
+.ferimentos-nivel-2.twbv-condition-state { box-shadow: inset 0 0 20px rgba(235, 53, 72, 0.38); }
+.ferimentos-nivel-3.twbv-condition-state { box-shadow: inset 0 0 22px rgba(245, 43, 66, 0.46); }
+.ferimentos-nivel-4.twbv-condition-state { box-shadow: inset 0 0 24px rgba(255, 35, 60, 0.55); }
 .ferimentos-nivel-5.twbv-condition-state {
   border-color: rgba(255, 20, 40, 1);
-  box-shadow: 0 0 42px rgba(255, 20, 45, 0.98), 0 0 72px rgba(255, 36, 71, 0.8);
-}
-
-.twbv-condition-state { box-shadow: 0 0 18px rgba(255, 78, 78, 0.26); }
-.ferimentos-nivel-0.twbv-condition-state {
-  border-color: rgba(70, 190, 110, 0.95);
-  background: linear-gradient(180deg, rgba(10, 48, 24, 0.95), rgba(6, 28, 14, 0.97));
-  box-shadow: 0 0 20px rgba(80, 220, 130, 0.48), inset 0 0 10px rgba(36, 145, 79, 0.35);
-}
-.ferimentos-nivel-0.twbv-condition-state h3,
-.ferimentos-nivel-0.twbv-condition-state p { color: #b8ffd2; }
-.ferimentos-nivel-1.twbv-condition-state { box-shadow: 0 0 18px rgba(224, 50, 68, 0.44); }
-.ferimentos-nivel-2.twbv-condition-state { box-shadow: 0 0 22px rgba(235, 53, 72, 0.58); }
-.ferimentos-nivel-3.twbv-condition-state { box-shadow: 0 0 26px rgba(245, 43, 66, 0.72); }
-.ferimentos-nivel-4.twbv-condition-state { box-shadow: 0 0 30px rgba(255, 35, 60, 0.86); }
-.ferimentos-nivel-5.twbv-condition-state {
-  border-color: rgba(255, 20, 40, 1);
-  box-shadow: 0 0 42px rgba(255, 20, 45, 0.98), 0 0 72px rgba(255, 36, 71, 0.8);
+  box-shadow: inset 0 0 28px rgba(255, 20, 45, 0.72), inset 0 0 42px rgba(255, 36, 71, 0.42);
 }
 
 .ferimentos-nivel-1 .twbv-condition-core { box-shadow: inset 0 0 8px rgba(110, 10, 19, 0.3), 0 0 10px rgba(224, 50, 68, 0.5); }
 .ferimentos-nivel-2 .twbv-condition-core { box-shadow: inset 0 0 10px rgba(138, 7, 22, 0.36), 0 0 14px rgba(235, 53, 72, 0.62); }
 .ferimentos-nivel-3 .twbv-condition-core { box-shadow: inset 0 0 12px rgba(150, 6, 22, 0.4), 0 0 18px rgba(245, 43, 66, 0.72); animation: twbv-blood-pulse 1.2s infinite; }
 .ferimentos-nivel-4 .twbv-condition-core { box-shadow: inset 0 0 14px rgba(175, 4, 21, 0.45), 0 0 24px rgba(255, 35, 60, 0.9); animation: twbv-blood-pulse .75s infinite; }
-.ferimentos-nivel-5 .twbv-condition-core { border-color: rgba(255, 20, 40, 1); box-shadow: inset 0 0 22px rgba(220, 8, 30, 0.72), 0 0 44px rgba(255, 20, 45, 1), 0 0 72px rgba(255, 36, 71, 0.85); animation: twbv-blood-pulse .6s infinite; }
+.ferimentos-nivel-5 .twbv-condition-core { border-color: rgba(255, 20, 40, 1); box-shadow: inset 0 0 18px rgba(220, 8, 30, 0.72), 0 0 16px rgba(255, 20, 45, 0.72); animation: twbv-blood-pulse .6s infinite; }
 
 
 .ferimentos-nivel-1 { border-color: rgba(255, 95, 95, 0.52); }
@@ -960,7 +945,7 @@
 .ferimentos-nivel-3 h3, .ferimentos-nivel-3 .twbv-condition-penalty { color:#ffaaaa; text-shadow: 0 0 7px rgba(255,95,95,.55); }
 .ferimentos-nivel-4 { border-color: rgba(255, 30, 30, 0.95); background: linear-gradient(180deg, rgba(96, 4, 10, 0.99), rgba(48, 2, 6, 0.99)); box-shadow: 0 0 18px rgba(255, 25, 25, 0.45); }
 .ferimentos-nivel-4 h3, .ferimentos-nivel-4 .twbv-condition-penalty { color:#ff8e8e; text-shadow: 0 0 10px rgba(255,75,75,.75); }
-.ferimentos-nivel-5 { border-color: rgba(255, 10, 10, 1); background: linear-gradient(180deg, rgba(125, 2, 8, 1), rgba(62, 1, 5, 1)); box-shadow: 0 0 36px rgba(255, 8, 28, 0.92), 0 0 70px rgba(255, 28, 56, 0.6); }
+.ferimentos-nivel-5 { border-color: rgba(255, 10, 10, 1); background: linear-gradient(180deg, rgba(125, 2, 8, 1), rgba(62, 1, 5, 1)); box-shadow: inset 0 0 0 1px rgba(255, 28, 56, 0.5), 0 0 14px rgba(255, 8, 28, 0.45); }
 .ferimentos-nivel-5 h3, .ferimentos-nivel-5 .twbv-condition-penalty { color:#ff6e7d; text-shadow: 0 0 14px rgba(255,48,69,1); }
 
 

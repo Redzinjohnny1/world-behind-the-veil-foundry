@@ -339,7 +339,7 @@
   border-radius: 8px;
   border: 1px solid rgba(120, 92, 220, 0.32);
   background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
-  background-size: contain;
+  background-size: 125% 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-color: rgba(4, 10, 22, 0.92);

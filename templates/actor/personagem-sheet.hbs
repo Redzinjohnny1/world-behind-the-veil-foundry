@@ -151,11 +151,16 @@
                 </div>
               </article>
 
-              <article class="twbv-condition-state ferimentos-nivel-{{system.ferimentos}} {{conditionStateClass}}" style="{{conditionStateStyle}}">
-                <h3>Status Atual</h3>
-                <p>{{condicaoAtual}}</p>
-                <p class="twbv-condition-state__detail">{{condicaoFerimentosResumo}}</p>
-                <p class="twbv-condition-state__detail">{{condicaoFadigaResumo}}</p>
+              <article class="twbv-condition-checklist">
+                <h3>Condições</h3>
+                <div class="twbv-condition-checklist-grid">
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao1" {{checked system.condicao1}} />Condição 1</label>
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao2" {{checked system.condicao2}} />Condição 2</label>
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao3" {{checked system.condicao3}} />Condição 3</label>
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao4" {{checked system.condicao4}} />Condição 4</label>
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao5" {{checked system.condicao5}} />Condição 5</label>
+                  <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao6" {{checked system.condicao6}} />Condição 6</label>
+                </div>
               </article>
             </div>
           </section>

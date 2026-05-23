@@ -971,6 +971,37 @@
   overflow: hidden;
   isolation: isolate;
 }
+.twbv-condition-checklist {
+  border: 1px solid rgba(217, 183, 117, 0.45);
+  border-radius: 10px;
+  padding: 8px;
+  background: linear-gradient(180deg, rgba(20,12,34,.96), rgba(10,8,18,.98));
+}
+.twbv-condition-checklist h3 {
+  margin: 0 0 8px;
+  text-align: center;
+  font-size: .98rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #f1ddb0;
+}
+.twbv-condition-checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 10px;
+}
+.twbv-condition-check-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .92rem;
+  color: #f7eccf;
+}
+.twbv-condition-check-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #d9b775;
+}
 
 .fadiga-nivel-0 { border-color: rgba(214, 180, 98, 0.42); background: linear-gradient(180deg, rgba(44, 35, 12, 0.86), rgba(24, 18, 6, 0.92)); }
 .fadiga-nivel-0 h3, .fadiga-nivel-0 .twbv-condition-penalty { color:#f4dfab; }

@@ -202,6 +202,25 @@ async function rollVeuExtrasFromFirst(die, firstValue) {
 }
 
 
+
+function formatVeuChainText(die, rolls = []) {
+  const safeDie = Number(die);
+  const sequence = Array.isArray(rolls) ? rolls.map((value) => Number(value)) : [];
+  if (!sequence.length) return `D${safeDie}(0)`;
+  const [first, ...extras] = sequence;
+  let text = `D${safeDie}(${first})`;
+  for (const value of extras) text += `+VÉU D${safeDie}(${value})`;
+  return text;
+}
+
+function escapeHtmlAttr(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 function applyVeuToFormula(formula) {
   const text = String(formula ?? '').trim();
   if (!text) return '1d4x';
@@ -258,6 +277,15 @@ function renderDualDieResult({
     const awakenedTotal = awakenedDieResult + effectiveBonusB;
 
     const baseTotal = Math.max(skillTotal, awakenedTotal);
+    const winnerIsSkill = skillTotal >= awakenedTotal;
+    const winnerLabel = winnerIsSkill ? "PERÍCIA" : "DESPERTO";
+    const winnerRolls = winnerIsSkill ? rollAData.rolls : rollBData.rolls;
+    const winnerDie = winnerIsSkill ? safeDieA : safeDieB;
+    const winnerBonus = winnerIsSkill ? skillBonus : effectiveBonusB;
+    const winnerSegments = [`${winnerLabel} ${formatVeuChainText(winnerDie, winnerRolls)}`];
+    if (winnerBonus) winnerSegments.push(`+Bonus(${winnerBonus})`);
+    winnerSegments.push(`= ${winnerIsSkill ? skillTotal : awakenedTotal}`);
+    const winnerExpr = winnerSegments.join(" | ");
     const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
     const total = baseTotal + appliedModifier;
     const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
@@ -274,6 +302,7 @@ function renderDualDieResult({
       </div>`;
     };
     const totalLabel = `${total}`;
+    const totalHoverText = `${winnerExpr}${appliedModifier !== 0 ? ` | Modificador(${appliedModifier > 0 ? '+' : ''}${appliedModifier})=${total}` : ''}`;
 
     const modifierDetails = appliedModifier !== 0
       ? `<span class="twbv-roll-chat__modifier"> Dado ${baseTotal}${finalModifierLabel ? ` • ${finalModifierLabel}` : ` • Mod ${appliedModifier > 0 ? "+" : ""}${appliedModifier}`}</span>`
@@ -289,7 +318,7 @@ function renderDualDieResult({
           ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
           ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
-        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong>${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong title="${escapeHtmlAttr(totalHoverText)}">${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
 
@@ -306,12 +335,15 @@ function renderDualDieResult({
 
 function buildRollAdjustSection(baseTotal, chain = []) {
   let running = Number(baseTotal ?? 0);
-  const rows = chain.map((entry) => {
-    const diePart = entry.die ? `${entry.roll} (d${entry.die})` : "0";
+  const rows = chain.map((entry, index) => {
+    const die = Number(entry.die ?? 0);
     const flat = Number(entry.flat ?? 0);
     const delta = Number(entry.delta ?? 0);
+    const rollParts = Array.isArray(entry.rollParts) ? entry.rollParts : [Number(entry.roll ?? 0)];
+    const dieText = die > 0 ? formatVeuChainText(die, rollParts) : "";
+    const detail = `Resultado Anterior ${running}${dieText ? `+${dieText}` : ""}${flat ? `${flat > 0 ? '+' : ''}${flat}` : ""}=${running + delta}`;
     running += delta;
-    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${diePart} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle">${running}</div>`;
+    return `<div class="twbv-adjust-row"><span class="twbv-adjust-left">🎲 ${dieText || "Sem dado"} ${flat ? `${flat > 0 ? "+" : ""}${flat}` : ""}</span><span class="twbv-adjust-right">= ${delta > 0 ? "+" : ""}${delta}</span></div><div class="twbv-adjust-circle-wrap"><div class="twbv-adjust-circle" title="${escapeHtmlAttr(detail.split("+").join(" | "))}">${running}</div><button type="button" class="twbv-adjust-remove" data-adjust-index="${index}" title="Remover este ajuste">🗑️</button></div>`;
   }).join("");
   return `<section class="twbv-adjust-stack"><div class="twbv-adjust-results">${rows || ""}</div></section>`;
 }
@@ -321,7 +353,7 @@ async function openRollAdjustDialog(message) {
   const chain = Array.isArray(state.chain) ? state.chain : [];
   const baseTotal = Number(state.baseTotal ?? 0);
   const content = `<div class="twbv-roll-adjust-dialog"><label>Dado adicional<select name="die"><option value="">Nenhum</option><option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option></select></label><label>Bônus manual<input type="number" name="flat" value="0" step="1" /></label></div>`;
-  new Dialog({ title: "Ajustar resultado da rolagem", content, buttons:{ apply:{label:"Aplicar", callback: async (html)=>{ const root=resolveDialogRoot(html); const die=Number(root?.querySelector('select[name="die"]')?.value||0); const flat=Number(root?.querySelector('input[name="flat"]')?.value||0); let roll=0; if(die>0){ roll=Number((await new Roll(`1d${die}`).evaluate()).total ?? 0);} const delta=roll+(Number.isFinite(flat)?flat:0); chain.push({die,roll,flat,delta}); const all = message.content; const marker='<!--TWBV_ADJUST-->';
+  new Dialog({ title: "Ajustar resultado da rolagem", content, buttons:{ apply:{label:"Aplicar", callback: async (html)=>{ const root=resolveDialogRoot(html); const die=Number(root?.querySelector('select[name="die"]')?.value||0); const flat=Number(root?.querySelector('input[name="flat"]')?.value||0); let roll=0; let rollParts=[]; if(die>0){ const baseRoll = await rollSingleDie(die); await showDice3dRoll(baseRoll); roll=Number(baseRoll.total ?? 0); rollParts=[roll, ...(await rollVeuExtrasFromFirst(die, roll))]; roll = rollParts.reduce((sum, value)=> sum + Number(value ?? 0), 0);} const delta=roll+(Number.isFinite(flat)?flat:0); chain.push({die,roll,rollParts,flat,delta}); const all = message.content; const marker='<!--TWBV_ADJUST-->';
       const baseContent = state.baseContent || (all.includes(marker)?all.split(marker)[0]:all);
       const newContent = `${baseContent}${marker}${buildRollAdjustSection(baseTotal, chain)}`;
       await message.update({content:newContent, 'flags.world-behind-the-veil.rollAdjust': {baseTotal, chain, baseContent}});
@@ -1598,6 +1630,24 @@ Hooks.on("renderChatMessage", (message, html) => {
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
   root.querySelectorAll(".twbv-roll-adjust").forEach((btn)=> btn.addEventListener("click", ()=> openRollAdjustDialog(message)));
+  root.querySelectorAll(".twbv-adjust-remove").forEach((btn)=> btn.addEventListener("click", async ()=> {
+    const idx = Number(btn.dataset.adjustIndex ?? -1);
+    if (!Number.isInteger(idx) || idx < 0) return;
+    const state = foundry.utils.deepClone(message.getFlag("world-behind-the-veil", "rollAdjust") ?? {});
+    const chain = Array.isArray(state.chain) ? state.chain : [];
+    if (idx >= chain.length) return;
+    chain.splice(idx, 1);
+    const baseTotal = Number(state.baseTotal ?? 0);
+    if (!chain.length) {
+      await message.delete();
+      return;
+    }
+    const marker = '<!--TWBV_ADJUST-->';
+    const all = message.content ?? '';
+    const baseContent = state.baseContent || (all.includes(marker) ? all.split(marker)[0] : all);
+    const newContent = `${baseContent}${marker}${buildRollAdjustSection(baseTotal, chain)}`;
+    await message.update({content:newContent, 'flags.world-behind-the-veil.rollAdjust': {baseTotal, chain, baseContent}});
+  }));
 });
 
 

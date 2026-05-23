@@ -306,7 +306,9 @@
 .twbv-header-status-gif.ferimentos-nivel-3 {
   background-image: url("https://static.wikia.nocookie.net/residentevil/images/c/cd/Caution_%28Yellow%29_RE3.gif/revision/latest?cb=20250910200651");
 }
-.twbv-header-status-gif.ferimentos-nivel-4,
+.twbv-header-status-gif.ferimentos-nivel-4 {
+  background-image: url("https://static.wikia.nocookie.net/residentevil/images/a/a6/Danger_%28Red%29_RE3.gif/revision/latest?cb=20250910200817");
+}
 .twbv-header-status-gif.ferimentos-nivel-5 {
   background-image: url("https://static.wikia.nocookie.net/residentevil/images/a/a6/Danger_%28Red%29_RE3.gif/revision/latest?cb=20250910200817");
 }
@@ -349,6 +351,15 @@
   color: #b8ffd2;
 }
 .ferimentos-nivel-0.twbv-header-status input[disabled] { color: #b8ffd2; }
+
+.twbv-header-status-gif.ferimentos-nivel-2,
+.twbv-header-status-gif.ferimentos-nivel-3,
+.twbv-header-status-gif.ferimentos-nivel-4,
+.twbv-header-status-gif.ferimentos-nivel-5 {
+  background-size: contain;
+  background-position: center;
+}
+
 .twbv-header-status-gif {
   margin-top: 2px;
   border-radius: 8px;

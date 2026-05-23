@@ -1857,7 +1857,9 @@
 .window-app.wbtv-custom-item-dialog .app,
 .window-app.wbtv-custom-item-dialog .window-content,
 .window-app.wbtv-custom-item-dialog .dialog-content,
-.window-app.wbtv-custom-item-dialog .window-resizable-handle {
+.window-app.wbtv-custom-item-dialog .window-resizable-handle,
+.window-app.wbtv-custom-item-dialog footer,
+.window-app.wbtv-custom-item-dialog footer.dialog-buttons {
   background-color: #090612 !important;
 }
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
@@ -1941,6 +1943,13 @@
   border-top: 1px solid rgba(217, 183, 117, 0.42);
   margin: 0 !important;
   border-radius: 0 0 12px 12px;
+}
+.window-app.wbtv-custom-item-dialog > footer.dialog-buttons,
+.window-app.wbtv-custom-item-dialog .window-content + footer.dialog-buttons {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+  padding: 10px !important;
+  margin: 0 !important;
 }
 .window-app.wbtv-custom-item-dialog .window-content .dialog-buttons,
 .window-app.wbtv-custom-item-dialog .window-content > .dialog-buttons,

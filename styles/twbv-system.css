@@ -305,14 +305,14 @@
   border: 1px solid transparent;
   border-radius: 8px;
   padding: 6px;
-  background-image: linear-gradient(180deg, color-mix(in srgb, var(--twbv-status-mid, rgba(42, 8, 12, 0.9)) 82%, transparent), color-mix(in srgb, var(--twbv-status-deep, rgba(19, 5, 9, 0.94)) 90%, transparent)), url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
-  background-size: cover, cover;
-  background-position: center, center;
-  background-repeat: no-repeat, no-repeat;
+  background-image: url("https://cdn.dribbble.com/userupload/20308632/file/original-9e8e495e17e677f8f63ba6cd7ee8108a.gif");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow: none;
 }
 .twbv-header-status input[disabled] {
-  background: rgba(0, 0, 0, 0.08);
+  background: transparent;
   border-color: transparent;
   box-shadow: none;
 }
@@ -2063,4 +2063,3 @@
 
 .twbv-defense-box{position:relative;}
 .twbv-defense-box:hover::after{content:attr(data-tooltip);position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 8px);min-width:220px;max-width:280px;padding:8px 10px;border-radius:8px;border:1px solid rgba(217,183,117,.7);background:rgba(12,8,22,.98);color:#f5e9c9;font-size:.72rem;line-height:1.35;z-index:15;box-shadow:0 6px 16px rgba(0,0,0,.45);pointer-events:none;}
-

@@ -2681,3 +2681,18 @@
   color: #ffedc5;
 }
 .twbv-custom-item-iconbox-edit { display: none !important; }
+
+/* Botões Salvar/Cancelar do popup de vantagem = estilo idêntico ao Adicionar Perícia */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons {
+  margin-top: 10px;
+  gap: 8px;
+}
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button, input[type="button"], input[type="submit"]) {
+  border-radius: 8px !important;
+  border: 1px solid rgba(217, 183, 117, 0.72) !important;
+  color: #ffedc5 !important;
+  -webkit-text-fill-color: #ffedc5 !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
+  font-weight: 700;
+}

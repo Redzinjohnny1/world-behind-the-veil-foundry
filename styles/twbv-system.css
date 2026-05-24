@@ -617,6 +617,16 @@
 .twbv-custom-item-icon-chooser {
   display: grid;
   gap: 6px;
+  position: absolute;
+  top: 112px;
+  left: 0;
+  width: 184px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(149, 96, 224, 0.9);
+  background: linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99));
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  z-index: 12;
 }
 .twbv-icon-source {
   font-size: 0.72rem;
@@ -1922,7 +1932,7 @@
   gap: 10px 14px;
   align-items: start;
 }
-.twbv-custom-item-side { display: grid; gap: 10px; align-content: start; }
+.twbv-custom-item-side { display: grid; gap: 10px; align-content: start; position: relative; }
 .twbv-custom-item-iconbox {
   width: 104px;
   height: 104px;

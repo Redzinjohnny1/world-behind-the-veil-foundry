@@ -1399,7 +1399,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         </section>
         <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
         <section class="twbv-custom-tab-pane" data-tab="efeitos">
-          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
           <div class="twbv-effects-list">${effectsMarkup}</div>
         </section>
       </form>`;
@@ -1510,7 +1510,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
       cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
-      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
+      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : (Array.isArray(item?.system?.efeitos) ? item.system.efeitos : [])
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
 
@@ -1553,7 +1553,9 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
+          cargas: payload.system.cargas,
           charges: payload.system.charges,
+          efeitos: payload.system.efeitos,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);

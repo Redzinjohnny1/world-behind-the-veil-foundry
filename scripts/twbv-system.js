@@ -1500,6 +1500,11 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconChooser = root.querySelector(".twbv-custom-item-icon-chooser");
     const iconSourceFileBtn = root.querySelector(".twbv-icon-source-file");
     const iconSourceUrlBtn = root.querySelector(".twbv-icon-source-url");
+    const toggleIconChooser = (show) => {
+      if (!iconChooser) return;
+      if (typeof show === "boolean") iconChooser.hidden = !show;
+      else iconChooser.hidden = !iconChooser.hidden;
+    };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
@@ -1509,7 +1514,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconButton?.addEventListener("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (iconChooser) iconChooser.hidden = !iconChooser.hidden;
+      toggleIconChooser();
+    });
+    iconPreview?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleIconChooser(true);
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
@@ -1524,7 +1534,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconSourceUrlBtn?.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (iconChooser) iconChooser.hidden = true;
+      toggleIconChooser(false);
       iconInput?.focus();
     });
     iconFileInput?.addEventListener("change", () => {
@@ -1535,9 +1545,15 @@ class TWBVPersonagemSheet extends ActorSheet {
         const result = String(reader.result ?? "");
         if (iconInput) iconInput.value = result;
         syncIconPreview();
-        if (iconChooser) iconChooser.hidden = true;
+        toggleIconChooser(false);
       };
       reader.readAsDataURL(file);
+    });
+    root.addEventListener("click", (event) => {
+      if (!iconChooser || iconChooser.hidden) return;
+      const clickedInsideChooser = event.target.closest(".twbv-custom-item-icon-chooser");
+      const clickedIconButton = event.target.closest(".twbv-custom-item-iconbox-button");
+      if (!clickedInsideChooser && !clickedIconButton) toggleIconChooser(false);
     });
     syncIconPreview();
   }
@@ -1602,6 +1618,20 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _bindCustomDialogActionButtons(root, onSubmit, onCancel) {
     if (!root) return;
+    root.querySelectorAll(".twbv-custom-item-submit").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+      });
+    });
+    root.querySelectorAll(".twbv-custom-item-cancel").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      });
+    });
     root.addEventListener("click", async (event) => {
       const submitBtn = event.target.closest(".twbv-custom-item-submit");
       if (submitBtn) {

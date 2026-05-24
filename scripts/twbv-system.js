@@ -1324,7 +1324,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
         </div>
         <div class="twbv-custom-item-main">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
@@ -1393,7 +1393,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
         </nav>
         <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
           ${fieldsByType[type] ?? ""}
           <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
         </section>
@@ -1508,9 +1508,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         severity,
         isArcaneBackground,
         hasCharges,
-        cargas: charges,
         charges,
-        efeitos: effects,
         activeEffects: effects,
         active: true
       }
@@ -1545,17 +1543,17 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
     const defaults = defaultsByType[type] ?? defaultsByType.vantagem;
     const itemData = {
-      name: item?.name ?? "",
-      fonte: item?.system?.fonte ?? item?.system?.source ?? "",
-      categoria: item?.system?.categoria ?? item?.system?.category ?? "",
-      requisitos: item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
-      descricao: item?.system?.descricao ?? item?.system?.description ?? "",
-      icon: item?.system?.icon ?? item?.icon ?? "",
-      severity: item?.system?.severity ?? defaults.severity,
-      isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
-      hasCharges: Boolean(item?.system?.hasCharges),
-      cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
-      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : (Array.isArray(item?.system?.efeitos) ? item.system.efeitos : [])
+      name: item?.name ?? item?.nome ?? "",
+      fonte: item?.fonte ?? item?.source ?? item?.system?.fonte ?? item?.system?.source ?? "",
+      categoria: item?.categoria ?? item?.category ?? item?.system?.categoria ?? item?.system?.category ?? "",
+      requisitos: item?.requisitos ?? item?.requirements ?? item?.tier ?? item?.system?.requisitos ?? item?.system?.requirements ?? item?.system?.tier ?? "",
+      descricao: item?.descricao ?? item?.description ?? item?.system?.descricao ?? item?.system?.description ?? "",
+      icon: item?.icon ?? item?.system?.icon ?? "",
+      severity: item?.severity ?? item?.system?.severity ?? defaults.severity,
+      isArcaneBackground: Boolean(item?.isArcaneBackground ?? item?.system?.isArcaneBackground),
+      hasCharges: Boolean(item?.hasCharges ?? item?.system?.hasCharges),
+      cargas: item?.cargas ?? item?.charges ?? item?.system?.cargas ?? item?.system?.charges ?? "",
+      effects: Array.isArray(item?.activeEffects) ? item.activeEffects : (Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : [])
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
 
@@ -1598,9 +1596,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
-          cargas: payload.system.cargas,
           charges: payload.system.charges,
-          efeitos: payload.system.efeitos,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);
@@ -1614,7 +1610,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
 
     const dialog = new Dialog({
-      title: item ? `Editar ${item.name}` : defaults.title,
+      title: item ? `Editar ${item.name ?? item.nome ?? "Item"}` : defaults.title,
       content,
       render: (dialogApp, renderedHtml) => {
         const root = resolveDialogRoot(renderedHtml);

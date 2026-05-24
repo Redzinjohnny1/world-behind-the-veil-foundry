@@ -1556,15 +1556,17 @@ class TWBVPersonagemSheet extends ActorSheet {
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");
-        if (type === "vantagem") {
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog");
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog-window");
-          root.classList.add("wbtv-vantagem-dialog");
+        if (type === "vantagem" || type === "habilidadeEspecial") {
+          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
+          const variantWindowClass = `${variantClass}-window`;
+          dialogWindow?.classList?.add(variantClass);
+          dialogWindow?.classList?.add(variantWindowClass);
+          root.classList.add(variantClass);
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add("wbtv-vantagem-dialog");
+          formRoot?.classList?.add(variantClass);
 
           const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons, footer");
-          footer?.classList?.add("twbv-vantagem-footer");
+          footer?.classList?.add("twbv-vantagem-footer", "twbv-custom-item-footer");
           if (footer?.style?.setProperty) {
             footer.style.setProperty("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
             footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
@@ -1572,7 +1574,7 @@ class TWBVPersonagemSheet extends ActorSheet {
             footer.style.setProperty("margin", "0", "important");
           }
           footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
-            btn.classList.add("twbv-vantagem-action");
+            btn.classList.add("twbv-vantagem-action", "twbv-custom-item-action");
             if (btn?.style?.setProperty) {
               btn.style.setProperty("appearance", "none", "important");
               btn.style.setProperty("-webkit-appearance", "none", "important");

@@ -1996,7 +1996,10 @@
 
 
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons,
-.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons {
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons,
+.window-app .dialog-buttons.twbv-custom-item-footer {
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
   border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
   padding: 10px !important;
@@ -2005,8 +2008,13 @@
 
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons button,
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons .dialog-button,
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons button,
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons .dialog-button,
 .window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons button,
-.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons .dialog-button {
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons .dialog-button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons .dialog-button,
+.window-app .dialog-buttons .twbv-custom-item-action {
   min-height: 42px;
   border-radius: 10px;
   border: 1px solid rgba(149, 96, 224, 0.9) !important;

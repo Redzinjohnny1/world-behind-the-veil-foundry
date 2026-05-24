@@ -1572,6 +1572,12 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       iconButton.click();
     });
+    root.addEventListener("click", (event) => {
+      if (!iconChooser || iconChooser.hidden) return;
+      const clickedInsideChooser = event.target.closest(".twbv-custom-item-icon-chooser");
+      const clickedIconButton = event.target.closest(".twbv-custom-item-iconbox-button");
+      if (!clickedInsideChooser && !clickedIconButton) toggleIconChooser(false);
+    });
     syncIconPreview();
   }
 

@@ -1338,7 +1338,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
-            <div class="form-group"><label>Ícone (URL)</label><input type="text" name="icon" value="${itemData.icon ?? ""}" placeholder="https://..." /></div>
+            <input type="hidden" name="icon" value="${itemData.icon ?? ""}" />
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
             <button type="button" class="twbv-tab-button is-active" data-tab="destaque">Destaque</button>

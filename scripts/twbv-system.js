@@ -1487,7 +1487,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = async () => {
+    const openIconSourceDialog = () => {
       try {
         const picker = new FilePicker({
           type: "image",
@@ -1498,8 +1498,8 @@ class TWBVPersonagemSheet extends ActorSheet {
             syncIconPreview();
           }
         });
-        if (typeof picker?.browse === "function") await picker.browse();
-        else picker.render(true);
+        // render(true) abre o popup interativo do Foundry para escolher imagem.
+        picker.render(true);
       } catch (error) {
         console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
         ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");

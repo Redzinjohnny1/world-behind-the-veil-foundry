@@ -1597,6 +1597,25 @@ class TWBVPersonagemSheet extends ActorSheet {
     this._setCustomDialogValidationState(root);
   }
 
+  _bindCustomDialogActionButtons(root, onSubmit, onCancel) {
+    if (!root) return;
+    root.addEventListener("click", async (event) => {
+      const submitBtn = event.target.closest(".twbv-custom-item-submit");
+      if (submitBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+        return;
+      }
+      const cancelBtn = event.target.closest(".twbv-custom-item-cancel");
+      if (cancelBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      }
+    }, true);
+  }
+
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
@@ -1681,18 +1700,21 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
+        this._bindCustomDialogActionButtons(
+          root,
+          async () => submitItemForm(root, dialogApp),
+          async () => dialogApp.close()
+        );
 
         // Fallback explícito: garante que os botões do popup sempre funcionem
-        root.querySelector(".twbv-custom-item-submit")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          await submitItemForm(root, dialogApp);
-        });
-        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          await dialogApp.close();
-        });
+        const windowRoot = dialogApp?.element?.[0];
+        if (windowRoot && windowRoot !== root) {
+          this._bindCustomDialogActionButtons(
+            windowRoot,
+            async () => submitItemForm(root, dialogApp),
+            async () => dialogApp.close()
+          );
+        }
 
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]

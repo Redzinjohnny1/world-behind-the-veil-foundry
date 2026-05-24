@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Combatente Acrobata",
+    "type": "edge"
+  },
+  {
+    "name": "Acrobata",
+    "type": "edge"
+  },
+  {
+    "name": "Guerreiro Marcial",
+    "type": "edge"
+  },
+  {
+    "name": "Impulso",
+    "type": "edge"
+  },
+  {
+    "name": "Chi",
+    "type": "edge"
+  },
+  {
+    "name": "Contra-Ataque Aprimorado",
+    "type": "edge"
+  },
+  {
+    "name": "Esquiva Aprimorada",
+    "type": "edge"
+  },
+  {
+    "name": "Brigão",
+    "type": "edge"
+  }
+]

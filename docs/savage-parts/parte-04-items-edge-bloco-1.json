@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Artista Marcial",
+    "type": "edge"
+  },
+  {
+    "name": "Arma Predileta (Léque)",
+    "type": "edge"
+  },
+  {
+    "name": "Contra-Ataque",
+    "type": "edge"
+  },
+  {
+    "name": "Antecedente Arcano Dom",
+    "type": "edge"
+  },
+  {
+    "name": "Golpe Poderoso",
+    "type": "edge"
+  },
+  {
+    "name": "Focado",
+    "type": "edge"
+  },
+  {
+    "name": "Extremamente Focado",
+    "type": "edge"
+  },
+  {
+    "name": "Esforço Extra",
+    "type": "edge"
+  },
+  {
+    "name": "Arma Predileta Aprimorada",
+    "type": "edge"
+  }
+]

@@ -1327,7 +1327,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button file-picker" data-type="image" data-target="icon" title="Clique para configurar ícone">
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/mystery-man.svg"}" alt="Imagem do ícone" />
-            <span class="twbv-custom-item-icon-placeholder">Imagem</span>
+            <span class="twbv-custom-item-icon-placeholder">Imagem</span><input type="file" class="twbv-custom-item-file-input" accept="image/*" aria-label="Escolher imagem do ícone" />
           </button>
         </div>
         <div class="twbv-custom-item-main">
@@ -1492,24 +1492,14 @@ class TWBVPersonagemSheet extends ActorSheet {
     localImageInput.style.display = "none";
     root.appendChild(localImageInput);
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
-    const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = () => {
-      try {
-        localImageInput.value = "";
-        if (typeof localImageInput.showPicker === "function") localImageInput.showPicker();
-        else localImageInput.click();
-      } catch (error) {
-        console.error("TWBV | Falha ao abrir seletor local de imagem", error);
-        ui.notifications?.error("Não foi possível abrir o seletor de imagem.");
-      }
-    };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
       if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
 
-    localImageInput.addEventListener("change", () => {
+    const localImageInput = root.querySelector(".twbv-custom-item-file-input");
+    localImageInput?.addEventListener("change", () => {
       const file = localImageInput.files?.[0];
       if (!file) return;
       const reader = new FileReader();
@@ -1521,23 +1511,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       };
       reader.readAsDataURL(file);
     });
+
     iconInput?.addEventListener("input", syncIconPreview);
-    const triggerIconPicker = (event) => {
-      event?.preventDefault?.();
-      event?.stopPropagation?.();
-      openIconSourceDialog();
-    };
-    iconButton?.addEventListener("click", triggerIconPicker);
-    iconPreview?.addEventListener("click", triggerIconPicker);
-    root.addEventListener("click", (event) => {
-      const target = event.target?.closest?.(".twbv-custom-item-iconbox-button, .twbv-custom-item-icon-preview, .twbv-custom-item-icon-placeholder");
-      if (!target) return;
-      triggerIconPicker(event);
-    });
-    iconButton?.addEventListener("keydown", (event) => {
-      if (!["Enter", " "].includes(event.key)) return;
-      triggerIconPicker(event);
-    });
     syncIconPreview();
   }
 

@@ -2707,3 +2707,14 @@
   position: relative;
   z-index: 80;
 }
+
+/* input de arquivo sobre o quadrado da imagem (clique nativo confiável) */
+.twbv-custom-item-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 90;
+}

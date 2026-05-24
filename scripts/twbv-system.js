@@ -1556,33 +1556,16 @@ class TWBVPersonagemSheet extends ActorSheet {
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");
-        if (type === "vantagem") {
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog");
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog-window");
-          root.classList.add("wbtv-vantagem-dialog");
+        if (type === "vantagem" || type === "habilidadeEspecial") {
+          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
+          const variantWindowClass = `${variantClass}-window`;
+          dialogWindow?.classList?.add(variantClass);
+          dialogWindow?.classList?.add(variantWindowClass);
+          root.classList.add(variantClass);
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add("wbtv-vantagem-dialog");
+          formRoot?.classList?.add(variantClass);
 
-          const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons, footer");
-          footer?.classList?.add("twbv-vantagem-footer");
-          if (footer?.style?.setProperty) {
-            footer.style.setProperty("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
-            footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
-            footer.style.setProperty("padding", "10px", "important");
-            footer.style.setProperty("margin", "0", "important");
-          }
-          footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
-            btn.classList.add("twbv-vantagem-action");
-            if (btn?.style?.setProperty) {
-              btn.style.setProperty("appearance", "none", "important");
-              btn.style.setProperty("-webkit-appearance", "none", "important");
-              btn.style.setProperty("background", "linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98))", "important");
-              btn.style.setProperty("color", "#f8edcc", "important");
-              btn.style.setProperty("border", "1px solid rgba(149, 96, 224, 0.9)", "important");
-              btn.style.setProperty("border-radius", "10px", "important");
-              btn.style.setProperty("min-height", "42px", "important");
-            }
-          });
+          applyCustomItemDialogTheme(dialogWindow);
         }
       },
       buttons: {
@@ -1604,6 +1587,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       default: "save",
       close: () => {
         const root = dialog.element?.[0];
+        root?.__twbvThemeObserver?.disconnect?.();
+        if (root) delete root.__twbvThemeObserver;
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
@@ -1613,6 +1598,54 @@ class TWBVPersonagemSheet extends ActorSheet {
 }
 
 
+
+
+function applyCustomItemDialogTheme(dialogWindow) {
+  const apply = () => {
+    const root = dialogWindow ?? document;
+    const appRoot = dialogWindow?.closest?.(".window-app") ?? dialogWindow;
+    const footerCandidates = new Set([
+      ...(root?.querySelectorAll?.("footer.dialog-buttons, .window-content + footer.dialog-buttons, .window-content + footer, .dialog-buttons") ?? []),
+      ...(appRoot?.querySelectorAll?.("footer.dialog-buttons, .window-content + footer.dialog-buttons, .window-content + footer, .dialog-buttons") ?? [])
+    ]);
+
+    appRoot?.style?.setProperty?.("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
+
+    footerCandidates.forEach((footer) => {
+      footer?.classList?.add("twbv-vantagem-footer", "twbv-custom-item-footer");
+      if (footer?.style?.setProperty) {
+        footer.style.setProperty("background-color", "#090612", "important");
+        footer.style.setProperty("background-image", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
+        footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
+        footer.style.setProperty("padding", "10px", "important");
+        footer.style.setProperty("margin", "0", "important");
+      }
+      footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
+        btn.classList.add("twbv-vantagem-action", "twbv-custom-item-action");
+        if (btn?.style?.setProperty) {
+          btn.style.setProperty("appearance", "none", "important");
+          btn.style.setProperty("-webkit-appearance", "none", "important");
+          btn.style.setProperty("background", "linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98))", "important");
+          btn.style.setProperty("color", "#f8edcc", "important");
+          btn.style.setProperty("border", "1px solid rgba(149, 96, 224, 0.9)", "important");
+          btn.style.setProperty("border-radius", "10px", "important");
+          btn.style.setProperty("min-height", "42px", "important");
+        }
+      });
+    });
+  };
+
+  apply();
+  requestAnimationFrame(apply);
+  setTimeout(apply, 0);
+  setTimeout(apply, 60);
+
+  if (!dialogWindow) return;
+  const obs = new MutationObserver(() => apply());
+  obs.observe(dialogWindow, { childList: true, subtree: true });
+  dialogWindow.__twbvThemeObserver?.disconnect?.();
+  dialogWindow.__twbvThemeObserver = obs;
+}
 
 function twbvApplyRollAdjustments(root) {
   const card = root?.querySelector?.('.twbv-roll-chat');

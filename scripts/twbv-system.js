@@ -1361,10 +1361,6 @@ class TWBVPersonagemSheet extends ActorSheet {
             <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
-          <div class="twbv-custom-item-actions">
-            <button type="submit" class="twbv-custom-item-submit">Salvar</button>
-            <button type="button" class="twbv-custom-item-cancel" data-action="cancel">Cancelar</button>
-          </div>
         </div>
       </form>`;
     }

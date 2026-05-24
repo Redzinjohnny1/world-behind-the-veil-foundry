@@ -1485,6 +1485,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     const iconInput = root.querySelector('input[name="icon"]');
+
+    const localImageInput = document.createElement("input");
+    localImageInput.type = "file";
+    localImageInput.accept = "image/*";
+    localImageInput.style.display = "none";
+    root.appendChild(localImageInput);
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();

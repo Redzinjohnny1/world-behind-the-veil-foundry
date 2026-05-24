@@ -552,7 +552,6 @@
 
 .twbv-item-create--vantagens,
 .twbv-item-create--habilidades {
-  grid-column: 3;
   justify-self: end;
   width: auto;
   min-width: 0;
@@ -560,6 +559,14 @@
   font-size: 0.68rem;
   margin-left: 0;
   white-space: nowrap;
+}
+.twbv-item-create-actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 
@@ -584,6 +591,27 @@
 .twbv-item-card--collapsible .twbv-item-card-head--toggle { cursor: pointer; }
 .twbv-item-card--collapsible.is-collapsed .twbv-item-card-meta,
 .twbv-item-card--collapsible.is-collapsed .twbv-item-effect { display: none; }
+
+.twbv-custom-item-iconbox-button {
+  border: 1px solid rgba(217, 183, 117, 0.5);
+  padding: 0;
+  background: linear-gradient(160deg, rgba(112, 76, 169, 0.8), rgba(56, 31, 93, 0.95));
+  position: relative;
+  overflow: hidden;
+}
+.twbv-custom-item-icon-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.twbv-custom-item-iconbox-edit {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  color: #f5e6bf;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
+}
 .twbv-active-bonuses {
   margin-top: 8px;
   border: 1px solid rgba(121, 196, 255, 0.45);

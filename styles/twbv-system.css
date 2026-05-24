@@ -1858,6 +1858,13 @@
 .window-app.wbtv-custom-item-dialog,
 .window-app.wbtv-custom-item-dialog .app,
 .window-app.wbtv-custom-item-dialog .window-content,
+.window-app.wbtv-custom-item-dialog .dialog-content {
+  border-color: rgba(217, 183, 117, 0.82) !important;
+  outline: none !important;
+}
+.window-app.wbtv-custom-item-dialog,
+.window-app.wbtv-custom-item-dialog .app,
+.window-app.wbtv-custom-item-dialog .window-content,
 .window-app.wbtv-custom-item-dialog .dialog-content,
 .window-app.wbtv-custom-item-dialog .window-resizable-handle,
 .window-app.wbtv-custom-item-dialog footer,
@@ -1996,7 +2003,10 @@
 
 
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons,
-.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons {
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons,
+.window-app .dialog-buttons.twbv-custom-item-footer {
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
   border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
   padding: 10px !important;
@@ -2005,8 +2015,13 @@
 
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons button,
 .window-app.wbtv-vantagem-dialog-window .dialog-buttons .dialog-button,
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons button,
+.window-app.wbtv-habilidade-dialog-window .dialog-buttons .dialog-button,
 .window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons button,
-.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons .dialog-button {
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) .dialog-buttons .dialog-button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons button,
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-habilidade-dialog) .dialog-buttons .dialog-button,
+.window-app .dialog-buttons .twbv-custom-item-action {
   min-height: 42px;
   border-radius: 10px;
   border: 1px solid rgba(149, 96, 224, 0.9) !important;
@@ -2413,4 +2428,44 @@
   color: #f8edcc !important;
   border: 1px solid rgba(149, 96, 224, 0.9) !important;
   border-radius: 10px !important;
+}
+
+
+/* Ensure themed action bar/buttons for custom vantagem/habilidade dialogs */
+.window-app.wbtv-vantagem-dialog-window :is(footer, .dialog-buttons),
+.window-app.wbtv-habilidade-dialog :is(footer, .dialog-buttons),
+.window-app.wbtv-add-skill-dialog :is(footer, .dialog-buttons),
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) :is(footer, .dialog-buttons) {
+  background-color: #090612 !important;
+  background-image: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+}
+
+.window-app.wbtv-vantagem-dialog-window :is(footer, .dialog-buttons) :is(button, .dialog-button, input[type="button"], input[type="submit"]),
+.window-app.wbtv-habilidade-dialog :is(footer, .dialog-buttons) :is(button, .dialog-button, input[type="button"], input[type="submit"]),
+.window-app.wbtv-add-skill-dialog :is(footer, .dialog-buttons) :is(button, .dialog-button, input[type="button"], input[type="submit"]),
+.window-app.dialog:has(.twbv-custom-item-dialog.wbtv-vantagem-dialog) :is(footer, .dialog-buttons) :is(button, .dialog-button, input[type="button"], input[type="submit"]) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  color: #f8edcc !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  border-radius: 10px !important;
+}
+
+
+.twbv-custom-item-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(217, 183, 117, 0.42);
+}
+.twbv-custom-item-actions button {
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  color: #f8edcc !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
 }

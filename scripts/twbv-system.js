@@ -1329,11 +1329,6 @@ class TWBVPersonagemSheet extends ActorSheet {
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
             <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
           </button>
-          <div class="twbv-custom-item-icon-chooser" hidden>
-            <button type="button" class="twbv-icon-source twbv-icon-source-file"><i class="fas fa-folder-open"></i> Procurar no PC</button>
-            <button type="button" class="twbv-icon-source twbv-icon-source-url"><i class="fas fa-link"></i> Usar URL</button>
-          </div>
-          <input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />
         </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
@@ -1496,14 +1491,65 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const iconFileInput = root.querySelector(".twbv-custom-item-icon-file");
-    const iconChooser = root.querySelector(".twbv-custom-item-icon-chooser");
-    const iconSourceFileBtn = root.querySelector(".twbv-icon-source-file");
-    const iconSourceUrlBtn = root.querySelector(".twbv-icon-source-url");
-    const toggleIconChooser = (show) => {
-      if (!iconChooser) return;
-      if (typeof show === "boolean") iconChooser.hidden = !show;
-      else iconChooser.hidden = !iconChooser.hidden;
+    const openIconSourceDialog = () => {
+      const pickFromFiles = () => {
+        try {
+          const picker = new FilePicker({
+            type: "image",
+            current: String(iconInput?.value ?? "").trim() || "icons/",
+            callback: (selectedPath) => {
+              if (!iconInput) return;
+              iconInput.value = String(selectedPath ?? "").trim();
+              syncIconPreview();
+            }
+          });
+          picker.render(true);
+        } catch (error) {
+          console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
+          ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
+        }
+      };
+      const openUrlDialog = () => {
+        new Dialog({
+          title: "Definir URL do Ícone",
+          content: `
+            <form class="twbv-icon-url-dialog">
+              <div class="form-group">
+                <label>URL da imagem</label>
+                <input type="text" name="icon-url" value="${String(iconInput?.value ?? "").trim()}" placeholder="https://..." />
+              </div>
+            </form>`,
+          buttons: {
+            save: {
+              label: "Aplicar",
+              callback: (html) => {
+                const rootEl = resolveDialogRoot(html);
+                const value = String(rootEl?.querySelector('input[name="icon-url"]')?.value ?? "").trim();
+                if (iconInput) iconInput.value = value;
+                syncIconPreview();
+              }
+            },
+            cancel: { label: "Cancelar" }
+          },
+          default: "save"
+        }).render(true);
+      };
+      new Dialog({
+        title: "Configurar Ícone",
+        content: `<p>Escolha a origem da imagem do ícone:</p>`,
+        buttons: {
+          file: {
+            label: '<i class="fas fa-folder-open"></i> Procurar Arquivo',
+            callback: pickFromFiles
+          },
+          url: {
+            label: '<i class="fas fa-link"></i> Usar URL',
+            callback: openUrlDialog
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "file"
+      }).render(true);
     };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
@@ -1514,40 +1560,17 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconButton?.addEventListener("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      toggleIconChooser();
+      openIconSourceDialog();
     });
     iconPreview?.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      toggleIconChooser(true);
+      openIconSourceDialog();
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
       event.preventDefault();
       iconButton.click();
-    });
-    iconSourceFileBtn?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      iconFileInput?.click();
-    });
-    iconSourceUrlBtn?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleIconChooser(false);
-      iconInput?.focus();
-    });
-    iconFileInput?.addEventListener("change", () => {
-      const file = iconFileInput.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = String(reader.result ?? "");
-        if (iconInput) iconInput.value = result;
-        syncIconPreview();
-        toggleIconChooser(false);
-      };
-      reader.readAsDataURL(file);
     });
     root.addEventListener("click", (event) => {
       if (!iconChooser || iconChooser.hidden) return;

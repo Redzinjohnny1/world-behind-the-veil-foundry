@@ -1572,12 +1572,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       iconButton.click();
     });
-    root.addEventListener("click", (event) => {
-      if (!iconChooser || iconChooser.hidden) return;
-      const clickedInsideChooser = event.target.closest(".twbv-custom-item-icon-chooser");
-      const clickedIconButton = event.target.closest(".twbv-custom-item-iconbox-button");
-      if (!clickedInsideChooser && !clickedIconButton) toggleIconChooser(false);
-    });
     syncIconPreview();
   }
 
@@ -1748,12 +1742,29 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
     };
 
+    let renderedRootRef = null;
     const dialog = new Dialog({
       title: item ? `Editar ${item.name ?? item.nome ?? "Item"}` : defaults.title,
       content,
+      buttons: {
+        save: {
+          label: "Salvar",
+          callback: async (html) => {
+            const root = renderedRootRef ?? resolveDialogRoot(html);
+            if (!root) return;
+            await submitItemForm(root, dialog);
+          }
+        },
+        cancel: {
+          label: "Cancelar",
+          callback: async () => dialog.close()
+        }
+      },
+      default: "save",
       render: (dialogApp, renderedHtml) => {
         const root = resolveDialogRoot(renderedHtml);
         if (!root) return;
+        renderedRootRef = root;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
         this._bindCustomDialogActionButtons(
@@ -1787,8 +1798,6 @@ class TWBVPersonagemSheet extends ActorSheet {
           applyCustomItemDialogTheme(dialogWindow);
         }
       },
-      buttons: {},
-      default: null,
       close: () => {
         const root = dialog.element?.[0];
         root?.__twbvThemeObserver?.disconnect?.();

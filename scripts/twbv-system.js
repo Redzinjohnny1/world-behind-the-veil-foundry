@@ -1329,11 +1329,6 @@ class TWBVPersonagemSheet extends ActorSheet {
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
             <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
           </button>
-          <div class="twbv-custom-item-icon-chooser" hidden>
-            <button type="button" class="twbv-icon-source twbv-icon-source-file"><i class="fas fa-folder-open"></i> Procurar no PC</button>
-            <button type="button" class="twbv-icon-source twbv-icon-source-url"><i class="fas fa-link"></i> Usar URL</button>
-          </div>
-          <input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />
         </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
@@ -1343,7 +1338,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
-            <div class="form-group"><label>Ícone (URL)</label><input type="text" name="icon" value="${itemData.icon ?? ""}" placeholder="https://..." /></div>
+            <input type="hidden" name="icon" value="${itemData.icon ?? ""}" />
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
             <button type="button" class="twbv-tab-button is-active" data-tab="destaque">Destaque</button>
@@ -1366,10 +1361,6 @@ class TWBVPersonagemSheet extends ActorSheet {
             <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
-          <div class="twbv-custom-item-actions">
-            <button type="submit" class="twbv-custom-item-submit">Salvar</button>
-            <button type="button" class="twbv-custom-item-cancel" data-action="cancel">Cancelar</button>
-          </div>
         </div>
       </form>`;
     }
@@ -1496,10 +1487,66 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const iconFileInput = root.querySelector(".twbv-custom-item-icon-file");
-    const iconChooser = root.querySelector(".twbv-custom-item-icon-chooser");
-    const iconSourceFileBtn = root.querySelector(".twbv-icon-source-file");
-    const iconSourceUrlBtn = root.querySelector(".twbv-icon-source-url");
+    const openIconSourceDialog = () => {
+      const pickFromFiles = () => {
+        try {
+          const picker = new FilePicker({
+            type: "image",
+            current: String(iconInput?.value ?? "").trim() || "icons/",
+            callback: (selectedPath) => {
+              if (!iconInput) return;
+              iconInput.value = String(selectedPath ?? "").trim();
+              syncIconPreview();
+            }
+          });
+          picker.render(true);
+        } catch (error) {
+          console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
+          ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
+        }
+      };
+      const openUrlDialog = () => {
+        new Dialog({
+          title: "Definir URL do Ícone",
+          content: `
+            <form class="twbv-icon-url-dialog">
+              <div class="form-group">
+                <label>URL da imagem</label>
+                <input type="text" name="icon-url" value="${String(iconInput?.value ?? "").trim()}" placeholder="https://..." />
+              </div>
+            </form>`,
+          buttons: {
+            save: {
+              label: "Aplicar",
+              callback: (html) => {
+                const rootEl = resolveDialogRoot(html);
+                const value = String(rootEl?.querySelector('input[name="icon-url"]')?.value ?? "").trim();
+                if (iconInput) iconInput.value = value;
+                syncIconPreview();
+              }
+            },
+            cancel: { label: "Cancelar" }
+          },
+          default: "save"
+        }).render(true);
+      };
+      new Dialog({
+        title: "Configurar Ícone",
+        content: `<p>Escolha a origem da imagem do ícone:</p>`,
+        buttons: {
+          file: {
+            label: '<i class="fas fa-folder-open"></i> Procurar Arquivo',
+            callback: pickFromFiles
+          },
+          url: {
+            label: '<i class="fas fa-link"></i> Usar URL',
+            callback: openUrlDialog
+          },
+          cancel: { label: "Cancelar" }
+        },
+        default: "file"
+      }).render(true);
+    };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
@@ -1509,35 +1556,17 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconButton?.addEventListener("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      if (iconChooser) iconChooser.hidden = !iconChooser.hidden;
+      openIconSourceDialog();
+    });
+    iconPreview?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openIconSourceDialog();
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
       event.preventDefault();
       iconButton.click();
-    });
-    iconSourceFileBtn?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      iconFileInput?.click();
-    });
-    iconSourceUrlBtn?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (iconChooser) iconChooser.hidden = true;
-      iconInput?.focus();
-    });
-    iconFileInput?.addEventListener("change", () => {
-      const file = iconFileInput.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = String(reader.result ?? "");
-        if (iconInput) iconInput.value = result;
-        syncIconPreview();
-        if (iconChooser) iconChooser.hidden = true;
-      };
-      reader.readAsDataURL(file);
     });
     syncIconPreview();
   }
@@ -1602,6 +1631,20 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   _bindCustomDialogActionButtons(root, onSubmit, onCancel) {
     if (!root) return;
+    root.querySelectorAll(".twbv-custom-item-submit").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+      });
+    });
+    root.querySelectorAll(".twbv-custom-item-cancel").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      });
+    });
     root.addEventListener("click", async (event) => {
       const submitBtn = event.target.closest(".twbv-custom-item-submit");
       if (submitBtn) {
@@ -1695,12 +1738,29 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
     };
 
+    let renderedRootRef = null;
     const dialog = new Dialog({
       title: item ? `Editar ${item.name ?? item.nome ?? "Item"}` : defaults.title,
       content,
+      buttons: {
+        save: {
+          label: "Salvar",
+          callback: async (html) => {
+            const root = renderedRootRef ?? resolveDialogRoot(html);
+            if (!root) return;
+            await submitItemForm(root, dialog);
+          }
+        },
+        cancel: {
+          label: "Cancelar",
+          callback: async () => dialog.close()
+        }
+      },
+      default: "save",
       render: (dialogApp, renderedHtml) => {
         const root = resolveDialogRoot(renderedHtml);
         if (!root) return;
+        renderedRootRef = root;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
         this._bindCustomDialogActionButtons(
@@ -1725,8 +1785,11 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (type === "vantagem" || type === "habilidadeEspecial") {
           const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
           const variantWindowClass = `${variantClass}-window`;
-          dialogWindow?.classList?.add(variantClass);
-          dialogWindow?.classList?.add(variantWindowClass);
+          const assuredWindow = dialogApp?.element?.[0] ?? dialogWindow;
+          assuredWindow?.classList?.add("wbtv-add-skill-dialog");
+          assuredWindow?.classList?.add("wbtv-custom-item-dialog");
+          assuredWindow?.classList?.add(variantClass);
+          assuredWindow?.classList?.add(variantWindowClass);
           root.classList.add(variantClass);
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
           formRoot?.classList?.add(variantClass);
@@ -1734,8 +1797,6 @@ class TWBVPersonagemSheet extends ActorSheet {
           applyCustomItemDialogTheme(dialogWindow);
         }
       },
-      buttons: {},
-      default: null,
       close: () => {
         const root = dialog.element?.[0];
         root?.__twbvThemeObserver?.disconnect?.();

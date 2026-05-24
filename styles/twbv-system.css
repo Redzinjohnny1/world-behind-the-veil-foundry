@@ -2384,3 +2384,31 @@
   text-shadow: none !important;
   box-shadow: inset 0 0 0 1px rgba(236, 208, 146, 0.1) !important;
 }
+
+
+/* Absolute fallback for dialogs rendering action row without .dialog-buttons */
+.window-app.wbtv-vantagem-dialog-window > footer,
+.window-app.wbtv-vantagem-dialog-window .window-content + footer,
+.window-app.wbtv-vantagem-dialog-window form + footer,
+.window-app.wbtv-vantagem-dialog-window > :is(div, section, nav):last-child {
+  background-color: #090612 !important;
+  background-image: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+}
+
+.window-app.wbtv-vantagem-dialog-window footer button,
+.window-app.wbtv-vantagem-dialog-window footer .dialog-button,
+.window-app.wbtv-vantagem-dialog-window footer input[type="button"],
+.window-app.wbtv-vantagem-dialog-window footer input[type="submit"],
+.window-app.wbtv-vantagem-dialog-window .dialog-buttons input[type="button"],
+.window-app.wbtv-vantagem-dialog-window .dialog-buttons input[type="submit"],
+.window-app.wbtv-vantagem-dialog-window > :is(div, section, nav):last-child button,
+.window-app.wbtv-vantagem-dialog-window > :is(div, section, nav):last-child input[type="button"],
+.window-app.wbtv-vantagem-dialog-window > :is(div, section, nav):last-child input[type="submit"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  color: #f8edcc !important;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  border-radius: 10px !important;
+}

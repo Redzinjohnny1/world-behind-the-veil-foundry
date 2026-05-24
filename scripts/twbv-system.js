@@ -1488,64 +1488,21 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
     const openIconSourceDialog = () => {
-      const pickFromFiles = () => {
-        try {
-          const picker = new FilePicker({
-            type: "image",
-            current: String(iconInput?.value ?? "").trim() || "icons/",
-            callback: (selectedPath) => {
-              if (!iconInput) return;
-              iconInput.value = String(selectedPath ?? "").trim();
-              syncIconPreview();
-            }
-          });
-          picker.render(true);
-        } catch (error) {
-          console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
-          ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
-        }
-      };
-      const openUrlDialog = () => {
-        new Dialog({
-          title: "Definir URL do Ícone",
-          content: `
-            <form class="twbv-icon-url-dialog">
-              <div class="form-group">
-                <label>URL da imagem</label>
-                <input type="text" name="icon-url" value="${String(iconInput?.value ?? "").trim()}" placeholder="https://..." />
-              </div>
-            </form>`,
-          buttons: {
-            save: {
-              label: "Aplicar",
-              callback: (html) => {
-                const rootEl = resolveDialogRoot(html);
-                const value = String(rootEl?.querySelector('input[name="icon-url"]')?.value ?? "").trim();
-                if (iconInput) iconInput.value = value;
-                syncIconPreview();
-              }
-            },
-            cancel: { label: "Cancelar" }
-          },
-          default: "save"
-        }).render(true);
-      };
-      new Dialog({
-        title: "Configurar Ícone",
-        content: `<p>Escolha a origem da imagem do ícone:</p>`,
-        buttons: {
-          file: {
-            label: '<i class="fas fa-folder-open"></i> Procurar Arquivo',
-            callback: pickFromFiles
-          },
-          url: {
-            label: '<i class="fas fa-link"></i> Usar URL',
-            callback: openUrlDialog
-          },
-          cancel: { label: "Cancelar" }
-        },
-        default: "file"
-      }).render(true);
+      try {
+        const picker = new FilePicker({
+          type: "image",
+          current: String(iconInput?.value ?? "").trim() || "icons/",
+          callback: (selectedPath) => {
+            if (!iconInput) return;
+            iconInput.value = String(selectedPath ?? "").trim();
+            syncIconPreview();
+          }
+        });
+        picker.render(true);
+      } catch (error) {
+        console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
+        ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
+      }
     };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
@@ -1779,22 +1736,12 @@ class TWBVPersonagemSheet extends ActorSheet {
           );
         }
 
-        const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
-          ?? dialogApp?.element?.[0]
-          ?? root.closest?.(".window-app");
         if (type === "vantagem" || type === "habilidadeEspecial") {
-          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
-          const variantWindowClass = `${variantClass}-window`;
-          const assuredWindow = dialogApp?.element?.[0] ?? dialogWindow;
-          assuredWindow?.classList?.add("wbtv-add-skill-dialog");
-          assuredWindow?.classList?.add("wbtv-custom-item-dialog");
-          assuredWindow?.classList?.add(variantClass);
-          assuredWindow?.classList?.add(variantWindowClass);
-          root.classList.add(variantClass);
+          // Não aplicar classes variantes aqui para evitar ativar overrides de tema
+          // no CSS que mudam o visual padrão do Foundry (Salvar/Cancelar etc.).
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add(variantClass);
-
-          applyCustomItemDialogTheme(dialogWindow);
+          formRoot?.classList?.remove?.("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
+          root.classList.remove("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
         }
       },
       close: () => {

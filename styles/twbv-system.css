@@ -1956,6 +1956,14 @@
   box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
 }
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
+
+.twbv-custom-item-form { display: grid; gap: 10px; }
+.twbv-custom-item-form--sheetlike { grid-template-columns: 128px 1fr; gap: 10px 14px; align-items: start; }
+.twbv-custom-item-form label { display: block; margin-bottom: 3px; color: #f2dfb0; font-weight: 700; }
+.twbv-custom-item-form input, .twbv-custom-item-form select, .twbv-custom-item-form textarea { width: 100%; border-radius: 10px; border: 1px solid rgba(149, 96, 224, 0.7); background: rgba(11, 8, 20, 0.96); color: #f8edcc; padding: 9px 11px; }
+.twbv-custom-item-form input:focus, .twbv-custom-item-form select:focus, .twbv-custom-item-form textarea:focus { outline: none; border-color: rgba(217, 183, 117, 0.92); box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.35), 0 0 12px rgba(149, 96, 224, 0.48); }
+.twbv-custom-item-form .form-group { margin: 0; display: block !important; }
+
 .twbv-custom-item-dialog--sheetlike {
   grid-template-columns: 120px 1fr;
   gap: 10px 14px;
@@ -1963,8 +1971,8 @@
 }
 .twbv-custom-item-side { display: grid; gap: 10px; align-content: start; position: relative; }
 .twbv-custom-item-iconbox {
-  width: 104px;
-  height: 104px;
+  width: 120px;
+  height: 120px;
   border-radius: 12px;
   border: 1px solid rgba(217, 183, 117, 0.82);
   background: radial-gradient(circle at 35% 25%, rgba(247, 224, 161, 0.36), rgba(97, 53, 156, 0.95));
@@ -1974,7 +1982,35 @@
   font-size: 2.6rem;
   box-shadow: inset 0 0 0 1px rgba(236, 208, 146, 0.25), 0 8px 16px rgba(0, 0, 0, 0.35);
 }
+
+.twbv-custom-item-iconbox img.twbv-custom-item-icon-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
 .twbv-custom-item-main { display: grid; gap: 6px; }
+.twbv-custom-item-title-wrap {
+  min-height: 120px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(217, 183, 117, 0.55);
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(17, 10, 30, 0.88), rgba(10, 7, 20, 0.92));
+  margin-bottom: 6px;
+}
+.twbv-custom-item-title-input {
+  text-align: center;
+  font-size: 1.8rem !important;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  max-width: 95%;
+}
 .twbv-custom-item-main > .form-group {
   display: grid !important;
   grid-template-columns: 120px 1fr;
@@ -2594,4 +2630,31 @@
   position: relative;
   z-index: 51;
   pointer-events: auto !important;
+}
+
+
+/* Hotfix: garantir fundo escuro no popup de vantagem/habilidade (sem branco) */
+.window-app:has(.twbv-custom-item-form) .window-content,
+.window-app:has(.twbv-custom-item-form) .dialog-content {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+}
+
+.window-app:has(.twbv-custom-item-form) .window-content {
+  padding: 10px !important;
+}
+
+.dialog .twbv-custom-item-form {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(20, 12, 34, 0.98), rgba(8, 7, 18, 0.99)) !important;
+  border: 1px solid rgba(217, 183, 117, 0.62);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 500px;
+}
+
+/* Ajuste final: texto Salvar/Cancelar no padrão do tema */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button) {
+  color: #f8edcc !important;
+  -webkit-text-fill-color: #f8edcc !important;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+  font-weight: 700;
 }

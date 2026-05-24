@@ -1487,7 +1487,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = () => {
+    const openIconSourceDialog = async () => {
       try {
         const picker = new FilePicker({
           type: "image",
@@ -1498,8 +1498,17 @@ class TWBVPersonagemSheet extends ActorSheet {
             syncIconPreview();
           }
         });
-        // render(true) abre o popup interativo do Foundry para escolher imagem.
-        picker.render(true);
+
+        // Compatibilidade: algumas versões abrem com render(true), outras exigem browse().
+        let opened = false;
+        if (typeof picker?.render === "function") {
+          picker.render(true);
+          opened = Boolean(picker?.rendered ?? picker?.element?.length);
+        }
+        if (!opened && typeof picker?.browse === "function") {
+          await picker.browse();
+          opened = true;
+        }
       } catch (error) {
         console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
         ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
@@ -1511,10 +1520,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
     iconInput?.addEventListener("input", syncIconPreview);
-    const triggerIconPicker = (event) => {
+    const triggerIconPicker = async (event) => {
       event?.preventDefault?.();
       event?.stopPropagation?.();
-      openIconSourceDialog();
+      await openIconSourceDialog();
     };
     iconButton?.addEventListener("click", triggerIconPicker);
     iconPreview?.addEventListener("click", triggerIconPicker);

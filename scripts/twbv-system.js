@@ -1387,23 +1387,21 @@ class TWBVPersonagemSheet extends ActorSheet {
       : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
-        <div class="twbv-custom-item-main">
-          <nav class="twbv-custom-tabs">
-            <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
-            <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
-            <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
-          </nav>
-          <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-            <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
-            ${fieldsByType[type] ?? ""}
-            <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
-          </section>
-          <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
-          <section class="twbv-custom-tab-pane" data-tab="efeitos">
-            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
-            <div class="twbv-effects-list">${effectsMarkup}</div>
-          </section>
-        </div>
+        <nav class="twbv-custom-tabs">
+          <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+          <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
+          <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+        </nav>
+        <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
+          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+          ${fieldsByType[type] ?? ""}
+          <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+        </section>
+        <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
+        <section class="twbv-custom-tab-pane" data-tab="efeitos">
+          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
+          <div class="twbv-effects-list">${effectsMarkup}</div>
+        </section>
       </form>`;
   }
 
@@ -1525,7 +1523,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
       cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
-      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
+      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : (Array.isArray(item?.system?.efeitos) ? item.system.efeitos : [])
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
 
@@ -1568,7 +1566,9 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
+          cargas: payload.system.cargas,
           charges: payload.system.charges,
+          efeitos: payload.system.efeitos,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);

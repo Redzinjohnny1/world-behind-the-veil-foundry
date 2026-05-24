@@ -2035,8 +2035,11 @@
 .twbv-custom-tabs--sheet { margin-top: 2px; }
 .twbv-tab-button { border: 1px solid rgba(217, 183, 117, 0.72); border-radius: 10px 10px 0 0; padding: 7px 14px; color: #f3e2b8; background: linear-gradient(180deg, rgba(27, 18, 42, 0.98), rgba(14, 10, 24, 0.99)); cursor: pointer; font-weight: 700; }
 .twbv-tab-button.is-active { color: #f6e7c1; border-color: rgba(236, 208, 146, 0.92); box-shadow: inset 0 -1px 0 rgba(40,24,65,0.95), 0 0 0 1px rgba(217,183,117,.25); }
-.twbv-custom-tab-pane { display: none; gap: 10px; }
-.twbv-custom-tab-pane.is-active { display: grid; border: 1px solid rgba(217, 183, 117, 0.55); border-radius: 0 10px 10px 10px; padding: 10px; background: rgba(18, 12, 30, 0.74); min-height: 250px; }
+.twbv-tab-button:focus-visible { outline: 1px solid rgba(217, 183, 117, 0.9); outline-offset: 2px; }
+.twbv-custom-tab-pane { display: none; gap: 10px; opacity: 0; transform: translateY(4px); }
+.twbv-custom-tab-pane.is-active { display: grid; opacity: 1; transform: translateY(0); transition: opacity .14s ease, transform .14s ease; border: 1px solid rgba(217, 183, 117, 0.55); border-radius: 0 10px 10px 10px; padding: 10px; background: rgba(18, 12, 30, 0.74); min-height: 250px; }
+.twbv-custom-item-dialog[data-active-tab="propriedades"] .twbv-custom-tab-pane.is-active { box-shadow: inset 0 0 18px rgba(217, 183, 117, 0.16); }
+.twbv-custom-item-dialog[data-active-tab="efeitos"] .twbv-custom-tab-pane.is-active { box-shadow: inset 0 0 18px rgba(149, 96, 224, 0.22); }
 .twbv-custom-tab-pane[data-tab="descricao"].is-active {
   background: linear-gradient(165deg, rgba(17, 10, 30, 0.88), rgba(10, 7, 20, 0.92));
 }

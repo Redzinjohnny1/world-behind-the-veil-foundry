@@ -1323,15 +1323,15 @@ class TWBVPersonagemSheet extends ActorSheet {
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
+      <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
-            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
-            <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
+            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/mystery-man.svg"}" alt="Imagem do ícone" />
+            <span class="twbv-custom-item-icon-placeholder">Imagem</span>
           </button>
         </div>
         <div class="twbv-custom-item-main">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
+          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="Nome da vantagem" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
@@ -1392,7 +1392,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
       : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
+      <form class="twbv-custom-item-form" data-type="${type}">
         <nav class="twbv-custom-tabs">
           <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
           <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
@@ -1442,7 +1442,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         pane.hidden = !isActive;
         pane.setAttribute("aria-hidden", isActive ? "false" : "true");
       });
-      const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+      const formRoot = root.querySelector("form.twbv-custom-item-form");
       formRoot?.setAttribute("data-active-tab", tabId);
     };
     tabsNav?.addEventListener("click", (event) => {
@@ -1487,86 +1487,54 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = () => {
-      const pickFromFiles = () => {
-        try {
-          const picker = new FilePicker({
-            type: "image",
-            current: String(iconInput?.value ?? "").trim() || "icons/",
-            callback: (selectedPath) => {
-              if (!iconInput) return;
-              iconInput.value = String(selectedPath ?? "").trim();
-              syncIconPreview();
-            }
-          });
+    const openIconSourceDialog = async () => {
+      try {
+        const picker = new FilePicker({
+          type: "image",
+          current: String(iconInput?.value ?? "").trim() || "icons/",
+          callback: (selectedPath) => {
+            if (!iconInput) return;
+            iconInput.value = String(selectedPath ?? "").trim();
+            syncIconPreview();
+          }
+        });
+
+        // Compatibilidade: algumas versões abrem com render(true), outras exigem browse().
+        let opened = false;
+        if (typeof picker?.render === "function") {
           picker.render(true);
-        } catch (error) {
-          console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
-          ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
+          opened = Boolean(picker?.rendered ?? picker?.element?.length);
         }
-      };
-      const openUrlDialog = () => {
-        new Dialog({
-          title: "Definir URL do Ícone",
-          content: `
-            <form class="twbv-icon-url-dialog">
-              <div class="form-group">
-                <label>URL da imagem</label>
-                <input type="text" name="icon-url" value="${String(iconInput?.value ?? "").trim()}" placeholder="https://..." />
-              </div>
-            </form>`,
-          buttons: {
-            save: {
-              label: "Aplicar",
-              callback: (html) => {
-                const rootEl = resolveDialogRoot(html);
-                const value = String(rootEl?.querySelector('input[name="icon-url"]')?.value ?? "").trim();
-                if (iconInput) iconInput.value = value;
-                syncIconPreview();
-              }
-            },
-            cancel: { label: "Cancelar" }
-          },
-          default: "save"
-        }).render(true);
-      };
-      new Dialog({
-        title: "Configurar Ícone",
-        content: `<p>Escolha a origem da imagem do ícone:</p>`,
-        buttons: {
-          file: {
-            label: '<i class="fas fa-folder-open"></i> Procurar Arquivo',
-            callback: pickFromFiles
-          },
-          url: {
-            label: '<i class="fas fa-link"></i> Usar URL',
-            callback: openUrlDialog
-          },
-          cancel: { label: "Cancelar" }
-        },
-        default: "file"
-      }).render(true);
+        if (!opened && typeof picker?.browse === "function") {
+          await picker.browse();
+          opened = true;
+        }
+      } catch (error) {
+        console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
+        ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
+      }
     };
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
-      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/item-bag.svg";
+      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
     iconInput?.addEventListener("input", syncIconPreview);
-    iconButton?.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openIconSourceDialog();
-    });
-    iconPreview?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openIconSourceDialog();
+    const triggerIconPicker = async (event) => {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      await openIconSourceDialog();
+    };
+    iconButton?.addEventListener("click", triggerIconPicker);
+    iconPreview?.addEventListener("click", triggerIconPicker);
+    root.addEventListener("click", (event) => {
+      const target = event.target?.closest?.(".twbv-custom-item-iconbox-button, .twbv-custom-item-icon-preview, .twbv-custom-item-icon-placeholder");
+      if (!target) return;
+      triggerIconPicker(event);
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
-      event.preventDefault();
-      iconButton.click();
+      triggerIconPicker(event);
     });
     syncIconPreview();
   }
@@ -1611,7 +1579,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
   _setCustomDialogValidationState(root) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form");
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
@@ -1619,7 +1587,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 
   _bindCustomDialogFormSubmit(root, onSubmit) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form");
     if (!form || typeof onSubmit !== "function") return;
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1686,7 +1654,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const content = this._buildCustomItemDialogContent(type, itemData, options);
 
     const submitItemForm = async (root, dialogApp) => {
-      const form = root?.querySelector("form.twbv-custom-item-dialog");
+      const form = root?.querySelector("form.twbv-custom-item-form");
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return false;
 
@@ -1779,22 +1747,12 @@ class TWBVPersonagemSheet extends ActorSheet {
           );
         }
 
-        const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
-          ?? dialogApp?.element?.[0]
-          ?? root.closest?.(".window-app");
         if (type === "vantagem" || type === "habilidadeEspecial") {
-          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
-          const variantWindowClass = `${variantClass}-window`;
-          const assuredWindow = dialogApp?.element?.[0] ?? dialogWindow;
-          assuredWindow?.classList?.add("wbtv-add-skill-dialog");
-          assuredWindow?.classList?.add("wbtv-custom-item-dialog");
-          assuredWindow?.classList?.add(variantClass);
-          assuredWindow?.classList?.add(variantWindowClass);
-          root.classList.add(variantClass);
-          const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add(variantClass);
-
-          applyCustomItemDialogTheme(dialogWindow);
+          // Não aplicar classes variantes aqui para evitar ativar overrides de tema
+          // no CSS que mudam o visual padrão do Foundry (Salvar/Cancelar etc.).
+          const formRoot = root.querySelector("form.twbv-custom-item-form");
+          formRoot?.classList?.remove?.("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
+          root.classList.remove("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
         }
       },
       close: () => {

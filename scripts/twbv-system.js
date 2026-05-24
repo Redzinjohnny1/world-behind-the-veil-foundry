@@ -1399,14 +1399,15 @@ class TWBVPersonagemSheet extends ActorSheet {
         </section>
         <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
         <section class="twbv-custom-tab-pane" data-tab="efeitos">
-          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
           <div class="twbv-effects-list">${effectsMarkup}</div>
         </section>
       </form>`;
   }
 
   _bindCustomDialogUi(root) {
-    const tabButtons = root.querySelectorAll(".twbv-tab-button");
+    const tabButtons = Array.from(root.querySelectorAll(".twbv-tab-button"));
+    const tabPanes = Array.from(root.querySelectorAll(".twbv-custom-tab-pane"));
     const switchTab = (tabId) => {
       root.querySelectorAll(".twbv-tab-button").forEach((btn) => {
         btn.classList.toggle("is-active", btn.dataset.tab === tabId);
@@ -1417,6 +1418,11 @@ class TWBVPersonagemSheet extends ActorSheet {
         pane.classList.toggle("is-active", isActive);
         pane.hidden = !isActive;
       });
+      const activePane = tabPanes.find((pane) => pane.dataset.tab === tabId);
+      if (activePane) {
+        activePane.classList.add("is-active");
+        activePane.hidden = false;
+      }
     };
     tabButtons.forEach((button) => {
       button.addEventListener("click", (event) => {
@@ -1516,7 +1522,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
       cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
-      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
+      effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : (Array.isArray(item?.system?.efeitos) ? item.system.efeitos : [])
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
 
@@ -1559,7 +1565,9 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
+          cargas: payload.system.cargas,
           charges: payload.system.charges,
+          efeitos: payload.system.efeitos,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);

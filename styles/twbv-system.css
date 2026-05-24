@@ -2040,18 +2040,26 @@
 .twbv-custom-tab-pane[data-tab="descricao"].is-active {
   background: linear-gradient(165deg, rgba(17, 10, 30, 0.88), rgba(10, 7, 20, 0.92));
 }
-.twbv-custom-tab-pane[data-tab="propriedades"].is-active {
-  background: linear-gradient(165deg, rgba(26, 15, 36, 0.9), rgba(14, 9, 24, 0.92));
-}
+.twbv-custom-tab-pane[data-tab="propriedades"].is-active,
 .twbv-custom-tab-pane[data-tab="efeitos"].is-active {
-  background: linear-gradient(165deg, rgba(20, 11, 34, 0.9), rgba(12, 8, 24, 0.92));
+  align-content: start;
+  gap: 12px;
+}
+.twbv-custom-tab-pane[data-tab="propriedades"] > h3,
+.twbv-custom-tab-pane[data-tab="efeitos"] > h3 {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f1dfb6;
 }
 .twbv-custom-tab-pane label,
 .twbv-tab-empty { color: #dbc89e; }
-.twbv-property-checkboxes { display: grid; gap: 8px; }
-.twbv-property-checkboxes label { display: flex; align-items: center; gap: 8px; }
+.twbv-property-checkboxes { display: grid; gap: 10px; margin-top: 2px; }
+.twbv-property-checkboxes label { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 0.7rem; }
 .twbv-property-checkboxes input[type="checkbox"] { width: auto; accent-color: #d9b775; }
-.twbv-effects-list { display: grid; gap: 8px; margin-top: 8px; }
+.twbv-effects-list { display: grid; gap: 8px; margin-top: 2px; }
 .twbv-effect-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
 .twbv-effect-remove { border: 1px solid rgba(166, 88, 102, 0.85); border-radius: 8px; color: #ffd9df; background: rgba(89, 33, 45, 0.82); cursor: pointer; padding: 6px 10px; }
 .twbv-effect-add { justify-self: start; border: 1px solid rgba(217, 183, 117, 0.72); border-radius: 8px; color: #ffedc5; background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)); padding: 6px 12px; cursor: pointer; }
@@ -2493,4 +2501,9 @@
 }
 .twbv-custom-properties-panel input {
   max-width: 260px;
+}
+
+@keyframes twbv-pane-fade {
+  from { opacity: .55; }
+  to { opacity: 1; }
 }

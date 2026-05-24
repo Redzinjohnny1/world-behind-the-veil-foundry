@@ -1737,12 +1737,11 @@ class TWBVPersonagemSheet extends ActorSheet {
         }
 
         if (type === "vantagem" || type === "habilidadeEspecial") {
-          // Mantém o layout customizado do formulário, mas preserva o tema padrão
-          // do Foundry no rodapé (Salvar/Cancelar), como no popup de perícia.
-          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
-          root.classList.add(variantClass);
+          // Não aplicar classes variantes aqui para evitar ativar overrides de tema
+          // no CSS que mudam o visual padrão do Foundry (Salvar/Cancelar etc.).
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add(variantClass);
+          formRoot?.classList?.remove?.("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
+          root.classList.remove("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
         }
       },
       close: () => {

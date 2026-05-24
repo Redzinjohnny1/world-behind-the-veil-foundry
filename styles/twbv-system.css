@@ -1859,8 +1859,10 @@
 .window-app.wbtv-custom-item-dialog .app,
 .window-app.wbtv-custom-item-dialog .window-content,
 .window-app.wbtv-custom-item-dialog .dialog-content {
-  border-color: rgba(217, 183, 117, 0.82) !important;
+  border: 1px solid rgba(217, 183, 117, 0.68) !important;
+  border-color: rgba(217, 183, 117, 0.68) !important;
   outline: none !important;
+  box-sizing: border-box;
 }
 .window-app.wbtv-custom-item-dialog,
 .window-app.wbtv-custom-item-dialog .app,
@@ -2035,6 +2037,15 @@
 .twbv-tab-button.is-active { color: #f6e7c1; border-color: rgba(236, 208, 146, 0.92); box-shadow: inset 0 -1px 0 rgba(40,24,65,0.95), 0 0 0 1px rgba(217,183,117,.25); }
 .twbv-custom-tab-pane { display: none; gap: 10px; }
 .twbv-custom-tab-pane.is-active { display: grid; border: 1px solid rgba(217, 183, 117, 0.55); border-radius: 0 10px 10px 10px; padding: 10px; background: rgba(18, 12, 30, 0.74); min-height: 250px; }
+.twbv-custom-tab-pane[data-tab="descricao"].is-active {
+  background: linear-gradient(165deg, rgba(17, 10, 30, 0.88), rgba(10, 7, 20, 0.92));
+}
+.twbv-custom-tab-pane[data-tab="propriedades"].is-active {
+  background: linear-gradient(165deg, rgba(26, 15, 36, 0.9), rgba(14, 9, 24, 0.92));
+}
+.twbv-custom-tab-pane[data-tab="efeitos"].is-active {
+  background: linear-gradient(165deg, rgba(20, 11, 34, 0.9), rgba(12, 8, 24, 0.92));
+}
 .twbv-custom-tab-pane label,
 .twbv-tab-empty { color: #dbc89e; }
 .twbv-property-checkboxes { display: grid; gap: 8px; }
@@ -2473,4 +2484,13 @@
 .twbv-custom-properties-panel {
   display: grid;
   gap: 8px;
+  align-content: start;
+  min-height: 205px;
+}
+.twbv-custom-properties-panel label {
+  font-weight: 700;
+  color: #f4e4bf;
+}
+.twbv-custom-properties-panel input {
+  max-width: 260px;
 }

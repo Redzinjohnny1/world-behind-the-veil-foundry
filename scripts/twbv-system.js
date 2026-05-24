@@ -1323,7 +1323,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
-      <form class="twbv-custom-item-form" data-type="${type}">
+      <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
@@ -1331,7 +1331,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </button>
         </div>
         <div class="twbv-custom-item-main">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
+          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="Nome da vantagem" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>

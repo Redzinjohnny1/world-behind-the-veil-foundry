@@ -1511,20 +1511,21 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
     iconInput?.addEventListener("input", syncIconPreview);
-    iconButton?.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+    const triggerIconPicker = (event) => {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
       openIconSourceDialog();
-    });
-    iconPreview?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openIconSourceDialog();
+    };
+    iconButton?.addEventListener("click", triggerIconPicker);
+    iconPreview?.addEventListener("click", triggerIconPicker);
+    root.addEventListener("click", (event) => {
+      const target = event.target?.closest?.(".twbv-custom-item-iconbox-button, .twbv-custom-item-icon-preview, .twbv-custom-item-icon-placeholder");
+      if (!target) return;
+      triggerIconPicker(event);
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
-      event.preventDefault();
-      iconButton.click();
+      triggerIconPicker(event);
     });
     syncIconPreview();
   }

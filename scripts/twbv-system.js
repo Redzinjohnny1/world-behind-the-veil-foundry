@@ -1342,12 +1342,19 @@ class TWBVPersonagemSheet extends ActorSheet {
             <div class="form-group"><textarea name="description" rows="11" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
-            <p class="twbv-tab-empty">Sem propriedades por enquanto.</p>
+            <div class="twbv-custom-properties-panel">
+              <label>Cargas</label>
+              <input type="text" name="charges" value="${itemData.cargas ?? itemData.charges ?? ""}" placeholder="Ex.: 3, 10, Ilimitado" />
+            </div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="efeitos">
-            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> ADICIONAR</button>
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
+          <div class="twbv-custom-item-actions">
+            <button type="submit" class="twbv-custom-item-submit">Salvar</button>
+            <button type="button" class="twbv-custom-item-cancel" data-action="cancel">Cancelar</button>
+          </div>
         </div>
       </form>`;
     }
@@ -1430,6 +1437,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
     const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
+    const charges = String(root?.querySelector('input[name="charges"]')?.value ?? "").trim();
     const effects = Array.from(root?.querySelectorAll('.twbv-effect-row input[type="text"]') ?? []).map((input) => String(input.value ?? "").trim()).filter(Boolean);
     return {
       name,
@@ -1447,6 +1455,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         severity,
         isArcaneBackground,
         hasCharges,
+        charges,
         activeEffects: effects,
         active: true
       }
@@ -1457,10 +1466,9 @@ class TWBVPersonagemSheet extends ActorSheet {
   _setCustomDialogValidationState(root) {
     const form = root?.querySelector("form.twbv-custom-item-dialog");
     const nameInput = form?.querySelector('input[name="name"]');
-    const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"]');
+    const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
-    const isValid = String(nameInput.value ?? "").trim().length > 0;
-    saveButton.disabled = !isValid;
+    saveButton.disabled = false;
   }
 
   _bindCustomDialogFormSubmit(root, onSubmit) {
@@ -1491,6 +1499,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       severity: item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
+      cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
       effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
@@ -1500,13 +1509,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return false;
 
-      const nome = String(nameInput.value ?? "").trim();
-      if (!nome) {
-        ui.notifications?.error("O nome da vantagem é obrigatório.");
-        nameInput.focus();
-        this._setCustomDialogValidationState(root);
-        return false;
-      }
+      const typedName = String(nameInput.value ?? "").trim();
+      const defaultNameByType = {
+        vantagem: "Vantagem",
+        habilidadeEspecial: "Habilidade Especial",
+        complicacao: "Complicação"
+      };
+      const nome = typedName || defaultNameByType[type] || "Vantagem";
+      if (!typedName) nameInput.value = nome;
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
       const isEmbeddedItem = item && typeof item.update === "function";
@@ -1533,6 +1543,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
+          charges: payload.system.charges,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);
@@ -1553,57 +1564,28 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
+        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async () => dialogApp.close());
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");
-        if (type === "vantagem") {
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog");
-          dialogWindow?.classList?.add("wbtv-vantagem-dialog-window");
-          root.classList.add("wbtv-vantagem-dialog");
+        if (type === "vantagem" || type === "habilidadeEspecial") {
+          const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
+          const variantWindowClass = `${variantClass}-window`;
+          dialogWindow?.classList?.add(variantClass);
+          dialogWindow?.classList?.add(variantWindowClass);
+          root.classList.add(variantClass);
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
-          formRoot?.classList?.add("wbtv-vantagem-dialog");
+          formRoot?.classList?.add(variantClass);
 
-          const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons, footer");
-          footer?.classList?.add("twbv-vantagem-footer");
-          if (footer?.style?.setProperty) {
-            footer.style.setProperty("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
-            footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
-            footer.style.setProperty("padding", "10px", "important");
-            footer.style.setProperty("margin", "0", "important");
-          }
-          footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
-            btn.classList.add("twbv-vantagem-action");
-            if (btn?.style?.setProperty) {
-              btn.style.setProperty("appearance", "none", "important");
-              btn.style.setProperty("-webkit-appearance", "none", "important");
-              btn.style.setProperty("background", "linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98))", "important");
-              btn.style.setProperty("color", "#f8edcc", "important");
-              btn.style.setProperty("border", "1px solid rgba(149, 96, 224, 0.9)", "important");
-              btn.style.setProperty("border-radius", "10px", "important");
-              btn.style.setProperty("min-height", "42px", "important");
-            }
-          });
+          applyCustomItemDialogTheme(dialogWindow);
         }
       },
-      buttons: {
-        save: {
-          label: "Salvar",
-          callback: async (dialogHtml) => {
-            const root = resolveDialogRoot(dialogHtml) ?? dialog.element?.[0];
-            await submitItemForm(root, dialog);
-            return false;
-          }
-        },
-        cancel: {
-          label: "Cancelar",
-          callback: async () => {
-            await dialog.close();
-          }
-        }
-      },
-      default: "save",
+      buttons: {},
+      default: null,
       close: () => {
         const root = dialog.element?.[0];
+        root?.__twbvThemeObserver?.disconnect?.();
+        if (root) delete root.__twbvThemeObserver;
         const nameInput = root?.querySelector('input[name="name"]');
         if (nameInput) nameInput.setCustomValidity("");
       }
@@ -1613,6 +1595,54 @@ class TWBVPersonagemSheet extends ActorSheet {
 }
 
 
+
+
+function applyCustomItemDialogTheme(dialogWindow) {
+  const apply = () => {
+    const root = dialogWindow ?? document;
+    const appRoot = dialogWindow?.closest?.(".window-app") ?? dialogWindow;
+    const footerCandidates = new Set([
+      ...(root?.querySelectorAll?.("footer.dialog-buttons, .window-content + footer.dialog-buttons, .window-content + footer, .dialog-buttons") ?? []),
+      ...(appRoot?.querySelectorAll?.("footer.dialog-buttons, .window-content + footer.dialog-buttons, .window-content + footer, .dialog-buttons") ?? [])
+    ]);
+
+    appRoot?.style?.setProperty?.("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
+
+    footerCandidates.forEach((footer) => {
+      footer?.classList?.add("twbv-vantagem-footer", "twbv-custom-item-footer");
+      if (footer?.style?.setProperty) {
+        footer.style.setProperty("background-color", "#090612", "important");
+        footer.style.setProperty("background-image", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
+        footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
+        footer.style.setProperty("padding", "10px", "important");
+        footer.style.setProperty("margin", "0", "important");
+      }
+      footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
+        btn.classList.add("twbv-vantagem-action", "twbv-custom-item-action");
+        if (btn?.style?.setProperty) {
+          btn.style.setProperty("appearance", "none", "important");
+          btn.style.setProperty("-webkit-appearance", "none", "important");
+          btn.style.setProperty("background", "linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98))", "important");
+          btn.style.setProperty("color", "#f8edcc", "important");
+          btn.style.setProperty("border", "1px solid rgba(149, 96, 224, 0.9)", "important");
+          btn.style.setProperty("border-radius", "10px", "important");
+          btn.style.setProperty("min-height", "42px", "important");
+        }
+      });
+    });
+  };
+
+  apply();
+  requestAnimationFrame(apply);
+  setTimeout(apply, 0);
+  setTimeout(apply, 60);
+
+  if (!dialogWindow) return;
+  const obs = new MutationObserver(() => apply());
+  obs.observe(dialogWindow, { childList: true, subtree: true });
+  dialogWindow.__twbvThemeObserver?.disconnect?.();
+  dialogWindow.__twbvThemeObserver = obs;
+}
 
 function twbvApplyRollAdjustments(root) {
   const card = root?.querySelector?.('.twbv-roll-chat');

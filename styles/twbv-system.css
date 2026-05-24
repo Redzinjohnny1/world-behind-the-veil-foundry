@@ -2658,3 +2658,26 @@
   text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
   font-weight: 700;
 }
+
+
+.twbv-custom-item-iconbox {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.twbv-custom-item-icon-placeholder {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.72));
+  color: #f8edcc;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 6px 4px;
+  pointer-events: none;
+}
+.twbv-custom-item-iconbox:hover .twbv-custom-item-icon-placeholder,
+.twbv-custom-item-iconbox:focus-visible .twbv-custom-item-icon-placeholder {
+  color: #ffedc5;
+}
+.twbv-custom-item-iconbox-edit { display: none !important; }

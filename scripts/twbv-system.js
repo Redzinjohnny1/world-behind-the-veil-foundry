@@ -1326,8 +1326,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
-            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
-            <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
+            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/mystery-man.svg"}" alt="Imagem do ícone" />
+            <span class="twbv-custom-item-icon-placeholder">Imagem</span>
           </button>
         </div>
         <div class="twbv-custom-item-main">
@@ -1508,7 +1508,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
-      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/item-bag.svg";
+      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
     iconInput?.addEventListener("input", syncIconPreview);
     iconButton?.addEventListener("click", async (event) => {

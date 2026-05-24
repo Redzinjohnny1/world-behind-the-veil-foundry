@@ -1325,7 +1325,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       return `
       <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
-          <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
+          <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button file-picker" data-type="image" data-target="icon" title="Clique para configurar ícone">
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/mystery-man.svg"}" alt="Imagem do ícone" />
             <span class="twbv-custom-item-icon-placeholder">Imagem</span>
           </button>
@@ -1487,8 +1487,19 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = async () => {
+    const openIconSourceDialog = async (event) => {
       try {
+        if (event?.currentTarget && typeof FilePicker?.fromButton === "function") {
+          const picker = await FilePicker.fromButton(event.currentTarget);
+          if (picker) {
+            picker.callback = (selectedPath) => {
+              if (!iconInput) return;
+              iconInput.value = String(selectedPath ?? "").trim();
+              syncIconPreview();
+            };
+            return;
+          }
+        }
         const picker = new FilePicker({
           type: "image",
           current: String(iconInput?.value ?? "").trim() || "icons/",
@@ -1498,17 +1509,7 @@ class TWBVPersonagemSheet extends ActorSheet {
             syncIconPreview();
           }
         });
-
-        // Compatibilidade: algumas versões abrem com render(true), outras exigem browse().
-        let opened = false;
-        if (typeof picker?.render === "function") {
-          picker.render(true);
-          opened = Boolean(picker?.rendered ?? picker?.element?.length);
-        }
-        if (!opened && typeof picker?.browse === "function") {
-          await picker.browse();
-          opened = true;
-        }
+        picker.render(true);
       } catch (error) {
         console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
         ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
@@ -1523,7 +1524,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const triggerIconPicker = async (event) => {
       event?.preventDefault?.();
       event?.stopPropagation?.();
-      await openIconSourceDialog();
+      await openIconSourceDialog(event);
     };
     iconButton?.addEventListener("click", triggerIconPicker);
     iconPreview?.addEventListener("click", triggerIconPicker);

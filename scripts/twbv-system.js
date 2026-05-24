@@ -1487,7 +1487,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = () => {
+    const openIconSourceDialog = async () => {
       try {
         const picker = new FilePicker({
           type: "image",
@@ -1498,10 +1498,11 @@ class TWBVPersonagemSheet extends ActorSheet {
             syncIconPreview();
           }
         });
-        picker.render(true);
+        if (typeof picker?.browse === "function") await picker.browse();
+        else picker.render(true);
       } catch (error) {
         console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
-        ui.notifications?.error("Não foi possível abrir o explorador de imagem.");
+        ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
       }
     };
     const syncIconPreview = () => {

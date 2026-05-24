@@ -1563,10 +1563,25 @@ class TWBVPersonagemSheet extends ActorSheet {
           const formRoot = root.querySelector("form.twbv-custom-item-dialog");
           formRoot?.classList?.add("wbtv-vantagem-dialog");
 
-          const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons");
+          const footer = dialogWindow?.querySelector?.("footer.dialog-buttons, .dialog-buttons, footer");
           footer?.classList?.add("twbv-vantagem-footer");
-          footer?.querySelectorAll?.("button, .dialog-button")?.forEach((btn) => {
+          if (footer?.style?.setProperty) {
+            footer.style.setProperty("background", "radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99))", "important");
+            footer.style.setProperty("border-top", "1px solid rgba(217, 183, 117, 0.42)", "important");
+            footer.style.setProperty("padding", "10px", "important");
+            footer.style.setProperty("margin", "0", "important");
+          }
+          footer?.querySelectorAll?.("button, .dialog-button, input[type='button'], input[type='submit']")?.forEach((btn) => {
             btn.classList.add("twbv-vantagem-action");
+            if (btn?.style?.setProperty) {
+              btn.style.setProperty("appearance", "none", "important");
+              btn.style.setProperty("-webkit-appearance", "none", "important");
+              btn.style.setProperty("background", "linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98))", "important");
+              btn.style.setProperty("color", "#f8edcc", "important");
+              btn.style.setProperty("border", "1px solid rgba(149, 96, 224, 0.9)", "important");
+              btn.style.setProperty("border-radius", "10px", "important");
+              btn.style.setProperty("min-height", "42px", "important");
+            }
           });
         }
       },

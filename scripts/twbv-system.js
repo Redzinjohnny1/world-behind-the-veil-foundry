@@ -1624,7 +1624,17 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
-        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async () => dialogApp.close());
+
+        // Fallback explícito: garante que os botões do popup sempre funcionem
+        root.querySelector(".twbv-custom-item-submit")?.addEventListener("click", async (event) => {
+          event.preventDefault();
+          await submitItemForm(root, dialogApp);
+        });
+        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async (event) => {
+          event.preventDefault();
+          await dialogApp.close();
+        });
+
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");

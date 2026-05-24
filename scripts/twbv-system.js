@@ -1487,29 +1487,22 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = async (event) => {
+    const openIconSourceDialog = async () => {
       try {
-        if (event?.currentTarget && typeof FilePicker?.fromButton === "function") {
-          const picker = await FilePicker.fromButton(event.currentTarget);
-          if (picker) {
-            picker.callback = (selectedPath) => {
-              if (!iconInput) return;
-              iconInput.value = String(selectedPath ?? "").trim();
-              syncIconPreview();
-            };
-            return;
-          }
-        }
+        const currentPath = String(iconInput?.value ?? "").trim() || "icons/";
         const picker = new FilePicker({
           type: "image",
-          current: String(iconInput?.value ?? "").trim() || "icons/",
+          current: currentPath,
           callback: (selectedPath) => {
             if (!iconInput) return;
             iconInput.value = String(selectedPath ?? "").trim();
             syncIconPreview();
           }
         });
-        picker.render(true);
+
+        // Fluxo mais confiável entre versões do Foundry.
+        if (typeof picker?.browse === "function") await picker.browse();
+        else if (typeof picker?.render === "function") picker.render(true);
       } catch (error) {
         console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
         ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
@@ -1524,7 +1517,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const triggerIconPicker = async (event) => {
       event?.preventDefault?.();
       event?.stopPropagation?.();
-      await openIconSourceDialog(event);
+      await openIconSourceDialog();
     };
     iconButton?.addEventListener("click", triggerIconPicker);
     iconPreview?.addEventListener("click", triggerIconPicker);

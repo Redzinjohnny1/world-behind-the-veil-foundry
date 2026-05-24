@@ -1463,8 +1463,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
-    const isValid = String(nameInput.value ?? "").trim().length > 0;
-    saveButton.disabled = !isValid;
+    saveButton.disabled = false;
   }
 
   _bindCustomDialogFormSubmit(root, onSubmit) {
@@ -1504,13 +1503,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return false;
 
-      const nome = String(nameInput.value ?? "").trim();
-      if (!nome) {
-        ui.notifications?.error("O nome da vantagem é obrigatório.");
-        nameInput.focus();
-        this._setCustomDialogValidationState(root);
-        return false;
-      }
+      const typedName = String(nameInput.value ?? "").trim();
+      const defaultNameByType = {
+        vantagem: "Vantagem",
+        habilidadeEspecial: "Habilidade Especial",
+        complicacao: "Complicação"
+      };
+      const nome = typedName || defaultNameByType[type] || "Vantagem";
+      if (!typedName) nameInput.value = nome;
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
       const isEmbeddedItem = item && typeof item.update === "function";

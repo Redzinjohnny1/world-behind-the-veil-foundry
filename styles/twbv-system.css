@@ -1858,6 +1858,13 @@
 .window-app.wbtv-custom-item-dialog,
 .window-app.wbtv-custom-item-dialog .app,
 .window-app.wbtv-custom-item-dialog .window-content,
+.window-app.wbtv-custom-item-dialog .dialog-content {
+  border-color: rgba(217, 183, 117, 0.82) !important;
+  outline: none !important;
+}
+.window-app.wbtv-custom-item-dialog,
+.window-app.wbtv-custom-item-dialog .app,
+.window-app.wbtv-custom-item-dialog .window-content,
 .window-app.wbtv-custom-item-dialog .dialog-content,
 .window-app.wbtv-custom-item-dialog .window-resizable-handle,
 .window-app.wbtv-custom-item-dialog footer,

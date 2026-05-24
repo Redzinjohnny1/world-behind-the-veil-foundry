@@ -1399,19 +1399,72 @@ class TWBVPersonagemSheet extends ActorSheet {
         </section>
         <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
         <section class="twbv-custom-tab-pane" data-tab="efeitos">
-          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
           <div class="twbv-effects-list">${effectsMarkup}</div>
         </section>
       </form>`;
   }
 
   _bindCustomDialogUi(root) {
-    const tabButtons = root.querySelectorAll(".twbv-tab-button");
-    tabButtons.forEach((button) => button.addEventListener("click", () => {
-      const tab = button.dataset.tab;
-      root.querySelectorAll(".twbv-tab-button").forEach((btn) => btn.classList.toggle("is-active", btn === button));
-      root.querySelectorAll(".twbv-custom-tab-pane").forEach((pane) => pane.classList.toggle("is-active", pane.dataset.tab === tab));
-    }));
+    const tabButtons = Array.from(root.querySelectorAll(".twbv-tab-button"));
+    const tabPanes = Array.from(root.querySelectorAll(".twbv-custom-tab-pane"));
+    const tabsNav = root.querySelector(".twbv-custom-tabs");
+    tabsNav?.setAttribute("role", "tablist");
+    tabButtons.forEach((btn, index) => {
+      const tabId = btn.dataset.tab ?? `tab-${index}`;
+      const pane = tabPanes.find((candidate) => candidate.dataset.tab === tabId);
+      btn.id = btn.id || `twbv-tab-${tabId}`;
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("tabindex", btn.classList.contains("is-active") ? "0" : "-1");
+      if (pane) {
+        pane.id = pane.id || `twbv-panel-${tabId}`;
+        pane.setAttribute("role", "tabpanel");
+        pane.setAttribute("aria-labelledby", btn.id);
+        btn.setAttribute("aria-controls", pane.id);
+      }
+    });
+    const switchTab = (tabId) => {
+      tabButtons.forEach((btn) => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.classList.toggle("is-active", isActive);
+        btn.setAttribute("aria-selected", isActive ? "true" : "false");
+        btn.setAttribute("tabindex", isActive ? "0" : "-1");
+      });
+      tabPanes.forEach((pane) => {
+        const isActive = pane.dataset.tab === tabId;
+        pane.classList.toggle("is-active", isActive);
+        pane.hidden = !isActive;
+        pane.setAttribute("aria-hidden", isActive ? "false" : "true");
+      });
+      const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+      formRoot?.setAttribute("data-active-tab", tabId);
+    };
+    tabsNav?.addEventListener("click", (event) => {
+      const button = event.target.closest(".twbv-tab-button");
+      if (!button || !tabsNav.contains(button)) return;
+      event.preventDefault();
+      const targetTab = button.dataset.tab;
+      if (!targetTab) return;
+      switchTab(targetTab);
+      button.focus();
+    });
+    tabsNav?.addEventListener("keydown", (event) => {
+      const currentIndex = tabButtons.findIndex((btn) => btn.classList.contains("is-active"));
+      if (currentIndex < 0) return;
+      if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = currentIndex;
+      if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabButtons.length;
+      if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabButtons.length) % tabButtons.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = tabButtons.length - 1;
+      const nextButton = tabButtons[nextIndex];
+      if (!nextButton) return;
+      switchTab(nextButton.dataset.tab);
+      nextButton.focus();
+    });
+    const firstActiveButton = root.querySelector(".twbv-tab-button.is-active");
+    switchTab(firstActiveButton?.dataset.tab ?? tabButtons[0]?.dataset.tab ?? "descricao");
     const effectsList = root.querySelector(".twbv-effects-list");
     root.querySelector(".twbv-effect-add")?.addEventListener("click", () => {
       const index = effectsList.querySelectorAll(".twbv-effect-row").length;

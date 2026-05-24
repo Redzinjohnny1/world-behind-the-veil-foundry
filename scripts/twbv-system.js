@@ -1216,8 +1216,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".twbv-item-create").on("click", async (event) => {
       event.preventDefault();
       const type = String(event.currentTarget.dataset.type ?? "equipamento");
+      const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
       if (["vantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
-        await this._openCustomItemDialog(type);
+        await this._openCustomItemDialog(type, null, { dialogVersion });
         return;
       }
       const name = `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
@@ -1234,7 +1235,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!listKey) return;
         const entry = Array.from(this.actor.system?.[listKey] ?? []).find((v) => String(v?.id ?? "") === itemId);
         if (!entry) return;
-        await this._openCustomItemDialog(type, entry, { listKey });
+        const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
+        await this._openCustomItemDialog(type, entry, { listKey, dialogVersion });
         return;
       }
       const item = this.actor.items.get(itemId);
@@ -1312,7 +1314,9 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   async _onItemCreate(event){event.preventDefault(); const type=event.currentTarget.dataset.type; const itemData={name:type==='weapon'?'Nova Arma':'Novo Consumível', type, system:type==='weapon'?this._buildWeaponDefaults():this._buildConsumableDefaults()}; await this.actor.createEmbeddedDocuments('Item',[itemData]);}
 
-  _buildCustomItemDialogContent(type, itemData = {}) {
+  _buildCustomItemDialogContent(type, itemData = {}, options = {}) {
+    const dialogVersion = String(options.dialogVersion ?? "");
+    const isV2 = dialogVersion === "2";
     if (["vantagem", "habilidadeEspecial"].includes(type)) {
       const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
       const effectsMarkup = effects.length
@@ -1321,7 +1325,15 @@ class TWBVPersonagemSheet extends ActorSheet {
       return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
-          <div class="twbv-custom-item-iconbox"><i class="fas fa-award"></i></div>
+          <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
+            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
+            <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
+          </button>
+          <div class="twbv-custom-item-icon-chooser" hidden>
+            <button type="button" class="twbv-icon-source twbv-icon-source-file"><i class="fas fa-folder-open"></i> Procurar no PC</button>
+            <button type="button" class="twbv-icon-source twbv-icon-source-url"><i class="fas fa-link"></i> Usar URL</button>
+          </div>
+          <input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />
         </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
@@ -1480,6 +1492,54 @@ class TWBVPersonagemSheet extends ActorSheet {
       btn.closest(".twbv-effect-row")?.remove();
       if (!effectsList.querySelector(".twbv-effect-row")) effectsList.innerHTML = `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     });
+
+    const iconInput = root.querySelector('input[name="icon"]');
+    const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
+    const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
+    const iconFileInput = root.querySelector(".twbv-custom-item-icon-file");
+    const iconChooser = root.querySelector(".twbv-custom-item-icon-chooser");
+    const iconSourceFileBtn = root.querySelector(".twbv-icon-source-file");
+    const iconSourceUrlBtn = root.querySelector(".twbv-icon-source-url");
+    const syncIconPreview = () => {
+      const iconValue = String(iconInput?.value ?? "").trim();
+      if (iconPreview && iconValue) iconPreview.src = iconValue;
+      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/item-bag.svg";
+    };
+    iconInput?.addEventListener("input", syncIconPreview);
+    iconButton?.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (iconChooser) iconChooser.hidden = !iconChooser.hidden;
+    });
+    iconButton?.addEventListener("keydown", async (event) => {
+      if (!["Enter", " "].includes(event.key)) return;
+      event.preventDefault();
+      iconButton.click();
+    });
+    iconSourceFileBtn?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      iconFileInput?.click();
+    });
+    iconSourceUrlBtn?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (iconChooser) iconChooser.hidden = true;
+      iconInput?.focus();
+    });
+    iconFileInput?.addEventListener("change", () => {
+      const file = iconFileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = String(reader.result ?? "");
+        if (iconInput) iconInput.value = result;
+        syncIconPreview();
+        if (iconChooser) iconChooser.hidden = true;
+      };
+      reader.readAsDataURL(file);
+    });
+    syncIconPreview();
   }
 
   _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {
@@ -1540,6 +1600,25 @@ class TWBVPersonagemSheet extends ActorSheet {
     this._setCustomDialogValidationState(root);
   }
 
+  _bindCustomDialogActionButtons(root, onSubmit, onCancel) {
+    if (!root) return;
+    root.addEventListener("click", async (event) => {
+      const submitBtn = event.target.closest(".twbv-custom-item-submit");
+      if (submitBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+        return;
+      }
+      const cancelBtn = event.target.closest(".twbv-custom-item-cancel");
+      if (cancelBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      }
+    }, true);
+  }
+
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
@@ -1561,7 +1640,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       cargas: item?.cargas ?? item?.charges ?? item?.system?.cargas ?? item?.system?.charges ?? "",
       effects: Array.isArray(item?.activeEffects) ? item.activeEffects : (Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : [])
     };
-    const content = this._buildCustomItemDialogContent(type, itemData);
+    const content = this._buildCustomItemDialogContent(type, itemData, options);
 
     const submitItemForm = async (root, dialogApp) => {
       const form = root?.querySelector("form.twbv-custom-item-dialog");
@@ -1624,16 +1703,21 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
+        this._bindCustomDialogActionButtons(
+          root,
+          async () => submitItemForm(root, dialogApp),
+          async () => dialogApp.close()
+        );
 
         // Fallback explícito: garante que os botões do popup sempre funcionem
-        root.querySelector(".twbv-custom-item-submit")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          await submitItemForm(root, dialogApp);
-        });
-        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          await dialogApp.close();
-        });
+        const windowRoot = dialogApp?.element?.[0];
+        if (windowRoot && windowRoot !== root) {
+          this._bindCustomDialogActionButtons(
+            windowRoot,
+            async () => submitItemForm(root, dialogApp),
+            async () => dialogApp.close()
+          );
+        }
 
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]

@@ -2641,3 +2641,11 @@
   padding: 14px;
   min-height: 500px;
 }
+
+/* Ajuste final: texto Salvar/Cancelar no padrão do tema */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button) {
+  color: #f8edcc !important;
+  -webkit-text-fill-color: #f8edcc !important;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+  font-weight: 700;
+}

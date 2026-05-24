@@ -1334,12 +1334,15 @@ class TWBVPersonagemSheet extends ActorSheet {
             <div class="form-group"><label>Ícone (URL)</label><input type="text" name="icon" value="${itemData.icon ?? ""}" placeholder="https://..." /></div>
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
-            <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+            <button type="button" class="twbv-tab-button is-active" data-tab="destaque">Destaque</button>
             <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
-            <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+            <button type="button" class="twbv-tab-button" data-tab="efeito">Efeito</button>
           </nav>
-          <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-            <div class="form-group"><textarea name="description" rows="11" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+          <section class="twbv-custom-tab-pane is-active" data-tab="destaque">
+            <div class="form-group"><label>Resumo / Destaque</label><textarea name="description" rows="7" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+            <div class="twbv-property-checkboxes">
+              <label><input type="checkbox" name="favorite" ${itemData.favorite ? "checked" : ""} /> Destacar na ficha</label>
+            </div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
             <div class="twbv-custom-properties-panel">
@@ -1347,7 +1350,7 @@ class TWBVPersonagemSheet extends ActorSheet {
               <input type="text" name="charges" value="${itemData.cargas ?? itemData.charges ?? ""}" placeholder="Ex.: 3, 10, Ilimitado" />
             </div>
           </section>
-          <section class="twbv-custom-tab-pane" data-tab="efeitos">
+          <section class="twbv-custom-tab-pane" data-tab="efeito">
             <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
@@ -1486,6 +1489,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const categoria = String(root?.querySelector('input[name="category"]')?.value ?? "").trim();
     const requisitos = String(root?.querySelector('input[name="requirements"]')?.value ?? "").trim();
     const descricao = String(root?.querySelector('textarea[name="description"]')?.value ?? "").trim();
+    const favorite = Boolean(root?.querySelector('input[name="favorite"]')?.checked);
     const extraNotes = String(root?.querySelector('textarea[name="extraNotes"]')?.value ?? "").trim();
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
@@ -1510,7 +1514,8 @@ class TWBVPersonagemSheet extends ActorSheet {
         hasCharges,
         charges,
         activeEffects: effects,
-        active: true
+        active: true,
+        favorite
       }
     };
   }
@@ -1552,6 +1557,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       severity: item?.severity ?? item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.isArcaneBackground ?? item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.hasCharges ?? item?.system?.hasCharges),
+      favorite: Boolean(item?.favorite ?? item?.system?.favorite),
       cargas: item?.cargas ?? item?.charges ?? item?.system?.cargas ?? item?.system?.charges ?? "",
       effects: Array.isArray(item?.activeEffects) ? item.activeEffects : (Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : [])
     };
@@ -1597,6 +1603,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
           charges: payload.system.charges,
+          favorite: payload.system.favorite,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);

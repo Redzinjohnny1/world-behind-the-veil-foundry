@@ -1387,39 +1387,54 @@ class TWBVPersonagemSheet extends ActorSheet {
       : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     return `
       <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
-        <nav class="twbv-custom-tabs">
-          <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
-          <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
-          <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
-        </nav>
-        <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
-          <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
-          ${fieldsByType[type] ?? ""}
-          <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
-        </section>
-        <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
-        <section class="twbv-custom-tab-pane" data-tab="efeitos">
-          <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
-          <div class="twbv-effects-list">${effectsMarkup}</div>
-        </section>
+        <div class="twbv-custom-item-main">
+          <nav class="twbv-custom-tabs">
+            <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
+            <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
+            <button type="button" class="twbv-tab-button" data-tab="efeitos">Efeitos</button>
+          </nav>
+          <section class="twbv-custom-tab-pane is-active" data-tab="descricao">
+            <div class="form-group"><label>Nome da Péricia</label><input type="text" name="name" value="${itemData.name ?? ""}" required autofocus /></div>
+            ${fieldsByType[type] ?? ""}
+            <div class="form-group"><label>Descrição</label><textarea name="description" rows="5">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
+          </section>
+          <section class="twbv-custom-tab-pane" data-tab="propriedades">${propertiesField}</section>
+          <section class="twbv-custom-tab-pane" data-tab="efeitos">
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar efeito ativo</button>
+            <div class="twbv-effects-list">${effectsMarkup}</div>
+          </section>
+        </div>
       </form>`;
   }
 
   _bindCustomDialogUi(root) {
-    const tabButtons = root.querySelectorAll(".twbv-tab-button");
+    const tabButtons = Array.from(root.querySelectorAll(".twbv-tab-button"));
+    const tabPanes = Array.from(root.querySelectorAll(".twbv-custom-tab-pane"));
     const switchTab = (tabId) => {
-      root.querySelectorAll(".twbv-tab-button").forEach((btn) => {
-        btn.classList.toggle("is-active", btn.dataset.tab === tabId);
+      tabButtons.forEach((btn) => btn.classList.remove("is-active"));
+      const activeButton = tabButtons.find((btn) => btn.dataset.tab === tabId);
+      activeButton?.classList.add("is-active");
+
+      tabPanes.forEach((pane) => {
+        pane.classList.remove("is-active");
+        pane.hidden = true;
       });
-      root.querySelectorAll(".twbv-custom-tab-pane").forEach((pane) => {
-        const isActive = pane.dataset.tab === tabId;
-        pane.classList.toggle("is-active", isActive);
-        pane.hidden = !isActive;
-      });
+      const activePane = tabPanes.find((pane) => pane.dataset.tab === tabId);
+      if (activePane) {
+        activePane.classList.add("is-active");
+        activePane.hidden = false;
+      }
     };
-    tabButtons.forEach((button) => button.addEventListener("click", () => switchTab(button.dataset.tab)));
-    const firstActiveButton = root.querySelector(".twbv-tab-button.is-active");
-    switchTab(firstActiveButton?.dataset.tab ?? tabButtons[0]?.dataset.tab ?? "descricao");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tabId = String(button.dataset.tab ?? "");
+        if (!tabPanes.some((pane) => pane.dataset.tab === tabId)) return;
+        switchTab(tabId);
+      });
+    });
+
+    switchTab("descricao");
     const effectsList = root.querySelector(".twbv-effects-list");
     root.querySelector(".twbv-effect-add")?.addEventListener("click", () => {
       const index = effectsList.querySelectorAll(".twbv-effect-row").length;

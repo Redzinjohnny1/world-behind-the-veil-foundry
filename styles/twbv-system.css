@@ -2445,3 +2445,20 @@
   border: 1px solid rgba(149, 96, 224, 0.9) !important;
   border-radius: 10px !important;
 }
+
+
+.twbv-custom-item-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(217, 183, 117, 0.42);
+}
+.twbv-custom-item-actions button {
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(149, 96, 224, 0.9) !important;
+  color: #f8edcc !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+}

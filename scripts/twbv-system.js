@@ -1348,6 +1348,10 @@ class TWBVPersonagemSheet extends ActorSheet {
             <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> ADICIONAR</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
+          <div class="twbv-custom-item-actions">
+            <button type="submit" class="twbv-custom-item-submit">Salvar</button>
+            <button type="button" class="twbv-custom-item-cancel" data-action="cancel">Cancelar</button>
+          </div>
         </div>
       </form>`;
     }
@@ -1457,7 +1461,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   _setCustomDialogValidationState(root) {
     const form = root?.querySelector("form.twbv-custom-item-dialog");
     const nameInput = form?.querySelector('input[name="name"]');
-    const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"]');
+    const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
     const isValid = String(nameInput.value ?? "").trim().length > 0;
     saveButton.disabled = !isValid;
@@ -1553,6 +1557,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!root) return;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
+        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async () => dialogApp.close());
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");
@@ -1568,23 +1573,8 @@ class TWBVPersonagemSheet extends ActorSheet {
           applyCustomItemDialogTheme(dialogWindow);
         }
       },
-      buttons: {
-        save: {
-          label: "Salvar",
-          callback: async (dialogHtml) => {
-            const root = resolveDialogRoot(dialogHtml) ?? dialog.element?.[0];
-            await submitItemForm(root, dialog);
-            return false;
-          }
-        },
-        cancel: {
-          label: "Cancelar",
-          callback: async () => {
-            await dialog.close();
-          }
-        }
-      },
-      default: "save",
+      buttons: {},
+      default: null,
       close: () => {
         const root = dialog.element?.[0];
         root?.__twbvThemeObserver?.disconnect?.();

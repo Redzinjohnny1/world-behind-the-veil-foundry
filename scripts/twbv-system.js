@@ -1485,27 +1485,21 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     const iconInput = root.querySelector('input[name="icon"]');
+
+    const localImageInput = document.createElement("input");
+    localImageInput.type = "file";
+    localImageInput.accept = "image/*";
+    localImageInput.style.display = "none";
+    root.appendChild(localImageInput);
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
     const openIconSourceDialog = async () => {
       try {
-        const currentPath = String(iconInput?.value ?? "").trim() || "icons/";
-        const picker = new FilePicker({
-          type: "image",
-          current: currentPath,
-          callback: (selectedPath) => {
-            if (!iconInput) return;
-            iconInput.value = String(selectedPath ?? "").trim();
-            syncIconPreview();
-          }
-        });
-
-        // Fluxo mais confiável entre versões do Foundry.
-        if (typeof picker?.browse === "function") await picker.browse();
-        else if (typeof picker?.render === "function") picker.render(true);
+        localImageInput.value = "";
+        localImageInput.click();
       } catch (error) {
-        console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
-        ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
+        console.error("TWBV | Falha ao abrir seletor local de imagem", error);
+        ui.notifications?.error("Não foi possível abrir o seletor de imagem.");
       }
     };
     const syncIconPreview = () => {
@@ -1513,6 +1507,19 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (iconPreview && iconValue) iconPreview.src = iconValue;
       if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
+
+    localImageInput.addEventListener("change", () => {
+      const file = localImageInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = String(reader.result ?? "");
+        if (!dataUrl) return;
+        if (iconInput) iconInput.value = dataUrl;
+        syncIconPreview();
+      };
+      reader.readAsDataURL(file);
+    });
     iconInput?.addEventListener("input", syncIconPreview);
     const triggerIconPicker = async (event) => {
       event?.preventDefault?.();

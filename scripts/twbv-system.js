@@ -1493,10 +1493,11 @@ class TWBVPersonagemSheet extends ActorSheet {
     root.appendChild(localImageInput);
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = async () => {
+    const openIconSourceDialog = () => {
       try {
         localImageInput.value = "";
-        localImageInput.click();
+        if (typeof localImageInput.showPicker === "function") localImageInput.showPicker();
+        else localImageInput.click();
       } catch (error) {
         console.error("TWBV | Falha ao abrir seletor local de imagem", error);
         ui.notifications?.error("Não foi possível abrir o seletor de imagem.");
@@ -1521,10 +1522,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       reader.readAsDataURL(file);
     });
     iconInput?.addEventListener("input", syncIconPreview);
-    const triggerIconPicker = async (event) => {
+    const triggerIconPicker = (event) => {
       event?.preventDefault?.();
       event?.stopPropagation?.();
-      await openIconSourceDialog();
+      openIconSourceDialog();
     };
     iconButton?.addEventListener("click", triggerIconPicker);
     iconPreview?.addEventListener("click", triggerIconPicker);
@@ -1533,7 +1534,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!target) return;
       triggerIconPicker(event);
     });
-    iconButton?.addEventListener("keydown", async (event) => {
+    iconButton?.addEventListener("keydown", (event) => {
       if (!["Enter", " "].includes(event.key)) return;
       triggerIconPicker(event);
     });

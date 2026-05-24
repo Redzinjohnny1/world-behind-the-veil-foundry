@@ -1410,6 +1410,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const switchTab = (tabId) => {
       root.querySelectorAll(".twbv-tab-button").forEach((btn) => {
         btn.classList.toggle("is-active", btn.dataset.tab === tabId);
+        btn.setAttribute("aria-selected", btn.dataset.tab === tabId ? "true" : "false");
       });
       root.querySelectorAll(".twbv-custom-tab-pane").forEach((pane) => {
         const isActive = pane.dataset.tab === tabId;
@@ -1417,7 +1418,12 @@ class TWBVPersonagemSheet extends ActorSheet {
         pane.hidden = !isActive;
       });
     };
-    tabButtons.forEach((button) => button.addEventListener("click", () => switchTab(button.dataset.tab)));
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        switchTab(button.dataset.tab);
+      });
+    });
     const firstActiveButton = root.querySelector(".twbv-tab-button.is-active");
     switchTab(firstActiveButton?.dataset.tab ?? tabButtons[0]?.dataset.tab ?? "descricao");
     const effectsList = root.querySelector(".twbv-effects-list");

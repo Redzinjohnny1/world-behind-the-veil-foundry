@@ -614,6 +614,19 @@
   color: #f5e6bf;
   text-shadow: 0 0 8px rgba(0, 0, 0, 0.7);
 }
+.twbv-custom-item-icon-chooser {
+  display: grid;
+  gap: 6px;
+}
+.twbv-icon-source {
+  font-size: 0.72rem;
+  border-radius: 8px;
+  border: 1px solid rgba(149, 96, 224, 0.85);
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98));
+  color: #f8edcc;
+  min-height: 30px;
+  cursor: pointer;
+}
 .twbv-active-bonuses {
   margin-top: 8px;
   border: 1px solid rgba(121, 196, 255, 0.45);

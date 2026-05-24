@@ -1329,7 +1329,11 @@ class TWBVPersonagemSheet extends ActorSheet {
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
             <i class="fas fa-pen twbv-custom-item-iconbox-edit"></i>
           </button>
-          ${isV2 ? `<input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />` : ""}
+          <div class="twbv-custom-item-icon-chooser" hidden>
+            <button type="button" class="twbv-icon-source twbv-icon-source-file"><i class="fas fa-folder-open"></i> Procurar no PC</button>
+            <button type="button" class="twbv-icon-source twbv-icon-source-url"><i class="fas fa-link"></i> Usar URL</button>
+          </div>
+          <input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />
         </div>
         <div class="twbv-custom-item-main">
           <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
@@ -1493,6 +1497,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
     const iconFileInput = root.querySelector(".twbv-custom-item-icon-file");
+    const iconChooser = root.querySelector(".twbv-custom-item-icon-chooser");
+    const iconSourceFileBtn = root.querySelector(".twbv-icon-source-file");
+    const iconSourceUrlBtn = root.querySelector(".twbv-icon-source-url");
     const syncIconPreview = () => {
       const iconValue = String(iconInput?.value ?? "").trim();
       if (iconPreview && iconValue) iconPreview.src = iconValue;
@@ -1502,28 +1509,23 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconButton?.addEventListener("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      const openIconChoiceDialog = () => new Promise((resolve) => {
-        const chooser = new Dialog({
-          title: "Configurar ícone",
-          content: `<p>Como deseja definir o ícone?</p>`,
-          buttons: {
-            file: { icon: '<i class="fas fa-folder-open"></i>', label: "Procurar no PC", callback: () => resolve("file") },
-            url: { icon: '<i class="fas fa-link"></i>', label: "Usar URL", callback: () => resolve("url") },
-            cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancelar", callback: () => resolve("cancel") }
-          },
-          default: "file",
-          close: () => resolve("cancel")
-        });
-        chooser.render(true);
-      });
-      const choice = await openIconChoiceDialog();
-      if (choice === "file" && iconFileInput) iconFileInput.click();
-      if (choice === "url") iconInput?.focus();
+      if (iconChooser) iconChooser.hidden = !iconChooser.hidden;
     });
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
       event.preventDefault();
       iconButton.click();
+    });
+    iconSourceFileBtn?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      iconFileInput?.click();
+    });
+    iconSourceUrlBtn?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (iconChooser) iconChooser.hidden = true;
+      iconInput?.focus();
     });
     iconFileInput?.addEventListener("change", () => {
       const file = iconFileInput.files?.[0];
@@ -1533,6 +1535,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         const result = String(reader.result ?? "");
         if (iconInput) iconInput.value = result;
         syncIconPreview();
+        if (iconChooser) iconChooser.hidden = true;
       };
       reader.readAsDataURL(file);
     });

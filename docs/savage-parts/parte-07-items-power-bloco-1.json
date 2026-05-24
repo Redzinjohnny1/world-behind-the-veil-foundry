@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Raiton: Denkō Sekka (Estilo Raio: Rápido como um Relâmpago)",
+    "type": "power",
+    "_id": "DcnEU9beFnUwyWoh"
+  },
+  {
+    "name": "Raiton: Raigeki no Gunrō (Estilo Raio: Matilha de Lobos de Trovão)",
+    "type": "power",
+    "_id": "m95KV2cJbRQzv9bx"
+  },
+  {
+    "name": "Raiton: Raijin no Sabaki (Estilo Raio: Julgamento do Deus do Trovão)",
+    "type": "power",
+    "_id": "yf9BM0jvXakqjBah"
+  },
+  {
+    "name": "Raiton: Shinkei Kasseika/Shinkei Konran (Estilo Raio: Ativação Sináptica/Confusão Sináptica)",
+    "type": "power",
+    "_id": "z2849SNPuHEC9WZN"
+  },
+  {
+    "name": "Raiton: Sanda no Yoroi (Estilo Raio: Armadura de Trovão)",
+    "type": "power",
+    "_id": "7F2uYPArWXDMTuNi"
+  },
+  {
+    "name": "Raiton: Raikō no Yaiba (Estilo Raio: Lâmina do Relâmpago)",
+    "type": "power",
+    "_id": "YSnmUuAz2cDRLbXn"
+  },
+  {
+    "name": "Raiton: Denki Ayatsuri (Estilo Raio: Controle Estático)",
+    "type": "power",
+    "_id": "QBtRZPZixgBx9WoP"
+  },
+  {
+    "name": "Raiton Hishō Rai",
+    "type": "power",
+    "_id": "HzeT6hs0m9SgAbki"
+  }
+]

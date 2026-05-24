@@ -1439,11 +1439,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       const formRoot = root.querySelector("form.twbv-custom-item-dialog");
       formRoot?.setAttribute("data-active-tab", tabId);
     };
-    tabButtons.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        event.preventDefault();
-        switchTab(button.dataset.tab);
-      });
+    tabsNav?.addEventListener("click", (event) => {
+      const button = event.target.closest(".twbv-tab-button");
+      if (!button || !tabsNav.contains(button)) return;
+      event.preventDefault();
+      const targetTab = button.dataset.tab;
+      if (!targetTab) return;
+      switchTab(targetTab);
+      button.focus();
     });
     tabsNav?.addEventListener("keydown", (event) => {
       const currentIndex = tabButtons.findIndex((btn) => btn.classList.contains("is-active"));

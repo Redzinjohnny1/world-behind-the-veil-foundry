@@ -598,6 +598,8 @@
   background: linear-gradient(160deg, rgba(112, 76, 169, 0.8), rgba(56, 31, 93, 0.95));
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  pointer-events: auto;
 }
 .twbv-custom-item-icon-preview {
   width: 100%;
@@ -2502,6 +2504,10 @@
   border-top: 1px solid rgba(217, 183, 117, 0.42);
 }
 .twbv-custom-item-actions button {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
   min-height: 42px;
   border-radius: 10px;
   border: 1px solid rgba(149, 96, 224, 0.9) !important;

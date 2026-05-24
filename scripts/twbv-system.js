@@ -1501,19 +1501,29 @@ class TWBVPersonagemSheet extends ActorSheet {
     iconInput?.addEventListener("input", syncIconPreview);
     iconButton?.addEventListener("click", async (event) => {
       event.preventDefault();
-      if (!iconFileInput) return;
-      const choice = await Dialog.wait({
-        title: "Configurar ícone",
-        content: `<p>Como deseja definir o ícone?</p>`,
-        buttons: {
-          file: { icon: '<i class="fas fa-folder-open"></i>', label: "Procurar no PC", callback: () => "file" },
-          url: { icon: '<i class="fas fa-link"></i>', label: "Usar URL", callback: () => "url" },
-          cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancelar", callback: () => "cancel" }
-        },
-        default: "file"
+      event.stopPropagation();
+      const openIconChoiceDialog = () => new Promise((resolve) => {
+        const chooser = new Dialog({
+          title: "Configurar ícone",
+          content: `<p>Como deseja definir o ícone?</p>`,
+          buttons: {
+            file: { icon: '<i class="fas fa-folder-open"></i>', label: "Procurar no PC", callback: () => resolve("file") },
+            url: { icon: '<i class="fas fa-link"></i>', label: "Usar URL", callback: () => resolve("url") },
+            cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancelar", callback: () => resolve("cancel") }
+          },
+          default: "file",
+          close: () => resolve("cancel")
+        });
+        chooser.render(true);
       });
-      if (choice === "file") iconFileInput.click();
+      const choice = await openIconChoiceDialog();
+      if (choice === "file" && iconFileInput) iconFileInput.click();
       if (choice === "url") iconInput?.focus();
+    });
+    iconButton?.addEventListener("keydown", async (event) => {
+      if (!["Enter", " "].includes(event.key)) return;
+      event.preventDefault();
+      iconButton.click();
     });
     iconFileInput?.addEventListener("change", () => {
       const file = iconFileInput.files?.[0];
@@ -1675,10 +1685,12 @@ class TWBVPersonagemSheet extends ActorSheet {
         // Fallback explícito: garante que os botões do popup sempre funcionem
         root.querySelector(".twbv-custom-item-submit")?.addEventListener("click", async (event) => {
           event.preventDefault();
+          event.stopPropagation();
           await submitItemForm(root, dialogApp);
         });
         root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async (event) => {
           event.preventDefault();
+          event.stopPropagation();
           await dialogApp.close();
         });
 

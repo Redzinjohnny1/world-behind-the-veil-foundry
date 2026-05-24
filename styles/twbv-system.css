@@ -1926,6 +1926,25 @@
 .window-app.wbtv-custom-item-dialog footer.dialog-buttons {
   background-color: #090612 !important;
 }
+
+/* Alinhar visual do popup de Vantagem/Habilidade com o popup funcional de Perícias */
+.window-app.wbtv-custom-item-dialog {
+  border: 1px solid rgba(217, 183, 117, 0.82) !important;
+  border-radius: 14px !important;
+  overflow: hidden !important;
+  box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.3), 0 0 26px rgba(149, 96, 224, 0.55), 0 16px 36px rgba(0, 0, 0, 0.7) !important;
+}
+.window-app.wbtv-custom-item-dialog .window-header {
+  background: linear-gradient(180deg, rgba(38, 19, 64, 0.98), rgba(14, 8, 25, 0.99)) !important;
+  border-bottom: 1px solid rgba(217, 183, 117, 0.68) !important;
+  color: #f7e7be !important;
+}
+.window-app.wbtv-custom-item-dialog > footer.dialog-buttons,
+.window-app.wbtv-custom-item-dialog .window-content + footer.dialog-buttons {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(217, 183, 117, 0.42) !important;
+}
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
 .twbv-custom-item-dialog--sheetlike {
   grid-template-columns: 120px 1fr;

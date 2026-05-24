@@ -1785,6 +1785,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (type === "vantagem" || type === "habilidadeEspecial") {
           const variantClass = type === "habilidadeEspecial" ? "wbtv-habilidade-dialog" : "wbtv-vantagem-dialog";
           const variantWindowClass = `${variantClass}-window`;
+          dialogWindow?.classList?.add("wbtv-add-skill-dialog");
           dialogWindow?.classList?.add(variantClass);
           dialogWindow?.classList?.add(variantWindowClass);
           root.classList.add(variantClass);

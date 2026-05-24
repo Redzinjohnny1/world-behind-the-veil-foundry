@@ -1323,7 +1323,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
+      <form class="twbv-custom-item-form" data-type="${type}">
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
@@ -1392,7 +1392,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
       : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
+      <form class="twbv-custom-item-form" data-type="${type}">
         <nav class="twbv-custom-tabs">
           <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
           <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
@@ -1442,7 +1442,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         pane.hidden = !isActive;
         pane.setAttribute("aria-hidden", isActive ? "false" : "true");
       });
-      const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+      const formRoot = root.querySelector("form.twbv-custom-item-form");
       formRoot?.setAttribute("data-active-tab", tabId);
     };
     tabsNav?.addEventListener("click", (event) => {
@@ -1568,7 +1568,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
   _setCustomDialogValidationState(root) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form");
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
@@ -1576,7 +1576,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 
   _bindCustomDialogFormSubmit(root, onSubmit) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form");
     if (!form || typeof onSubmit !== "function") return;
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1643,7 +1643,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const content = this._buildCustomItemDialogContent(type, itemData, options);
 
     const submitItemForm = async (root, dialogApp) => {
-      const form = root?.querySelector("form.twbv-custom-item-dialog");
+      const form = root?.querySelector("form.twbv-custom-item-form");
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return false;
 
@@ -1739,7 +1739,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (type === "vantagem" || type === "habilidadeEspecial") {
           // Não aplicar classes variantes aqui para evitar ativar overrides de tema
           // no CSS que mudam o visual padrão do Foundry (Salvar/Cancelar etc.).
-          const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+          const formRoot = root.querySelector("form.twbv-custom-item-form");
           formRoot?.classList?.remove?.("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
           root.classList.remove("wbtv-vantagem-dialog", "wbtv-habilidade-dialog");
         }

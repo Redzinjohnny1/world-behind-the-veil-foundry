@@ -1956,6 +1956,10 @@
   box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
 }
 .twbv-custom-item-dialog { display: grid; gap: 10px; }
+
+.twbv-custom-item-form { display: grid; gap: 10px; }
+.twbv-custom-item-form .form-group { margin: 0; display: block !important; }
+
 .twbv-custom-item-dialog--sheetlike {
   grid-template-columns: 120px 1fr;
   gap: 10px 14px;

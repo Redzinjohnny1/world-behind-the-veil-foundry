@@ -1406,20 +1406,33 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 
   _bindCustomDialogUi(root) {
-    const tabButtons = root.querySelectorAll(".twbv-tab-button");
+    const tabButtons = Array.from(root.querySelectorAll(".twbv-tab-button"));
+    const tabPanes = Array.from(root.querySelectorAll(".twbv-custom-tab-pane"));
     const switchTab = (tabId) => {
-      root.querySelectorAll(".twbv-tab-button").forEach((btn) => {
-        btn.classList.toggle("is-active", btn.dataset.tab === tabId);
+      tabButtons.forEach((btn) => btn.classList.remove("is-active"));
+      const activeButton = tabButtons.find((btn) => btn.dataset.tab === tabId);
+      activeButton?.classList.add("is-active");
+
+      tabPanes.forEach((pane) => {
+        pane.classList.remove("is-active");
+        pane.hidden = true;
       });
-      root.querySelectorAll(".twbv-custom-tab-pane").forEach((pane) => {
-        const isActive = pane.dataset.tab === tabId;
-        pane.classList.toggle("is-active", isActive);
-        pane.hidden = !isActive;
-      });
+      const activePane = tabPanes.find((pane) => pane.dataset.tab === tabId);
+      if (activePane) {
+        activePane.classList.add("is-active");
+        activePane.hidden = false;
+      }
     };
-    tabButtons.forEach((button) => button.addEventListener("click", () => switchTab(button.dataset.tab)));
-    const firstActiveButton = root.querySelector(".twbv-tab-button.is-active");
-    switchTab(firstActiveButton?.dataset.tab ?? tabButtons[0]?.dataset.tab ?? "descricao");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const tabId = String(button.dataset.tab ?? "");
+        if (!tabPanes.some((pane) => pane.dataset.tab === tabId)) return;
+        switchTab(tabId);
+      });
+    });
+
+    switchTab("descricao");
     const effectsList = root.querySelector(".twbv-effects-list");
     root.querySelector(".twbv-effect-add")?.addEventListener("click", () => {
       const index = effectsList.querySelectorAll(".twbv-effect-row").length;

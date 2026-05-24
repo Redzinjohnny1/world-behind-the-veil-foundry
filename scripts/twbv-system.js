@@ -1342,10 +1342,13 @@ class TWBVPersonagemSheet extends ActorSheet {
             <div class="form-group"><textarea name="description" rows="11" placeholder="Descreva a vantagem/habilidade...">${itemData.descricao ?? itemData.description ?? ""}</textarea></div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="propriedades">
-            <p class="twbv-tab-empty">Sem propriedades por enquanto.</p>
+            <div class="twbv-custom-properties-panel">
+              <label>Cargas</label>
+              <input type="text" name="charges" value="${itemData.cargas ?? itemData.charges ?? ""}" placeholder="Ex.: 3, 10, Ilimitado" />
+            </div>
           </section>
           <section class="twbv-custom-tab-pane" data-tab="efeitos">
-            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> ADICIONAR</button>
+            <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
           <div class="twbv-custom-item-actions">
@@ -1434,6 +1437,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const severity = String(root?.querySelector('select[name="severity"]')?.value ?? defaultSeverity).trim();
     const isArcaneBackground = Boolean(root?.querySelector('input[name="isArcaneBackground"]')?.checked);
     const hasCharges = Boolean(root?.querySelector('input[name="hasCharges"]')?.checked);
+    const charges = String(root?.querySelector('input[name="charges"]')?.value ?? "").trim();
     const effects = Array.from(root?.querySelectorAll('.twbv-effect-row input[type="text"]') ?? []).map((input) => String(input.value ?? "").trim()).filter(Boolean);
     return {
       name,
@@ -1451,6 +1455,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         severity,
         isArcaneBackground,
         hasCharges,
+        charges,
         activeEffects: effects,
         active: true
       }
@@ -1494,6 +1499,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       severity: item?.system?.severity ?? defaults.severity,
       isArcaneBackground: Boolean(item?.system?.isArcaneBackground),
       hasCharges: Boolean(item?.system?.hasCharges),
+      cargas: item?.system?.cargas ?? item?.system?.charges ?? "",
       effects: Array.isArray(item?.system?.activeEffects) ? item.system.activeEffects : []
     };
     const content = this._buildCustomItemDialogContent(type, itemData);
@@ -1537,6 +1543,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           severity: payload.system.severity,
           isArcaneBackground: payload.system.isArcaneBackground,
           hasCharges: payload.system.hasCharges,
+          charges: payload.system.charges,
           activeEffects: payload.system.activeEffects
         };
         const existingIndex = currentList.findIndex((entry) => String(entry?.id ?? "") === existingId);

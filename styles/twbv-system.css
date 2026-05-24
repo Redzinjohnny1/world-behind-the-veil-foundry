@@ -1850,9 +1850,9 @@
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
 .window-app.wbtv-custom-item-dialog {
-  border: 1px solid rgba(217, 183, 117, 0.82);
+  border: 1px solid rgba(217, 183, 117, 0.95) !important;
   border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(217, 183, 117, 0.32), 0 0 24px rgba(149, 96, 224, 0.45), 0 14px 32px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 14px rgba(217, 183, 117, 0.24), 0 0 24px rgba(149, 96, 224, 0.38), 0 14px 32px rgba(0, 0, 0, 0.55);
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
 .window-app.wbtv-custom-item-dialog,
@@ -2468,4 +2468,9 @@
   border: 1px solid rgba(149, 96, 224, 0.9) !important;
   color: #f8edcc !important;
   background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+}
+
+.twbv-custom-properties-panel {
+  display: grid;
+  gap: 8px;
 }

@@ -2494,3 +2494,18 @@
 .twbv-custom-properties-panel input {
   max-width: 260px;
 }
+
+/* Hotfix: garantir botões de diálogo clicáveis (Aceitar/Cancelar) */
+.window-app.dialog .dialog-buttons,
+.window-app.dialog footer.dialog-buttons {
+  position: relative;
+  z-index: 50;
+  pointer-events: auto !important;
+}
+
+.window-app.dialog .dialog-buttons :is(button, .dialog-button, input[type="button"], input[type="submit"]),
+.window-app.dialog footer.dialog-buttons :is(button, .dialog-button, input[type="button"], input[type="submit"]) {
+  position: relative;
+  z-index: 51;
+  pointer-events: auto !important;
+}

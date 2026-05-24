@@ -2696,25 +2696,3 @@
   box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
   font-weight: 700;
 }
-
-/* Hotfix definitivo: garantir clique no quadrado de imagem */
-.window-app:has(.twbv-custom-item-form) .twbv-custom-item-iconbox-button,
-.window-app:has(.twbv-custom-item-form) .twbv-custom-item-icon-preview,
-.window-app:has(.twbv-custom-item-form) .twbv-custom-item-icon-placeholder {
-  pointer-events: auto !important;
-}
-.window-app:has(.twbv-custom-item-form) .twbv-custom-item-iconbox-button {
-  position: relative;
-  z-index: 80;
-}
-
-/* input de arquivo sobre o quadrado da imagem (clique nativo confiável) */
-.twbv-custom-item-file-input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  z-index: 90;
-}

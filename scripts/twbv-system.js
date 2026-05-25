@@ -1489,6 +1489,14 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
     const openIconSourceDialog = async () => {
       try {
+        // Usa o mesmo fluxo padrão do Foundry para campos `data-target`
+        // (igual ao comportamento de imagens em fichas padrão).
+        if (iconButton && typeof FilePicker?.fromButton === "function") {
+          await FilePicker.fromButton(iconButton);
+          syncIconPreview();
+          return;
+        }
+
         const rawIconPath = String(iconInput?.value ?? "").trim();
         const currentPath = rawIconPath
           ? (rawIconPath.includes("/") ? rawIconPath.split("/").slice(0, -1).join("/") || "icons/" : "icons/")

@@ -1,0 +1,54 @@
+<form class="{{cssClass}} twbv-item-sheet twbv-armor-sheet" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome da Armadura"/></h1>
+      <div class="twbv-grid twbv-grid-3col">
+        <label>
+          Proteção
+          <input type="text" name="system.protection" value="{{system.protection}}" placeholder="0" />
+        </label>
+        <label>
+          Penalidade
+          <input type="text" name="system.penalty" value="{{system.penalty}}" placeholder="0" />
+        </label>
+        <label>
+          Slot de Equipamento
+          <select name="system.equipSlot">
+            <option value="" {{#ifEquals system.equipSlot ""}}selected{{/ifEquals}}>Selecione...</option>
+            <option value="maos" {{#ifEquals system.equipSlot "maos"}}selected{{/ifEquals}}>Mãos</option>
+            <option value="cabeca" {{#ifEquals system.equipSlot "cabeca"}}selected{{/ifEquals}}>Cabeça</option>
+            <option value="pes" {{#ifEquals system.equipSlot "pes"}}selected{{/ifEquals}}>Pés</option>
+            <option value="peito" {{#ifEquals system.equipSlot "peito"}}selected{{/ifEquals}}>Peito</option>
+            <option value="cintura" {{#ifEquals system.equipSlot "cintura"}}selected{{/ifEquals}}>Cintura</option>
+            <option value="pernas" {{#ifEquals system.equipSlot "pernas"}}selected{{/ifEquals}}>Pernas</option>
+          </select>
+        </label>
+      </div>
+      <div class="twbv-grid twbv-grid-3col">
+        <label>
+          Quantidade
+          <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" />
+        </label>
+        <label>
+          Peso
+          <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" />
+        </label>
+        <label>
+          Custo
+          <input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" />
+        </label>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado
+      </label>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+    <label>
+      Descrição
+      <textarea name="system.description" rows="8">{{system.description}}</textarea>
+    </label>
+  </section>
+</form>

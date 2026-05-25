@@ -1489,7 +1489,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
     const openIconSourceDialog = async () => {
       try {
-        const currentPath = String(iconInput?.value ?? "").trim() || "icons/";
+        const rawIconPath = String(iconInput?.value ?? "").trim();
+        const currentPath = rawIconPath
+          ? (rawIconPath.includes("/") ? rawIconPath.split("/").slice(0, -1).join("/") || "icons/" : "icons/")
+          : "icons/";
         const picker = new FilePicker({
           type: "image",
           current: currentPath,
@@ -1514,6 +1517,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
     };
     iconInput?.addEventListener("input", syncIconPreview);
+    iconInput?.addEventListener("change", syncIconPreview);
     const triggerIconPicker = async (event) => {
       event?.preventDefault?.();
       event?.stopPropagation?.();
@@ -1521,11 +1525,8 @@ class TWBVPersonagemSheet extends ActorSheet {
     };
     iconButton?.addEventListener("click", triggerIconPicker);
     iconPreview?.addEventListener("click", triggerIconPicker);
-    root.addEventListener("click", (event) => {
-      const target = event.target?.closest?.(".twbv-custom-item-iconbox-button, .twbv-custom-item-icon-preview, .twbv-custom-item-icon-placeholder");
-      if (!target) return;
-      triggerIconPicker(event);
-    });
+    const iconPlaceholder = root.querySelector(".twbv-custom-item-icon-placeholder");
+    iconPlaceholder?.addEventListener("click", triggerIconPicker);
     iconButton?.addEventListener("keydown", async (event) => {
       if (!["Enter", " "].includes(event.key)) return;
       triggerIconPicker(event);

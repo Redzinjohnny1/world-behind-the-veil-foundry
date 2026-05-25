@@ -1324,12 +1324,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
       <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
-        <div class="twbv-custom-item-side">
-          <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button file-picker" data-type="image" data-target="icon" title="Clique para configurar ícone">
-            <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/mystery-man.svg"}" alt="Imagem do ícone" />
-            <span class="twbv-custom-item-icon-placeholder">Imagem</span>
-          </button>
-        </div>
+        <div class="twbv-custom-item-side"></div>
         <div class="twbv-custom-item-main">
           <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="Nome da vantagem" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
@@ -1338,7 +1333,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
-            <input type="hidden" name="icon" value="${itemData.icon ?? ""}" />
+            <input type="hidden" name="icon" value="" />
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
             <button type="button" class="twbv-tab-button is-active" data-tab="destaque">Destaque</button>
@@ -1485,53 +1480,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     const iconInput = root.querySelector('input[name="icon"]');
-    const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
-    const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const syncIconPreview = () => {
-      const iconValue = String(iconInput?.value ?? "").trim();
-      if (iconPreview && iconValue) iconPreview.src = iconValue;
-      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
-    };
-    iconInput?.addEventListener("input", syncIconPreview);
-    iconInput?.addEventListener("change", syncIconPreview);
-    // Prioriza o binder nativo do Foundry para `.file-picker`.
-    try {
-      if (typeof FilePicker?.activateFilePicker === "function") FilePicker.activateFilePicker(root);
-    } catch (error) {
-      console.error("TWBV | Falha ao ativar FilePicker nativo", error);
-    }
-
-    // Fallback local caso a versão do Foundry não exponha activateFilePicker.
-    const openIconSourceDialogFallback = async (event) => {
-      event?.preventDefault?.();
-      event?.stopPropagation?.();
-      try {
-        const rawIconPath = String(iconInput?.value ?? "").trim();
-        const currentPath = rawIconPath
-          ? (rawIconPath.includes("/") ? rawIconPath.split("/").slice(0, -1).join("/") || "icons/" : "icons/")
-          : "icons/";
-        const picker = new FilePicker({
-          type: "image",
-          current: currentPath,
-          callback: (selectedPath) => {
-            if (!iconInput) return;
-            iconInput.value = String(selectedPath ?? "").trim();
-            syncIconPreview();
-          }
-        });
-        if (typeof picker?.browse === "function") await picker.browse();
-        else if (typeof picker?.render === "function") picker.render(true);
-      } catch (error) {
-        console.error("TWBV | Falha ao abrir FilePicker de ícone", error);
-        ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
-      }
-    };
-    if (typeof FilePicker?.activateFilePicker !== "function") {
-      iconButton?.addEventListener("click", openIconSourceDialogFallback);
-      iconPreview?.addEventListener("click", openIconSourceDialogFallback);
-      root.querySelector(".twbv-custom-item-icon-placeholder")?.addEventListener("click", openIconSourceDialogFallback);
-    }
-    syncIconPreview();
+    if (iconInput) iconInput.value = "";
   }
 
   _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {

@@ -41,7 +41,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "vantagem", "desvantagem", "habilidadeEspecial"];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "vantagem", "desvantagem", "habilidadeEspecial"];
 
 
 function twbvApplyItemTypeOrderConfig() {
@@ -1961,8 +1961,9 @@ Hooks.once("init", () => {
 });
 
 Hooks.on("renderDialog", (app, html) => {
-  const title = String(app?.title ?? "").toLowerCase();
-  if (title.includes("criar") && title.includes("item")) twbvNormalizeItemCreateTypeSelect(html);
+  const host = html?.[0] ?? html;
+  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
+  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
 });
 
 Hooks.on("renderChatMessage", (message, html) => {

@@ -1,6 +1,6 @@
-<form class="{{cssClass}} twbv-item-sheet twbv-basic-item-sheet" autocomplete="off">
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="96" width="96"/>
+<form class="{{cssClass}} twbv-item-sheet twbv-basic-item-sheet twbv-themed-item-sheet" autocomplete="off">
+  <header class="sheet-header twbv-armor-header">
+    <img class="profile-img twbv-armor-profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="140" width="140"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do Item"/></h1>
       <div class="twbv-grid twbv-grid-3col">
@@ -26,4 +26,8 @@
   <section class="sheet-body">
     <label>Descrição<textarea name="system.description" rows="10">{{system.description}}</textarea></label>
   </section>
+  <footer class="twbv-armor-footer">
+    <button type="submit" class="twbv-sheet-save"><i class="fas fa-save"></i> Salvar</button>
+    <button type="button" class="twbv-sheet-cancel"><i class="fas fa-times"></i> Cancelar</button>
+  </footer>
 </form>

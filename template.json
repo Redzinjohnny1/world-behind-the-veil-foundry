@@ -93,15 +93,15 @@
   },
   "Item": {
     "types": [
+      "arma",
+      "armadura",
+      "consumable",
+      "equipamento",
       "vantagem",
       "desvantagem",
       "habilidadeEspecial",
       "complicacao",
-      "equipamento",
-      "arma",
-      "armadura",
-      "weapon",
-      "consumable"
+      "weapon"
     ],
     "templates": {
       "base": {
@@ -165,7 +165,8 @@
         "inventory"
       ],
       "protection": "",
-      "penalty": ""
+      "penalty": "",
+      "equipSlot": ""
     },
     "weapon": {
       "templates": [

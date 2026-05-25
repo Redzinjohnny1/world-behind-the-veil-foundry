@@ -2381,7 +2381,9 @@
 .twbv-armor-slot-title { display:block; margin-bottom:8px; font-size:.8rem; color:#f2deaf; text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
 .twbv-armor-slot-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; }
 .twbv-armor-slot-option { display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid rgba(154,123,255,.35); border-radius:8px; background:rgba(21,14,37,.7); cursor:pointer; }
+.twbv-weapon-slot-option { display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid rgba(154,123,255,.35); border-radius:8px; background:rgba(21,14,37,.7); cursor:pointer; }
 .twbv-armor-slot-option input[type="radio"] { width:14px; height:14px; accent-color:#c9a96a; }
+.twbv-weapon-slot-option input[type="radio"] { width:14px; height:14px; accent-color:#c9a96a; }
 .twbv-armor-sheet input[type='text'], .twbv-armor-sheet input[type='number'], .twbv-armor-sheet textarea,
 .twbv-themed-item-sheet input[type='text'], .twbv-themed-item-sheet input[type='number'], .twbv-themed-item-sheet textarea {
   color: #f7e9c8 !important;

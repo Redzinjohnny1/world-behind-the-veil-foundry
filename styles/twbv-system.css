@@ -2356,10 +2356,19 @@
 .equipment-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
 .equipment-card { background:rgba(20,20,24,.88); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px; color:#eee; box-shadow:0 0 12px rgba(0,0,0,.35); }
 .twbv-armor-sheet { background: radial-gradient(circle at top, rgba(108, 73, 170, 0.24), rgba(13, 10, 24, 0.96) 50%), linear-gradient(180deg, rgba(15, 10, 24, 0.98), rgba(9, 7, 16, 0.98)); color:#f3e7ca; border:1px solid rgba(201,169,106,.45); border-radius:12px; padding:12px; }
+.twbv-themed-item-sheet { background: radial-gradient(circle at top, rgba(108, 73, 170, 0.24), rgba(13, 10, 24, 0.96) 50%), linear-gradient(180deg, rgba(15, 10, 24, 0.98), rgba(9, 7, 16, 0.98)); color:#f3e7ca; border:1px solid rgba(201,169,106,.45); border-radius:12px; padding:12px; }
 .window-app:has(.twbv-armor-sheet) {
   border: 1px solid rgba(201,169,106,.72) !important;
   border-radius: 12px !important;
   box-shadow: 0 0 20px rgba(101,73,166,.45) !important;
+}
+.window-app:has(.twbv-themed-item-sheet) {
+  border: 1px solid rgba(201,169,106,.72) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 0 20px rgba(101,73,166,.45) !important;
+}
+.window-app:has(.twbv-themed-item-sheet) .window-content {
+  background: radial-gradient(circle at top, rgba(112,74,172,.34), transparent 52%),linear-gradient(165deg, rgba(12,8,21,.98), rgba(7,5,14,.99)) !important;
 }
 .window-app:has(.twbv-armor-sheet) .window-content {
   background: radial-gradient(circle at top, rgba(112,74,172,.34), transparent 52%),linear-gradient(165deg, rgba(12,8,21,.98), rgba(7,5,14,.99)) !important;
@@ -2373,12 +2382,14 @@
 .twbv-armor-slot-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; }
 .twbv-armor-slot-option { display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid rgba(154,123,255,.35); border-radius:8px; background:rgba(21,14,37,.7); cursor:pointer; }
 .twbv-armor-slot-option input[type="radio"] { width:14px; height:14px; accent-color:#c9a96a; }
-.twbv-armor-sheet input[type='text'], .twbv-armor-sheet input[type='number'], .twbv-armor-sheet textarea {
+.twbv-armor-sheet input[type='text'], .twbv-armor-sheet input[type='number'], .twbv-armor-sheet textarea,
+.twbv-themed-item-sheet input[type='text'], .twbv-themed-item-sheet input[type='number'], .twbv-themed-item-sheet textarea {
   color: #f7e9c8 !important;
   border-color: rgba(217, 183, 117, 0.64) !important;
   background: rgba(10, 8, 18, 0.92) !important;
 }
-.twbv-armor-sheet input::placeholder, .twbv-armor-sheet textarea::placeholder {
+.twbv-armor-sheet input::placeholder, .twbv-armor-sheet textarea::placeholder,
+.twbv-themed-item-sheet input::placeholder, .twbv-themed-item-sheet textarea::placeholder {
   color: rgba(247, 233, 200, 0.55) !important;
 }
 .twbv-armor-footer { display:flex; justify-content:flex-end; gap:10px; margin-top:12px; }

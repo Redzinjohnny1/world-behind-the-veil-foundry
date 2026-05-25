@@ -60,6 +60,22 @@ function twbvApplyItemTypeOrderConfig() {
   }
 }
 
+
+
+function twbvPatchItemCreateDialog() {
+  const itemClass = CONFIG?.Item?.documentClass;
+  if (!itemClass || itemClass._twbvCreateDialogPatched) return;
+  const originalCreateDialog = itemClass.createDialog;
+  if (typeof originalCreateDialog !== "function") return;
+
+  itemClass.createDialog = function(data = {}, options = {}) {
+    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
+    return originalCreateDialog.call(this, data, nextOptions);
+  };
+
+  itemClass._twbvCreateDialogPatched = true;
+}
+
 function twbvNormalizeItemCreateTypeSelect(root) {
   const host = root?.[0] ?? root;
   if (!host || typeof host.querySelector !== "function") return;
@@ -1932,6 +1948,7 @@ Hooks.once("init", () => {
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
   twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
@@ -2182,6 +2199,7 @@ Hooks.on('renderSidebarTab', (app, html) => {
 });
 Hooks.on("ready", () => {
   twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

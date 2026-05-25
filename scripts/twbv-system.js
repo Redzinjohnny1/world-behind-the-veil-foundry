@@ -39,6 +39,47 @@ function summarizeItemActiveEffects(item) {
   return changes.slice(0, 3).join(", ");
 }
 
+
+
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "vantagem", "desvantagem", "habilidadeEspecial"];
+
+
+function twbvApplyItemTypeOrderConfig() {
+  const allowed = [...TWBV_ITEM_CREATE_ORDER];
+  if (game?.system?.documentTypes?.Item) {
+    game.system.documentTypes.Item = allowed;
+  }
+  if (CONFIG?.Item?.typeLabels) {
+    const nextLabels = {};
+    for (const type of allowed) {
+      if (Object.prototype.hasOwnProperty.call(CONFIG.Item.typeLabels, type)) {
+        nextLabels[type] = CONFIG.Item.typeLabels[type];
+      }
+    }
+    CONFIG.Item.typeLabels = nextLabels;
+  }
+}
+
+function twbvNormalizeItemCreateTypeSelect(root) {
+  const host = root?.[0] ?? root;
+  if (!host || typeof host.querySelector !== "function") return;
+  const select = host.querySelector('select[name="type"]');
+  if (!select) return;
+
+  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
+  const selected = String(select.value ?? "");
+
+  while (select.firstChild) select.removeChild(select.firstChild);
+
+  for (const type of TWBV_ITEM_CREATE_ORDER) {
+    const option = optionByValue.get(type);
+    if (option) select.appendChild(option);
+  }
+
+  const fallback = select.options[0]?.value ?? "";
+  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
+}
+
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
 const SKILL_LEVELS = [
@@ -1890,6 +1931,7 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
+  twbvApplyItemTypeOrderConfig();
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
@@ -1899,6 +1941,11 @@ Hooks.once("init", () => {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
+});
+
+Hooks.on("renderDialog", (app, html) => {
+  const title = String(app?.title ?? "").toLowerCase();
+  if (title.includes("criar") && title.includes("item")) twbvNormalizeItemCreateTypeSelect(html);
 });
 
 Hooks.on("renderChatMessage", (message, html) => {
@@ -2134,6 +2181,7 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
+  twbvApplyItemTypeOrderConfig();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

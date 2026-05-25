@@ -288,6 +288,28 @@
             </div>
           </section>
 
+          <section class="equipment-section slots">
+            <h3>Slots de Equipamento</h3>
+            <div class="equipment-grid">
+              {{#each equipmentSlots as |slot|}}
+                <article class="equipment-card twbv-equip-slot" data-slot-key="{{slot.key}}">
+                  <div class="equipment-card-header">
+                    <div class="equipment-title-block">
+                      <div class="equipment-name">{{slot.label}}</div>
+                      <div class="equipment-category">Arraste aqui</div>
+                    </div>
+                  </div>
+                  {{#if slot.item}}
+                    <div class="equipment-name">{{slot.item.name}}</div>
+                    <div class="equipment-category">{{slot.item.typeLabel}}</div>
+                  {{else}}
+                    <div class="equipment-category">Vazio</div>
+                  {{/if}}
+                </article>
+              {{/each}}
+            </div>
+          </section>
+
           <section class="equipment-section weapons">
             <h3>Armas</h3>
             <div class="equipment-grid">

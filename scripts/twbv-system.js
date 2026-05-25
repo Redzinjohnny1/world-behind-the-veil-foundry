@@ -1741,6 +1741,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!typedName) nameInput.value = nome;
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
+      payload.name = nome;
       const isEmbeddedItem = item && typeof item.update === "function";
       if (isEmbeddedItem) {
         await item.update(payload);
@@ -2043,6 +2044,11 @@ class TWBVArmorSheet extends ItemSheet {
     html.find('input[name="system.equipped"]').on("change", (event) => {
       const checked = Boolean(event.currentTarget?.checked);
       html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
+    });
+    html.find(".twbv-armor-save").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: true });
+      await this.close();
     });
     html.find(".twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();

@@ -24,7 +24,9 @@ const TWBV_ITEM_TYPES = {
   complicacao: "Complicação",
   equipamento: "Equipamento",
   arma: "Arma",
-  armadura: "Armadura"
+  armadura: "Armadura",
+  weapon: "Arma",
+  consumable: "Consumível"
 };
 
 function summarizeItemActiveEffects(item) {
@@ -672,6 +674,38 @@ class TWBVPersonagemSheet extends ActorSheet {
       atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
       atributos[key].bonus = Number.isFinite(Number(atributos[key].bonus)) ? Number(atributos[key].bonus) : 0;
     }
+  }
+
+  async _onDrop(event) {
+    const raw = event?.dataTransfer?.getData("text/plain");
+    if (!raw) return super._onDrop(event);
+
+    let data;
+    try { data = JSON.parse(raw); } catch (_) { return super._onDrop(event); }
+    if (data?.type !== "Item") return super._onDrop(event);
+
+    const dropped = await Item.implementation.fromDropData(data);
+    if (!dropped) return;
+
+    const source = dropped.toObject();
+    const itemType = String(source.type ?? "").trim();
+    const needsActorEmbed = ["weapon", "consumable", "equipamento", "arma", "armadura", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(itemType);
+    if (!needsActorEmbed) return super._onDrop(event);
+
+    const payload = { ...source, system: foundry.utils.deepClone(source.system ?? {}) };
+
+    if (["armadura", "equipamento", "arma", "weapon", "consumable"].includes(itemType)) {
+      payload.system.active = payload.system.active ?? true;
+      payload.system.equipped = payload.system.equipped ?? false;
+    }
+
+    if (itemType === "armadura") {
+      const equipSlot = String(payload.system.equipSlot ?? "").trim();
+      payload.system.category = payload.system.category || `armadura${equipSlot ? `:${equipSlot}` : ""}`;
+    }
+
+    await this.actor.createEmbeddedDocuments("Item", [payload]);
+    return;
   }
 
   activateListeners(html) {
@@ -1856,6 +1890,7 @@ Hooks.once("init", () => {
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","arma"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
@@ -1892,6 +1927,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
 class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
 class TWBVArmorSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:680,height:680}); } get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }}
+class TWBVBasicItemSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet'],width:640,height:620}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
 
 
 function twbvEnhanceDiceTray(root) {

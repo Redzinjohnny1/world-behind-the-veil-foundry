@@ -2023,6 +2023,26 @@ Hooks.on("renderChatMessage", (message, html) => {
   }));
 });
 
+Hooks.on("preCreateItem", (item, createData) => {
+  const currentName = String(createData?.name ?? item?.name ?? "").trim();
+  const looksGeneric = !currentName || /^item(?:\s*\(\d+\))?$/i.test(currentName);
+  if (!looksGeneric) return;
+  const type = String(createData?.type ?? item?.type ?? "").trim();
+  const fallbackByType = {
+    vantagem: "Vantagem",
+    desvantagem: "Desvantagem",
+    habilidadeEspecial: "Habilidade Especial",
+    complicacao: "Complicação",
+    arma: "Arma",
+    armadura: "Armadura",
+    weapon: "Arma",
+    consumable: "Consumível",
+    equipamento: "Equipamento"
+  };
+  const nextName = fallbackByType[type] ?? "Item";
+  item.updateSource({ name: nextName });
+});
+
 
 class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:760,height:860,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); await this._onSubmit(e, {preventClose:true}); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
 class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:760,height:860,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); await this._onSubmit(e, {preventClose:true}); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}

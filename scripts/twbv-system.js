@@ -1978,10 +1978,10 @@ Hooks.once("init", () => {
   twbvApplyItemTypeOrderConfig();
   twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
-  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","arma"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
@@ -2124,7 +2124,7 @@ Hooks.on("updateItem", async (item, changes) => {
 async function twbvRouteWeaponToSlotFolder(item) {
   if (!game.user?.isGM) return;
   if (!item || item.isEmbedded) return;
-  if (String(item.type ?? "") !== "weapon") return;
+  if (!["weapon", "arma"].includes(String(item.type ?? ""))) return;
   const slotKey = String(item.system?.equipSlot ?? "").trim();
   if (!slotKey) return;
   const slotLabelByKey = {

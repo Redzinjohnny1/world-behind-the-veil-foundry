@@ -99,7 +99,9 @@
       "equipamento",
       "vantagem",
       "desvantagem",
-      "habilidadeEspecial"
+      "habilidadeEspecial",
+      "complicacao",
+      "weapon"
     ],
     "templates": {
       "base": {

@@ -2034,14 +2034,7 @@ class TWBVArmorSheet extends ItemSheet {
     super.activateListeners(html);
     html.find(".twbv-armor-slot-check").on("change", async (event) => {
       const target = event.currentTarget;
-      const checked = Boolean(target?.checked);
-      const slotValue = String(target?.dataset?.slotValue ?? "").trim();
-      const all = Array.from(html.find(".twbv-armor-slot-check"));
-      for (const node of all) {
-        if (node !== target) node.checked = false;
-      }
-      const next = checked ? slotValue : "";
-      if (target) target.checked = checked;
+      const next = String(target?.value ?? "").trim();
       html.find('input[name="system.equipSlot"]').val(next);
       await this.item.update({ "system.equipSlot": next });
     });

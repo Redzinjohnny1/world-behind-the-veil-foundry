@@ -1960,11 +1960,14 @@ Hooks.once("init", () => {
   });
 });
 
-Hooks.on("renderDialog", (app, html) => {
+function twbvNormalizeAnyItemTypeDialog(app, html) {
   const host = html?.[0] ?? html;
   const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
   if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
-});
+}
+
+Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
+Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;

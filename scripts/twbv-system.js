@@ -39,6 +39,30 @@ function summarizeItemActiveEffects(item) {
   return changes.slice(0, 3).join(", ");
 }
 
+
+
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "vantagem", "desvantagem", "habilidadeEspecial"];
+
+function twbvNormalizeItemCreateTypeSelect(root) {
+  const host = root?.[0] ?? root;
+  if (!host || typeof host.querySelector !== "function") return;
+  const select = host.querySelector('select[name="type"]');
+  if (!select) return;
+
+  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
+  const selected = String(select.value ?? "");
+
+  while (select.firstChild) select.removeChild(select.firstChild);
+
+  for (const type of TWBV_ITEM_CREATE_ORDER) {
+    const option = optionByValue.get(type);
+    if (option) select.appendChild(option);
+  }
+
+  const fallback = select.options[0]?.value ?? "";
+  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
+}
+
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
 const SKILL_LEVELS = [
@@ -1899,6 +1923,11 @@ Hooks.once("init", () => {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
+});
+
+Hooks.on("renderDialog", (app, html) => {
+  const title = String(app?.title ?? "").toLowerCase();
+  if (title.includes("criar") && title.includes("item")) twbvNormalizeItemCreateTypeSelect(html);
 });
 
 Hooks.on("renderChatMessage", (message, html) => {

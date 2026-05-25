@@ -593,6 +593,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     context.vantagens = Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
     context.habilidadesEspeciais = Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
+    context.desvantagens = Array.from(this.actor.system?.desvantagens ?? []).map((entry) => mapSystemEntry(entry, "desvantagem"));
     context.complicacoes = Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
     context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
     const weapons=actorItems.filter(i=>i.type==="weapon"); const consumables=actorItems.filter(i=>i.type==="consumable"); const magazines=consumables.filter(i=>i.system?.subtype==="magazine"); const normalConsumables=consumables.filter(i=>i.system?.subtype!=="magazine");
@@ -661,6 +662,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
+    if (!Array.isArray(this.actor.system?.desvantagens)) this.actor.system.desvantagens = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
@@ -1217,7 +1219,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       const type = String(event.currentTarget.dataset.type ?? "equipamento");
       const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
-      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
+      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
         await this._openCustomItemDialog(type, null, { dialogVersion });
         return;
       }
@@ -1241,7 +1243,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       const item = this.actor.items.get(itemId);
       if (!item) return;
-      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
+      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
         await this._openCustomItemDialog(item.type, item);
         return;
       }
@@ -1317,7 +1319,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   _buildCustomItemDialogContent(type, itemData = {}, options = {}) {
     const dialogVersion = String(options.dialogVersion ?? "");
     const isV2 = dialogVersion === "2";
-    if (["vantagem", "habilidadeEspecial"].includes(type)) {
+    if (["vantagem", "desvantagem", "habilidadeEspecial"].includes(type)) {
       const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
       const effectsMarkup = effects.length
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
@@ -1326,7 +1328,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side"></div>
         <div class="twbv-custom-item-main">
-          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="Nome da vantagem" autofocus /></div>
+          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="${type === "desvantagem" ? "Nome da desvantagem" : "Nome da vantagem"}" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
@@ -1364,6 +1366,9 @@ class TWBVPersonagemSheet extends ActorSheet {
       vantagem: `
         <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
         <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+      desvantagem: `
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
       habilidadeEspecial: `
         <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
         <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
@@ -1377,7 +1382,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </select>
         </div>`
     };
-    const propertiesField = type === "vantagem" ? `
+    const propertiesField = ["vantagem", "desvantagem"].includes(type) ? `
       <div class="twbv-property-checkboxes">
         <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
         <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
@@ -1577,6 +1582,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
+      desvantagem: { title: "Nova Desvantagem", severity: "", tierLabel: "Requisito/Tier" },
       habilidadeEspecial: { title: "Nova Habilidade", severity: "", tierLabel: "" },
       complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
     };
@@ -1605,6 +1611,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const typedName = String(nameInput.value ?? "").trim();
       const defaultNameByType = {
         vantagem: "Vantagem",
+        desvantagem: "Desvantagem",
         habilidadeEspecial: "Habilidade Especial",
         complicacao: "Complicação"
       };
@@ -1618,6 +1625,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       } else {
         const listKeyByType = {
           vantagem: "vantagens",
+          desvantagem: "desvantagens",
           habilidadeEspecial: "habilidadesEspeciais",
           complicacao: "complicacoes"
         };
@@ -1648,6 +1656,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       await dialogApp.close();
       await this.render(true);
       if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
+      if (!item && type === "desvantagem") ui.notifications?.info("Desvantagem adicionada.");
     };
 
     let renderedRootRef = null;

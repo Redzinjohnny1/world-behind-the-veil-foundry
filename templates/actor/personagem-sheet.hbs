@@ -250,21 +250,21 @@
     <div class="tab" data-group="primary" data-tab="desvantagens">
       <div class="twbv-panel twbv-ornate">
         <div class="twbv-item-section">
-        <div class="twbv-item-tab-header"><h2>COMPLICAÇÕES</h2><button type="button" class="twbv-item-create twbv-item-create--fancy" data-type="complicacao" data-label="Complicação"><i class="fas fa-plus"></i> Adicionar complicação</button></div>
-        <div class="twbv-item-card-list">
-          {{#each complicacoes as |item|}}
-            <article class="twbv-item-card twbv-item-card--fantasy">
-              <div class="twbv-item-card-layout">
-                <div class="twbv-item-card-icon"><i class="fas fa-skull"></i></div>
-                <div class="twbv-item-card-content">
-                  <div class="twbv-item-card-head"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="system" data-list-key="complicacoes" data-type="complicacao"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="system" data-list-key="complicacoes"><i class="fas fa-trash"></i></button></div></div>
-              <div class="twbv-item-card-meta">Categoria: {{#if item.categoria}}{{item.categoria}}{{else}}-{{/if}}</div>
-                  <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
+          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Desvantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="desvantagem" data-label="Desvantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar desvantagem</button></div></div>
+          <div class="twbv-item-card-list">
+            {{#each desvantagens as |item|}}
+              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed">
+                <div class="twbv-item-card-layout">
+                  <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-skull"></i>{{/if}}</div>
+                  <div class="twbv-item-card-content">
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="system" data-list-key="desvantagens" data-type="desvantagem" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="system" data-list-key="desvantagens"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
+                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
+                  </div>
                 </div>
-              </div>
-            </article>
-          {{else}}<p class="twbv-adv-empty">Nenhuma complicação cadastrada.</p>{{/each}}
-        </div>
+              </article>
+            {{else}}<p class="twbv-adv-empty">Nenhuma desvantagem cadastrada.</p>{{/each}}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <form class="{{cssClass}} twbv-item-sheet twbv-armor-sheet" autocomplete="off">
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+  <header class="sheet-header twbv-armor-header">
+    <img class="profile-img twbv-armor-profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="140" width="140"/>
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome da Armadura"/></h1>
       <div class="twbv-grid twbv-grid-3col">
@@ -12,19 +12,19 @@
           Penalidade
           <input type="text" name="system.penalty" value="{{system.penalty}}" placeholder="0" />
         </label>
-        <label>
-          Slot de Equipamento
-          <select name="system.equipSlot">
-            <option value="" {{#ifEquals system.equipSlot ""}}selected{{/ifEquals}}>Selecione...</option>
-            <option value="head" {{#ifEquals system.equipSlot "head"}}selected{{/ifEquals}}>Cabeça</option>
-            <option value="chest" {{#ifEquals system.equipSlot "chest"}}selected{{/ifEquals}}>Peito</option>
-            <option value="legs" {{#ifEquals system.equipSlot "legs"}}selected{{/ifEquals}}>Perna</option>
-            <option value="gloves" {{#ifEquals system.equipSlot "gloves"}}selected{{/ifEquals}}>Luva</option>
-            <option value="belt" {{#ifEquals system.equipSlot "belt"}}selected{{/ifEquals}}>Cinto</option>
-            <option value="ringLeft" {{#ifEquals system.equipSlot "ringLeft"}}selected{{/ifEquals}}>Anel Esq.</option>
-            <option value="ringRight" {{#ifEquals system.equipSlot "ringRight"}}selected{{/ifEquals}}>Anel Dir.</option>
-          </select>
-        </label>
+        <input type="hidden" name="system.equipSlot" value="{{system.equipSlot}}" />
+      </div>
+      <div class="twbv-armor-slot-group">
+        <span class="twbv-armor-slot-title">Slot de Equipamento</span>
+        <div class="twbv-armor-slot-options">
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="head" {{#ifEquals system.equipSlot "head"}}checked{{/ifEquals}} /><span>Cabeça</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="chest" {{#ifEquals system.equipSlot "chest"}}checked{{/ifEquals}} /><span>Peito</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="legs" {{#ifEquals system.equipSlot "legs"}}checked{{/ifEquals}} /><span>Pernas</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="gloves" {{#ifEquals system.equipSlot "gloves"}}checked{{/ifEquals}} /><span>Luva</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="belt" {{#ifEquals system.equipSlot "belt"}}checked{{/ifEquals}} /><span>Cinto</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="ringLeft" {{#ifEquals system.equipSlot "ringLeft"}}checked{{/ifEquals}} /><span>Anel Esq.</span></label>
+          <label class="twbv-armor-slot-option"><input type="checkbox" class="twbv-armor-slot-check" data-slot-value="ringRight" {{#ifEquals system.equipSlot "ringRight"}}checked{{/ifEquals}} /><span>Anel Dir.</span></label>
+        </div>
       </div>
       <div class="twbv-grid twbv-grid-3col">
         <label>
@@ -52,4 +52,8 @@
       <textarea name="system.description" rows="8">{{system.description}}</textarea>
     </label>
   </section>
+  <footer class="twbv-armor-footer">
+    <button type="submit" class="twbv-armor-save"><i class="fas fa-save"></i> Salvar</button>
+    <button type="button" class="twbv-armor-cancel"><i class="fas fa-times"></i> Cancelar</button>
+  </footer>
 </form>

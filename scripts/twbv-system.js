@@ -2032,13 +2032,26 @@ class TWBVArmorSheet extends ItemSheet {
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
     super.activateListeners(html);
-    html.find('select[name="system.equipSlot"]').on("change", async (event) => {
-      const next = String(event.currentTarget?.value ?? "").trim();
+    html.find(".twbv-armor-slot-check").on("change", async (event) => {
+      const target = event.currentTarget;
+      const checked = Boolean(target?.checked);
+      const slotValue = String(target?.dataset?.slotValue ?? "").trim();
+      const all = Array.from(html.find(".twbv-armor-slot-check"));
+      for (const node of all) {
+        if (node !== target) node.checked = false;
+      }
+      const next = checked ? slotValue : "";
+      if (target) target.checked = checked;
+      html.find('input[name="system.equipSlot"]').val(next);
       await this.item.update({ "system.equipSlot": next });
     });
     html.find('input[name="system.equipped"]').on("change", async (event) => {
       const checked = Boolean(event.currentTarget?.checked);
       await this.item.update({ "system.equipped": checked, "system.equipStatus": checked ? 1 : 0 });
+    });
+    html.find(".twbv-armor-cancel").on("click", async (event) => {
+      event.preventDefault();
+      await this.render(true);
     });
   }
 }

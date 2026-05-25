@@ -40,6 +40,7 @@
           <input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" />
         </label>
       </div>
+      <input type="hidden" name="system.equipStatus" value="{{#if system.equipped}}1{{else}}0{{/if}}" />
       <label class="checkbox">
         <input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado
       </label>

@@ -2366,6 +2366,8 @@
 }
 .twbv-armor-header { display:flex; flex-direction:column; align-items:center; gap:10px; }
 .twbv-armor-profile-img { width:140px !important; height:140px !important; aspect-ratio:1/1; border-radius:16px; }
+.twbv-armor-sheet .charname { text-align:center; }
+.twbv-armor-sheet .charname input[name="name"] { text-align:center; font-size:2rem; font-weight:800; color:#f7e9c8 !important; }
 .twbv-armor-slot-group { margin:10px 0 12px; padding:10px; border:1px solid rgba(201,169,106,.4); border-radius:10px; background:rgba(9,7,18,.6); }
 .twbv-armor-slot-title { display:block; margin-bottom:8px; font-size:.8rem; color:#f2deaf; text-transform:uppercase; letter-spacing:.06em; font-weight:700; }
 .twbv-armor-slot-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:8px; }

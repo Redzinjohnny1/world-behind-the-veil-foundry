@@ -2027,14 +2027,19 @@ class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return fo
 class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
 class TWBVArmorSheet extends ItemSheet {
   static get defaultOptions(){
-    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:680,height:680,submitOnChange:false,submitOnClose:true});
+    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:760,height:860,submitOnChange:false,submitOnClose:true,resizable:true});
   }
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
     super.activateListeners(html);
-    html.find(".twbv-armor-slot-check").on("change", async (event) => {
-      const target = event.currentTarget;
-      const next = String(target?.value ?? "").trim();
+    html.find(".twbv-armor-slot-option").on("click", async (event) => {
+      event.preventDefault();
+      const option = event.currentTarget;
+      const input = option?.querySelector?.(".twbv-armor-slot-check");
+      const next = String(input?.value ?? "").trim();
+      if (!next) return;
+      html.find(".twbv-armor-slot-check").prop("checked", false);
+      if (input) input.checked = true;
       html.find('input[name="system.equipSlot"]').val(next);
       await this.item.update({ "system.equipSlot": next });
     });
@@ -2042,9 +2047,13 @@ class TWBVArmorSheet extends ItemSheet {
       const checked = Boolean(event.currentTarget?.checked);
       await this.item.update({ "system.equipped": checked, "system.equipStatus": checked ? 1 : 0 });
     });
+    html.find(".twbv-armor-save").on("click", async (event) => {
+      event.preventDefault();
+      await this._onSubmit(event, { preventClose: false });
+    });
     html.find(".twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();
-      await this.render(true);
+      await this.close();
     });
   }
 }

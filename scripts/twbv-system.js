@@ -2032,24 +2032,24 @@ class TWBVArmorSheet extends ItemSheet {
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
     super.activateListeners(html);
-    html.find(".twbv-armor-slot-option").on("click", async (event) => {
-      event.preventDefault();
-      const option = event.currentTarget;
-      const input = option?.querySelector?.(".twbv-armor-slot-check");
+    html.find(".twbv-armor-slot-check").on("change", async (event) => {
+      const input = event.currentTarget;
       const next = String(input?.value ?? "").trim();
       if (!next) return;
       html.find(".twbv-armor-slot-check").prop("checked", false);
-      if (input) input.checked = true;
+      input.checked = true;
       html.find('input[name="system.equipSlot"]').val(next);
       await this.item.update({ "system.equipSlot": next });
     });
     html.find('input[name="system.equipped"]').on("change", async (event) => {
       const checked = Boolean(event.currentTarget?.checked);
-      await this.item.update({ "system.equipped": checked, "system.equipStatus": checked ? 1 : 0 });
+      const currentSlot = String(this.item.system?.equipSlot ?? html.find('input[name="system.equipSlot"]').val() ?? "").trim();
+      await this.item.update({ "system.equipped": checked, "system.equipStatus": checked ? 1 : 0, "system.equipSlot": currentSlot });
     });
     html.find(".twbv-armor-save").on("click", async (event) => {
       event.preventDefault();
-      await this._onSubmit(event, { preventClose: false });
+      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
+      await this._onSubmit(new Event("submit"), { preventClose: false, updateData: foundry.utils.expandObject(new FormDataExtended(form).object) });
     });
     html.find(".twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();

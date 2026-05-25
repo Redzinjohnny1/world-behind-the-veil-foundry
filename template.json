@@ -93,15 +93,13 @@
   },
   "Item": {
     "types": [
-      "vantagem",
-      "desvantagem",
-      "habilidadeEspecial",
-      "complicacao",
-      "equipamento",
       "arma",
       "armadura",
-      "weapon",
-      "consumable"
+      "consumable",
+      "equipamento",
+      "vantagem",
+      "desvantagem",
+      "habilidadeEspecial"
     ],
     "templates": {
       "base": {

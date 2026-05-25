@@ -1328,7 +1328,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       <form class="twbv-custom-item-form twbv-custom-item-form--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side"></div>
         <div class="twbv-custom-item-main">
-          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="Nome da vantagem" autofocus /></div>
+          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="${type === "desvantagem" ? "Nome da desvantagem" : "Nome da vantagem"}" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>

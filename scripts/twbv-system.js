@@ -1487,16 +1487,25 @@ class TWBVPersonagemSheet extends ActorSheet {
     const iconInput = root.querySelector('input[name="icon"]');
     const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
     const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const openIconSourceDialog = async () => {
-      try {
-        // Usa o mesmo fluxo padrão do Foundry para campos `data-target`
-        // (igual ao comportamento de imagens em fichas padrão).
-        if (iconButton && typeof FilePicker?.fromButton === "function") {
-          await FilePicker.fromButton(iconButton);
-          syncIconPreview();
-          return;
-        }
+    const syncIconPreview = () => {
+      const iconValue = String(iconInput?.value ?? "").trim();
+      if (iconPreview && iconValue) iconPreview.src = iconValue;
+      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
+    };
+    iconInput?.addEventListener("input", syncIconPreview);
+    iconInput?.addEventListener("change", syncIconPreview);
+    // Prioriza o binder nativo do Foundry para `.file-picker`.
+    try {
+      if (typeof FilePicker?.activateFilePicker === "function") FilePicker.activateFilePicker(root);
+    } catch (error) {
+      console.error("TWBV | Falha ao ativar FilePicker nativo", error);
+    }
 
+    // Fallback local caso a versão do Foundry não exponha activateFilePicker.
+    const openIconSourceDialogFallback = async (event) => {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      try {
         const rawIconPath = String(iconInput?.value ?? "").trim();
         const currentPath = rawIconPath
           ? (rawIconPath.includes("/") ? rawIconPath.split("/").slice(0, -1).join("/") || "icons/" : "icons/")
@@ -1510,8 +1519,6 @@ class TWBVPersonagemSheet extends ActorSheet {
             syncIconPreview();
           }
         });
-
-        // Fluxo mais confiável entre versões do Foundry.
         if (typeof picker?.browse === "function") await picker.browse();
         else if (typeof picker?.render === "function") picker.render(true);
       } catch (error) {
@@ -1519,26 +1526,11 @@ class TWBVPersonagemSheet extends ActorSheet {
         ui.notifications?.error("Não foi possível abrir o popup de seleção de imagem.");
       }
     };
-    const syncIconPreview = () => {
-      const iconValue = String(iconInput?.value ?? "").trim();
-      if (iconPreview && iconValue) iconPreview.src = iconValue;
-      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/mystery-man.svg";
-    };
-    iconInput?.addEventListener("input", syncIconPreview);
-    iconInput?.addEventListener("change", syncIconPreview);
-    const triggerIconPicker = async (event) => {
-      event?.preventDefault?.();
-      event?.stopPropagation?.();
-      await openIconSourceDialog();
-    };
-    iconButton?.addEventListener("click", triggerIconPicker);
-    iconPreview?.addEventListener("click", triggerIconPicker);
-    const iconPlaceholder = root.querySelector(".twbv-custom-item-icon-placeholder");
-    iconPlaceholder?.addEventListener("click", triggerIconPicker);
-    iconButton?.addEventListener("keydown", async (event) => {
-      if (!["Enter", " "].includes(event.key)) return;
-      triggerIconPicker(event);
-    });
+    if (typeof FilePicker?.activateFilePicker !== "function") {
+      iconButton?.addEventListener("click", openIconSourceDialogFallback);
+      iconPreview?.addEventListener("click", openIconSourceDialogFallback);
+      root.querySelector(".twbv-custom-item-icon-placeholder")?.addEventListener("click", openIconSourceDialogFallback);
+    }
     syncIconPreview();
   }
 

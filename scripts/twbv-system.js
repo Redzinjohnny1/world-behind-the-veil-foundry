@@ -41,7 +41,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "vantagem", "desvantagem", "habilidadeEspecial"];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "vantagem", "desvantagem", "habilidadeEspecial"];
 
 
 function twbvApplyItemTypeOrderConfig() {

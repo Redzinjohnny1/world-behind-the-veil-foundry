@@ -2167,24 +2167,14 @@ class TWBVItemSheetBase extends ItemSheet {
       submitOnChange: false
     });
   }
-
-
-  async _salvarDireto(event) {
-    event.preventDefault();
-    const form = this.form;
-    if (!form) return;
-
-    const bruto = new FormDataExtended(form).object;
+  async _updateObject(_event, formData) {
     const permitido = {};
-    for (const [chave, valor] of Object.entries(bruto)) {
+    for (const [chave, valor] of Object.entries(formData ?? {})) {
       if (chave === "name" || chave === "img" || chave.startsWith("system.")) {
         permitido[chave] = valor;
       }
     }
-
-    const dados = foundry.utils.expandObject(permitido);
-    await this.item.update(dados);
-    await this.close();
+    await this.item.update(permitido);
   }
 
   _fitToViewport() {
@@ -2202,7 +2192,6 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", this._salvarDireto.bind(this));
     html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();
       await this.close();

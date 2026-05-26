@@ -2162,16 +2162,10 @@ class TWBVItemSheetBase extends ItemSheet {
       width: 760,
       height: 860,
       resizable: true,
-      closeOnSubmit: false,
-      submitOnClose: false,
+      closeOnSubmit: true,
+      submitOnClose: true,
       submitOnChange: false
     });
-  }
-
-  async _saveAndClose(event) {
-    event.preventDefault();
-    await this.submit({ preventClose: true });
-    await this.close();
   }
 
   _fitToViewport() {
@@ -2189,7 +2183,6 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", this._saveAndClose.bind(this));
     html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();
       await this.close();

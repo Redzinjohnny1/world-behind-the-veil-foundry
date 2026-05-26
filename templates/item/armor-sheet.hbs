@@ -4,14 +4,8 @@
     <div class="header-fields">
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome da Armadura"/></h1>
       <div class="twbv-grid twbv-grid-3col">
-        <label>
-          Proteção
-          <input type="text" name="system.protection" value="{{system.protection}}" placeholder="0" />
-        </label>
-        <label>
-          Penalidade
-          <input type="text" name="system.penalty" value="{{system.penalty}}" placeholder="0" />
-        </label>
+        <label>Proteção<input type="text" name="system.protection" value="{{system.protection}}" placeholder="0" /></label>
+        <label>Penalidade<input type="text" name="system.penalty" value="{{system.penalty}}" placeholder="0" /></label>
         <input type="hidden" name="system.equipSlot" value="{{system.equipSlot}}" />
       </div>
       <div class="twbv-armor-slot-group">
@@ -27,34 +21,19 @@
         </div>
       </div>
       <div class="twbv-grid twbv-grid-3col">
-        <label>
-          Quantidade
-          <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" />
-        </label>
-        <label>
-          Peso
-          <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" />
-        </label>
-        <label>
-          Custo
-          <input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" />
-        </label>
+        <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
+        <label>Peso<input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" /></label>
+        <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
       </div>
       <input type="hidden" name="system.equipStatus" value="{{#if system.equipped}}1{{else}}0{{/if}}" />
-      <label class="checkbox">
-        <input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado
-      </label>
+      <label class="checkbox"><input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado</label>
     </div>
   </header>
-
+  <nav class="sheet-tabs tabs" data-group="primary"><a class="item" data-tab="general">Geral</a><a class="item" data-tab="mods">Modificações</a><a class="item" data-tab="description">Descrição</a></nav>
   <section class="sheet-body">
-    <label>
-      Descrição
-      <textarea name="system.description" rows="8">{{system.description}}</textarea>
-    </label>
+    <div class="tab" data-group="primary" data-tab="general"></div>
+    <div class="tab" data-group="primary" data-tab="mods"><header class="mods-header"><h3>Modificações</h3><a class="mod-create"><i class="fas fa-plus"></i> Adicionar Mod</a></header><div class="mods-list">{{#each system.actions.additional as |mod key|}}<div class="mod-row" data-mod-key="{{key}}"><input type="text" name="system.actions.additional.{{key}}.name" value="{{mod.name}}" placeholder="Nome" /><input type="text" name="system.actions.additional.{{key}}.modifier" value="{{mod.modifier}}" placeholder="+1 / -1" /><a class="mod-delete"><i class="fas fa-trash"></i></a></div>{{/each}}</div></div>
+    <div class="tab" data-group="primary" data-tab="description"><label>Descrição<textarea name="system.description" rows="8">{{system.description}}</textarea></label></div>
   </section>
-  <footer class="twbv-armor-footer">
-    <button type="submit" class="twbv-armor-save"><i class="fas fa-save"></i> Salvar</button>
-    <button type="button" class="twbv-armor-cancel"><i class="fas fa-times"></i> Cancelar</button>
-  </footer>
+  <footer class="twbv-armor-footer"><button type="submit" class="twbv-sheet-save-new"><i class="fas fa-save"></i> Salvar</button><button type="button" class="twbv-sheet-cancel-new"><i class="fas fa-times"></i> Cancelar</button></footer>
 </form>

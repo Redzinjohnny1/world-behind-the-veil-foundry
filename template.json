@@ -99,7 +99,8 @@
       "equipamento",
       "vantagem",
       "desvantagem",
-      "habilidadeEspecial"
+      "habilidadeEspecial",
+      "modificacao"
     ],
     "templates": {
       "base": {
@@ -282,6 +283,20 @@
       },
       "messageOnUse": true,
       "destroyOnEmpty": false
+    },
+    "modificacao": {
+      "templates": [
+        "base",
+        "inventory"
+      ],
+      "category": "modificacao",
+      "modifier": "",
+      "ap": 0,
+      "damage": "",
+      "range": "",
+      "rof": 0,
+      "shots": 0,
+      "currentShots": 0
     }
   }
 }

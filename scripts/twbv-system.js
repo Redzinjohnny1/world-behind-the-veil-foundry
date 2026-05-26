@@ -2198,21 +2198,27 @@ class TWBVItemSheetBase extends ItemSheet {
   activateListeners(html) {
     super.activateListeners(html);
     const formEl = html?.[0]?.querySelector?.("form") ?? html?.[0];
-    const submitAndClose = async (event) => {
+    const submitWithoutClose = async (event) => {
       event?.preventDefault?.();
       try {
         await this._onSubmit(event, { preventClose: true });
-        await this.close();
       } catch (error) {
         console.error("[TWBV] Falha ao salvar item:", error);
         ui.notifications?.error(`Falha ao salvar ${this.item?.name ?? "item"}. Veja o console (F12).`);
       }
     };
+
+    const scheduleAutoSave = foundry.utils.debounce(() => {
+      void submitWithoutClose();
+    }, 350);
     html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", (event) => {
       event.preventDefault();
       formEl?.requestSubmit?.();
     });
-    html.find("form").on("submit", submitAndClose);
+    html.find("form").on("submit", submitWithoutClose);
+    html.find('input, select, textarea').on('input change', () => {
+      scheduleAutoSave();
+    });
     html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
       event.preventDefault();
       await this.close();

@@ -35,5 +35,5 @@
     <div class="tab" data-group="primary" data-tab="mods"><header class="mods-header"><h3>Modificações</h3><a class="mod-create"><i class="fas fa-plus"></i> Adicionar Mod</a></header><div class="mods-list">{{#each system.actions.additional as |mod key|}}<div class="mod-row" data-mod-key="{{key}}"><input type="text" name="system.actions.additional.{{key}}.name" value="{{mod.name}}" placeholder="Nome" /><input type="text" name="system.actions.additional.{{key}}.modifier" value="{{mod.modifier}}" placeholder="+1 / -1" /><a class="mod-delete"><i class="fas fa-trash"></i></a></div>{{/each}}</div></div>
     <div class="tab" data-group="primary" data-tab="description"><label>Descrição<textarea name="system.description" rows="8">{{system.description}}</textarea></label></div>
   </section>
-  <footer class="twbv-armor-footer"><button type="submit" class="twbv-sheet-save-new"><i class="fas fa-save"></i> Salvar</button><button type="button" class="twbv-sheet-cancel-new"><i class="fas fa-times"></i> Cancelar</button></footer>
+  
 </form>

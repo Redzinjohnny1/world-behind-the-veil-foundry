@@ -209,7 +209,10 @@
       "equippable": true,
       "equipStatus": 0,
       "favorite": false,
-      "category": ""
+      "category": "",
+      "actions": {
+        "additional": {}
+      }
     },
     "weapon": {
       "templates": [

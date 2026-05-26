@@ -2164,8 +2164,8 @@ class TWBVItemSheetBase extends ItemSheet {
       width: 760,
       height: 860,
       resizable: true,
-      closeOnSubmit: true,
-      submitOnClose: true,
+      closeOnSubmit: false,
+      submitOnClose: false,
       submitOnChange: false
     });
   }
@@ -2197,6 +2197,18 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", async (event) => {
+      event.preventDefault();
+      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
+      if (!form) return;
+      const expanded = foundry.utils.expandObject(new FormDataExtended(form).object);
+      const payload = {};
+      if (Object.prototype.hasOwnProperty.call(expanded, "name")) payload.name = expanded.name;
+      if (Object.prototype.hasOwnProperty.call(expanded, "img")) payload.img = expanded.img;
+      payload.system = foundry.utils.mergeObject(foundry.utils.deepClone(this.item.system ?? {}), expanded.system ?? {}, { inplace: false });
+      await this.item.update(payload);
+      await this.close();
+    });
     html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
       event.preventDefault();
       await this.close();

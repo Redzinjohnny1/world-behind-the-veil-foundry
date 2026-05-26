@@ -1425,8 +1425,8 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
 
-  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,price:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
-  _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,price:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
+  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
+  _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,cost:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
   async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
   async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(applyVeuToFormula(item.system.damage||'1d4'))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
   async _onWeaponRoll(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const c=Number(item.system.currentShots??0),max=Number(item.system.shots??0); if(max>0&&c<=0) return ui.notifications.warn(`${item.name} está sem munição.`); if(max>0) await item.update({'system.currentShots':Math.max(c-1,0)}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p><strong>${item.name}</strong> atacou. Munição: ${Math.max(c-1,0)}/${max}</p>`});}
@@ -2156,11 +2156,56 @@ Hooks.on("updateItem", async (item, changes) => {
 });
 
 
-class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-option").on("click", (event)=>{event.preventDefault(); const option=event.currentTarget; const input=option?.querySelector?.(".twbv-weapon-slot-check"); const next=String(input?.value??"").trim(); if(!next) return; html.find(".twbv-weapon-slot-check").prop("checked", false); if(input) input.checked=true; html.find('input[name="system.equipSlot"]').val(next);}); html.find('input[name="system.equipped"]').on("change", (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");}); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); await this.submit(); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
-class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); await this.submit(); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
-class TWBVArmorSheet extends ItemSheet {
+class TWBVItemSheetBase extends ItemSheet {
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      width: 760,
+      height: 860,
+      resizable: true,
+      closeOnSubmit: true,
+      submitOnClose: true,
+      submitOnChange: false
+    });
+  }
+
+
+  async _salvarDireto(event) {
+    event.preventDefault();
+    const form = this.form;
+    if (!form) return;
+    const dados = foundry.utils.expandObject(new FormDataExtended(form).object);
+    await this.item.update(dados);
+    await this.close();
+  }
+
+  _fitToViewport() {
+    const width = Math.min(Math.max(Number(this.position?.width ?? 760), 760), window.innerWidth - 24);
+    const height = Math.min(Math.max(Number(this.position?.height ?? 860), 860), window.innerHeight - 24);
+    const left = Math.max(12, Math.floor((window.innerWidth - width) / 2));
+    const top = 12;
+    this.setPosition({ width, height, left, top });
+  }
+
+  async _render(force, options = {}) {
+    await super._render(force, options);
+    this._fitToViewport();
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", this._salvarDireto.bind(this));
+    html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
+      event.preventDefault();
+      await this.close();
+    });
+  }
+}
+
+class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-option").on("click", (event)=>{event.preventDefault(); const option=event.currentTarget; const input=option?.querySelector?.(".twbv-weapon-slot-check"); const next=String(input?.value??"").trim(); if(!next) return; html.find(".twbv-weapon-slot-check").prop("checked", false); if(input) input.checked=true; html.find('input[name="system.equipSlot"]').val(next);}); html.find('input[name="system.equipped"]').on("change", (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");}); }}
+class TWBVConsumableSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
+class TWBVArmorSheet extends TWBVItemSheetBase {
   static get defaultOptions(){
-    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:760,height:860,submitOnChange:false,submitOnClose:false,closeOnSubmit:false,resizable:true});
+    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet']});
   }
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
@@ -2177,18 +2222,9 @@ class TWBVArmorSheet extends ItemSheet {
       const checked = Boolean(event.currentTarget?.checked);
       html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
     });
-    html.find(".twbv-armor-save").on("click", async (event) => {
-      event.preventDefault();
-      await this.submit();
-      await this.close();
-    });
-    html.find(".twbv-armor-cancel").on("click", async (event) => {
-      event.preventDefault();
-      await this.close();
-    });
   }
 }
-class TWBVBasicItemSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); await this.submit(); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
+class TWBVBasicItemSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet']}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
 
 
 function twbvEnhanceDiceTray(root) {

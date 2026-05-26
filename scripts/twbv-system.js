@@ -2183,6 +2183,10 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", async (event) => {
+      event.preventDefault();
+      await this.submit();
+    });
     html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();
       await this.close();

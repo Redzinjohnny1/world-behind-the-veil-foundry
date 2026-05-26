@@ -2197,9 +2197,7 @@ class TWBVItemSheetBase extends ItemSheet {
     super.activateListeners(html);
     html.find(".twbv-sheet-save, .twbv-armor-save").on("click", async (event) => {
       event.preventDefault();
-      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
-      const updateData = form ? foundry.utils.expandObject(new FormDataExtended(form).object) : undefined;
-      await this._onSubmit(event, { preventClose: true, updateData });
+      await this.submit({ preventClose: true });
       await this.close();
     });
     html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {

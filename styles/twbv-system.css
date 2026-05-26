@@ -2675,102 +2675,67 @@
   pointer-events: auto !important;
 }
 
-/* Remover botões de salvar/cancelar das folhas de item do sistema */
-.window-app.sheet.item > footer.dialog-buttons,
-.window-app.sheet.item .window-content + footer.dialog-buttons,
-.window-app.sheet.item .dialog-buttons {
-  display: none !important;
+
+/* Hotfix: garantir fundo escuro no popup de vantagem/habilidade (sem branco) */
+.window-app:has(.twbv-custom-item-form) .window-content,
+.window-app:has(.twbv-custom-item-form) .dialog-content {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
 }
 
-/* Estilos para botões de Salvar/Cancelar customizados em item sheets */
-.sheet.item .sheet-footer {
-  display: flex;
-  gap: 8px;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 12px;
-  background: rgba(8, 7, 16, 0.8);
-  border-top: 1px solid rgba(217, 183, 117, 0.42);
-  margin-top: auto;
+.window-app:has(.twbv-custom-item-form) .window-content {
+  padding: 10px !important;
 }
 
-.sheet.item .sheet-footer button {
-  min-height: 36px;
-  padding: 0 16px;
-  border-radius: 6px;
-  border: 1px solid rgba(217, 183, 117, 0.55);
-  color: var(--twbv-text);
-  background: linear-gradient(180deg, rgba(84, 53, 126, 0.8), rgba(26, 17, 44, 0.9));
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
+.dialog .twbv-custom-item-form {
+  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(20, 12, 34, 0.98), rgba(8, 7, 18, 0.99)) !important;
+  border: 1px solid rgba(217, 183, 117, 0.62);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 500px;
 }
 
-.sheet.item .sheet-footer button:hover {
-  background: linear-gradient(180deg, rgba(108, 66, 157, 0.9), rgba(40, 25, 66, 0.95));
-  border-color: rgba(217, 183, 117, 0.8);
-  box-shadow: 0 0 12px rgba(154, 123, 255, 0.3);
-}
-
-.sheet.item .sheet-footer button:active {
-  transform: scale(0.98);
-}
-
-/* Estilos para SLOT DE ARMA */
-.weapon-sheet .weapon-slots-group {
-  margin-top: 12px;
-  padding: 12px;
-  border: 1px solid rgba(217, 183, 117, 0.42);
-  border-radius: 6px;
-  background: rgba(12, 10, 22, 0.5);
-}
-
-.weapon-sheet .weapon-slots-group legend {
-  padding: 0 8px;
-  color: var(--twbv-accent-gold);
+/* Ajuste final: texto Salvar/Cancelar no padrão do tema */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button) {
+  color: #f8edcc !important;
+  -webkit-text-fill-color: #f8edcc !important;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
   font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
 }
 
-.weapon-sheet .weapon-slots {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
 
-.weapon-sheet .weapon-slots label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid rgba(217, 183, 117, 0.3);
-  border-radius: 4px;
-  background: rgba(12, 10, 22, 0.3);
+.twbv-custom-item-iconbox {
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.15s ease;
-  user-select: none;
 }
-
-.weapon-sheet .weapon-slots label:hover {
-  background: rgba(154, 123, 255, 0.15);
-  border-color: rgba(154, 123, 255, 0.5);
+.twbv-custom-item-icon-placeholder {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.72));
+  color: #f8edcc;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 6px 4px;
+  pointer-events: none;
 }
-
-.weapon-sheet .weapon-slots label input[type="radio"] {
-  cursor: pointer;
-  accent-color: var(--twbv-accent-gold);
+.twbv-custom-item-iconbox:hover .twbv-custom-item-icon-placeholder,
+.twbv-custom-item-iconbox:focus-visible .twbv-custom-item-icon-placeholder {
+  color: #ffedc5;
 }
+.twbv-custom-item-iconbox-edit { display: none !important; }
 
-.weapon-sheet .weapon-slots label input[type="radio"]:checked + {
-  color: var(--twbv-accent-gold);
+/* Botões Salvar/Cancelar do popup de vantagem = estilo idêntico ao Adicionar Perícia */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons {
+  margin-top: 10px;
+  gap: 8px;
 }
-
-.weapon-sheet .weapon-slots label:has(input[type="radio"]:checked) {
-  background: rgba(217, 183, 117, 0.15);
-  border-color: var(--twbv-accent-gold);
-  color: var(--twbv-accent-gold);
-  font-weight: 600;
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button, input[type="button"], input[type="submit"]) {
+  border-radius: 8px !important;
+  border: 1px solid rgba(217, 183, 117, 0.72) !important;
+  color: #ffedc5 !important;
+  -webkit-text-fill-color: #ffedc5 !important;
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
+  box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
+  font-weight: 700;
 }
-

@@ -2227,6 +2227,16 @@ class TWBVItemSheetBase extends ItemSheet {
     if (formEl && !formEl.querySelector(".twbv-autosave-indicator")) {
       formEl.insertAdjacentHTML("afterbegin", `<div class="twbv-autosave-indicator" data-state="idle">Autosave ativo</div>`);
     }
+    const queueSubmit = foundry.utils.debounce(async () => {
+      try {
+        await this._onSubmit(null, { preventClose: true });
+      } catch (error) {
+        console.error("[TWBV] Erro no autosave:", error);
+      }
+    }, 250);
+
+    html.find('input[type="text"], input[type="number"], textarea').on("input", () => queueSubmit());
+    html.find("select, input[type='checkbox']").on("change", () => queueSubmit());
     this._setAutoSaveIndicator("idle");
   }
 }

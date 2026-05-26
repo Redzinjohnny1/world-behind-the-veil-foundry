@@ -1323,7 +1323,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
         : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
       return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
+      <form class="twbv-custom-item-form twbv-custom-item-dialog twbv-custom-item-dialog--sheetlike" data-type="${type}">
         <div class="twbv-custom-item-side">
           <button type="button" class="twbv-custom-item-iconbox twbv-custom-item-iconbox-button" title="Clique para configurar ícone">
             <img class="twbv-custom-item-icon-preview" src="${itemData.icon || "icons/svg/item-bag.svg"}" alt="Ícone" />
@@ -1362,12 +1362,8 @@ class TWBVPersonagemSheet extends ActorSheet {
             <button type="button" class="twbv-effect-add"><i class="fas fa-plus"></i> Adicionar Efeitos</button>
             <div class="twbv-effects-list">${effectsMarkup}</div>
           </section>
-          <div class="twbv-custom-item-actions">
-            <button type="submit" class="twbv-custom-item-submit">Salvar</button>
-            <button type="button" class="twbv-custom-item-cancel" data-action="cancel">Cancelar</button>
           </div>
-        </div>
-      </form>`;
+        </form>`;
     }
 
     const fieldsByType = {
@@ -1397,7 +1393,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
       : `<p class="twbv-tab-empty">Nenhum efeito ativo cadastrado.</p>`;
     return `
-      <form class="twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
+      <form class="twbv-custom-item-form twbv-custom-item-dialog twbv-custom-item-dialog--tabs" data-type="${type}">
         <nav class="twbv-custom-tabs">
           <button type="button" class="twbv-tab-button is-active" data-tab="descricao">Descrição</button>
           <button type="button" class="twbv-tab-button" data-tab="propriedades">Propriedades</button>
@@ -1447,7 +1443,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         pane.hidden = !isActive;
         pane.setAttribute("aria-hidden", isActive ? "false" : "true");
       });
-      const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+      const formRoot = root.querySelector("form.twbv-custom-item-form, form.twbv-custom-item-dialog");
       formRoot?.setAttribute("data-active-tab", tabId);
     };
     tabsNav?.addEventListener("click", (event) => {
@@ -1579,7 +1575,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
   _setCustomDialogValidationState(root) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form, form.twbv-custom-item-dialog");
     const nameInput = form?.querySelector('input[name="name"]');
     const saveButton = root?.querySelector('.dialog-buttons .dialog-button[data-button="save"], .twbv-custom-item-submit');
     if (!form || !nameInput || !saveButton) return;
@@ -1587,7 +1583,7 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 
   _bindCustomDialogFormSubmit(root, onSubmit) {
-    const form = root?.querySelector("form.twbv-custom-item-dialog");
+    const form = root?.querySelector("form.twbv-custom-item-form, form.twbv-custom-item-dialog");
     if (!form || typeof onSubmit !== "function") return;
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1621,7 +1617,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     const content = this._buildCustomItemDialogContent(type, itemData, options);
 
     const submitItemForm = async (root, dialogApp) => {
-      const form = root?.querySelector("form.twbv-custom-item-dialog");
+      const form = root?.querySelector("form.twbv-custom-item-form, form.twbv-custom-item-dialog");
       const nameInput = form?.querySelector('input[name="name"]');
       if (!form || !nameInput) return false;
 
@@ -1682,18 +1678,6 @@ class TWBVPersonagemSheet extends ActorSheet {
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
 
-        // Fallback explícito: garante que os botões do popup sempre funcionem
-        root.querySelector(".twbv-custom-item-submit")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          await submitItemForm(root, dialogApp);
-        });
-        root.querySelector(".twbv-custom-item-cancel")?.addEventListener("click", async (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          await dialogApp.close();
-        });
-
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
           ?? root.closest?.(".window-app");
@@ -1703,7 +1687,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           dialogWindow?.classList?.add(variantClass);
           dialogWindow?.classList?.add(variantWindowClass);
           root.classList.add(variantClass);
-          const formRoot = root.querySelector("form.twbv-custom-item-dialog");
+          const formRoot = root.querySelector("form.twbv-custom-item-form, form.twbv-custom-item-dialog");
           formRoot?.classList?.add(variantClass);
 
           applyCustomItemDialogTheme(dialogWindow);
@@ -1891,8 +1875,45 @@ Hooks.on("renderChatMessage", (message, html) => {
 });
 
 
-class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
-class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
+class TWBVItemSheetBase extends ItemSheet {
+  static get defaultOptions() {
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      width: 760,
+      height: 860,
+      resizable: true,
+      closeOnSubmit: false,
+      submitOnClose: false,
+      submitOnChange: false
+    });
+  }
+
+  activateListeners(html) {
+    super.activateListeners(html);
+    const formEl = html?.[0]?.querySelector?.("form") ?? html?.[0];
+    const submitAndClose = async (event) => {
+      event?.preventDefault?.();
+      try {
+        await this._onSubmit(event, { preventClose: true });
+        await this.close();
+      } catch (error) {
+        console.error("[TWBV] Falha ao salvar item:", error);
+        ui.notifications?.error(`Falha ao salvar ${this.item?.name ?? "item"}. Veja o console (F12).`);
+      }
+    };
+    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", (event) => {
+      event.preventDefault();
+      formEl?.requestSubmit?.();
+    });
+    html.find("form").on("submit", submitAndClose);
+    html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
+      event.preventDefault();
+      await this.close();
+    });
+  }
+}
+
+class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
+class TWBVConsumableSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
 
 
 function twbvEnhanceDiceTray(root) {

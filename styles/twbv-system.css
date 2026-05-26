@@ -2543,3 +2543,103 @@
   z-index: 51;
   pointer-events: auto !important;
 }
+
+/* Remover botões de salvar/cancelar das folhas de item do sistema */
+.window-app.sheet.item > footer.dialog-buttons,
+.window-app.sheet.item .window-content + footer.dialog-buttons,
+.window-app.sheet.item .dialog-buttons {
+  display: none !important;
+}
+
+/* Estilos para botões de Salvar/Cancelar customizados em item sheets */
+.sheet.item .sheet-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px;
+  background: rgba(8, 7, 16, 0.8);
+  border-top: 1px solid rgba(217, 183, 117, 0.42);
+  margin-top: auto;
+}
+
+.sheet.item .sheet-footer button {
+  min-height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(217, 183, 117, 0.55);
+  color: var(--twbv-text);
+  background: linear-gradient(180deg, rgba(84, 53, 126, 0.8), rgba(26, 17, 44, 0.9));
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.sheet.item .sheet-footer button:hover {
+  background: linear-gradient(180deg, rgba(108, 66, 157, 0.9), rgba(40, 25, 66, 0.95));
+  border-color: rgba(217, 183, 117, 0.8);
+  box-shadow: 0 0 12px rgba(154, 123, 255, 0.3);
+}
+
+.sheet.item .sheet-footer button:active {
+  transform: scale(0.98);
+}
+
+/* Estilos para SLOT DE ARMA */
+.weapon-sheet .weapon-slots-group {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(217, 183, 117, 0.42);
+  border-radius: 6px;
+  background: rgba(12, 10, 22, 0.5);
+}
+
+.weapon-sheet .weapon-slots-group legend {
+  padding: 0 8px;
+  color: var(--twbv-accent-gold);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.weapon-sheet .weapon-slots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.weapon-sheet .weapon-slots label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(217, 183, 117, 0.3);
+  border-radius: 4px;
+  background: rgba(12, 10, 22, 0.3);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.weapon-sheet .weapon-slots label:hover {
+  background: rgba(154, 123, 255, 0.15);
+  border-color: rgba(154, 123, 255, 0.5);
+}
+
+.weapon-sheet .weapon-slots label input[type="radio"] {
+  cursor: pointer;
+  accent-color: var(--twbv-accent-gold);
+}
+
+.weapon-sheet .weapon-slots label input[type="radio"]:checked + {
+  color: var(--twbv-accent-gold);
+}
+
+.weapon-sheet .weapon-slots label:has(input[type="radio"]:checked) {
+  background: rgba(217, 183, 117, 0.15);
+  border-color: var(--twbv-accent-gold);
+  color: var(--twbv-accent-gold);
+  font-weight: 600;
+}
+

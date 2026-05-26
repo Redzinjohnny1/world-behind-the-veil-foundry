@@ -41,6 +41,7 @@ const TWBV_EQUIPMENT_SLOT_DEFS = [
   { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
 ];
 
+
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
   if (explicitSummary) return explicitSummary;
@@ -52,61 +53,6 @@ function summarizeItemActiveEffects(item) {
 }
 
 
-
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial"];
-
-
-function twbvApplyItemTypeOrderConfig() {
-  const allowed = [...TWBV_ITEM_CREATE_ORDER];
-  if (game?.system?.documentTypes?.Item) {
-    game.system.documentTypes.Item = allowed;
-  }
-  if (CONFIG?.Item?.typeLabels) {
-    const nextLabels = {};
-    for (const type of allowed) {
-      if (Object.prototype.hasOwnProperty.call(CONFIG.Item.typeLabels, type)) {
-        nextLabels[type] = CONFIG.Item.typeLabels[type];
-      }
-    }
-    CONFIG.Item.typeLabels = nextLabels;
-  }
-}
-
-
-
-function twbvPatchItemCreateDialog() {
-  const itemClass = CONFIG?.Item?.documentClass;
-  if (!itemClass || itemClass._twbvCreateDialogPatched) return;
-  const originalCreateDialog = itemClass.createDialog;
-  if (typeof originalCreateDialog !== "function") return;
-
-  itemClass.createDialog = function(data = {}, options = {}) {
-    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
-    return originalCreateDialog.call(this, data, nextOptions);
-  };
-
-  itemClass._twbvCreateDialogPatched = true;
-}
-
-function twbvNormalizeItemCreateTypeSelect(root) {
-  const host = root?.[0] ?? root;
-  if (!host || typeof host.querySelector !== "function") return;
-  const select = host.querySelector('select[name="type"]');
-  if (!select) return;
-
-  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
-  const selected = String(select.value ?? "");
-
-  while (select.firstChild) select.removeChild(select.firstChild);
-
-  for (const type of TWBV_ITEM_CREATE_ORDER) {
-    const option = optionByValue.get(type);
-    if (option) select.appendChild(option);
-  }
-
-  const fallback = select.options[0]?.value ?? "";
-  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
-}
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
@@ -1976,8 +1922,6 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
-  twbvApplyItemTypeOrderConfig();
-  twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
@@ -1988,15 +1932,6 @@ Hooks.once("init", () => {
     makeDefault: true
   });
 });
-
-function twbvNormalizeAnyItemTypeDialog(app, html) {
-  const host = html?.[0] ?? html;
-  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
-  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
-}
-
-Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
-Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
@@ -2024,138 +1959,6 @@ Hooks.on("renderChatMessage", (message, html) => {
   }));
 });
 
-Hooks.on("preCreateItem", (item, createData) => {
-  const currentName = String(createData?.name ?? item?.name ?? "").trim();
-  const looksGeneric = !currentName || /^item(?:\s*\(\d+\))?$/i.test(currentName);
-  if (!looksGeneric) return;
-  const type = String(createData?.type ?? item?.type ?? "").trim();
-  const fallbackByType = {
-    vantagem: "Vantagem",
-    desvantagem: "Desvantagem",
-    habilidadeEspecial: "Habilidade Especial",
-    complicacao: "Complicação",
-    arma: "Arma",
-    armadura: "Armadura",
-    weapon: "Arma",
-    consumable: "Consumível",
-  modificacao: "Modificação",
-    equipamento: "Equipamento"
-  };
-  const nextName = fallbackByType[type] ?? "Item";
-  item.updateSource({ name: nextName });
-});
-
-Hooks.on("createItem", async (item) => {
-  if (!game.user?.isGM) return;
-  if (item.isEmbedded) return;
-
-  const type = String(item.type ?? "").trim();
-  const folderNameByType = {
-    vantagem: "Vantagens",
-    desvantagem: "Desvantagens",
-    habilidadeEspecial: "Habilidades Especiais",
-    complicacao: "Complicações",
-    arma: "Armas",
-    weapon: "Armas",
-    armadura: "Armaduras",
-    consumable: "Consumíveis",
-    equipamento: "Equipamentos"
-  };
-  const folderName = folderNameByType[type];
-  if (!folderName) return;
-
-  let folder = game.folders?.find((f) => f.type === "Item" && f.name === folderName);
-  if (!folder) {
-    folder = await Folder.create({ name: folderName, type: "Item", color: "#6f54b8" });
-  }
-  if (!folder) return;
-  if (item.folder?.id === folder.id) return;
-  await item.update({ folder: folder.id });
-});
-
-async function twbvEnsureItemFolderPath(folderNames = []) {
-  let parent = null;
-  for (const rawName of folderNames) {
-    const name = String(rawName ?? "").trim();
-    if (!name) continue;
-    let folder = game.folders?.find((f) =>
-      f.type === "Item" &&
-      f.name === name &&
-      ((parent && f.folder?.id === parent.id) || (!parent && !f.folder))
-    );
-    if (!folder) {
-      folder = await Folder.create({ name, type: "Item", color: "#6f54b8", folder: parent?.id ?? null });
-    }
-    parent = folder ?? parent;
-  }
-  return parent;
-}
-
-async function twbvRouteArmorToSlotFolder(item) {
-  if (!game.user?.isGM) return;
-  if (!item || item.isEmbedded) return;
-  if (String(item.type ?? "") !== "armadura") return;
-  const slotKey = String(item.system?.equipSlot ?? "").trim();
-  if (!slotKey) return;
-  const slotLabelByKey = {
-    head: "Cabeça",
-    chest: "Peito",
-    legs: "Pernas",
-    gloves: "Luva",
-    belt: "Cinto",
-    ringLeft: "Anel Esq.",
-    ringRight: "Anel Dir."
-  };
-  const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
-  const target = await twbvEnsureItemFolderPath(["Armaduras", slotFolderName]);
-  if (!target) return;
-  if (item.folder?.id === target.id) return;
-  await item.update({ folder: target.id });
-}
-
-Hooks.on("createItem", async (item) => {
-  await twbvRouteArmorToSlotFolder(item);
-});
-
-Hooks.on("updateItem", async (item, changes) => {
-  const touchedSlot = Object.prototype.hasOwnProperty.call(changes ?? {}, "system") && Object.prototype.hasOwnProperty.call(changes.system ?? {}, "equipSlot");
-  if (!touchedSlot) return;
-  await twbvRouteArmorToSlotFolder(item);
-});
-
-async function twbvRouteWeaponToSlotFolder(item) {
-  if (!game.user?.isGM) return;
-  if (!item || item.isEmbedded) return;
-  if (!["weapon", "arma"].includes(String(item.type ?? ""))) return;
-  const slotKey = String(item.system?.equipSlot ?? "").trim();
-  if (!slotKey) return;
-  const slotLabelByKey = {
-    shortBlade: "Lâmina curta",
-    longBlade: "Lâmina Longa",
-    blunt: "Contusivo/Corporal",
-    pistol: "Pistolas",
-    revolver: "Revólver",
-    smg: "Submetralhadoras",
-    assault: "Assalto",
-    shotgun: "Escopeta",
-    sniper: "Sniper"
-  };
-  const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
-  const target = await twbvEnsureItemFolderPath(["Armas", slotFolderName]);
-  if (!target) return;
-  if (item.folder?.id === target.id) return;
-  await item.update({ folder: target.id });
-}
-
-Hooks.on("createItem", async (item) => {
-  await twbvRouteWeaponToSlotFolder(item);
-});
-
-Hooks.on("updateItem", async (item, changes) => {
-  const touchedSlot = Object.prototype.hasOwnProperty.call(changes ?? {}, "system") && Object.prototype.hasOwnProperty.call(changes.system ?? {}, "equipSlot");
-  if (!touchedSlot) return;
-  await twbvRouteWeaponToSlotFolder(item);
-});
 
 
 class TWBVItemSheetBase extends ItemSheet {
@@ -2468,8 +2271,6 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
-  twbvApplyItemTypeOrderConfig();
-  twbvPatchItemCreateDialog();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

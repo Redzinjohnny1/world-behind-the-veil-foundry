@@ -26,7 +26,8 @@ const TWBV_ITEM_TYPES = {
   arma: "Arma",
   armadura: "Armadura",
   weapon: "Arma",
-  consumable: "Consumível"
+  consumable: "Consumível",
+  modificacao: "Modificação"
 };
 const TWBV_EQUIPMENT_SLOT_DEFS = [
   { key: "head", label: "Cabeça", accepts: ["armadura"] },
@@ -52,7 +53,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "vantagem", "desvantagem", "habilidadeEspecial"];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial"];
 
 
 function twbvApplyItemTypeOrderConfig() {
@@ -1981,7 +1982,7 @@ Hooks.once("init", () => {
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
-  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
@@ -2037,6 +2038,7 @@ Hooks.on("preCreateItem", (item, createData) => {
     armadura: "Armadura",
     weapon: "Arma",
     consumable: "Consumível",
+  modificacao: "Modificação",
     equipamento: "Equipamento"
   };
   const nextName = fallbackByType[type] ?? "Item";
@@ -2195,7 +2197,7 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
+    html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
       event.preventDefault();
       await this.close();
     });
@@ -2206,7 +2208,7 @@ class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ r
 class TWBVConsumableSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
 class TWBVArmorSheet extends TWBVItemSheetBase {
   static get defaultOptions(){
-    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet']});
+    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'description'}]});
   }
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
@@ -2223,6 +2225,8 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
       const checked = Boolean(event.currentTarget?.checked);
       html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
     });
+    html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Slot de Mod',type:'trait',modifier:'',uuid:''}});});
+    html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});});
   }
 }
 class TWBVBasicItemSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet']}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
@@ -2435,9 +2439,3 @@ Hooks.on("ready", () => {
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);
   setTimeout(() => twbvInjectCustomDiceTray(document), 1300);
 });
-    html.find(".twbv-armor-save").on("click", async (event) => {
-      event.preventDefault();
-      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
-      await this._onSubmit(event, { preventClose: true, updateData: foundry.utils.expandObject(new FormDataExtended(form).object) });
-      await this.close();
-    });

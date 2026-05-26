@@ -41,6 +41,7 @@ const TWBV_EQUIPMENT_SLOT_DEFS = [
   { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
 ];
 
+
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
   if (explicitSummary) return explicitSummary;
@@ -52,61 +53,6 @@ function summarizeItemActiveEffects(item) {
 }
 
 
-
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial"];
-
-
-function twbvApplyItemTypeOrderConfig() {
-  const allowed = [...TWBV_ITEM_CREATE_ORDER];
-  if (game?.system?.documentTypes?.Item) {
-    game.system.documentTypes.Item = allowed;
-  }
-  if (CONFIG?.Item?.typeLabels) {
-    const nextLabels = {};
-    for (const type of allowed) {
-      if (Object.prototype.hasOwnProperty.call(CONFIG.Item.typeLabels, type)) {
-        nextLabels[type] = CONFIG.Item.typeLabels[type];
-      }
-    }
-    CONFIG.Item.typeLabels = nextLabels;
-  }
-}
-
-
-
-function twbvPatchItemCreateDialog() {
-  const itemClass = CONFIG?.Item?.documentClass;
-  if (!itemClass || itemClass._twbvCreateDialogPatched) return;
-  const originalCreateDialog = itemClass.createDialog;
-  if (typeof originalCreateDialog !== "function") return;
-
-  itemClass.createDialog = function(data = {}, options = {}) {
-    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
-    return originalCreateDialog.call(this, data, nextOptions);
-  };
-
-  itemClass._twbvCreateDialogPatched = true;
-}
-
-function twbvNormalizeItemCreateTypeSelect(root) {
-  const host = root?.[0] ?? root;
-  if (!host || typeof host.querySelector !== "function") return;
-  const select = host.querySelector('select[name="type"]');
-  if (!select) return;
-
-  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
-  const selected = String(select.value ?? "");
-
-  while (select.firstChild) select.removeChild(select.firstChild);
-
-  for (const type of TWBV_ITEM_CREATE_ORDER) {
-    const option = optionByValue.get(type);
-    if (option) select.appendChild(option);
-  }
-
-  const fallback = select.options[0]?.value ?? "";
-  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
-}
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
@@ -1979,8 +1925,6 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
-  twbvApplyItemTypeOrderConfig();
-  twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
@@ -1991,15 +1935,6 @@ Hooks.once("init", () => {
     makeDefault: true
   });
 });
-
-function twbvNormalizeAnyItemTypeDialog(app, html) {
-  const host = html?.[0] ?? html;
-  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
-  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
-}
-
-Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
-Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
@@ -2026,6 +1961,7 @@ Hooks.on("renderChatMessage", (message, html) => {
     await message.update({content:newContent, 'flags.world-behind-the-veil.rollAdjust': {baseTotal, chain, baseContent}});
   }));
 });
+
 
 
 class TWBVItemSheetBase extends ItemSheet {
@@ -2269,8 +2205,6 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
-  twbvApplyItemTypeOrderConfig();
-  twbvPatchItemCreateDialog();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

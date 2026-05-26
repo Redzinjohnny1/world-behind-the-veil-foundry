@@ -2173,7 +2173,16 @@ class TWBVItemSheetBase extends ItemSheet {
     event.preventDefault();
     const form = this.form;
     if (!form) return;
-    const dados = foundry.utils.expandObject(new FormDataExtended(form).object);
+
+    const bruto = new FormDataExtended(form).object;
+    const permitido = {};
+    for (const [chave, valor] of Object.entries(bruto)) {
+      if (chave === "name" || chave === "img" || chave.startsWith("system.")) {
+        permitido[chave] = valor;
+      }
+    }
+
+    const dados = foundry.utils.expandObject(permitido);
     await this.item.update(dados);
     await this.close();
   }

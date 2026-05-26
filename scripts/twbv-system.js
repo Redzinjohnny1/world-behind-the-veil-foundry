@@ -2166,7 +2166,7 @@ class TWBVItemSheetBase extends ItemSheet {
       resizable: true,
       closeOnSubmit: false,
       submitOnClose: false,
-      submitOnChange: false
+      submitOnChange: true
     });
   }
   async _updateObject(_event, formData) {

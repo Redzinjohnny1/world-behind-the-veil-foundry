@@ -2170,6 +2170,7 @@ class TWBVItemSheetBase extends ItemSheet {
     });
   }
   async _updateObject(_event, formData) {
+    this._setAutoSaveIndicator("saving");
     const permitido = {};
     for (const [chave, valor] of Object.entries(formData ?? {})) {
       if (chave === "name" || chave === "img" || chave.startsWith("system.")) {
@@ -2179,7 +2180,32 @@ class TWBVItemSheetBase extends ItemSheet {
         permitido.system = valor;
       }
     }
-    await this.item.update(permitido);
+    try {
+      await this.item.update(permitido);
+      this._setAutoSaveIndicator("saved");
+    } catch (error) {
+      this._setAutoSaveIndicator("error");
+      throw error;
+    }
+  }
+
+  _setAutoSaveIndicator(state = "idle") {
+    const root = this.element?.[0];
+    if (!root) return;
+    const badge = root.querySelector(".twbv-autosave-indicator");
+    if (!badge) return;
+    const labels = {
+      idle: "Autosave ativo",
+      saving: "Salvando...",
+      saved: "Salvo ✓",
+      error: "Erro ao salvar"
+    };
+    badge.textContent = labels[state] ?? labels.idle;
+    badge.dataset.state = state;
+    if (state === "saved") {
+      clearTimeout(this._twbvAutoSaveIndicatorTimer);
+      this._twbvAutoSaveIndicatorTimer = setTimeout(() => this._setAutoSaveIndicator("idle"), 1200);
+    }
   }
 
   _fitToViewport() {
@@ -2197,6 +2223,11 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    const formEl = html?.[0]?.querySelector?.("form");
+    if (formEl && !formEl.querySelector(".twbv-autosave-indicator")) {
+      formEl.insertAdjacentHTML("afterbegin", `<div class="twbv-autosave-indicator" data-state="idle">Autosave ativo</div>`);
+    }
+    this._setAutoSaveIndicator("idle");
   }
 }
 

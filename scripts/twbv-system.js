@@ -2241,7 +2241,7 @@ class TWBVItemSheetBase extends ItemSheet {
   }
 }
 
-class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-check").on("change", async (event)=>{const input=event.currentTarget; const next=String(input?.value??"").trim(); if(!next) return; html.find(".twbv-weapon-slot-check").prop("checked", false); input.checked=true; html.find('input[name="system.equipSlot"]').val(next).trigger("change"); await this._onSubmit(event, { preventClose: true });}); html.find('input[name="system.equipped"]').on("change", async (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0").trigger("change"); await this._onSubmit(event, { preventClose: true });}); }}
+class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-check").on("change", async (event)=>{const next=String(event.currentTarget?.value??"").trim(); if(!next) return; html.find('input[name="system.equipSlot"]').val(next); await this.item.update({"system.equipSlot": next});}); html.find('input[name="system.equipped"]').on("change", async (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0"); await this.item.update({"system.equipped": checked, "system.equipStatus": checked ? "1" : "0"});}); }}
 class TWBVConsumableSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
 class TWBVArmorSheet extends TWBVItemSheetBase {
   static get defaultOptions(){
@@ -2251,19 +2251,15 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
   activateListeners(html){
     super.activateListeners(html);
     html.find(".twbv-armor-slot-check").on("change", async (event) => {
-      const input = event.currentTarget;
-      const next = String(input?.value ?? "").trim();
+      const next = String(event.currentTarget?.value ?? "").trim();
       if (!next) return;
-      const shouldClear = current === next;
-      html.find(".twbv-armor-slot-check").prop("checked", false);
-      input.checked = true;
-      html.find('input[name="system.equipSlot"]').val(next).trigger("change");
-      await this._onSubmit(event, { preventClose: true });
+      html.find('input[name="system.equipSlot"]').val(next);
+      await this.item.update({"system.equipSlot": next});
     });
     html.find('input[name="system.equipped"]').on("change", async (event) => {
       const checked = Boolean(event.currentTarget?.checked);
-      html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0").trigger("change");
-      await this._onSubmit(event, { preventClose: true });
+      html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
+      await this.item.update({"system.equipped": checked, "system.equipStatus": checked ? "1" : "0"});
     });
     html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Slot de Mod',type:'trait',modifier:'',uuid:''}});});
     html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});});

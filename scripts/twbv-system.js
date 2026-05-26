@@ -2173,6 +2173,9 @@ class TWBVItemSheetBase extends ItemSheet {
       if (chave === "name" || chave === "img" || chave.startsWith("system.")) {
         permitido[chave] = valor;
       }
+      if (chave === "system" && valor && typeof valor === "object") {
+        permitido.system = valor;
+      }
     }
     await this.item.update(permitido);
   }

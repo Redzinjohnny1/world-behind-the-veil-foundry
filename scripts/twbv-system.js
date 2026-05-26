@@ -2197,18 +2197,18 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", async (event) => {
-      event.preventDefault();
-      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
-      if (!form) return;
-      const expanded = foundry.utils.expandObject(new FormDataExtended(form).object);
-      const payload = {};
-      if (Object.prototype.hasOwnProperty.call(expanded, "name")) payload.name = expanded.name;
-      if (Object.prototype.hasOwnProperty.call(expanded, "img")) payload.img = expanded.img;
-      payload.system = foundry.utils.mergeObject(foundry.utils.deepClone(this.item.system ?? {}), expanded.system ?? {}, { inplace: false });
-      await this.item.update(payload);
-      await this.close();
-    });
+    const submitAndClose = async (event) => {
+      event?.preventDefault?.();
+      try {
+        await this._onSubmit(event, { preventClose: true });
+        await this.close();
+      } catch (error) {
+        console.error("[TWBV] Falha ao salvar item:", error);
+        ui.notifications?.error(`Falha ao salvar ${this.item?.name ?? "item"}. Veja o console (F12).`);
+      }
+    };
+    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", submitAndClose);
+    html.find("form").on("submit", submitAndClose);
     html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
       event.preventDefault();
       await this.close();

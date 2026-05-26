@@ -24,8 +24,22 @@ const TWBV_ITEM_TYPES = {
   complicacao: "Complicação",
   equipamento: "Equipamento",
   arma: "Arma",
-  armadura: "Armadura"
+  armadura: "Armadura",
+  weapon: "Arma",
+  consumable: "Consumível",
+  modificacao: "Modificação"
 };
+const TWBV_EQUIPMENT_SLOT_DEFS = [
+  { key: "head", label: "Cabeça", accepts: ["armadura"] },
+  { key: "chest", label: "Peito", accepts: ["armadura"] },
+  { key: "legs", label: "Perna", accepts: ["armadura"] },
+  { key: "gloves", label: "Luva", accepts: ["armadura"] },
+  { key: "belt", label: "Cinto", accepts: ["armadura"] },
+  { key: "ringLeft", label: "Anel Esq.", accepts: ["armadura"] },
+  { key: "ringRight", label: "Anel Dir.", accepts: ["armadura"] },
+  { key: "weaponMain", label: "Arma", accepts: ["weapon", "arma"] },
+  { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
+];
 
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
@@ -35,6 +49,63 @@ function summarizeItemActiveEffects(item) {
   );
   if (!changes.length) return "";
   return changes.slice(0, 3).join(", ");
+}
+
+
+
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial"];
+
+
+function twbvApplyItemTypeOrderConfig() {
+  const allowed = [...TWBV_ITEM_CREATE_ORDER];
+  if (game?.system?.documentTypes?.Item) {
+    game.system.documentTypes.Item = allowed;
+  }
+  if (CONFIG?.Item?.typeLabels) {
+    const nextLabels = {};
+    for (const type of allowed) {
+      if (Object.prototype.hasOwnProperty.call(CONFIG.Item.typeLabels, type)) {
+        nextLabels[type] = CONFIG.Item.typeLabels[type];
+      }
+    }
+    CONFIG.Item.typeLabels = nextLabels;
+  }
+}
+
+
+
+function twbvPatchItemCreateDialog() {
+  const itemClass = CONFIG?.Item?.documentClass;
+  if (!itemClass || itemClass._twbvCreateDialogPatched) return;
+  const originalCreateDialog = itemClass.createDialog;
+  if (typeof originalCreateDialog !== "function") return;
+
+  itemClass.createDialog = function(data = {}, options = {}) {
+    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
+    return originalCreateDialog.call(this, data, nextOptions);
+  };
+
+  itemClass._twbvCreateDialogPatched = true;
+}
+
+function twbvNormalizeItemCreateTypeSelect(root) {
+  const host = root?.[0] ?? root;
+  if (!host || typeof host.querySelector !== "function") return;
+  const select = host.querySelector('select[name="type"]');
+  if (!select) return;
+
+  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
+  const selected = String(select.value ?? "");
+
+  while (select.firstChild) select.removeChild(select.firstChild);
+
+  for (const type of TWBV_ITEM_CREATE_ORDER) {
+    const option = optionByValue.get(type);
+    if (option) select.appendChild(option);
+  }
+
+  const fallback = select.options[0]?.value ?? "";
+  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
 }
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
@@ -575,7 +646,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       bonus: String(item.system?.bonus ?? "").trim(),
       protection: String(item.system?.protection ?? "").trim(),
       penalty: String(item.system?.penalty ?? "").trim(),
-      tags: String(item.system?.tags ?? "").trim()
+      tags: String(item.system?.tags ?? "").trim(),
+      equipSlot: String(item.system?.equipSlot ?? "").trim(),
+      equipStatus: Number(item.system?.equipStatus ?? 0),
+      isEquipped: Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1)
     });
 
     const mapSystemEntry = (entry, fallbackType) => ({
@@ -591,13 +665,26 @@ class TWBVPersonagemSheet extends ActorSheet {
       descricao: String(entry?.descricao ?? entry?.description ?? "").trim()
     });
 
-    context.vantagens = Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
-    context.habilidadesEspeciais = Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
+    const vantagensEmbedded = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
+    const habilidadesEmbedded = actorItems.filter((item) => item.type === "habilidadeEspecial").map(mapItem);
+    const desvantagensEmbedded = actorItems.filter((item) => item.type === "desvantagem").map(mapItem);
+
+    context.vantagens = vantagensEmbedded.length ? vantagensEmbedded : Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
+    context.habilidadesEspeciais = habilidadesEmbedded.length ? habilidadesEmbedded : Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
+    context.desvantagens = desvantagensEmbedded.length ? desvantagensEmbedded : Array.from(this.actor.system?.desvantagens ?? []).map((entry) => mapSystemEntry(entry, "desvantagem"));
     context.complicacoes = Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
     context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "armadura"].includes(item.type)).map(mapItem);
     const weapons=actorItems.filter(i=>i.type==="weapon"); const consumables=actorItems.filter(i=>i.type==="consumable"); const magazines=consumables.filter(i=>i.system?.subtype==="magazine"); const normalConsumables=consumables.filter(i=>i.system?.subtype!=="magazine");
     for (const item of [...weapons,...consumables]) { const sys=item.system; if(item.type==="weapon"){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
     context.equipment={favorite:actorItems.filter(i=>i.system?.favorite),weapons,magazines,consumables:normalConsumables,others:actorItems.filter(i=>!["weapon","consumable"].includes(i.type))};
+    const slotItemByKey = new Map();
+    for (const item of actorItems) {
+      const slotKey = String(item.system?.equipSlot ?? "").trim();
+      const equipped = Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1);
+      if (!slotKey || !equipped || slotItemByKey.has(slotKey)) continue;
+      slotItemByKey.set(slotKey, mapItem(item));
+    }
+    context.equipmentSlots = TWBV_EQUIPMENT_SLOT_DEFS.map((slot) => ({ ...slot, item: slotItemByKey.get(slot.key) ?? null }));
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
       .map((item) => ({
@@ -661,6 +748,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
+    if (!Array.isArray(this.actor.system?.desvantagens)) this.actor.system.desvantagens = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
@@ -670,6 +758,38 @@ class TWBVPersonagemSheet extends ActorSheet {
       atributos[key].passo = normalizeAttributeStep(atributos[key].passo);
       atributos[key].bonus = Number.isFinite(Number(atributos[key].bonus)) ? Number(atributos[key].bonus) : 0;
     }
+  }
+
+  async _onDrop(event) {
+    const raw = event?.dataTransfer?.getData("text/plain");
+    if (!raw) return super._onDrop(event);
+
+    let data;
+    try { data = JSON.parse(raw); } catch (_) { return super._onDrop(event); }
+    if (data?.type !== "Item") return super._onDrop(event);
+
+    const dropped = await Item.implementation.fromDropData(data);
+    if (!dropped) return;
+
+    const source = dropped.toObject();
+    const itemType = String(source.type ?? "").trim();
+    const needsActorEmbed = ["weapon", "consumable", "equipamento", "arma", "armadura", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(itemType);
+    if (!needsActorEmbed) return super._onDrop(event);
+
+    const payload = { ...source, system: foundry.utils.deepClone(source.system ?? {}) };
+
+    if (["armadura", "equipamento", "arma", "weapon", "consumable"].includes(itemType)) {
+      payload.system.active = payload.system.active ?? true;
+      payload.system.equipped = payload.system.equipped ?? false;
+    }
+
+    if (itemType === "armadura") {
+      const equipSlot = String(payload.system.equipSlot ?? "").trim();
+      payload.system.category = payload.system.category || `armadura${equipSlot ? `:${equipSlot}` : ""}`;
+    }
+
+    await this.actor.createEmbeddedDocuments("Item", [payload]);
+    return;
   }
 
   activateListeners(html) {
@@ -1217,7 +1337,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       const type = String(event.currentTarget.dataset.type ?? "equipamento");
       const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
-      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
+      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
         await this._openCustomItemDialog(type, null, { dialogVersion });
         return;
       }
@@ -1241,7 +1361,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       }
       const item = this.actor.items.get(itemId);
       if (!item) return;
-      if (["vantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
+      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
         await this._openCustomItemDialog(item.type, item);
         return;
       }
@@ -1278,6 +1398,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".weapon-mod").on("click", this._onWeaponMod.bind(this));
     html.find(".weapon-reload").on("click", this._onWeaponReload.bind(this));
     html.find(".consumable-use").on("click", this._onConsumableUse.bind(this));
+    html.find(".item-toggle-equip").on("click", this._onToggleEquip.bind(this));
+    html.find(".twbv-equip-slot").on("dragover", (event) => event.preventDefault());
+    html.find(".twbv-equip-slot").on("drop", this._onEquipmentSlotDrop.bind(this));
 
     html.find(".twbv-item-toggle-active, .twbv-item-toggle-equipped").on("change", async (event) => {
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
@@ -1303,8 +1426,8 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
 
-  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,price:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
-  _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,price:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
+  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
+  _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,cost:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
   async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
   async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(applyVeuToFormula(item.system.damage||'1d4'))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
   async _onWeaponRoll(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const c=Number(item.system.currentShots??0),max=Number(item.system.shots??0); if(max>0&&c<=0) return ui.notifications.warn(`${item.name} está sem munição.`); if(max>0) await item.update({'system.currentShots':Math.max(c-1,0)}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p><strong>${item.name}</strong> atacou. Munição: ${Math.max(c-1,0)}/${max}</p>`});}
@@ -1313,11 +1436,13 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
 
   async _onItemCreate(event){event.preventDefault(); const type=event.currentTarget.dataset.type; const itemData={name:type==='weapon'?'Nova Arma':'Novo Consumível', type, system:type==='weapon'?this._buildWeaponDefaults():this._buildConsumableDefaults()}; await this.actor.createEmbeddedDocuments('Item',[itemData]);}
+  async _onToggleEquip(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const isEquipped=Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0)===1); await item.update({'system.equipped': !isEquipped,'system.equipStatus': !isEquipped ? 1 : 0});}
+  async _onEquipmentSlotDrop(event){event.preventDefault(); const slotEl=event.currentTarget; const slotKey=String(slotEl?.dataset.slotKey??"").trim(); if(!slotKey) return; const raw=event.originalEvent?.dataTransfer?.getData('text/plain') ?? event.dataTransfer?.getData('text/plain'); if(!raw) return; let data; try{data=JSON.parse(raw);}catch(_){return;} if(data?.type!=="Item") return; const dropped=await Item.implementation.fromDropData(data); if(!dropped) return; const actorItem=this.actor.items.get(dropped.id); if(!actorItem) return ui.notifications?.warn("Arraste um item do próprio personagem."); const slotDef=TWBV_EQUIPMENT_SLOT_DEFS.find(s=>s.key===slotKey); if(!slotDef) return; if(!slotDef.accepts.includes(actorItem.type)) return ui.notifications?.warn(`Slot ${slotDef.label} não aceita ${actorItem.type}.`); await actorItem.update({'system.equipSlot': slotKey,'system.equipped': true,'system.equipStatus': 1});}
 
   _buildCustomItemDialogContent(type, itemData = {}, options = {}) {
     const dialogVersion = String(options.dialogVersion ?? "");
     const isV2 = dialogVersion === "2";
-    if (["vantagem", "habilidadeEspecial"].includes(type)) {
+    if (["vantagem", "desvantagem", "habilidadeEspecial"].includes(type)) {
       const effects = Array.isArray(itemData.effects) ? itemData.effects : [];
       const effectsMarkup = effects.length
         ? effects.map((effect, index) => `<div class="twbv-effect-row"><input type="text" name="effect-${index}" value="${effect}" /><button type="button" class="twbv-effect-remove" data-index="${index}"><i class="fas fa-trash"></i></button></div>`).join("")
@@ -1332,14 +1457,14 @@ class TWBVPersonagemSheet extends ActorSheet {
           ${isV2 ? `<input type="file" class="twbv-custom-item-icon-file" accept="image/*" hidden />` : ""}
         </div>
         <div class="twbv-custom-item-main">
-          <div class="form-group"><label>Nome</label><input type="text" name="name" value="${itemData.name ?? ""}" autofocus /></div>
+          <div class="twbv-custom-item-title-wrap"><input type="text" class="twbv-custom-item-title-input" name="name" value="${itemData.name ?? ""}" placeholder="${type === "desvantagem" ? "Nome da desvantagem" : "Nome da vantagem"}" autofocus /></div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
             <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>
           </div>
           <div class="twbv-custom-item-grid2 twbv-custom-item-grid2--header">
             <div class="form-group"><label>Fonte</label><input type="text" name="source" value="${itemData.fonte ?? itemData.source ?? ""}" /></div>
-            <div class="form-group"><label>Ícone (URL)</label><input type="text" name="icon" value="${itemData.icon ?? ""}" placeholder="https://..." /></div>
+            <input type="hidden" name="icon" value="" />
           </div>
           <nav class="twbv-custom-tabs twbv-custom-tabs--sheet">
             <button type="button" class="twbv-tab-button is-active" data-tab="destaque">Destaque</button>
@@ -1370,6 +1495,9 @@ class TWBVPersonagemSheet extends ActorSheet {
       vantagem: `
         <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
         <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
+      desvantagem: `
+        <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
+        <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
       habilidadeEspecial: `
         <div class="form-group"><label>Pré Requisito</label><input type="text" name="requirements" value="${itemData.requisitos ?? itemData.requirements ?? ""}" /></div>
         <div class="form-group"><label>Categoria</label><input type="text" name="category" value="${itemData.categoria ?? itemData.category ?? ""}" /></div>`,
@@ -1383,7 +1511,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           </select>
         </div>`
     };
-    const propertiesField = type === "vantagem" ? `
+    const propertiesField = ["vantagem", "desvantagem"].includes(type) ? `
       <div class="twbv-property-checkboxes">
         <label><input type="checkbox" name="isArcaneBackground" ${itemData.isArcaneBackground ? "checked" : ""} /> Antecedente Arcano</label>
         <label><input type="checkbox" name="hasCharges" ${itemData.hasCharges ? "checked" : ""} /> Possui Cargas</label>
@@ -1486,53 +1614,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     const iconInput = root.querySelector('input[name="icon"]');
-    const iconPreview = root.querySelector(".twbv-custom-item-icon-preview");
-    const iconButton = root.querySelector(".twbv-custom-item-iconbox-button");
-    const iconFileInput = root.querySelector(".twbv-custom-item-icon-file");
-    const syncIconPreview = () => {
-      const iconValue = String(iconInput?.value ?? "").trim();
-      if (iconPreview && iconValue) iconPreview.src = iconValue;
-      if (iconPreview && !iconValue) iconPreview.src = "icons/svg/item-bag.svg";
-    };
-    iconInput?.addEventListener("input", syncIconPreview);
-    iconButton?.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const openIconChoiceDialog = () => new Promise((resolve) => {
-        const chooser = new Dialog({
-          title: "Configurar ícone",
-          content: `<p>Como deseja definir o ícone?</p>`,
-          buttons: {
-            file: { icon: '<i class="fas fa-folder-open"></i>', label: "Procurar no PC", callback: () => resolve("file") },
-            url: { icon: '<i class="fas fa-link"></i>', label: "Usar URL", callback: () => resolve("url") },
-            cancel: { icon: '<i class="fas fa-times"></i>', label: "Cancelar", callback: () => resolve("cancel") }
-          },
-          default: "file",
-          close: () => resolve("cancel")
-        });
-        chooser.render(true);
-      });
-      const choice = await openIconChoiceDialog();
-      if (choice === "file" && iconFileInput) iconFileInput.click();
-      if (choice === "url") iconInput?.focus();
-    });
-    iconButton?.addEventListener("keydown", async (event) => {
-      if (!["Enter", " "].includes(event.key)) return;
-      event.preventDefault();
-      iconButton.click();
-    });
-    iconFileInput?.addEventListener("change", () => {
-      const file = iconFileInput.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = String(reader.result ?? "");
-        if (iconInput) iconInput.value = result;
-        syncIconPreview();
-      };
-      reader.readAsDataURL(file);
-    });
-    syncIconPreview();
+    if (iconInput) iconInput.value = "";
   }
 
   _collectCustomItemDialogData(root, type, defaultSeverity = "Menor") {
@@ -1593,9 +1675,43 @@ class TWBVPersonagemSheet extends ActorSheet {
     this._setCustomDialogValidationState(root);
   }
 
+  _bindCustomDialogActionButtons(root, onSubmit, onCancel) {
+    if (!root) return;
+    root.querySelectorAll(".twbv-custom-item-submit").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+      });
+    });
+    root.querySelectorAll(".twbv-custom-item-cancel").forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      });
+    });
+    root.addEventListener("click", async (event) => {
+      const submitBtn = event.target.closest(".twbv-custom-item-submit");
+      if (submitBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onSubmit === "function") await onSubmit();
+        return;
+      }
+      const cancelBtn = event.target.closest(".twbv-custom-item-cancel");
+      if (cancelBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onCancel === "function") await onCancel();
+      }
+    }, true);
+  }
+
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
+      desvantagem: { title: "Nova Desvantagem", severity: "", tierLabel: "Requisito/Tier" },
       habilidadeEspecial: { title: "Nova Habilidade", severity: "", tierLabel: "" },
       complicacao: { title: "Nova Complicação", severity: "Menor", tierLabel: "" }
     };
@@ -1624,6 +1740,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const typedName = String(nameInput.value ?? "").trim();
       const defaultNameByType = {
         vantagem: "Vantagem",
+        desvantagem: "Desvantagem",
         habilidadeEspecial: "Habilidade Especial",
         complicacao: "Complicação"
       };
@@ -1631,12 +1748,14 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!typedName) nameInput.value = nome;
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
+      payload.name = nome;
       const isEmbeddedItem = item && typeof item.update === "function";
       if (isEmbeddedItem) {
         await item.update(payload);
       } else {
         const listKeyByType = {
           vantagem: "vantagens",
+          desvantagem: "desvantagens",
           habilidadeEspecial: "habilidadesEspeciais",
           complicacao: "complicacoes"
         };
@@ -1667,16 +1786,39 @@ class TWBVPersonagemSheet extends ActorSheet {
       await dialogApp.close();
       await this.render(true);
       if (!item && type === "vantagem") ui.notifications?.info("Vantagem adicionada.");
+      if (!item && type === "desvantagem") ui.notifications?.info("Desvantagem adicionada.");
     };
 
+    let renderedRootRef = null;
     const dialog = new Dialog({
       title: item ? `Editar ${item.name ?? item.nome ?? "Item"}` : defaults.title,
       content,
+      buttons: {
+        save: {
+          label: "Salvar",
+          callback: async (html) => {
+            const root = renderedRootRef ?? resolveDialogRoot(html);
+            if (!root) return;
+            await submitItemForm(root, dialog);
+          }
+        },
+        cancel: {
+          label: "Cancelar",
+          callback: async () => dialog.close()
+        }
+      },
+      default: "save",
       render: (dialogApp, renderedHtml) => {
         const root = resolveDialogRoot(renderedHtml);
         if (!root) return;
+        renderedRootRef = root;
         this._bindCustomDialogUi(root);
         this._bindCustomDialogFormSubmit(root, async () => submitItemForm(root, dialogApp));
+        this._bindCustomDialogActionButtons(
+          root,
+          async () => submitItemForm(root, dialogApp),
+          async () => dialogApp.close()
+        );
 
         const dialogWindow = applyDialogWindowClass(renderedHtml ?? dialogApp, "wbtv-custom-item-dialog")
           ?? dialogApp?.element?.[0]
@@ -1693,8 +1835,6 @@ class TWBVPersonagemSheet extends ActorSheet {
           applyCustomItemDialogTheme(dialogWindow);
         }
       },
-      buttons: {},
-      default: null,
       close: () => {
         const root = dialog.element?.[0];
         root?.__twbvThemeObserver?.disconnect?.();
@@ -1839,14 +1979,27 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
+  twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
 });
+
+function twbvNormalizeAnyItemTypeDialog(app, html) {
+  const host = html?.[0] ?? html;
+  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
+  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
+}
+
+Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
+Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
@@ -2116,6 +2269,8 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
+  twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

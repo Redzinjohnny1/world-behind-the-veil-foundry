@@ -1,0 +1,29 @@
+<form class="{{cssClass}} twbv-item-sheet twbv-basic-item-sheet twbv-themed-item-sheet" autocomplete="off">
+  <header class="sheet-header twbv-armor-header">
+    <img class="profile-img twbv-armor-profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="140" width="140"/>
+    <div class="header-fields">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do Item"/></h1>
+      <div class="twbv-grid twbv-grid-3col">
+        <label>Tipo
+          <input type="text" value="{{item.type}}" disabled />
+        </label>
+        <label>Categoria
+          <input type="text" name="system.category" value="{{system.category}}" placeholder="Categoria" />
+        </label>
+        <label>Tag(s)
+          <input type="text" name="system.tags" value="{{system.tags}}" placeholder="tags" />
+        </label>
+      </div>
+      <div class="twbv-grid twbv-grid-3col">
+        <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
+        <label>Peso<input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" /></label>
+        <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
+      </div>
+      <label class="checkbox"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
+      <label class="checkbox"><input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado</label>
+    </div>
+  </header>
+  <section class="sheet-body">
+    <label>Descrição<textarea name="system.description" rows="10">{{system.description}}</textarea></label>
+  </section>
+</form>

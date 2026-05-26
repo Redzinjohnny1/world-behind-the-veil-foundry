@@ -41,11 +41,6 @@ const TWBV_EQUIPMENT_SLOT_DEFS = [
   { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
 ];
 
-
-const TWBVActorSheetBaseClass = globalThis.foundry?.appv1?.sheets?.ActorSheet ?? globalThis.ActorSheet;
-const TWBVItemSheetBaseClass = globalThis.foundry?.appv1?.sheets?.ItemSheet ?? globalThis.ItemSheet;
-const TWBVItemsRegistry = globalThis.foundry?.documents?.collections?.Items ?? globalThis.Items;
-
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
   if (explicitSummary) return explicitSummary;
@@ -57,6 +52,61 @@ function summarizeItemActiveEffects(item) {
 }
 
 
+
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial"];
+
+
+function twbvApplyItemTypeOrderConfig() {
+  const allowed = [...TWBV_ITEM_CREATE_ORDER];
+  if (game?.system?.documentTypes?.Item) {
+    game.system.documentTypes.Item = allowed;
+  }
+  if (CONFIG?.Item?.typeLabels) {
+    const nextLabels = {};
+    for (const type of allowed) {
+      if (Object.prototype.hasOwnProperty.call(CONFIG.Item.typeLabels, type)) {
+        nextLabels[type] = CONFIG.Item.typeLabels[type];
+      }
+    }
+    CONFIG.Item.typeLabels = nextLabels;
+  }
+}
+
+
+
+function twbvPatchItemCreateDialog() {
+  const itemClass = CONFIG?.Item?.documentClass;
+  if (!itemClass || itemClass._twbvCreateDialogPatched) return;
+  const originalCreateDialog = itemClass.createDialog;
+  if (typeof originalCreateDialog !== "function") return;
+
+  itemClass.createDialog = function(data = {}, options = {}) {
+    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
+    return originalCreateDialog.call(this, data, nextOptions);
+  };
+
+  itemClass._twbvCreateDialogPatched = true;
+}
+
+function twbvNormalizeItemCreateTypeSelect(root) {
+  const host = root?.[0] ?? root;
+  if (!host || typeof host.querySelector !== "function") return;
+  const select = host.querySelector('select[name="type"]');
+  if (!select) return;
+
+  const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
+  const selected = String(select.value ?? "");
+
+  while (select.firstChild) select.removeChild(select.firstChild);
+
+  for (const type of TWBV_ITEM_CREATE_ORDER) {
+    const option = optionByValue.get(type);
+    if (option) select.appendChild(option);
+  }
+
+  const fallback = select.options[0]?.value ?? "";
+  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
+}
 
 const ATTRIBUTE_DICE = [4, 6, 8, 10, 12];
 const SKILL_DICE = [4, 6, 8, 10, 12];
@@ -405,7 +455,7 @@ function applyDialogWindowClass(dialogLike, className) {
   if (windowApp) windowApp.classList.add(className);
   return windowApp ?? null;
 }
-class TWBVPersonagemSheet extends TWBVActorSheetBaseClass {
+class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["twbv", "sheet", "actor", "personagem"],
@@ -1929,16 +1979,27 @@ Hooks.once("init", () => {
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
-  TWBVItemsRegistry.unregisterSheet("core", TWBVItemSheetBaseClass);
-  TWBVItemsRegistry.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
-  TWBVItemsRegistry.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
-  TWBVItemsRegistry.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
-  TWBVItemsRegistry.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
+  twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
+  Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
 });
+
+function twbvNormalizeAnyItemTypeDialog(app, html) {
+  const host = html?.[0] ?? html;
+  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
+  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
+}
+
+Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
+Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
@@ -1967,8 +2028,7 @@ Hooks.on("renderChatMessage", (message, html) => {
 });
 
 
-
-class TWBVItemSheetBase extends TWBVItemSheetBaseClass {
+class TWBVItemSheetBase extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       width: 760,
@@ -2209,6 +2269,8 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
+  twbvApplyItemTypeOrderConfig();
+  twbvPatchItemCreateDialog();
   setTimeout(() => twbvEnhanceDiceTray(document), 200);
   setTimeout(() => twbvEnhanceDiceTray(document), 1200);
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);

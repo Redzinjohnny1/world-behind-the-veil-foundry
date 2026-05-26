@@ -2170,7 +2170,7 @@ class TWBVItemSheetBase extends ItemSheet {
 
   async _saveAndClose(event) {
     event.preventDefault();
-    await this._onSubmit(event, { preventClose: true, preventRender: true });
+    await this.submit({ preventClose: true });
     await this.close();
   }
 

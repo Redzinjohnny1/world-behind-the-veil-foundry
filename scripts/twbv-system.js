@@ -2024,27 +2024,6 @@ Hooks.on("renderChatMessage", (message, html) => {
   }));
 });
 
-Hooks.on("preCreateItem", (item, createData) => {
-  const currentName = String(createData?.name ?? item?.name ?? "").trim();
-  const looksGeneric = !currentName || /^item(?:\s*\(\d+\))?$/i.test(currentName);
-  if (!looksGeneric) return;
-  const type = String(createData?.type ?? item?.type ?? "").trim();
-  const fallbackByType = {
-    vantagem: "Vantagem",
-    desvantagem: "Desvantagem",
-    habilidadeEspecial: "Habilidade Especial",
-    complicacao: "Complicação",
-    arma: "Arma",
-    armadura: "Armadura",
-    weapon: "Arma",
-    consumable: "Consumível",
-  modificacao: "Modificação",
-    equipamento: "Equipamento"
-  };
-  const nextName = fallbackByType[type] ?? "Item";
-  item.updateSource({ name: nextName });
-});
-
 
 
 class TWBVItemSheetBase extends ItemSheet {

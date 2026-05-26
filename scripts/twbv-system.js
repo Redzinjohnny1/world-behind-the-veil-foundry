@@ -2168,6 +2168,16 @@ class TWBVItemSheetBase extends ItemSheet {
     });
   }
 
+
+  async _salvarDireto(event) {
+    event.preventDefault();
+    const form = this.form;
+    if (!form) return;
+    const dados = foundry.utils.expandObject(new FormDataExtended(form).object);
+    await this.item.update(dados);
+    await this.close();
+  }
+
   _fitToViewport() {
     const width = Math.min(Math.max(Number(this.position?.width ?? 760), 760), window.innerWidth - 24);
     const height = Math.min(Math.max(Number(this.position?.height ?? 860), 860), window.innerHeight - 24);
@@ -2183,10 +2193,7 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", async (event) => {
-      event.preventDefault();
-      await this.submit();
-    });
+    html.find(".twbv-sheet-save, .twbv-armor-save").on("click", this._salvarDireto.bind(this));
     html.find(".twbv-sheet-cancel, .twbv-armor-cancel").on("click", async (event) => {
       event.preventDefault();
       await this.close();

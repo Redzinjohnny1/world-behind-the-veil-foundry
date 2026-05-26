@@ -2166,7 +2166,7 @@ class TWBVItemSheetBase extends ItemSheet {
       resizable: true,
       closeOnSubmit: false,
       submitOnClose: false,
-      submitOnChange: false
+      submitOnChange: true
     });
   }
   async _updateObject(_event, formData) {
@@ -2254,6 +2254,7 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
       const input = event.currentTarget;
       const next = String(input?.value ?? "").trim();
       if (!next) return;
+      const shouldClear = current === next;
       html.find(".twbv-armor-slot-check").prop("checked", false);
       input.checked = true;
       html.find('input[name="system.equipSlot"]').val(next).trigger("change");

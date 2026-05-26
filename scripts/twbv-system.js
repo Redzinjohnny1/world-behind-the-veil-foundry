@@ -2197,6 +2197,7 @@ class TWBVItemSheetBase extends ItemSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    const formEl = html?.[0]?.querySelector?.("form") ?? html?.[0];
     const submitAndClose = async (event) => {
       event?.preventDefault?.();
       try {
@@ -2207,7 +2208,10 @@ class TWBVItemSheetBase extends ItemSheet {
         ui.notifications?.error(`Falha ao salvar ${this.item?.name ?? "item"}. Veja o console (F12).`);
       }
     };
-    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", submitAndClose);
+    html.find(".twbv-sheet-save-new, .twbv-sheet-save, .twbv-armor-save").on("click", (event) => {
+      event.preventDefault();
+      formEl?.requestSubmit?.();
+    });
     html.find("form").on("submit", submitAndClose);
     html.find(".twbv-sheet-cancel-new, .twbv-armor-cancel, .twbv-sheet-cancel-new").on("click", async (event) => {
       event.preventDefault();

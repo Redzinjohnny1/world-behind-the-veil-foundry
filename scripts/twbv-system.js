@@ -2047,7 +2047,7 @@ class TWBVItemSheetBase extends ItemSheet {
       event?.preventDefault?.();
       try {
         await this._onSubmit(event, { preventClose: true });
-        await this.close();
+        ui.notifications?.info(`✓ ${this.item?.name ?? "Item"} salvo com sucesso!`);
       } catch (error) {
         console.error("[TWBV] Falha ao salvar item:", error);
         ui.notifications?.error(`Falha ao salvar ${this.item?.name ?? "item"}. Veja o console (F12).`);

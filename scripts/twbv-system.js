@@ -2244,6 +2244,7 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
       const input = event.currentTarget;
       const next = String(input?.value ?? "").trim();
       if (!next) return;
+      const shouldClear = current === next;
       html.find(".twbv-armor-slot-check").prop("checked", false);
       input.checked = true;
       html.find('input[name="system.equipSlot"]').val(next).trigger("change");

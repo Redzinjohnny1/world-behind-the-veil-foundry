@@ -28,6 +28,17 @@ const TWBV_ITEM_TYPES = {
   weapon: "Arma",
   consumable: "Consumível"
 };
+const TWBV_EQUIPMENT_SLOT_DEFS = [
+  { key: "head", label: "Cabeça", accepts: ["armadura"] },
+  { key: "chest", label: "Peito", accepts: ["armadura"] },
+  { key: "legs", label: "Perna", accepts: ["armadura"] },
+  { key: "gloves", label: "Luva", accepts: ["armadura"] },
+  { key: "belt", label: "Cinto", accepts: ["armadura"] },
+  { key: "ringLeft", label: "Anel Esq.", accepts: ["armadura"] },
+  { key: "ringRight", label: "Anel Dir.", accepts: ["armadura"] },
+  { key: "weaponMain", label: "Arma", accepts: ["weapon", "arma"] },
+  { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
+];
 
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
@@ -41,7 +52,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "vantagem", "desvantagem", "habilidadeEspecial"];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "vantagem", "desvantagem", "habilidadeEspecial"];
 
 
 function twbvApplyItemTypeOrderConfig() {
@@ -634,7 +645,10 @@ class TWBVPersonagemSheet extends ActorSheet {
       bonus: String(item.system?.bonus ?? "").trim(),
       protection: String(item.system?.protection ?? "").trim(),
       penalty: String(item.system?.penalty ?? "").trim(),
-      tags: String(item.system?.tags ?? "").trim()
+      tags: String(item.system?.tags ?? "").trim(),
+      equipSlot: String(item.system?.equipSlot ?? "").trim(),
+      equipStatus: Number(item.system?.equipStatus ?? 0),
+      isEquipped: Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1)
     });
 
     const mapSystemEntry = (entry, fallbackType) => ({
@@ -662,6 +676,14 @@ class TWBVPersonagemSheet extends ActorSheet {
     const weapons=actorItems.filter(i=>i.type==="weapon"); const consumables=actorItems.filter(i=>i.type==="consumable"); const magazines=consumables.filter(i=>i.system?.subtype==="magazine"); const normalConsumables=consumables.filter(i=>i.system?.subtype!=="magazine");
     for (const item of [...weapons,...consumables]) { const sys=item.system; if(item.type==="weapon"){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
     context.equipment={favorite:actorItems.filter(i=>i.system?.favorite),weapons,magazines,consumables:normalConsumables,others:actorItems.filter(i=>!["weapon","consumable"].includes(i.type))};
+    const slotItemByKey = new Map();
+    for (const item of actorItems) {
+      const slotKey = String(item.system?.equipSlot ?? "").trim();
+      const equipped = Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1);
+      if (!slotKey || !equipped || slotItemByKey.has(slotKey)) continue;
+      slotItemByKey.set(slotKey, mapItem(item));
+    }
+    context.equipmentSlots = TWBV_EQUIPMENT_SLOT_DEFS.map((slot) => ({ ...slot, item: slotItemByKey.get(slot.key) ?? null }));
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
       .map((item) => ({
@@ -1375,6 +1397,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".weapon-mod").on("click", this._onWeaponMod.bind(this));
     html.find(".weapon-reload").on("click", this._onWeaponReload.bind(this));
     html.find(".consumable-use").on("click", this._onConsumableUse.bind(this));
+    html.find(".item-toggle-equip").on("click", this._onToggleEquip.bind(this));
+    html.find(".twbv-equip-slot").on("dragover", (event) => event.preventDefault());
+    html.find(".twbv-equip-slot").on("drop", this._onEquipmentSlotDrop.bind(this));
 
     html.find(".twbv-item-toggle-active, .twbv-item-toggle-equipped").on("change", async (event) => {
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
@@ -1410,6 +1435,8 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
 
   async _onItemCreate(event){event.preventDefault(); const type=event.currentTarget.dataset.type; const itemData={name:type==='weapon'?'Nova Arma':'Novo Consumível', type, system:type==='weapon'?this._buildWeaponDefaults():this._buildConsumableDefaults()}; await this.actor.createEmbeddedDocuments('Item',[itemData]);}
+  async _onToggleEquip(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const isEquipped=Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0)===1); await item.update({'system.equipped': !isEquipped,'system.equipStatus': !isEquipped ? 1 : 0});}
+  async _onEquipmentSlotDrop(event){event.preventDefault(); const slotEl=event.currentTarget; const slotKey=String(slotEl?.dataset.slotKey??"").trim(); if(!slotKey) return; const raw=event.originalEvent?.dataTransfer?.getData('text/plain') ?? event.dataTransfer?.getData('text/plain'); if(!raw) return; let data; try{data=JSON.parse(raw);}catch(_){return;} if(data?.type!=="Item") return; const dropped=await Item.implementation.fromDropData(data); if(!dropped) return; const actorItem=this.actor.items.get(dropped.id); if(!actorItem) return ui.notifications?.warn("Arraste um item do próprio personagem."); const slotDef=TWBV_EQUIPMENT_SLOT_DEFS.find(s=>s.key===slotKey); if(!slotDef) return; if(!slotDef.accepts.includes(actorItem.type)) return ui.notifications?.warn(`Slot ${slotDef.label} não aceita ${actorItem.type}.`); await actorItem.update({'system.equipSlot': slotKey,'system.equipped': true,'system.equipStatus': 1});}
 
   _buildCustomItemDialogContent(type, itemData = {}, options = {}) {
     const dialogVersion = String(options.dialogVersion ?? "");
@@ -1714,6 +1741,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       if (!typedName) nameInput.value = nome;
 
       const payload = this._collectCustomItemDialogData(root, type, defaults.severity);
+      payload.name = nome;
       const isEmbeddedItem = item && typeof item.update === "function";
       if (isEmbeddedItem) {
         await item.update(payload);
@@ -1950,20 +1978,24 @@ Hooks.once("init", () => {
   twbvApplyItemTypeOrderConfig();
   twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
-  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","arma"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento"], makeDefault:true });
   Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
     types: ["personagem", "despertos", "semi-despertos", "sombras"],
     makeDefault: true
   });
 });
 
-Hooks.on("renderDialog", (app, html) => {
-  const title = String(app?.title ?? "").toLowerCase();
-  if (title.includes("criar") && title.includes("item")) twbvNormalizeItemCreateTypeSelect(html);
-});
+function twbvNormalizeAnyItemTypeDialog(app, html) {
+  const host = html?.[0] ?? html;
+  const hasItemTypeSelect = Boolean(host?.querySelector?.('select[name="type"]'));
+  if (hasItemTypeSelect) twbvNormalizeItemCreateTypeSelect(html);
+}
+
+Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
+Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
@@ -1991,11 +2023,167 @@ Hooks.on("renderChatMessage", (message, html) => {
   }));
 });
 
+Hooks.on("preCreateItem", (item, createData) => {
+  const currentName = String(createData?.name ?? item?.name ?? "").trim();
+  const looksGeneric = !currentName || /^item(?:\s*\(\d+\))?$/i.test(currentName);
+  if (!looksGeneric) return;
+  const type = String(createData?.type ?? item?.type ?? "").trim();
+  const fallbackByType = {
+    vantagem: "Vantagem",
+    desvantagem: "Desvantagem",
+    habilidadeEspecial: "Habilidade Especial",
+    complicacao: "Complicação",
+    arma: "Arma",
+    armadura: "Armadura",
+    weapon: "Arma",
+    consumable: "Consumível",
+    equipamento: "Equipamento"
+  };
+  const nextName = fallbackByType[type] ?? "Item";
+  item.updateSource({ name: nextName });
+});
 
-class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:720,height:720,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); }}
-class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:680,height:680,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
-class TWBVArmorSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:680,height:680}); } get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }}
-class TWBVBasicItemSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet'],width:640,height:620}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
+Hooks.on("createItem", async (item) => {
+  if (!game.user?.isGM) return;
+  if (item.isEmbedded) return;
+
+  const type = String(item.type ?? "").trim();
+  const folderNameByType = {
+    vantagem: "Vantagens",
+    desvantagem: "Desvantagens",
+    habilidadeEspecial: "Habilidades Especiais",
+    complicacao: "Complicações",
+    arma: "Armas",
+    weapon: "Armas",
+    armadura: "Armaduras",
+    consumable: "Consumíveis",
+    equipamento: "Equipamentos"
+  };
+  const folderName = folderNameByType[type];
+  if (!folderName) return;
+
+  let folder = game.folders?.find((f) => f.type === "Item" && f.name === folderName);
+  if (!folder) {
+    folder = await Folder.create({ name: folderName, type: "Item", color: "#6f54b8" });
+  }
+  if (!folder) return;
+  if (item.folder?.id === folder.id) return;
+  await item.update({ folder: folder.id });
+});
+
+async function twbvEnsureItemFolderPath(folderNames = []) {
+  let parent = null;
+  for (const rawName of folderNames) {
+    const name = String(rawName ?? "").trim();
+    if (!name) continue;
+    let folder = game.folders?.find((f) =>
+      f.type === "Item" &&
+      f.name === name &&
+      ((parent && f.folder?.id === parent.id) || (!parent && !f.folder))
+    );
+    if (!folder) {
+      folder = await Folder.create({ name, type: "Item", color: "#6f54b8", folder: parent?.id ?? null });
+    }
+    parent = folder ?? parent;
+  }
+  return parent;
+}
+
+async function twbvRouteArmorToSlotFolder(item) {
+  if (!game.user?.isGM) return;
+  if (!item || item.isEmbedded) return;
+  if (String(item.type ?? "") !== "armadura") return;
+  const slotKey = String(item.system?.equipSlot ?? "").trim();
+  if (!slotKey) return;
+  const slotLabelByKey = {
+    head: "Cabeça",
+    chest: "Peito",
+    legs: "Pernas",
+    gloves: "Luva",
+    belt: "Cinto",
+    ringLeft: "Anel Esq.",
+    ringRight: "Anel Dir."
+  };
+  const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
+  const target = await twbvEnsureItemFolderPath(["Armaduras", slotFolderName]);
+  if (!target) return;
+  if (item.folder?.id === target.id) return;
+  await item.update({ folder: target.id });
+}
+
+Hooks.on("createItem", async (item) => {
+  await twbvRouteArmorToSlotFolder(item);
+});
+
+Hooks.on("updateItem", async (item, changes) => {
+  const touchedSlot = Object.prototype.hasOwnProperty.call(changes ?? {}, "system") && Object.prototype.hasOwnProperty.call(changes.system ?? {}, "equipSlot");
+  if (!touchedSlot) return;
+  await twbvRouteArmorToSlotFolder(item);
+});
+
+async function twbvRouteWeaponToSlotFolder(item) {
+  if (!game.user?.isGM) return;
+  if (!item || item.isEmbedded) return;
+  if (!["weapon", "arma"].includes(String(item.type ?? ""))) return;
+  const slotKey = String(item.system?.equipSlot ?? "").trim();
+  if (!slotKey) return;
+  const slotLabelByKey = {
+    shortBlade: "Lâmina curta",
+    longBlade: "Lâmina Longa",
+    blunt: "Contusivo/Corporal",
+    pistol: "Pistolas",
+    revolver: "Revólver",
+    smg: "Submetralhadoras",
+    assault: "Assalto",
+    shotgun: "Escopeta",
+    sniper: "Sniper"
+  };
+  const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
+  const target = await twbvEnsureItemFolderPath(["Armas", slotFolderName]);
+  if (!target) return;
+  if (item.folder?.id === target.id) return;
+  await item.update({ folder: target.id });
+}
+
+Hooks.on("createItem", async (item) => {
+  await twbvRouteWeaponToSlotFolder(item);
+});
+
+Hooks.on("updateItem", async (item, changes) => {
+  const touchedSlot = Object.prototype.hasOwnProperty.call(changes ?? {}, "system") && Object.prototype.hasOwnProperty.call(changes.system ?? {}, "equipSlot");
+  if (!touchedSlot) return;
+  await twbvRouteWeaponToSlotFolder(item);
+});
+
+
+class TWBVWeaponSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-option").on("click", (event)=>{event.preventDefault(); const option=event.currentTarget; const input=option?.querySelector?.(".twbv-weapon-slot-check"); const next=String(input?.value??"").trim(); if(!next) return; html.find(".twbv-weapon-slot-check").prop("checked", false); if(input) input.checked=true; html.find('input[name="system.equipSlot"]').val(next);}); html.find('input[name="system.equipped"]').on("change", (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");}); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); const form=html?.[0]?.querySelector?.("form") ?? html?.[0]; await this._onSubmit(e, {preventClose:true, updateData: foundry.utils.expandObject(new FormDataExtended(form).object)}); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
+class TWBVConsumableSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false,tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); const form=html?.[0]?.querySelector?.("form") ?? html?.[0]; await this._onSubmit(e, {preventClose:true, updateData: foundry.utils.expandObject(new FormDataExtended(form).object)}); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
+class TWBVArmorSheet extends ItemSheet {
+  static get defaultOptions(){
+    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],width:760,height:860,submitOnChange:false,submitOnClose:false,closeOnSubmit:false,resizable:true});
+  }
+  get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
+  activateListeners(html){
+    super.activateListeners(html);
+    html.find(".twbv-armor-slot-check").on("change", (event) => {
+      const input = event.currentTarget;
+      const next = String(input?.value ?? "").trim();
+      if (!next) return;
+      html.find(".twbv-armor-slot-check").prop("checked", false);
+      input.checked = true;
+      html.find('input[name="system.equipSlot"]').val(next);
+    });
+    html.find('input[name="system.equipped"]').on("change", (event) => {
+      const checked = Boolean(event.currentTarget?.checked);
+      html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
+    });
+    html.find(".twbv-armor-cancel").on("click", async (event) => {
+      event.preventDefault();
+      await this.close();
+    });
+  }
+}
+class TWBVBasicItemSheet extends ItemSheet { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet'],width:760,height:860,closeOnSubmit:false,submitOnClose:false}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find(".twbv-sheet-save").on("click", async (e)=>{e.preventDefault(); const form=html?.[0]?.querySelector?.("form") ?? html?.[0]; await this._onSubmit(e, {preventClose:true, updateData: foundry.utils.expandObject(new FormDataExtended(form).object)}); await this.close();}); html.find(".twbv-sheet-cancel").on("click", async (e)=>{e.preventDefault(); await this.close();}); }}
 
 
 function twbvEnhanceDiceTray(root) {
@@ -2205,3 +2393,9 @@ Hooks.on("ready", () => {
   setTimeout(() => twbvInjectCustomDiceTray(document), 300);
   setTimeout(() => twbvInjectCustomDiceTray(document), 1300);
 });
+    html.find(".twbv-armor-save").on("click", async (event) => {
+      event.preventDefault();
+      const form = html?.[0]?.querySelector?.("form") ?? html?.[0];
+      await this._onSubmit(event, { preventClose: true, updateData: foundry.utils.expandObject(new FormDataExtended(form).object) });
+      await this.close();
+    });

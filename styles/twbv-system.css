@@ -2691,43 +2691,36 @@
   background: rgba(12, 10, 22, 0.5);
 }
 
-.weapon-sheet .weapon-slots-group legend {
-  padding: 0 8px;
-  color: var(--twbv-accent-gold);
+/* Ajuste final: texto Salvar/Cancelar no padrão do tema */
+.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button) {
+  color: #f8edcc !important;
+  -webkit-text-fill-color: #f8edcc !important;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
   font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
 }
 
-.weapon-sheet .weapon-slots {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 12px;
-}
 
-.weapon-sheet .weapon-slots label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid rgba(217, 183, 117, 0.3);
-  border-radius: 4px;
-  background: rgba(12, 10, 22, 0.3);
+.twbv-custom-item-iconbox {
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.15s ease;
-  user-select: none;
 }
-
-.weapon-sheet .weapon-slots label:hover {
-  background: rgba(154, 123, 255, 0.15);
-  border-color: rgba(154, 123, 255, 0.5);
+.twbv-custom-item-icon-placeholder {
+  position: absolute;
+  inset: auto 0 0 0;
+  background: linear-gradient(180deg, transparent, rgba(0,0,0,.72));
+  color: #f8edcc;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 6px 4px;
+  pointer-events: none;
 }
-
-.weapon-sheet .weapon-slots label input[type="radio"] {
-  cursor: pointer;
-  accent-color: var(--twbv-accent-gold);
+.twbv-custom-item-iconbox:hover .twbv-custom-item-icon-placeholder,
+.twbv-custom-item-iconbox:focus-visible .twbv-custom-item-icon-placeholder {
+  color: #ffedc5;
 }
+.twbv-custom-item-iconbox-edit { display: none !important; }
 
 .weapon-sheet .weapon-slots label:has(input[type="radio"]:checked) {
   background: rgba(217, 183, 117, 0.15);

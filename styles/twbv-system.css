@@ -2675,23 +2675,20 @@
   pointer-events: auto !important;
 }
 
-
-/* Hotfix: garantir fundo escuro no popup de vantagem/habilidade (sem branco) */
-.window-app:has(.twbv-custom-item-form) .window-content,
-.window-app:has(.twbv-custom-item-form) .dialog-content {
-  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+/* Remover botões de salvar/cancelar das folhas de item do sistema */
+.window-app.sheet.item > footer.dialog-buttons,
+.window-app.sheet.item .window-content + footer.dialog-buttons,
+.window-app.sheet.item .dialog-buttons {
+  display: none !important;
 }
 
-.window-app:has(.twbv-custom-item-form) .window-content {
-  padding: 10px !important;
-}
-
-.dialog .twbv-custom-item-form {
-  background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.2), transparent 52%), linear-gradient(165deg, rgba(20, 12, 34, 0.98), rgba(8, 7, 18, 0.99)) !important;
-  border: 1px solid rgba(217, 183, 117, 0.62);
-  border-radius: 10px;
-  padding: 14px;
-  min-height: 500px;
+/* Estilos para SLOT DE ARMA */
+.weapon-sheet .weapon-slots-group {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(217, 183, 117, 0.42);
+  border-radius: 6px;
+  background: rgba(12, 10, 22, 0.5);
 }
 
 /* Ajuste final: texto Salvar/Cancelar no padrão do tema */
@@ -2725,17 +2722,11 @@
 }
 .twbv-custom-item-iconbox-edit { display: none !important; }
 
-/* Botões Salvar/Cancelar do popup de vantagem = estilo idêntico ao Adicionar Perícia */
-.window-app:has(.twbv-custom-item-form) .dialog-buttons {
-  margin-top: 10px;
-  gap: 8px;
+.weapon-sheet .weapon-slots label:has(input[type="radio"]:checked) {
+  background: rgba(217, 183, 117, 0.15);
+  border-color: var(--twbv-accent-gold);
+  color: var(--twbv-accent-gold);
+  font-weight: 600;
 }
-.window-app:has(.twbv-custom-item-form) .dialog-buttons :is(button, .dialog-button, input[type="button"], input[type="submit"]) {
-  border-radius: 8px !important;
-  border: 1px solid rgba(217, 183, 117, 0.72) !important;
-  color: #ffedc5 !important;
-  -webkit-text-fill-color: #ffedc5 !important;
-  background: linear-gradient(180deg, rgba(84, 53, 126, 0.95), rgba(26, 17, 44, 0.98)) !important;
-  box-shadow: inset 0 0 10px rgba(149, 96, 224, 0.22), 0 0 10px rgba(95, 62, 151, 0.3) !important;
-  font-weight: 700;
-}
+
+

@@ -19,7 +19,6 @@
   "styles": [
     "styles/twbv-system.css"
   ],
-  "template": "template.json",
   "languages": [
     {
       "lang": "pt-BR",

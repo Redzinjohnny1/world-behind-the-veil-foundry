@@ -1,6 +1,219 @@
-<form class="{{cssClass}} item-sheet weapon-sheet twbv-item-sheet twbv-themed-item-sheet" autocomplete="off"><header class="sheet-header twbv-armor-header"><img class="profile-img twbv-armor-profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" /><div class="header-fields"><h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome da arma" /></h1><input name="system.category" type="text" value="{{system.category}}" placeholder="Categoria" /></div></header><nav class="sheet-tabs tabs" data-group="primary"><a class="item" data-tab="general">Geral</a><a class="item" data-tab="combat">Combate</a><a class="item" data-tab="mods">Modificações</a><a class="item" data-tab="description">Descrição</a></nav><section class="sheet-body">
-<div class="tab" data-group="primary" data-tab="general"><div class="form-group"><label>Quantidade</label><input type="number" name="system.quantity" value="{{system.quantity}}" /></div><div class="form-group"><label>Peso</label><input type="number" step="0.1" name="system.weight" value="{{system.weight}}" /></div><div class="form-group"><label>Preço</label><input type="number" name="system.cost" value="{{system.cost}}" /></div><div class="form-group"><label>Favorito</label><input type="checkbox" name="system.favorite" {{checked system.favorite}} /></div><input type="hidden" name="system.equipStatus" value="{{#if system.equipped}}1{{else}}0{{/if}}" /><div class="form-group"><label>Equipado</label><input type="checkbox" name="system.equipped" {{checked system.equipped}} /></div></div>
-<div class="tab" data-group="primary" data-tab="combat"><div class="form-group"><label>Dano</label><input type="text" name="system.damage" value="{{system.damage}}" /></div><div class="form-group"><label>Alcance</label><input type="text" name="system.range" value="{{system.range}}" /></div><div class="form-group"><label>CdT / ROF</label><input type="number" name="system.rof" value="{{system.rof}}" /></div><div class="form-group"><label>AP</label><input type="number" name="system.ap" value="{{system.ap}}" /></div><div class="form-group"><label>Capacidade</label><input type="number" name="system.shots" value="{{system.shots}}" /></div><div class="form-group"><label>Munição Atual</label><input type="number" name="system.currentShots" value="{{system.currentShots}}" /></div><div class="form-group"><label>Nome do Carregador</label><input type="text" name="system.ammo" value="{{system.ammo}}" /></div><div class="twbv-armor-slot-group"><span class="twbv-armor-slot-title">Slot de Arma</span><div class="twbv-armor-slot-options"><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shortBlade" {{#ifEquals system.equipSlot "shortBlade"}}checked{{/ifEquals}} /><span>Lâmina curta</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="longBlade" {{#ifEquals system.equipSlot "longBlade"}}checked{{/ifEquals}} /><span>Lâmina Longa</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="blunt" {{#ifEquals system.equipSlot "blunt"}}checked{{/ifEquals}} /><span>Contusivo/Corporal</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="pistol" {{#ifEquals system.equipSlot "pistol"}}checked{{/ifEquals}} /><span>Pistolas</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="revolver" {{#ifEquals system.equipSlot "revolver"}}checked{{/ifEquals}} /><span>Revólver</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="smg" {{#ifEquals system.equipSlot "smg"}}checked{{/ifEquals}} /><span>Submetralhadoras</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="assault" {{#ifEquals system.equipSlot "assault"}}checked{{/ifEquals}} /><span>Assalto</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shotgun" {{#ifEquals system.equipSlot "shotgun"}}checked{{/ifEquals}} /><span>Escopeta</span></label><label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="sniper" {{#ifEquals system.equipSlot "sniper"}}checked{{/ifEquals}} /><span>Sniper</span></label></div></div><input type="hidden" name="system.equipSlot" value="{{system.equipSlot}}" /></div>
-<div class="tab" data-group="primary" data-tab="mods"><header class="mods-header"><h3>Modificações</h3><a class="mod-create"><i class="fas fa-plus"></i> Adicionar Mod</a></header><div class="mods-list">{{#each system.actions.additional as |mod key|}}<div class="mod-row" data-mod-key="{{key}}"><input type="text" name="system.actions.additional.{{key}}.name" value="{{mod.name}}" placeholder="Nome" /><select name="system.actions.additional.{{key}}.type"><option value="trait" {{#ifEquals mod.type "trait"}}selected{{/ifEquals}}>Ataque / Perícia</option><option value="damage" {{#ifEquals mod.type "damage"}}selected{{/ifEquals}}>Dano</option></select><input type="text" name="system.actions.additional.{{key}}.modifier" value="{{mod.modifier}}" placeholder="+1 / -1" /><input type="number" name="system.actions.additional.{{key}}.dice" value="{{mod.dice}}" /><a class="mod-delete"><i class="fas fa-trash"></i></a></div>{{/each}}</div></div>
-<div class="tab" data-group="primary" data-tab="description"><div class="form-group stacked"><label>Descrição</label>{{editor system.description target="system.description" button=true owner=owner editable=editable}}</div><div class="form-group stacked"><label>Notas</label><textarea name="system.notes">{{system.notes}}</textarea></div></div>
-</section></form>
+<form class="{{cssClass}} item-sheet weapon-sheet twbv-item-sheet twbv-themed-item-sheet twbv-weapon-sheet" autocomplete="off">
+  <header class="twbv-weapon-hero">
+    <div class="twbv-weapon-icon-wrap">
+      <img class="profile-img twbv-weapon-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    </div>
+
+    <div class="twbv-weapon-title-block">
+      <span class="twbv-weapon-kicker">Arma</span>
+      <h1 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Nome da arma" />
+      </h1>
+
+      <div class="twbv-weapon-meta-grid">
+        <label>
+          Categoria
+          <input name="system.category" type="text" value="{{system.category}}" placeholder="Categoria" />
+        </label>
+        <label>
+          Carregador
+          <input name="system.ammo" type="text" value="{{system.ammo}}" placeholder="Nome do carregador" />
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <section class="twbv-weapon-summary">
+    <article>
+      <span>Dano</span>
+      <strong>{{#if system.damage}}{{system.damage}}{{else}}-{{/if}}</strong>
+    </article>
+    <article>
+      <span>Alcance</span>
+      <strong>{{#if system.range}}{{system.range}}{{else}}-{{/if}}</strong>
+    </article>
+    <article>
+      <span>AP</span>
+      <strong>{{#if system.ap}}{{system.ap}}{{else}}0{{/if}}</strong>
+    </article>
+    <article>
+      <span>Munição</span>
+      <strong>{{#if system.currentShots}}{{system.currentShots}}{{else}}0{{/if}} / {{#if system.shots}}{{system.shots}}{{else}}0{{/if}}</strong>
+    </article>
+  </section>
+
+  <nav class="sheet-tabs tabs twbv-weapon-tabs" data-group="primary">
+    <a class="item" data-tab="general">Geral</a>
+    <a class="item" data-tab="combat">Combate</a>
+    <a class="item" data-tab="mods">Modificações</a>
+    <a class="item" data-tab="description">Descrição</a>
+  </nav>
+
+  <section class="sheet-body twbv-weapon-body">
+    <div class="tab twbv-weapon-panel" data-group="primary" data-tab="general">
+      <h2>Inventário</h2>
+      <div class="twbv-weapon-grid">
+        <label>
+          Quantidade
+          <input type="number" name="system.quantity" value="{{system.quantity}}" />
+        </label>
+        <label>
+          Peso
+          <input type="number" step="0.1" name="system.weight" value="{{system.weight}}" />
+        </label>
+        <label>
+          Custo
+          <input type="number" name="system.cost" value="{{system.cost}}" />
+        </label>
+        <label class="twbv-weapon-check">
+          <input type="checkbox" name="system.favorite" {{checked system.favorite}} />
+          Favorito
+        </label>
+        <input type="hidden" name="system.equipStatus" value="{{#if system.equipped}}1{{else}}0{{/if}}" />
+        <label class="twbv-weapon-check">
+          <input type="checkbox" name="system.equipped" {{checked system.equipped}} />
+          Equipado
+        </label>
+      </div>
+      <div class="twbv-armor-slot-group twbv-weapon-hand-group">
+        <span class="twbv-armor-slot-title">Empunhadura</span>
+        <div class="twbv-armor-slot-options">
+          <label class="twbv-weapon-hand-option"><input type="radio" name="twbv-weapon-hand-radio" class="twbv-weapon-hand-check" value="main" {{#ifEquals system.handMode "main"}}checked{{/ifEquals}} /><span>Mão Principal</span></label>
+          <label class="twbv-weapon-hand-option"><input type="radio" name="twbv-weapon-hand-radio" class="twbv-weapon-hand-check" value="off" {{#ifEquals system.handMode "off"}}checked{{/ifEquals}} /><span>Mão Inábil</span></label>
+          <label class="twbv-weapon-hand-option"><input type="radio" name="twbv-weapon-hand-radio" class="twbv-weapon-hand-check" value="two" {{#ifEquals system.handMode "two"}}checked{{/ifEquals}} /><span>2 Mãos</span></label>
+        </div>
+        {{#if system.equipped}}
+          <div class="twbv-weapon-hand-equipped">
+            Equipada em {{#ifEquals system.equippedHand "off"}}Mão Inábil{{else}}{{#ifEquals system.equippedHand "two"}}2 Mãos{{else}}Mão Principal{{/ifEquals}}{{/ifEquals}}
+          </div>
+        {{/if}}
+        <input type="hidden" name="system.handMode" value="{{#if system.handMode}}{{system.handMode}}{{else}}main{{/if}}" />
+      </div>
+    </div>
+
+    <div class="tab twbv-weapon-panel" data-group="primary" data-tab="combat">
+      <h2>Dados de Combate</h2>
+      <div class="twbv-weapon-grid">
+        <label>
+          Dano
+          <input type="text" name="system.damage" value="{{system.damage}}" />
+        </label>
+        <label>
+          Alcance
+          <input type="text" name="system.range" value="{{system.range}}" />
+        </label>
+        <label>
+          CdT / ROF
+          <input type="number" name="system.rof" value="{{system.rof}}" />
+        </label>
+        <label>
+          AP
+          <input type="number" name="system.ap" value="{{system.ap}}" />
+        </label>
+        <label>
+          Capacidade
+          <input type="number" name="system.shots" value="{{system.shots}}" />
+        </label>
+        <label>
+          Munição Atual
+          <input type="number" name="system.currentShots" value="{{system.currentShots}}" />
+        </label>
+        <label class="twbv-weapon-skill-field">
+          Perícia da arma
+          <div class="twbv-weapon-skill-control">
+            <input type="text" name="system.skill" value="{{system.skill}}" placeholder="Ex.: Atirar" />
+            <button type="button" class="twbv-weapon-skill-picker-button" title="Escolher perícia da ficha"><i class="fas fa-list"></i></button>
+          </div>
+        </label>
+      </div>
+
+      <div class="twbv-armor-slot-group twbv-weapon-slot-group">
+        <span class="twbv-armor-slot-title">Slot de Arma</span>
+        <div class="twbv-armor-slot-options">
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shortBlade" {{#ifEquals system.equipSlot "shortBlade"}}checked{{/ifEquals}} /><span>Lâmina curta</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="longBlade" {{#ifEquals system.equipSlot "longBlade"}}checked{{/ifEquals}} /><span>Lâmina Longa</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="blunt" {{#ifEquals system.equipSlot "blunt"}}checked{{/ifEquals}} /><span>Contusivo/Corporal</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="pistol" {{#ifEquals system.equipSlot "pistol"}}checked{{/ifEquals}} /><span>Pistolas</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="revolver" {{#ifEquals system.equipSlot "revolver"}}checked{{/ifEquals}} /><span>Revólver</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="smg" {{#ifEquals system.equipSlot "smg"}}checked{{/ifEquals}} /><span>Submetralhadoras</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="assault" {{#ifEquals system.equipSlot "assault"}}checked{{/ifEquals}} /><span>Assalto</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shotgun" {{#ifEquals system.equipSlot "shotgun"}}checked{{/ifEquals}} /><span>Escopeta</span></label>
+          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="sniper" {{#ifEquals system.equipSlot "sniper"}}checked{{/ifEquals}} /><span>Sniper</span></label>
+        </div>
+      </div>
+      <input type="hidden" name="system.equipSlot" value="{{system.equipSlot}}" />
+    </div>
+
+    <div class="tab twbv-weapon-panel" data-group="primary" data-tab="mods">
+      <section class="twbv-weapon-ammo-zone twbv-weapon-mod-drop-zone" data-drop-mode="ammo">
+        <div class="twbv-weapon-zone-head">
+          <h2>Munição</h2>
+          <div class="twbv-weapon-zone-actions">
+            <button type="button" class="twbv-weapon-pick-ammo" title="Escolher munição ou carregador"><i class="fas fa-list"></i> Escolher</button>
+            <button type="button" class="twbv-weapon-reload-magazine" title="Recarregar arma"><i class="fas fa-rotate"></i> Recarregar</button>
+          </div>
+        </div>
+        <p>Escolha um carregador/pente/cilindro carregado para alimentar a arma. Caixas ficam guardadas na ficha para carregar esses itens.</p>
+        <div class="twbv-weapon-grid">
+          <label>
+            Nome da munição
+            <input type="text" name="system.ammo" value="{{system.ammo}}" placeholder="Ex.: Munição incendiária" />
+          </label>
+          <label>
+            Tipo de recarga
+            <select name="system.reloadType">
+              <option value="magazine" {{#ifEquals system.reloadType "magazine"}}selected{{/ifEquals}}>Pente</option>
+              <option value="loader" {{#ifEquals system.reloadType "loader"}}selected{{/ifEquals}}>Carregador</option>
+              <option value="clip" {{#ifEquals system.reloadType "clip"}}selected{{/ifEquals}}>Clip</option>
+              <option value="shell" {{#ifEquals system.reloadType "shell"}}selected{{/ifEquals}}>Cartucho</option>
+              <option value="round" {{#ifEquals system.reloadType "round"}}selected{{/ifEquals}}>Projétil</option>
+              <option value="cylinder" {{#ifEquals system.reloadType "cylinder"}}selected{{/ifEquals}}>Cilindro</option>
+              <option value="cell" {{#ifEquals system.reloadType "cell"}}selected{{/ifEquals}}>Célula</option>
+              <option value="box" {{#ifEquals system.reloadType "box"}}selected{{/ifEquals}}>Caixa</option>
+            </select>
+          </label>
+          <label>
+            Capacidade
+            <input type="number" name="system.shots" value="{{system.shots}}" min="0" step="1" />
+          </label>
+          <label>
+            Munição atual
+            <input type="number" name="system.currentShots" value="{{system.currentShots}}" min="0" step="1" />
+          </label>
+        </div>
+      </section>
+
+      <header class="twbv-weapon-mods-header">
+        <h2>Modificações Adicionais</h2>
+        <a class="mod-create twbv-weapon-mod-create"><i class="fas fa-plus"></i> Adicionar Mod</a>
+      </header>
+      <div class="twbv-weapon-extra-drop twbv-weapon-mod-drop-zone" data-drop-mode="mod">
+        Arraste Mira Laser, mira, baioneta ou qualquer Modificação aqui.
+      </div>
+      <div class="mods-list twbv-weapon-mods-list">
+        {{#each system.actions.additional as |mod key|}}
+        <div class="mod-row twbv-weapon-mod-row" data-mod-key="{{key}}">
+          <input type="text" name="system.actions.additional.{{key}}.name" value="{{mod.name}}" placeholder="Nome" />
+          <select name="system.actions.additional.{{key}}.type">
+            <option value="trait" {{#ifEquals mod.type "trait"}}selected{{/ifEquals}}>Ataque / Perícia</option>
+            <option value="damage" {{#ifEquals mod.type "damage"}}selected{{/ifEquals}}>Dano</option>
+          </select>
+          <input type="text" name="system.actions.additional.{{key}}.modifier" value="{{mod.modifier}}" placeholder="+1 / -1" />
+          <input type="text" name="system.actions.additional.{{key}}.damage" value="{{mod.damage}}" placeholder="+1d6" />
+          <input type="number" name="system.actions.additional.{{key}}.dice" value="{{mod.dice}}" />
+          <a class="mod-delete twbv-weapon-mod-delete"><i class="fas fa-trash"></i></a>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="tab twbv-weapon-panel twbv-weapon-description" data-group="primary" data-tab="description">
+      <h2>Descrição</h2>
+      {{editor system.description target="system.description" button=true owner=owner editable=editable}}
+      <label class="twbv-weapon-notes">
+        Notas
+        <textarea name="system.notes">{{system.notes}}</textarea>
+      </label>
+    </div>
+  </section>
+</form>

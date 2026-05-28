@@ -27,71 +27,31 @@ const TWBV_ITEM_TYPES = {
   armadura: "Armadura",
   weapon: "Arma",
   consumable: "Consumível",
-  modificacao: "Modificação",
-  municao: "Munição"
+  modificacao: "Modificação"
 };
-
-const TWBV_ACTOR_TYPES = {
-  personagem: "Personagem",
-  despertos: "Desperto",
-  "semi-despertos": "Semi-Desperto",
-  sombras: "Sombra"
-};
-
-const TWBV_ACTOR_CREATE_ORDER = ["despertos", "semi-despertos", "sombras"];
-const TWBV_ACTOR_DEFAULT_TYPE = "despertos";
-
 const TWBV_EQUIPMENT_SLOT_DEFS = [
   { key: "head", label: "Cabeça", accepts: ["armadura"] },
   { key: "chest", label: "Peito", accepts: ["armadura"] },
   { key: "legs", label: "Perna", accepts: ["armadura"] },
-  { key: "boots", label: "Botas", accepts: ["armadura"] },
   { key: "gloves", label: "Luva", accepts: ["armadura"] },
   { key: "belt", label: "Cinto", accepts: ["armadura"] },
   { key: "ringLeft", label: "Anel Esq.", accepts: ["armadura"] },
   { key: "ringRight", label: "Anel Dir.", accepts: ["armadura"] },
-  { key: "weaponMain", label: "Mão Principal", accepts: ["weapon", "arma"] },
-  { key: "weaponOff", label: "Mão Inábil", accepts: ["weapon", "arma"] }
-];
-
-const TWBV_DEFAULT_BODY_SLOT_POSITIONS = {
-  weaponMain: { left: 4.2, top: 5.6 },
-  head: { left: 40.6, top: 3.0 },
-  weaponOff: { left: 76.4, top: 5.8 },
-  gloves: { left: 3.2, top: 27.6 },
-  chest: { left: 76.0, top: 27.2 },
-  ringLeft: { left: 3.6, top: 48.8 },
-  ringRight: { left: 75.2, top: 47.4 },
-  legs: { left: 3.8, top: 70.3 },
-  belt: { left: 75.0, top: 70.3 },
-  boots: { left: 39.0, top: 85.0 }
-};
-
-const TWBV_DEFAULT_BODY_LINES = [
-  { key: "head", left: 50.3, top: 19.2, width: 0.1, angle: 0 },
-  { key: "chest", left: 50.0, top: 33.4, width: 28.5, angle: 0 },
-  { key: "gloves", left: 34.6, top: 42.2, width: 21.5, angle: -154 },
-  { key: "ring-left", left: 34.8, top: 42.8, width: 24.2, angle: 154 },
-  { key: "ring-right", left: 66.0, top: 42.6, width: 18.0, angle: 29 },
-  { key: "legs", left: 46.6, top: 57.1, width: 31.0, angle: 154 },
-  { key: "belt", left: 54.2, top: 57.1, width: 26.0, angle: 30 },
-  { key: "boots", left: 45.3, top: 79.0, width: 5.8, angle: 66 },
-  { key: "weapon-main", left: 23.0, top: 12.8, width: 0.1, angle: 0 },
-  { key: "weapon-off", left: 76.4, top: 13.2, width: 0.1, angle: 0 }
+  { key: "weaponMain", label: "Arma", accepts: ["weapon", "arma"] },
+  { key: "consumableQuick", label: "Consumível", accepts: ["consumable"] }
 ];
 
 const TWBV_HANDLEBARS_PARTIALS = [
   "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs"
 ];
 
-const TWBV_LOCAL_BUILD = "weapon-hand-equip-flow-2026-05-28-0302";
+const TWBV_LOCAL_BUILD = "items-subsystem-rebuild-2026-05-27-0320";
 
 const TWBV_ITEM_ICONS = {
   arma: "icons/svg/sword.svg",
   weapon: "icons/svg/sword.svg",
   armadura: "icons/svg/shield.svg",
   consumable: "icons/svg/item-bag.svg",
-  municao: "icons/svg/target.svg",
   equipamento: "icons/svg/item-bag.svg",
   modificacao: "icons/svg/item-bag.svg",
   vantagem: "icons/svg/item-bag.svg",
@@ -104,7 +64,6 @@ const TWBV_ARMOR_SLOT_LABELS = {
   head: "Cabeça",
   chest: "Peito",
   legs: "Pernas",
-  boots: "Botas",
   gloves: "Luva",
   belt: "Cinto",
   ringLeft: "Anel Esq.",
@@ -123,32 +82,6 @@ const TWBV_WEAPON_SLOT_LABELS = {
   sniper: "Sniper"
 };
 
-const TWBV_AMMO_RELOAD_LABELS = {
-  magazine: "Pente",
-  loader: "Carregador",
-  clip: "Clip",
-  shell: "Cartucho",
-  round: "Projétil",
-  cylinder: "Cilindro",
-  cell: "Célula",
-  box: "Caixa"
-};
-
-const TWBV_WEAPON_HAND_LABELS = {
-  main: "Mão Principal",
-  off: "Mão Inábil",
-  two: "2 Mãos"
-};
-
-function twbvIsAmmoBox(itemOrData) {
-  const system = itemOrData?.system ?? {};
-  return String(system.reloadType ?? system.ammoType ?? "").trim() === "box";
-}
-
-function twbvIsAmmoCarrier(itemOrData) {
-  return String(itemOrData?.type ?? "") === "municao" && !twbvIsAmmoBox(itemOrData);
-}
-
 function summarizeItemActiveEffects(item) {
   const explicitSummary = String(item.system?.effectsSummary ?? "").trim();
   if (explicitSummary) return explicitSummary;
@@ -161,18 +94,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "municao", "vantagem", "desvantagem", "habilidadeEspecial", "modificacao"];
-
-const TWBV_ITEM_MAIN_FOLDER_ORDER = [
-  { name: "Armas", types: ["arma", "weapon"], color: "#7c4dff" },
-  { name: "Armaduras", types: ["armadura"], color: "#2f8f5b" },
-  { name: "Consumíveis", types: ["consumable"], color: "#d6a33d" },
-  { name: "Munições", types: ["municao"], color: "#50b1be" },
-  { name: "Vantagens", types: ["vantagem"], color: "#2f79c8" },
-  { name: "Desvantagens", types: ["desvantagem"], color: "#c95470" },
-  { name: "Habilidade Especial", types: ["habilidadeEspecial"], color: "#7aa05a" },
-  { name: "Modificação", types: ["modificacao"], color: "#c06f3a" }
-];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "equipamento", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"];
 
 
 function twbvApplyItemTypeOrderConfig() {
@@ -184,85 +106,6 @@ function twbvApplyItemTypeOrderConfig() {
     CONFIG.Item.typeLabels.weapon = TWBV_ITEM_TYPES.weapon;
   }
 }
-
-function twbvApplyActorTypeConfig() {
-  if (CONFIG?.Actor?.typeLabels) {
-    for (const type of TWBV_ACTOR_CREATE_ORDER) {
-      CONFIG.Actor.typeLabels[type] = TWBV_ACTOR_TYPES[type] ?? type;
-    }
-  }
-}
-
-function twbvWithDefaultActorType(data) {
-  const next = foundry.utils.deepClone(data ?? {});
-  if (!String(next.type ?? "").trim()) next.type = TWBV_ACTOR_DEFAULT_TYPE;
-  return next;
-}
-
-function twbvGetActorSheetKind(actorOrType) {
-  const configured = typeof actorOrType === "string" ? "" : String(actorOrType?.system?.twbvSheetKind ?? "").trim();
-  const type = configured || (typeof actorOrType === "string" ? actorOrType : actorOrType?.type);
-  if (type === "semi-despertos") return "semi-despertos";
-  if (type === "sombras") return "sombras";
-  return "despertos";
-}
-
-function twbvActorUsesAwakenedDie(actorOrType) {
-  return twbvGetActorSheetKind(actorOrType) === "despertos";
-}
-
-function twbvGetActorWoundMax(actorOrType) {
-  const kind = twbvGetActorSheetKind(actorOrType);
-  if (kind === "sombras") return 1;
-  if (kind === "semi-despertos") return 3;
-  return 5;
-}
-
-function twbvPatchActorCreationDefaults() {
-  const actorClass = CONFIG?.Actor?.documentClass;
-  if (!actorClass || actorClass._twbvCreationDefaultsPatched) return;
-
-  const originalCreateDialog = actorClass.createDialog;
-  if (typeof originalCreateDialog === "function") {
-    actorClass.createDialog = function(data = {}, options = {}) {
-      const nextData = twbvWithDefaultActorType(data);
-      const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ACTOR_CREATE_ORDER] }, { overwrite: true, inplace: false });
-      return originalCreateDialog.call(this, nextData, nextOptions);
-    };
-  }
-
-  const originalCreate = actorClass.create;
-  if (typeof originalCreate === "function") {
-    actorClass.create = function(data = {}, options = {}) {
-      const nextData = Array.isArray(data) ? data.map(twbvWithDefaultActorType) : twbvWithDefaultActorType(data);
-      return originalCreate.call(this, nextData, options);
-    };
-  }
-
-  const originalCreateDocuments = actorClass.createDocuments;
-  if (typeof originalCreateDocuments === "function") {
-    actorClass.createDocuments = function(data = [], options = {}) {
-      const nextData = Array.isArray(data) ? data.map(twbvWithDefaultActorType) : [twbvWithDefaultActorType(data)];
-      return originalCreateDocuments.call(this, nextData, options);
-    };
-  }
-
-  actorClass._twbvCreationDefaultsPatched = true;
-}
-
-function twbvRegisterActorSheets() {
-  try {
-    Actors.unregisterSheet("core", ActorSheet);
-  } catch (_) {
-    // Core sheet may already be unregistered.
-  }
-  Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
-    types: ["despertos", "semi-despertos", "sombras", "personagem"],
-    makeDefault: true
-  });
-  console.log("[TWBV] ActorSheet registrada para Despertos/Semi-Despertos/Sombras.");
-}
-
 
 
 
@@ -300,25 +143,6 @@ function twbvNormalizeItemCreateTypeSelect(root) {
   select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
 }
 
-function twbvGetMainItemFolderConfig(type) {
-  const itemType = String(type ?? "").trim();
-  return TWBV_ITEM_MAIN_FOLDER_ORDER.find((entry) => entry.types.includes(itemType)) ?? null;
-}
-
-async function twbvEnsureMainItemFolders() {
-  if (!game.user?.isGM) return;
-  for (let index = 0; index < TWBV_ITEM_MAIN_FOLDER_ORDER.length; index += 1) {
-    const config = TWBV_ITEM_MAIN_FOLDER_ORDER[index];
-    let folder = game.folders?.find((f) => f.type === "Item" && f.name === config.name && !f.folder);
-    const update = { color: config.color, sort: (index + 1) * 100000 };
-    if (!folder) {
-      folder = await Folder.create({ name: config.name, type: "Item", ...update });
-    } else if (folder.color !== config.color || folder.sort !== update.sort) {
-      await folder.update(update);
-    }
-  }
-}
-
 function twbvResolveSupportedItemType(preferredType) {
   const preferred = String(preferredType ?? "equipamento").trim() || "equipamento";
   const aliases = preferred === "arma" ? ["arma", "weapon"] : preferred === "weapon" ? ["arma", "weapon"] : [preferred];
@@ -337,581 +161,6 @@ function twbvGetItemDefaultName(type, system = {}) {
   if (resolved === "armadura" && slot) return TWBV_ARMOR_SLOT_LABELS[slot] ?? "Armadura";
   if (["arma", "weapon"].includes(resolved) && slot) return TWBV_WEAPON_SLOT_LABELS[slot] ?? "Arma";
   return TWBV_ITEM_TYPES[resolved] ?? "Item";
-}
-
-function twbvIsActorItemType(type) {
-  return ["weapon", "arma", "armadura", "consumable", "municao", "equipamento", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(String(type ?? ""));
-}
-
-function twbvIsEquipmentItemType(type) {
-  return ["weapon", "arma", "armadura", "consumable", "municao", "equipamento", "modificacao"].includes(String(type ?? ""));
-}
-
-function twbvNormalizeSlotText(value) {
-  return String(value ?? "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase();
-}
-
-function twbvInferArmorSlot(item) {
-  const direct = String(item?.system?.equipSlot ?? "").trim();
-  if (TWBV_EQUIPMENT_SLOT_DEFS.some((slot) => slot.key === direct && slot.accepts.includes("armadura"))) return direct;
-
-  const candidates = [
-    item?.system?.category,
-    item?.system?.categoria,
-    item?.folder?.name,
-    item?.name
-  ].map(twbvNormalizeSlotText);
-
-  const aliasByText = {
-    cabeca: "head",
-    head: "head",
-    peito: "chest",
-    chest: "chest",
-    tronco: "chest",
-    perna: "legs",
-    pernas: "legs",
-    legs: "legs",
-    bota: "boots",
-    botas: "boots",
-    boots: "boots",
-    luva: "gloves",
-    luvas: "gloves",
-    gloves: "gloves",
-    cinto: "belt",
-    belt: "belt",
-    "anel esq": "ringLeft",
-    "anel esquerdo": "ringLeft",
-    ringleft: "ringLeft",
-    "anel dir": "ringRight",
-    "anel direito": "ringRight",
-    ringright: "ringRight"
-  };
-
-  for (const raw of candidates) {
-    const text = raw.includes(":") ? raw.split(":").pop().trim() : raw;
-    if (aliasByText[text]) return aliasByText[text];
-  }
-  return "chest";
-}
-
-function twbvGetBodySlotKey(item) {
-  const type = String(item?.type ?? "");
-  if (type === "armadura") return twbvInferArmorSlot(item);
-  if (["arma", "weapon"].includes(type)) {
-    const hand = twbvGetWeaponEquippedHand(item);
-    if (hand === "off") return "weaponOff";
-    return "weaponMain";
-  }
-  return String(item?.system?.equipSlot ?? "").trim();
-}
-
-function twbvGetWeaponHandMode(item) {
-  const mode = String(item?.system?.handMode ?? item?.system?.equippedHand ?? "main").trim();
-  return ["main", "off", "two"].includes(mode) ? mode : "main";
-}
-
-function twbvGetWeaponEquippedHand(item) {
-  const equipped = String(item?.system?.equippedHand ?? "").trim();
-  if (["main", "off", "two"].includes(equipped)) return equipped;
-  return twbvGetWeaponHandMode(item);
-}
-
-function twbvGetWeaponBodySlots(item) {
-  if (!["arma", "weapon"].includes(String(item?.type ?? ""))) return [];
-  const hand = twbvGetWeaponEquippedHand(item);
-  if (hand === "two") return ["weaponMain", "weaponOff"];
-  return [hand === "off" ? "weaponOff" : "weaponMain"];
-}
-
-function twbvGetWeaponHandLabel(item) {
-  return TWBV_WEAPON_HAND_LABELS[twbvGetWeaponEquippedHand(item)] ?? TWBV_WEAPON_HAND_LABELS.main;
-}
-
-async function twbvUnequipWeaponOccupants(actor, item, hand) {
-  if (!(actor instanceof Actor) || !item) return;
-  const targetSlots = hand === "two" ? ["weaponMain", "weaponOff"] : [hand === "off" ? "weaponOff" : "weaponMain"];
-  for (const candidate of actor.items) {
-    if (candidate.id === item.id || !["arma", "weapon"].includes(candidate.type)) continue;
-    const equipped = Boolean(candidate.system?.equipped ?? Number(candidate.system?.equipStatus ?? 0) === 1);
-    if (!equipped) continue;
-    if (twbvGetWeaponBodySlots(candidate).some((slot) => targetSlots.includes(slot))) {
-      await candidate.update({"system.equipped": false, "system.equipStatus": 0});
-    }
-  }
-}
-
-async function twbvChooseWeaponHand(item) {
-  const current = twbvGetWeaponHandMode(item);
-  const content = `<form class="twbv-hand-dialog">
-    <label><input type="radio" name="hand" value="main" ${current === "main" ? "checked" : ""} /><span>Mão Principal</span></label>
-    <label><input type="radio" name="hand" value="off" ${current === "off" ? "checked" : ""} /><span>Mão Inábil</span></label>
-    <label><input type="radio" name="hand" value="two" ${current === "two" ? "checked" : ""} /><span>2 Mãos</span></label>
-  </form>`;
-  let settled = false;
-  return new Promise((resolve) => {
-    new Dialog({
-      title: `Equipar ${item.name}`,
-      content,
-      buttons: {
-        equip: {
-          label: "Equipar",
-          callback: (html) => {
-            settled = true;
-            const root = resolveDialogRoot(html);
-            resolve(String(root?.querySelector('input[name="hand"]:checked')?.value ?? "main"));
-          }
-        },
-        cancel: {
-          label: "Cancelar",
-          callback: () => {
-            settled = true;
-            resolve(null);
-          }
-        }
-      },
-      close: () => {
-        if (!settled) resolve(null);
-      },
-      default: "equip"
-    }).render(true);
-  });
-}
-
-function twbvGetBodySlotPositionStyle(actor, slotKey) {
-  const saved = actor?.getFlag?.("world-behind-the-veil", "bodySlotPositions") ?? {};
-  const positions = { ...TWBV_DEFAULT_BODY_SLOT_POSITIONS, ...(saved && typeof saved === "object" ? saved : {}) };
-  const pos = positions?.[slotKey];
-  const left = Number(pos?.left);
-  const top = Number(pos?.top);
-  if (!Number.isFinite(left) || !Number.isFinite(top)) return "";
-  return `left:${Math.clamp(left, 0, 92)}%; top:${Math.clamp(top, 0, 92)}%; right:auto;`;
-}
-
-function twbvNormalizeBodySlotPositions(positions) {
-  const source = { ...TWBV_DEFAULT_BODY_SLOT_POSITIONS, ...(positions && typeof positions === "object" ? positions : {}) };
-  const normalized = {};
-  for (const slot of TWBV_EQUIPMENT_SLOT_DEFS) {
-    const pos = source[slot.key];
-    const left = Number(pos?.left);
-    const top = Number(pos?.top);
-    if (!Number.isFinite(left) || !Number.isFinite(top)) continue;
-    normalized[slot.key] = {
-      left: Math.round(Math.clamp(left, 0, 92) * 10) / 10,
-      top: Math.round(Math.clamp(top, 0, 92) * 10) / 10
-    };
-  }
-  return normalized;
-}
-
-async function twbvSetBodyLayout(actor, { positions, lines } = {}) {
-  const namespace = foundry.utils.deepClone(actor.flags?.["world-behind-the-veil"] ?? {});
-  namespace.bodySlotPositions = positions === undefined
-    ? twbvNormalizeBodySlotPositions(actor.getFlag("world-behind-the-veil", "bodySlotPositions"))
-    : twbvNormalizeBodySlotPositions(positions);
-  namespace.bodyMapLines = lines === undefined
-    ? twbvNormalizeBodyLines(actor.getFlag("world-behind-the-veil", "bodyMapLines"))
-    : twbvNormalizeBodyLines(lines);
-  await actor.update({ "flags.world-behind-the-veil": namespace }, { recursive: false });
-}
-
-async function twbvSetBodySlotPositions(actor, positions) {
-  await twbvSetBodyLayout(actor, { positions });
-}
-
-function twbvGetBodyLineStyle(line) {
-  const left = Math.clamp(Number(line?.left ?? 45), 0, 98);
-  const top = Math.clamp(Number(line?.top ?? 45), 0, 98);
-  const width = Math.clamp(Number(line?.width ?? 16), 3, 80);
-  const angle = Number(line?.angle ?? 0);
-  return `left:${left}%; top:${top}%; width:${width}%; transform:rotate(${Number.isFinite(angle) ? angle : 0}deg);`;
-}
-
-function twbvNormalizeBodyLines(lines) {
-  const source = Array.isArray(lines) ? lines : TWBV_DEFAULT_BODY_LINES;
-  return source.map((line) => ({
-    key: String(line?.key ?? line?.lineKey ?? line?.id ?? foundry.utils.randomID()),
-    left: Math.clamp(Number(line?.left ?? 45), 0, 98),
-    top: Math.clamp(Number(line?.top ?? 45), 0, 98),
-    width: Math.clamp(Number(line?.width ?? 16), 3, 80),
-    angle: Number.isFinite(Number(line?.angle)) ? Number(line.angle) : 0
-  }));
-}
-
-async function twbvSetBodyLines(actor, lines) {
-  await twbvSetBodyLayout(actor, { lines });
-}
-
-function twbvSanitizeItemDataForActor(source) {
-  const data = foundry.utils.deepClone(source ?? {});
-  delete data._id;
-  delete data.id;
-  delete data.folder;
-  delete data.sort;
-  delete data.ownership;
-  if (data.flags?.core) delete data.flags.core;
-  data.type = twbvResolveSupportedItemType(data.type);
-  data.name = String(data.name ?? twbvGetItemDefaultName(data.type, data.system)).trim() || twbvGetItemDefaultName(data.type, data.system);
-  data.img = data.img || twbvGetItemIcon(data.type);
-  data.system = foundry.utils.mergeObject(twbvGetDefaultItemSystem(data.type), data.system ?? {}, { inplace: false, overwrite: true });
-  return data;
-}
-
-async function twbvResolveDroppedItemData(dropData) {
-  if (!dropData || dropData.type !== "Item") return null;
-  const dropped = await Item.implementation.fromDropData(dropData);
-  if (!dropped) return null;
-  const source = typeof dropped.toObject === "function" ? dropped.toObject() : dropped;
-  const type = String(source.type ?? "").trim();
-  if (!twbvIsActorItemType(type)) return null;
-  return twbvSanitizeItemDataForActor(source);
-}
-
-function twbvReadDropData(event) {
-  const transfer = event?.originalEvent?.dataTransfer ?? event?.dataTransfer;
-  const raw = transfer?.getData("text/plain") || transfer?.getData("application/json");
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw);
-  } catch (_) {
-    return null;
-  }
-}
-
-function twbvNumberOrZero(value) {
-  const number = Number(value ?? 0);
-  return Number.isFinite(number) ? number : 0;
-}
-
-function twbvIsAmmoModification(itemOrData) {
-  const system = itemOrData?.system ?? {};
-  const modType = String(system.modType ?? "").trim().toLowerCase();
-  const category = String(system.category ?? "").trim().toLowerCase();
-  const tags = String(system.tags ?? "").trim().toLowerCase();
-  return modType === "ammo" || ["municao", "munição", "ammo", "ammunition"].some((term) => category.includes(term) || tags.includes(term));
-}
-
-function twbvBuildWeaponModFromModification(itemOrData) {
-  const system = itemOrData?.system ?? {};
-  const modifier = String(system.modifier ?? system.bonus ?? "").trim();
-  const damage = String(system.damage ?? "").trim();
-  return {
-    name: String(itemOrData?.name ?? "Modificação").trim() || "Modificação",
-    type: damage ? "damage" : "trait",
-    dice: null,
-    resourcesUsed: null,
-    modifier,
-    damage,
-    ap: twbvNumberOrZero(system.ap),
-    rof: twbvNumberOrZero(system.rof),
-    range: String(system.range ?? "").trim(),
-    override: "",
-    uuid: String(itemOrData?.uuid ?? ""),
-    macroActor: "default",
-    isHeavyWeapon: false
-  };
-}
-
-function twbvBuildWeaponAmmoUpdateFromModification(itemOrData, weapon) {
-  const system = itemOrData?.system ?? {};
-  const capacity = Math.max(0, twbvNumberOrZero(system.shots || system.currentShots || weapon?.system?.shots));
-  const current = Math.max(0, twbvNumberOrZero(system.currentShots || capacity));
-  const reloadType = String(system.reloadType ?? weapon?.system?.reloadType ?? "magazine").trim() || "magazine";
-  return {
-    "system.ammo": String(itemOrData?.name ?? "").trim(),
-    "system.reloadType": reloadType,
-    "system.shots": capacity,
-    "system.currentShots": Math.min(current, capacity || current),
-    "system.ammoSourceUuid": String(itemOrData?.uuid ?? ""),
-    "system.ammoSourceName": String(itemOrData?.name ?? "").trim()
-  };
-}
-
-function twbvGetWeaponMods(weapon) {
-  return Object.values(weapon?.system?.actions?.additional ?? {}).filter((mod) => mod && typeof mod === "object");
-}
-
-function twbvGetWeaponTraitBonusDetails(weapon) {
-  return twbvGetWeaponMods(weapon)
-    .map((mod) => ({ name: String(mod.name ?? "Modificação").trim(), value: twbvNumberOrZero(String(mod.modifier ?? "").replace(",", ".")) }))
-    .filter((mod) => mod.value !== 0);
-}
-
-function twbvFormatSignedNumber(value) {
-  const number = twbvNumberOrZero(value);
-  return number >= 0 ? `+${number}` : `${number}`;
-}
-
-function twbvGetReloadTypeLabel(type) {
-  const labels = {
-    magazine: "pente",
-    loader: "carregador",
-    clip: "clip",
-    shell: "cartucho",
-    round: "projétil",
-    cylinder: "cilindro",
-    cell: "célula",
-    box: "caixa"
-  };
-  return labels[String(type ?? "").trim()] ?? "munição";
-}
-
-async function twbvOpenWeaponAmmoPicker(actor, weapon) {
-  if (!actor || !weapon?.isEmbedded) return ui.notifications?.warn("Abra a arma pela ficha para escolher munição do inventário.");
-  const ammoItems = Array.from(actor.items ?? []).filter((item) => item.type === "municao");
-  if (!ammoItems.length) return ui.notifications?.warn("Nenhuma munição ou carregador no inventário.");
-  const options = ammoItems.map((item) => {
-    const typeLabel = TWBV_AMMO_RELOAD_LABELS[item.system?.reloadType] ?? item.system?.reloadType ?? "Munição";
-    const shots = `${Number(item.system?.currentShots ?? 0)} / ${Number(item.system?.shots ?? 0)}`;
-    const boxTag = twbvIsAmmoBox(item) ? "Caixa" : "Carregador";
-    return `<option value="${item.id}">${item.name} — ${boxTag} / ${typeLabel} — ${shots}</option>`;
-  }).join("");
-  const content = `
-    <form class="twbv-roll-adjust-dialog twbv-ammo-picker-dialog">
-      <label>Munições e carregadores
-        <select name="ammoId">${options}</select>
-      </label>
-    </form>`;
-  new Dialog({
-    title: `Escolher munição para ${weapon.name}`,
-    content,
-    buttons: {
-      select: {
-        label: "Selecionar",
-        callback: async (html) => {
-          const root = resolveDialogRoot(html);
-          const ammo = actor.items.get(root?.querySelector('select[name="ammoId"]')?.value);
-          if (!ammo) return;
-          if (twbvIsAmmoBox(ammo)) {
-            ui.notifications?.warn("Caixas carregam pentes/carregadores. Para a arma, selecione um pente, carregador, clip, cartucho, projétil, cilindro ou célula.");
-            return;
-          }
-          const loaded = Math.max(0, Number(ammo.system?.currentShots ?? 0));
-          if (loaded <= 0) return ui.notifications?.warn(`${ammo.name} está vazio. Carregue-o usando uma caixa de munição.`);
-          const capacity = Math.max(0, Number(ammo.system?.shots ?? loaded));
-          await weapon.update({
-            "system.ammo": ammo.name,
-            "system.ammoSourceUuid": ammo.uuid,
-            "system.ammoSourceName": ammo.name,
-            "system.reloadType": ammo.system?.reloadType ?? "magazine",
-            "system.shots": capacity,
-            "system.currentShots": Math.min(loaded, capacity || loaded)
-          });
-          await ammo.update({ "system.currentShots": 0 });
-          ui.notifications?.info(`${weapon.name} carregada com ${ammo.name}.`);
-        }
-      },
-      cancel: { label: "Cancelar" }
-    },
-    default: "select"
-  }).render(true);
-}
-
-async function twbvOpenCarrierLoadPicker(actor, carrier) {
-  if (!actor || !carrier?.isEmbedded) return ui.notifications?.warn("Abra o carregador pela ficha para carregar usando uma caixa.");
-  const boxes = Array.from(actor.items ?? []).filter((item) => item.type === "municao" && twbvIsAmmoBox(item) && Number(item.system?.currentShots ?? 0) > 0);
-  if (!boxes.length) return ui.notifications?.warn("Nenhuma caixa de munição com munição disponível.");
-  const options = boxes.map((box) => {
-    const shots = `${Number(box.system?.currentShots ?? 0)} / ${Number(box.system?.shots ?? 0)}`;
-    return `<option value="${box.id}">${box.name} — Caixa — ${shots}</option>`;
-  }).join("");
-  const content = `
-    <form class="twbv-roll-adjust-dialog twbv-ammo-picker-dialog">
-      <label>Caixa de munição
-        <select name="boxId">${options}</select>
-      </label>
-    </form>`;
-  new Dialog({
-    title: `Carregar ${carrier.name}`,
-    content,
-    buttons: {
-      load: {
-        label: "Carregar",
-        callback: async (html) => {
-          const root = resolveDialogRoot(html);
-          const box = actor.items.get(root?.querySelector('select[name="boxId"]')?.value);
-          if (!box) return;
-          const capacity = Math.max(0, Number(carrier.system?.shots ?? 0));
-          if (capacity <= 0) return ui.notifications?.warn(`${carrier.name} não tem capacidade configurada.`);
-          const current = Math.max(0, Number(carrier.system?.currentShots ?? 0));
-          const available = Math.max(0, Number(box.system?.currentShots ?? 0));
-          const load = Math.min(capacity - current, available);
-          if (load <= 0) return ui.notifications?.warn(`${carrier.name} já está cheio ou ${box.name} está vazia.`);
-          await carrier.update({ "system.currentShots": current + load });
-          await box.update({ "system.currentShots": available - load });
-          ui.notifications?.info(`${carrier.name} recebeu ${load} munições de ${box.name}.`);
-        }
-      },
-      cancel: { label: "Cancelar" }
-    },
-    default: "load"
-  }).render(true);
-}
-
-function twbvBuildWeaponAttackExtras(weapon, bonusDetails = [], nextShots = 0, maxShots = 0) {
-  const max = Math.max(0, twbvNumberOrZero(maxShots));
-  const current = Math.max(0, twbvNumberOrZero(nextShots));
-  const percent = max > 0 ? Math.max(0, Math.min(100, Math.round((current / max) * 100))) : 0;
-  const mods = bonusDetails.length
-    ? bonusDetails.map((mod) => `<span>${escapeHtml(mod.name)} ${escapeHtml(twbvFormatSignedNumber(mod.value))}</span>`).join("")
-    : `<span>Nenhuma modificação de acerto</span>`;
-  const ammo = max > 0
-    ? `<div class="twbv-chat-ammo">
-        <div class="twbv-chat-ammo__head"><span>Munição</span><strong>${current} / ${max}</strong></div>
-        <div class="twbv-chat-ammo__bar"><i style="width:${percent}%;"></i></div>
-        ${weapon?.system?.ammo ? `<div class="twbv-chat-ammo__name">${escapeHtml(weapon.system.ammo)}</div>` : ""}
-      </div>`
-    : "";
-  return `
-    <div class="twbv-attack-details">
-      <h4>Modificações de acerto</h4>
-      <div class="twbv-attack-mod-list">${mods}</div>
-      ${ammo}
-      <button type="button" class="twbv-chat-damage-button" data-weapon-uuid="${escapeHtmlAttr(weapon?.uuid ?? "")}">
-        <i class="fas fa-burst"></i> Dano
-      </button>
-    </div>`;
-}
-
-async function twbvAppendWeaponDamageToChat(message, weaponUuid) {
-  const weapon = await fromUuid(String(weaponUuid ?? ""));
-  const actor = weapon?.actor;
-  if (!weapon || !actor) {
-    ui.notifications?.warn("Arma não encontrada para rolar dano.");
-    return;
-  }
-  const damageMods = twbvGetWeaponMods(weapon).filter((mod) => String(mod.damage ?? "").trim());
-  const damageContent = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods);
-  if (!damageContent) return;
-  const current = String(message.content ?? "");
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = current;
-  const target = wrapper.querySelector(".twbv-chat-damage-result");
-  if (target) target.innerHTML = damageContent;
-  else wrapper.insertAdjacentHTML("beforeend", `<div class="twbv-chat-damage-result">${damageContent}</div>`);
-  const nextContent = wrapper.innerHTML;
-  await message.update({ content: nextContent });
-}
-
-async function twbvRollWeaponSkill(actor, weapon, extraBonus = 0, attackState = {}) {
-  const skillName = String(weapon?.system?.skill ?? weapon?.system?.trait ?? "").trim();
-  if (!actor || !skillName) return false;
-
-  const skills = Array.from(actor.system?.pericias ?? []);
-  const skill = skills.find((entry) => String(entry?.nome ?? "").trim().toLocaleLowerCase("pt-BR") === skillName.toLocaleLowerCase("pt-BR"));
-  if (!skill) {
-    ui.notifications?.warn(`Perícia "${skillName}" não encontrada em ${actor.name}.`);
-    return false;
-  }
-
-  const attrKey = String(skill?.atributo ?? "destreza").toLowerCase();
-  const attr = SKILL_ATTRIBUTES.find((entry) => entry.key === attrKey) ?? SKILL_ATTRIBUTES.find((entry) => entry.key === "destreza") ?? SKILL_ATTRIBUTES[0];
-  const attrData = actor.system?.atributos?.[attr.key] ?? {};
-  const attrBonus = Number(attrData.bonus ?? 0);
-  const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
-  const awakenedDie = resolveAwakenedDie(attrDie);
-  const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
-  const skillBonus = Number(skill.bonus ?? 0);
-  const modBonus = Number.isFinite(Number(extraBonus)) ? Number(extraBonus) : 0;
-  const ferimentoPenalty = getGlobalRollPenalty(actor.system);
-  const totalBonus = skillBonus + attrBonus + modBonus;
-  const currentShots = Number.isFinite(Number(attackState.currentShots)) ? Number(attackState.currentShots) : Number(weapon.system?.currentShots ?? 0);
-  const maxShots = Number.isFinite(Number(attackState.maxShots)) ? Number(attackState.maxShots) : Number(weapon.system?.shots ?? 0);
-  const ammoText = maxShots > 0 ? ` • Munição ${currentShots}/${maxShots}` : "";
-  const modText = modBonus ? ` • Modificações ${twbvFormatSignedNumber(modBonus)}` : "";
-  const bonusDetails = twbvGetWeaponTraitBonusDetails(weapon);
-  const rollBonusDetails = [
-    skillBonus ? { label: "Perícia", value: skillBonus } : null,
-    attrBonus ? { label: attr.label, value: attrBonus } : null,
-    ...bonusDetails.map((mod) => ({ label: mod.name, value: mod.value }))
-  ].filter(Boolean);
-  const attackExtras = twbvBuildWeaponAttackExtras(weapon, bonusDetails, currentShots, maxShots);
-
-  if (twbvActorUsesAwakenedDie(actor)) {
-    await renderDualDieResult({
-      title: `${weapon.name} - ${skillName}`,
-      subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${modText}${ammoText}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
-      dieA: skillDie,
-      labelA: "Perícia",
-      dieB: awakenedDie,
-      labelB: "Desperto",
-      bonusA: totalBonus,
-      bonusB: 0,
-      finalModifier: ferimentoPenalty.value,
-      finalModifierLabel: ferimentoPenalty.label,
-      dieDisplayA: buildDieLabel(skillDie, skillBonus),
-      dieDisplayB: `d${awakenedDie}`,
-      bonusDetailsA: rollBonusDetails,
-      actor,
-      extraContent: attackExtras
-    });
-    return true;
-  }
-
-  await renderSingleDieResult({
-    title: `${weapon.name} - ${skillName}`,
-    subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${modText}${ammoText}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
-    die: skillDie,
-    label: "Perícia",
-    bonus: totalBonus,
-    finalModifier: ferimentoPenalty.value,
-    finalModifierLabel: ferimentoPenalty.label,
-    dieDisplay: buildDieLabel(skillDie, skillBonus),
-    bonusDetails: rollBonusDetails,
-    actor,
-    extraContent: attackExtras
-  });
-  return true;
-}
-
-async function twbvRollWeaponAttack(actor, item) {
-  if (!actor || !item) return false;
-  const c = Number(item.system.currentShots ?? 0);
-  const max = Number(item.system.shots ?? 0);
-  if (max > 0 && c <= 0) {
-    ui.notifications?.warn(`${item.name} está sem munição.`);
-    return false;
-  }
-  const nextShots = max > 0 ? Math.max(c - 1, 0) : c;
-  if (max > 0) await item.update({ "system.currentShots": nextShots });
-  const bonusDetails = twbvGetWeaponTraitBonusDetails(item);
-  const totalBonus = bonusDetails.reduce((sum, mod) => sum + mod.value, 0);
-  if (String(item.system?.skill ?? "").trim()) {
-    const rolled = await twbvRollWeaponSkill(actor, item, totalBonus, { currentShots: nextShots, maxShots: max });
-    if (rolled) return true;
-  }
-  const bonusText = bonusDetails.length
-    ? `<p><strong>Bônus de modificações:</strong> ${bonusDetails.map((mod) => `${escapeHtml(mod.name)} ${twbvFormatSignedNumber(mod.value)}`).join(", ")}. Total ${twbvFormatSignedNumber(totalBonus)} para acertar.</p>`
-    : "";
-  ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content: `<p><strong>${escapeHtml(item.name)}</strong> atacou. Munição: ${nextShots}/${max}</p>${bonusText}${twbvBuildWeaponAttackExtras(item, bonusDetails, nextShots, max)}`
-  });
-  return true;
-}
-
-async function twbvRollWeaponDamageByUuid(itemUuid) {
-  const item = await fromUuid(String(itemUuid ?? ""));
-  if (!item?.actor) return ui.notifications?.warn("Arma não encontrada.");
-  const damageMods = twbvGetWeaponMods(item).filter((mod) => String(mod.damage ?? "").trim());
-  await twbvRenderWeaponDamageRoll(item.actor, item, damageMods);
-}
-
-async function twbvRollWeaponAttackByUuid(itemUuid) {
-  const item = await fromUuid(String(itemUuid ?? ""));
-  if (!item?.actor) return ui.notifications?.warn("Arma não encontrada.");
-  await twbvRollWeaponAttack(item.actor, item);
-}
-
-function twbvGetSlotDefinition(slotKey) {
-  return TWBV_EQUIPMENT_SLOT_DEFS.find((slot) => slot.key === slotKey) ?? null;
-}
-
-function twbvCanSlotAcceptItem(slotDef, itemType) {
-  return Boolean(slotDef?.accepts?.includes?.(String(itemType ?? "")));
 }
 
 function twbvMergeItemCreationFormData(type, formData = {}) {
@@ -944,14 +193,6 @@ function twbvMergeItemCreationFormData(type, formData = {}) {
     system.subtype = String(formData.subtype ?? system.subtype ?? "regular").trim() || "regular";
   }
 
-  if (resolved === "municao") {
-    system.category = "municao";
-    system.reloadType = String(formData.reloadType ?? system.reloadType ?? "box").trim() || "box";
-    system.ammoType = system.reloadType;
-    system.shots = Number(formData.shots ?? system.shots ?? 0) || 0;
-    system.currentShots = Number(formData.currentShots ?? system.currentShots ?? system.shots ?? 0) || 0;
-  }
-
   if (resolved === "modificacao") {
     system.category = category || "modificacao";
   }
@@ -963,8 +204,7 @@ async function twbvCreateActorItem(actor, requestedType, system = {}) {
   const type = twbvResolveSupportedItemType(requestedType);
   const isWeapon = ["arma", "weapon"].includes(type);
   const isConsumable = type === "consumable";
-  const isAmmo = type === "municao";
-  const name = isWeapon ? "Nova Arma" : isConsumable ? "Novo Consumível" : isAmmo ? "Nova Munição" : `${TWBV_ITEM_TYPES[type] ?? "Item"} ${actor?.items?.size + 1}`;
+  const name = isWeapon ? "Nova Arma" : isConsumable ? "Novo Consumível" : `${TWBV_ITEM_TYPES[type] ?? "Item"} ${actor?.items?.size + 1}`;
   console.log("[TWBV] Clique criar item na ficha.", {
     actor: actor?.name,
     requestedType,
@@ -996,7 +236,6 @@ function twbvGetDefaultItemSystem(type) {
       equipStatus: 1,
       favorite: false,
       category: "",
-      skill: "",
       rangeType: 1,
       rof: 1,
       ap: 0,
@@ -1005,14 +244,10 @@ function twbvGetDefaultItemSystem(type) {
       shots: 0,
       currentShots: 0,
       ammo: "",
-      ammoSourceUuid: "",
-      ammoSourceName: "",
       reloadType: "magazine",
       isHeavyWeapon: false,
       mods: 0,
       equipSlot: "",
-      handMode: "main",
-      equippedHand: "main",
       actions: { trait: "Atirar", traitMod: "", dmgMod: "", additional: {} },
       bonusDamageDie: 6,
       bonusDamageDice: 1,
@@ -1076,34 +311,13 @@ function twbvGetDefaultItemSystem(type) {
       equipped: false,
       tags: "",
       category: "modificacao",
-      modType: "mod",
       modifier: "",
       ap: 0,
       damage: "",
       range: "",
       rof: 0,
       shots: 0,
-      currentShots: 0,
-      reloadType: "magazine"
-    };
-  }
-  if (resolved === "municao") {
-    return {
-      active: true,
-      description: "",
-      effectsSummary: "",
-      quantity: 1,
-      weight: 0,
-      cost: 0,
-      equipped: false,
-      tags: "",
-      category: "municao",
-      ammoType: "box",
-      reloadType: "box",
-      shots: 0,
-      currentShots: 0,
-      caliber: "",
-      compatibleWeapon: ""
+      currentShots: 0
     };
   }
   if (resolved === "equipamento") {
@@ -1126,22 +340,31 @@ async function twbvOpenWorldItemCreateDialog({ folder = null } = {}) {
   const typeOptions = TWBV_ITEM_CREATE_ORDER
     .map((type) => `<option value="${type}">${TWBV_ITEM_TYPES[type] ?? type}</option>`)
     .join("");
+  const armorSlotOptions = Object.entries(TWBV_ARMOR_SLOT_LABELS)
+    .map(([value, label]) => `<option value="${value}">${label}</option>`)
+    .join("");
+  const weaponSlotOptions = Object.entries(TWBV_WEAPON_SLOT_LABELS)
+    .map(([value, label]) => `<option value="${value}">${label}</option>`)
+    .join("");
   const folderInput = folder ? `<input type="hidden" name="folder" value="${folder.id}" />` : "";
   const content = `
     <form class="twbv-create-item-dialog">
-      <label>Nome do item<input type="text" name="name" value="" placeholder="Automático pelo tipo" autofocus /></label>
-      <label>Tipo do item<select name="type" autofocus>${typeOptions}</select></label>
+      <div class="form-group"><label>Nome</label><input type="text" name="name" value="" placeholder="Automatico pelo tipo/slot" autofocus /></div>
+      <div class="form-group"><label>Tipo</label><select name="type">${typeOptions}</select></div>
+      <div class="form-group"><label>Categoria</label><input type="text" name="category" value="" /></div>
+      <div class="form-group"><label>Slot de armadura</label><select name="armorSlot"><option value="">Nenhum</option>${armorSlotOptions}</select></div>
+      <div class="form-group"><label>Slot de arma</label><select name="weaponSlot"><option value="">Nenhum</option>${weaponSlotOptions}</select></div>
+      <div class="form-group"><label>Protecao</label><input type="text" name="protection" value="" /></div>
+      <div class="form-group"><label>Penalidade</label><input type="text" name="penalty" value="" /></div>
+      <div class="form-group"><label>Dano</label><input type="text" name="damage" value="" /></div>
+      <div class="form-group"><label>Alcance</label><input type="text" name="range" value="" /></div>
+      <div class="form-group"><label>Subtipo consumivel</label><input type="text" name="subtype" value="regular" /></div>
       ${folderInput}
     </form>`;
 
   return new Dialog({
-    title: "Criar Item",
+    title: "Criar novo(a) Item",
     content,
-    classes: ["wbtv-add-skill-dialog", "wbtv-create-item-dialog"],
-    render: (dialog, html) => {
-      applyDialogWindowClass(html ?? dialog, "wbtv-add-skill-dialog");
-      applyDialogWindowClass(html ?? dialog, "wbtv-create-item-dialog");
-    },
     buttons: {
       create: {
         label: "Criar",
@@ -1149,9 +372,19 @@ async function twbvOpenWorldItemCreateDialog({ folder = null } = {}) {
           const root = resolveDialogRoot(html);
           const requestedType = String(root?.querySelector('[name="type"]')?.value ?? "arma");
           const type = twbvResolveSupportedItemType(requestedType);
-          const system = twbvGetDefaultItemSystem(type);
+          const formData = {
+            category: root?.querySelector('[name="category"]')?.value,
+            armorSlot: root?.querySelector('[name="armorSlot"]')?.value,
+            weaponSlot: root?.querySelector('[name="weaponSlot"]')?.value,
+            protection: root?.querySelector('[name="protection"]')?.value,
+            penalty: root?.querySelector('[name="penalty"]')?.value,
+            damage: root?.querySelector('[name="damage"]')?.value,
+            range: root?.querySelector('[name="range"]')?.value,
+            subtype: root?.querySelector('[name="subtype"]')?.value
+          };
+          const system = twbvMergeItemCreationFormData(type, formData);
           const typedName = String(root?.querySelector('[name="name"]')?.value ?? "").trim();
-          const name = typedName || twbvGetItemDefaultName(type, system);
+          const name = typedName && !/^item$/i.test(typedName) ? typedName : twbvGetItemDefaultName(type, system);
           const folderId = String(root?.querySelector('[name="folder"]')?.value ?? "").trim();
           const data = { name, type, img: twbvGetItemIcon(type), system };
           if (folderId) data.folder = folderId;
@@ -1410,7 +643,7 @@ function resolveAwakenedDie(attributeDie) {
 
 
 async function rollSingleDie(die) {
-  return (new Roll(`1d${Number(die)}`)).evaluate();
+  return (new Roll(`1d${Number(die)}`)).evaluate({ async: true });
 }
 
 async function showDice3dRoll(roll) {
@@ -1443,106 +676,6 @@ function formatVeuChainText(die, rolls = []) {
   return text;
 }
 
-function twbvFormatSignedLabel(value) {
-  const number = twbvNumberOrZero(value);
-  return number >= 0 ? `+${number}` : `${number}`;
-}
-
-function twbvRollBreakdownHtml({ title, die, rolls = [], bonus = 0, bonusLabel = "Bônus", bonusDetails = [] }) {
-  const safeDie = Number(die);
-  const rollValues = Array.isArray(rolls) ? rolls.map((value) => Number(value ?? 0)) : [];
-  const rollTotal = rollValues.reduce((sum, value) => sum + value, 0);
-  const bonusValue = twbvNumberOrZero(bonus);
-  const total = rollTotal + bonusValue;
-  const formulaText = formatVeuChainText(safeDie, rollValues).replaceAll("+VÃ‰U", " + Véu").replaceAll("+VÉU", " + Véu");
-  const details = Array.isArray(bonusDetails) ? bonusDetails.filter((entry) => twbvNumberOrZero(entry?.value) !== 0) : [];
-  const bonusRows = details.length
-    ? details.map((entry) => `
-      <div class="twbv-roll-breakdown__row">
-        <span>${escapeHtml(entry.label ?? bonusLabel)}</span>
-        <strong>${twbvFormatSignedLabel(entry.value)}</strong>
-      </div>`).join("")
-    : `<div class="twbv-roll-breakdown__row">
-        <span>${escapeHtml(bonusLabel)}</span>
-        <strong>${twbvFormatSignedLabel(bonusValue)}</strong>
-      </div>`;
-  return `
-    <div class="twbv-roll-breakdown">
-      <div class="twbv-roll-breakdown__row">
-        <span>${escapeHtml(title)}</span>
-        <strong>${escapeHtml(formulaText)} = ${rollTotal}</strong>
-      </div>
-      ${bonusRows}
-      <div class="twbv-roll-breakdown__row is-total">
-        <span>Total</span>
-        <strong>${rollTotal}${bonusValue ? ` ${twbvFormatSignedLabel(bonusValue)}` : ""} = ${total}</strong>
-      </div>
-    </div>`;
-}
-
-function twbvDiceTermBreakdownHtml(roll) {
-  const dice = Array.from(roll?.dice ?? []);
-  if (!dice.length) return `<div class="twbv-roll-breakdown__row"><span>Dados</span><strong>${escapeHtml(roll?.result ?? "")}</strong></div>`;
-  const rows = [];
-  for (const die of dice) {
-    const faces = Number(die.faces ?? 0);
-    const count = Math.max(1, Number(die.number ?? 1));
-    const values = Array.from(die.results ?? []).map((result) => Number(result.result ?? result.count ?? 0)).filter((value) => Number.isFinite(value));
-    if (!values.length) continue;
-    const chunks = values.map((value, index) => `${index >= count ? `Véu D${faces}` : `D${faces}`}(${value})`);
-    rows.push(`
-      <div class="twbv-roll-breakdown__row">
-        <span>Dados</span>
-        <strong>${escapeHtml(chunks.join(" + "))} = ${values.reduce((sum, value) => sum + value, 0)}</strong>
-      </div>`);
-  }
-  return rows.join("");
-}
-
-async function twbvEvaluateFormulaDetailed(formula, label = "Dados") {
-  const text = String(formula ?? "").replace(/\s+/g, "");
-  const tokens = text.match(/[+\-]?(?:\d*d\d+|\d+)/gi) ?? [];
-  const rows = [];
-  let total = 0;
-
-  for (const rawToken of tokens) {
-    const sign = rawToken.startsWith("-") ? -1 : 1;
-    const token = rawToken.replace(/^[+\-]/, "");
-    const diceMatch = token.match(/^(\d*)d(\d+)$/i);
-    if (diceMatch) {
-      const count = Math.max(1, Number(diceMatch[1] || 1));
-      const faces = Number(diceMatch[2]);
-      for (let index = 0; index < count; index += 1) {
-        const baseRoll = await rollSingleDie(faces);
-        await showDice3dRoll(baseRoll);
-        const rolls = [Number(baseRoll.total ?? 0)];
-        rolls.push(...(await rollVeuExtrasFromFirst(faces, rolls[0])));
-        const subtotal = rolls.reduce((sum, value) => sum + Number(value ?? 0), 0) * sign;
-        total += subtotal;
-        const chain = formatVeuChainText(faces, rolls).replaceAll("+VÃ‰U", " + Véu").replaceAll("+VÉU", " + Véu");
-        rows.push(`
-          <div class="twbv-roll-breakdown__row">
-            <span>${escapeHtml(label)}</span>
-            <strong>${sign < 0 ? "-" : ""}${escapeHtml(chain)} = ${subtotal}</strong>
-          </div>`);
-      }
-      continue;
-    }
-
-    const flat = Number(token) * sign;
-    if (Number.isFinite(flat) && flat !== 0) {
-      total += flat;
-      rows.push(`
-        <div class="twbv-roll-breakdown__row">
-          <span>${escapeHtml(label === "Dados" ? "Bônus" : label)}</span>
-          <strong>${twbvFormatSignedLabel(flat)}</strong>
-        </div>`);
-    }
-  }
-
-  return { total, rows: rows.join("") || `<div class="twbv-roll-breakdown__row"><span>${escapeHtml(label)}</span><strong>0</strong></div>` };
-}
-
 function escapeHtmlAttr(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -1551,90 +684,10 @@ function escapeHtmlAttr(value) {
     .replaceAll(">", "&gt;");
 }
 
-function escapeHtml(value) {
-  return escapeHtmlAttr(value).replaceAll("'", "&#39;");
-}
-
 function applyVeuToFormula(formula) {
   const text = String(formula ?? '').trim();
   if (!text) return '1d4x';
   return text.replace(/(\d*)d(\d+)(?![a-zA-Z])/gi, (match, count, faces) => `${count || 1}d${faces}x`);
-}
-
-function twbvNormalizeDamageFormulaPart(value, { base = false } = {}) {
-  const text = String(value ?? "").trim().replace(/\s+/g, "");
-  if (!text) return base ? "1d4" : "";
-  if (base || /^[+\-*/]/.test(text)) return text;
-  return `+${text}`;
-}
-
-function twbvBuildWeaponDamageFormula(weapon, damageMods = []) {
-  const base = twbvNormalizeDamageFormulaPart(weapon?.system?.damage, { base: true });
-  const extras = damageMods
-    .map((mod) => twbvNormalizeDamageFormulaPart(mod?.damage ?? mod?.modifier ?? ""))
-    .filter(Boolean);
-  return `${base}${extras.join("")}`;
-}
-
-async function twbvBuildWeaponDamageChatContent(actor, weapon, damageMods = []) {
-  const formula = twbvBuildWeaponDamageFormula(weapon, damageMods);
-  let detailedRoll;
-  try {
-    const baseFormula = twbvNormalizeDamageFormulaPart(weapon?.system?.damage, { base: true });
-    const baseRoll = await twbvEvaluateFormulaDetailed(baseFormula, "Dano");
-    const modRolls = [];
-    for (const mod of damageMods) {
-      const modFormula = twbvNormalizeDamageFormulaPart(mod?.damage ?? mod?.modifier ?? "");
-      if (modFormula) modRolls.push(await twbvEvaluateFormulaDetailed(modFormula, mod?.name ?? "Modificação"));
-    }
-    detailedRoll = {
-      total: baseRoll.total + modRolls.reduce((sum, entry) => sum + entry.total, 0),
-      rows: `${baseRoll.rows}${modRolls.map((entry) => entry.rows).join("")}`
-    };
-  } catch (error) {
-    console.error("[TWBV] Fórmula de dano inválida.", { weapon: weapon?.name, formula, error });
-    ui.notifications?.error(`Fórmula de dano inválida em ${weapon?.name ?? "arma"}: ${formula}`);
-    return null;
-  }
-  const modText = damageMods.length
-    ? damageMods.map((mod) => `<span>${escapeHtml(mod.name ?? "Modificação")} ${escapeHtml(twbvNormalizeDamageFormulaPart(mod.damage ?? mod.modifier ?? ""))}</span>`).join("")
-    : `<span>Nenhuma modificação de dano</span>`;
-  const damageBonusRows = damageMods.length ? "" : `<div class="twbv-roll-breakdown__row"><span>Bônus</span><strong>+0</strong></div>`;
-  return `
-    <section class="twbv-roll-chat twbv-damage-chat">
-      <header class="twbv-roll-chat__header">
-        <h3>${escapeHtml(weapon?.name ?? "Arma")} - Dano</h3>
-        <p>${escapeHtml(formula)}${weapon?.system?.ammo ? ` • ${escapeHtml(weapon.system.ammo)}` : ""}</p>
-      </header>
-      <div class="twbv-roll-chat__grid twbv-damage-chat__grid">
-        <div class="twbv-roll-card is-selected">
-          <div class="twbv-roll-card__label">Fórmula</div>
-          <div class="twbv-roll-card__die">${escapeHtml(formula)}</div>
-          <div class="twbv-roll-card__value twbv-roll-card__value--breakdown">
-            <div class="twbv-roll-breakdown">
-              ${detailedRoll.rows}
-              ${damageBonusRows}
-              <div class="twbv-roll-breakdown__row is-total"><span>Total</span><strong>${Number(detailedRoll.total ?? 0)}</strong></div>
-            </div>
-          </div>
-        </div>
-        <div class="twbv-roll-card">
-          <div class="twbv-roll-card__label">Modificações</div>
-          <div class="twbv-damage-mod-list">${modText}</div>
-        </div>
-      </div>
-      <footer class="twbv-roll-chat__total">Dano Total<strong>${Number(detailedRoll.total ?? 0)}</strong></footer>
-    </section>`;
-}
-
-async function twbvRenderWeaponDamageRoll(actor, weapon, damageMods = []) {
-  const content = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods);
-  if (!content) return null;
-  return ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    type: CONST.CHAT_MESSAGE_TYPES.OTHER
-  });
 }
 
 function renderDualDieResult({
@@ -1648,14 +701,11 @@ function renderDualDieResult({
   bonusB,
   dieDisplayA,
   dieDisplayB,
-  bonusDetailsA = [],
-  bonusDetailsB = [],
   actor,
   subtitle = "",
   subtitleClass = "",
   finalModifier = 0,
-  finalModifierLabel = "",
-  extraContent = ""
+  finalModifierLabel = ""
 }) {
   return (async () => {
     const safeDieA = Number(dieA);
@@ -1701,18 +751,17 @@ function renderDualDieResult({
     const winnerExpr = winnerSegments.join(" | ");
     const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
     const total = baseTotal + appliedModifier;
-    const dieCard = (label, dieDisplay, dieFaces, value, effectiveBonus, modified, selected, selectedRolls = [], bonusDetails = []) => {
+    const dieCard = (label, dieDisplay, value, effectiveBonus, modified, selected, selectedRolls = []) => {
       const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
       const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
       const veuAtivado = Array.isArray(selectedRolls) && selectedRolls.length > 1;
       const rollBreakdown = Array.isArray(selectedRolls) && selectedRolls.length ? selectedRolls.join(' + ') : `${value}`;
       const hoverText = `Rolagens: ${rollBreakdown}${effectiveBonus !== 0 ? ` | Bônus: ${effectiveBonus > 0 ? '+' : ''}${effectiveBonus}` : ''} | Total: ${modified}`;
-      const breakdown = twbvRollBreakdownHtml({ title: label, die: dieFaces, rolls: selectedRolls, bonus: effectiveBonus, bonusDetails });
       return `
       <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
         <div class="twbv-roll-card__label">${label}</div>
         <div class="twbv-roll-card__die">${dieDisplay}${veuAtivado ? ' • Véu' : ''}</div>
-        <div class="twbv-roll-card__value twbv-roll-card__value--breakdown" title="${hoverText}">${breakdown}</div>
+        <div class="twbv-roll-card__value" title="${hoverText}">${valueLabel}</div>
       </div>`;
     };
     const totalLabel = `${total}`;
@@ -1729,10 +778,8 @@ function renderDualDieResult({
           ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
         </header>
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, safeDieA, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls, bonusDetailsA)}
-          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, safeDieB, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls, bonusDetailsB)}
-          ${extraContent || ""}
-          <div class="twbv-chat-damage-result"></div>
+          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls)}
+          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls)}
         </div>
         <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong title="${escapeHtmlAttr(totalHoverText)}">${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
@@ -1745,69 +792,6 @@ function renderDualDieResult({
       flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
     });
     return persistedMessage;
-  })();
-}
-
-function renderSingleDieResult({
-  title,
-  die,
-  label = "Dado",
-  bonus = 0,
-  dieDisplay,
-  bonusDetails = [],
-  actor,
-  subtitle = "",
-  subtitleClass = "",
-  finalModifier = 0,
-  finalModifierLabel = "",
-  extraContent = ""
-}) {
-  return (async () => {
-    const safeDie = Number(die);
-    const baseRoll = await rollSingleDie(safeDie);
-    await showDice3dRoll(baseRoll);
-
-    const rolls = [Number(baseRoll.total ?? 0)];
-    const extras = await rollVeuExtrasFromFirst(safeDie, rolls[0]);
-    if (extras.length) rolls.push(...extras);
-
-    const value = rolls.reduce((sum, entry) => sum + Number(entry ?? 0), 0);
-    const effectiveBonus = Number.isFinite(Number(bonus)) ? Number(bonus) : 0;
-    const appliedModifier = Number.isFinite(Number(finalModifier)) ? Number(finalModifier) : 0;
-    const modified = value + effectiveBonus;
-    const total = modified + appliedModifier;
-    const bonusLabel = effectiveBonus === 0 ? "" : ` ${effectiveBonus > 0 ? "+" : ""}${effectiveBonus}`;
-    const valueLabel = effectiveBonus === 0 ? `${value}` : `${value}${bonusLabel} = ${modified}`;
-    const veuAtivado = rolls.length > 1;
-    const modifierDetails = appliedModifier !== 0
-      ? `<span class="twbv-roll-chat__modifier"> Dado ${modified}${finalModifierLabel ? ` • ${finalModifierLabel}` : ` • Mod ${appliedModifier > 0 ? "+" : ""}${appliedModifier}`}</span>`
-      : "";
-    const content = `
-      <section class="twbv-roll-chat">
-        <header class="twbv-roll-chat__header">
-          <h3>${title}</h3>
-          ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
-        </header>
-        <div class="twbv-roll-chat__grid">
-          <div class="twbv-roll-card is-selected">
-            <div class="twbv-roll-card__label">${label}</div>
-            <div class="twbv-roll-card__die">${dieDisplay ?? `d${safeDie}`}${veuAtivado ? ' • Véu' : ''}</div>
-            <div class="twbv-roll-card__value twbv-roll-card__value--breakdown" title="Rolagens: ${rolls.join(' + ')} | Total: ${modified}">
-              ${twbvRollBreakdownHtml({ title: label, die: safeDie, rolls, bonus: effectiveBonus, bonusDetails })}
-            </div>
-          </div>
-          ${extraContent || ""}
-          <div class="twbv-chat-damage-result"></div>
-        </div>
-        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong>${total}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">+ Ajustar</button></div>
-      </section>`;
-    const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
-    return ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor }),
-      content: contentWithAdjust,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
-    });
   })();
 }
 
@@ -1877,65 +861,9 @@ class TWBVPersonagemSheet extends ActorSheet {
     return `systems/${game.system.id}/templates/actor/personagem-sheet.hbs`;
   }
 
-  _getHeaderButtons() {
-    const buttons = super._getHeaderButtons();
-    buttons.unshift({
-      label: "Configuração",
-      class: "twbv-sheet-config",
-      icon: "fas fa-cog",
-      onclick: () => this._openSheetConfiguration()
-    });
-    return buttons;
-  }
-
-  async _openSheetConfiguration() {
-    const currentKind = twbvGetActorSheetKind(this.actor);
-    const typeOptions = TWBV_ACTOR_CREATE_ORDER
-      .map((type) => `<option value="${type}" ${type === currentKind ? "selected" : ""}>${TWBV_ACTOR_TYPES[type] ?? type}</option>`)
-      .join("");
-    const content = `
-      <form class="twbv-sheet-config-dialog">
-        <div class="form-group">
-          <label>Tipo da ficha</label>
-          <select name="actorType">${typeOptions}</select>
-        </div>
-        <div class="form-group">
-          <label><input type="checkbox" name="autoWounds" checked /> Ajustar limite de ferimentos pelo tipo</label>
-        </div>
-      </form>`;
-
-    new Dialog({
-      title: "Configuração da Ficha",
-      content,
-      buttons: {
-        apply: {
-          label: "Aplicar",
-          callback: async (html) => {
-            const root = resolveDialogRoot(html);
-            const actorType = String(root?.querySelector('[name="actorType"]')?.value ?? TWBV_ACTOR_DEFAULT_TYPE);
-            const autoWounds = Boolean(root?.querySelector('[name="autoWounds"]')?.checked);
-            const update = { "system.twbvSheetKind": actorType };
-            if (autoWounds) {
-              const maxWounds = twbvGetActorWoundMax(actorType);
-              update["system.ferimentos"] = Math.max(0, Math.min(maxWounds, Number(this.actor.system?.ferimentos ?? 0)));
-            }
-            await this.actor.update(update);
-            await this.render(true);
-          }
-        },
-        cancel: { label: "Cancelar" }
-      },
-      default: "apply"
-    }).render(true);
-  }
-
   getData(options = {}) {
     const context = super.getData(options);
     context.system = this.actor?.system ?? context.system ?? {};
-    context.actorKind = twbvGetActorSheetKind(this.actor);
-    context.actorKindLabel = TWBV_ACTOR_TYPES[context.actorKind] ?? "Desperto";
-    context.usesAwakenedDie = twbvActorUsesAwakenedDie(this.actor);
-    context.woundMax = twbvGetActorWoundMax(this.actor);
     context.system.mana = context.system.mana ?? {};
     context.system.codinome = String(context.system.codinome ?? "").trim();
     context.system.mana.value = Number(context.system.mana.value ?? 0);
@@ -1971,7 +899,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     context.defesaResistenciaTooltip = `2 (padrão) + Constituição (${resistenciaConHalf}) + Talento (${resistenciaTalento}) + Itens (${resistenciaItens}) = ${resistenciaTotal}`;
     context.defesaDesviarTooltip = `4 (padrão) + Talento (${desviarTalento}) + Itens (${desviarItens}) + Magias (${desviarMagias}) = ${desviarTotal}`;
     context.defesaResistenciaMagicaTooltip = `2 (padrão) + Influência (${resistenciaMagicaInfluHalf}) + Talento (${resistenciaMagicaTalento}) + Itens (${resistenciaMagicaItens}) + Magias (${resistenciaMagicaMagias}) = ${resistenciaMagicaTotal}`;
-    context.system.ferimentos = Math.max(0, Math.min(context.woundMax, Number(context.system.ferimentos ?? 0)));
+    context.system.ferimentos = Math.max(0, Math.min(5, Number(context.system.ferimentos ?? 0)));
     context.system.fadiga = Math.max(0, Math.min(4, Number(context.system.fadiga ?? 0)));
     context.system.tamanho = Number.isFinite(Number(context.system.tamanho)) ? Number(context.system.tamanho) : 0;
     const atletismo = findSkillByName(context.system, "ATLETISMO");
@@ -2013,7 +941,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     } else {
       context.penaltyFadigaLabel = "Inconsciente (-4)";
     }
-    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= context.woundMax;
+    context.inconsciente = context.system.fadiga >= 4 || context.system.ferimentos >= 5;
     context.condicaoAtual = context.inconsciente ? "Morrendo" : context.condicaoFerimentosLabel;
     context.condicaoFerimentosResumo = context.penaltyFerimentosLabel;
     context.condicaoFadigaResumo = context.penaltyFadigaLabel;
@@ -2093,11 +1021,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     const mapItem = (item) => ({
       id: item.id,
-      uuid: item.uuid,
       name: item.name,
-      icon: item.img,
-      img: item.img,
-      img: item.img,
       type: item.type,
       typeLabel: TWBV_ITEM_TYPES[item.type] ?? item.type,
       active: Boolean(item.system?.active),
@@ -2105,10 +1029,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       tier: String(item.system?.tier ?? "").trim(),
       severity: String(item.system?.severity ?? "").trim(),
       description: String(item.system?.description ?? "").trim(),
-      descricao: String(item.system?.descricao ?? item.system?.description ?? "").trim(),
-      fonte: String(item.system?.fonte ?? item.system?.source ?? "").trim(),
-      categoria: String(item.system?.categoria ?? item.system?.category ?? "").trim(),
-      requisitos: String(item.system?.requisitos ?? item.system?.requirements ?? item.system?.tier ?? "").trim(),
       effectsSummary: summarizeItemActiveEffects(item),
       quantity: parseNumber(item.system?.quantity, 1),
       weight: parseNumber(item.system?.weight),
@@ -2120,9 +1040,6 @@ class TWBVPersonagemSheet extends ActorSheet {
       penalty: String(item.system?.penalty ?? "").trim(),
       tags: String(item.system?.tags ?? "").trim(),
       equipSlot: String(item.system?.equipSlot ?? "").trim(),
-      handMode: twbvGetWeaponHandMode(item),
-      equippedHand: twbvGetWeaponEquippedHand(item),
-      equippedHandLabel: TWBV_WEAPON_HAND_LABELS[twbvGetWeaponHandMode(item)] ?? twbvGetWeaponHandLabel(item),
       equipStatus: Number(item.system?.equipStatus ?? 0),
       isEquipped: Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1),
       isWeapon: ["arma", "weapon"].includes(item.type)
@@ -2131,20 +1048,12 @@ class TWBVPersonagemSheet extends ActorSheet {
     const mapEquipmentCardItem = (item) => ({
       _id: item.id,
       id: item.id,
-      uuid: item.uuid,
       name: item.name,
       type: item.type,
       img: item.img,
       typeLabel: TWBV_ITEM_TYPES[item.type] ?? item.type,
-      system: {
-        ...(item.system ?? {}),
-        categoryLabel: TWBV_ITEM_TYPES[String(item.system?.category ?? "").trim()] ?? String(item.system?.category ?? "").trim()
-      },
-      isAmmoBox: twbvIsAmmoBox(item),
+      system: item.system,
       equipSlot: String(item.system?.equipSlot ?? "").trim(),
-      handMode: twbvGetWeaponHandMode(item),
-      equippedHand: twbvGetWeaponEquippedHand(item),
-      equippedHandLabel: TWBV_WEAPON_HAND_LABELS[twbvGetWeaponHandMode(item)] ?? twbvGetWeaponHandLabel(item),
       isEquipped: Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1),
       isWeapon: ["arma", "weapon"].includes(item.type)
     });
@@ -2165,36 +1074,23 @@ class TWBVPersonagemSheet extends ActorSheet {
     const vantagensEmbedded = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
     const habilidadesEmbedded = actorItems.filter((item) => item.type === "habilidadeEspecial").map(mapItem);
     const desvantagensEmbedded = actorItems.filter((item) => item.type === "desvantagem").map(mapItem);
-    const complicacoesEmbedded = actorItems.filter((item) => item.type === "complicacao").map(mapItem);
 
     context.vantagens = vantagensEmbedded.length ? vantagensEmbedded : Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
     context.habilidadesEspeciais = habilidadesEmbedded.length ? habilidadesEmbedded : Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
     context.desvantagens = desvantagensEmbedded.length ? desvantagensEmbedded : Array.from(this.actor.system?.desvantagens ?? []).map((entry) => mapSystemEntry(entry, "desvantagem"));
-    context.complicacoes = complicacoesEmbedded.length ? complicacoesEmbedded : Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
-    context.equipamentos = actorItems.filter((item) => twbvIsEquipmentItemType(item.type)).map(mapItem);
-    const weapons=actorItems.filter(i=>["arma","weapon"].includes(i.type)); const armors=actorItems.filter(i=>i.type==="armadura"); const consumables=actorItems.filter(i=>i.type==="consumable"); const ammoItems=actorItems.filter(i=>i.type==="municao"); const magazines=ammoItems.filter(i=>!twbvIsAmmoBox(i)); const ammunitions=ammoItems.filter(i=>twbvIsAmmoBox(i));
-    for (const item of [...weapons,...armors,...consumables,...ammoItems]) { const sys=item.system; if(["arma","weapon","municao"].includes(item.type)){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0; sys.reloadTypeLabel=TWBV_AMMO_RELOAD_LABELS[sys.reloadType]??sys.reloadType;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
-    context.equipment={favorite:actorItems.filter(i=>twbvIsEquipmentItemType(i.type)&&i.system?.favorite).map(mapEquipmentCardItem),weapons:weapons.map(mapEquipmentCardItem),armors:armors.map(mapEquipmentCardItem),magazines:magazines.map(mapEquipmentCardItem),ammunitions:ammunitions.map(mapEquipmentCardItem),consumables:consumables.map(mapEquipmentCardItem),others:actorItems.filter(i=>["equipamento","modificacao"].includes(i.type)).map(mapEquipmentCardItem)};
+    context.complicacoes = Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
+    context.equipamentos = actorItems.filter((item) => ["equipamento", "arma", "weapon", "armadura"].includes(item.type)).map(mapItem);
+    const weapons=actorItems.filter(i=>["arma","weapon"].includes(i.type)); const consumables=actorItems.filter(i=>i.type==="consumable"); const magazines=consumables.filter(i=>i.system?.subtype==="magazine"); const normalConsumables=consumables.filter(i=>i.system?.subtype!=="magazine");
+    for (const item of [...weapons,...consumables]) { const sys=item.system; if(["arma","weapon"].includes(item.type)){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
+    context.equipment={favorite:actorItems.filter(i=>i.system?.favorite).map(mapEquipmentCardItem),weapons:weapons.map(mapEquipmentCardItem),magazines:magazines.map(mapEquipmentCardItem),consumables:normalConsumables.map(mapEquipmentCardItem),others:actorItems.filter(i=>!["arma","weapon","consumable"].includes(i.type)).map(mapEquipmentCardItem)};
     const slotItemByKey = new Map();
     for (const item of actorItems) {
+      const slotKey = String(item.system?.equipSlot ?? "").trim();
       const equipped = Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1);
-      if (!equipped) continue;
-      const slotKeys = ["arma", "weapon"].includes(item.type) ? twbvGetWeaponBodySlots(item) : [twbvGetBodySlotKey(item)];
-      for (const slotKey of slotKeys) {
-        if (!slotKey || slotItemByKey.has(slotKey)) continue;
-        slotItemByKey.set(slotKey, mapItem(item));
-      }
+      if (!slotKey || !equipped || slotItemByKey.has(slotKey)) continue;
+      slotItemByKey.set(slotKey, mapItem(item));
     }
     context.equipmentSlots = TWBV_EQUIPMENT_SLOT_DEFS.map((slot) => ({ ...slot, item: slotItemByKey.get(slot.key) ?? null }));
-    context.bodySlots = context.equipmentSlots.map((slot) => ({
-      ...slot,
-      positionStyle: twbvGetBodySlotPositionStyle(this.actor, slot.key)
-    }));
-    const savedBodyLines = this.actor.getFlag("world-behind-the-veil", "bodyMapLines");
-    context.bodyLines = twbvNormalizeBodyLines(savedBodyLines).map((line) => ({
-      id: line.key,
-      style: twbvGetBodyLineStyle(line)
-    }));
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
       .map((item) => ({
@@ -2232,14 +1128,12 @@ class TWBVPersonagemSheet extends ActorSheet {
       max: Number.isFinite(manaMax) ? Math.max(0, manaMax) : 3
     };
 
-    const woundMax = twbvGetActorWoundMax(this.actor);
-    this.actor.system.twbvSheetKind = twbvGetActorSheetKind(this.actor);
-    this.actor.system.ferimentos = Math.max(0, Math.min(woundMax, Number(this.actor.system.ferimentos ?? 0)));
+    this.actor.system.ferimentos = Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)));
     this.actor.system.fadiga = Math.max(0, Math.min(4, Number(this.actor.system.fadiga ?? 0)));
     this.actor.system.tamanho = Number.isFinite(Number(this.actor.system.tamanho)) ? Number(this.actor.system.tamanho) : 0;
 
     if (!Array.isArray(this.actor.system?.condicoes)) this.actor.system.condicoes = [];
-    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= woundMax;
+    const shouldBeUnconscious = this.actor.system.fadiga >= 4 || this.actor.system.ferimentos >= 5;
     const woundConditionByLevel = ["", "Machucado", "Ferido", "Muito ferido", "Gravemente ferido", "Morrendo"];
     const woundCondition = woundConditionByLevel[Math.max(0, Math.min(5, Number(this.actor.system.ferimentos ?? 0)))];
     const woundStates = new Set(woundConditionByLevel.filter(Boolean));
@@ -2273,22 +1167,33 @@ class TWBVPersonagemSheet extends ActorSheet {
   }
 
   async _onDrop(event) {
-    const data = twbvReadDropData(event);
-    if (data?.type !== "Item") return super._onDrop(event);
-    const payload = await twbvResolveDroppedItemData(data);
-    if (!payload) return super._onDrop(event);
+    const raw = event?.dataTransfer?.getData("text/plain");
+    if (!raw) return super._onDrop(event);
 
-    if (twbvIsEquipmentItemType(payload.type)) {
+    let data;
+    try { data = JSON.parse(raw); } catch (_) { return super._onDrop(event); }
+    if (data?.type !== "Item") return super._onDrop(event);
+
+    const dropped = await Item.implementation.fromDropData(data);
+    if (!dropped) return;
+
+    const source = dropped.toObject();
+    const itemType = String(source.type ?? "").trim();
+    const needsActorEmbed = ["weapon", "consumable", "equipamento", "arma", "armadura", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(itemType);
+    if (!needsActorEmbed) return super._onDrop(event);
+
+    const payload = { ...source, system: foundry.utils.deepClone(source.system ?? {}) };
+
+    if (["armadura", "equipamento", "arma", "weapon", "consumable"].includes(itemType)) {
       payload.system.active = payload.system.active ?? true;
       payload.system.equipped = payload.system.equipped ?? false;
     }
 
-    if (payload.type === "armadura") {
+    if (itemType === "armadura") {
       const equipSlot = String(payload.system.equipSlot ?? "").trim();
       payload.system.category = payload.system.category || `armadura${equipSlot ? `:${equipSlot}` : ""}`;
     }
 
-    console.log("[TWBV] Drop de item na ficha.", { actor: this.actor.name, item: payload.name, type: payload.type });
     await this.actor.createEmbeddedDocuments("Item", [payload]);
     return;
   }
@@ -2488,7 +1393,6 @@ class TWBVPersonagemSheet extends ActorSheet {
               const totalBonus = skillBonus + attrBonus + (Number.isFinite(manualBonus) ? manualBonus : 0);
               const bonusDieValue = String(root?.querySelector('select[name="bonusDie"]')?.value ?? '').replace('d','');
               const bonusDie = Number(bonusDieValue);
-              if (twbvActorUsesAwakenedDie(this.actor)) {
               await renderDualDieResult({
                 title: skill.nome || `Perícia ${index + 1}`,
                 subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` • dado extra d${bonusDie}` : ''}${manualBonus ? ` • flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ''}`,
@@ -2504,19 +1408,6 @@ class TWBVPersonagemSheet extends ActorSheet {
                 dieDisplayB: `d${awakenedDie}`,
                 actor: this.actor
               });
-              } else {
-                await renderSingleDieResult({
-                  title: skill.nome || `PerÃ­cia ${index + 1}`,
-                  subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${bonusDie ? ` â€¢ dado extra d${bonusDie}` : ''}${manualBonus ? ` â€¢ flat ${manualBonus > 0 ? '+' : ''}${manualBonus}` : ''}${ferimentoPenalty.label ? ` â€¢ ${ferimentoPenalty.label}` : ''}`,
-                  die: skillDie,
-                  label: "PerÃ­cia",
-                  bonus: totalBonus,
-                  finalModifier: ferimentoPenalty.value,
-                  finalModifierLabel: ferimentoPenalty.label,
-                  dieDisplay: buildDieLabel(skillDie, skillBonus),
-                  actor: this.actor
-                });
-              }
               if (Number.isFinite(bonusDie) && bonusDie > 0) {
                 const bonusRoll = await (new Roll(`1d${bonusDie}`)).evaluate();
                 await bonusRoll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: `Dado extra (${skill.nome || `Perícia ${index + 1}`})` });
@@ -2534,7 +1425,7 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".twbv-move-roll").on("click", async () => {
       const atletismo = findSkillByName(this.actor.system, "ATLETISMO");
       const die = SKILL_DICE.includes(Number(atletismo?.dado)) ? Number(atletismo.dado) : 4;
-      const roll = await (new Roll(`1d${die}`)).evaluate();
+      const roll = await (new Roll(`1d${die}`)).evaluate({ async: true });
       if (game?.dice3d?.showForRoll) await game.dice3d.showForRoll(roll, game.user, true);
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -2560,8 +1451,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       const totalBonus = Number(attrData.bonus ?? 0);
       const bonusTerm = totalBonus === 0 ? "" : `${totalBonus > 0 ? "+" : ""}${totalBonus}`;
 
-      if (twbvActorUsesAwakenedDie(this.actor)) {
-        await renderDualDieResult({
+      await renderDualDieResult({
         title: labels[attributeKey] ?? attributeKey,
         subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span>${bonusTerm ? ` • bônus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
         dieA: attrDie,
@@ -2572,19 +1462,7 @@ class TWBVPersonagemSheet extends ActorSheet {
         finalModifier: ferimentoPenalty.value,
         finalModifierLabel: ferimentoPenalty.label,
         actor: this.actor
-        });
-      } else {
-        await renderSingleDieResult({
-          title: labels[attributeKey] ?? attributeKey,
-          subtitle: `<span class="twbv-skill-attr twbv-attr-${attributeKey}">${labels[attributeKey] ?? attributeKey}</span>${bonusTerm ? ` - bonus ${bonusTerm}` : ""}${ferimentoPenalty.label ? ` - ${ferimentoPenalty.label}` : ""}`,
-          die: attrDie,
-          label: "Atributo",
-          bonus: totalBonus,
-          finalModifier: ferimentoPenalty.value,
-          finalModifierLabel: ferimentoPenalty.label,
-          actor: this.actor
-        });
-      }
+      });
     });
 
     html.find(".twbv-add-skill").on("click", async (event) => {
@@ -2870,10 +1748,9 @@ class TWBVPersonagemSheet extends ActorSheet {
         await this._openCustomItemDialog(type, null, { dialogVersion });
         return;
       }
-      const system = twbvGetDefaultItemSystem(type);
-      const name = type === "municao" ? "Nova Munição" : `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
+      const name = `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
       try {
-        await this.actor.createEmbeddedDocuments("Item", [{ type, name, img: twbvGetItemIcon(type), system }]);
+        await this.actor.createEmbeddedDocuments("Item", [{ type, name }]);
       } catch (error) {
         console.error("[TWBV] Falha ao criar item customizado na ficha.", { requestedType, resolvedType: type, error });
         ui.notifications?.error(`Falha ao criar ${TWBV_ITEM_TYPES[requestedType] ?? "item"}. Veja o console.`);
@@ -2925,17 +1802,6 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
 
     html.find(".item-create").off("click.twbv-create").on("click.twbv-create", this._onItemCreate.bind(this));
-    html.find(".item[data-item-id], .twbv-item-card[data-item-id]").attr("draggable", "true").off("dragstart.twbv-item").on("dragstart.twbv-item", (event) => {
-      const itemId = String(event.currentTarget.dataset.itemId ?? "");
-      const item = this.actor.items.get(itemId);
-      if (!item) return;
-      const transfer = event.originalEvent?.dataTransfer ?? event.dataTransfer;
-      transfer?.setData("text/plain", JSON.stringify({ type: "Item", uuid: item.uuid }));
-      transfer?.setData("application/json", JSON.stringify({ type: "Item", uuid: item.uuid }));
-      event.currentTarget.classList.add("is-dragging");
-    }).off("dragend.twbv-item").on("dragend.twbv-item", (event) => {
-      event.currentTarget.classList.remove("is-dragging");
-    });
     const root = html?.[0] ?? html;
     if (root && !root._twbvCreateDelegated) {
       root.addEventListener("click", (event) => {
@@ -2954,31 +1820,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".weapon-damage").on("click", this._onWeaponDamage.bind(this));
     html.find(".weapon-mod").on("click", this._onWeaponMod.bind(this));
     html.find(".weapon-reload").on("click", this._onWeaponReload.bind(this));
-    html.find(".ammo-load-carrier").on("click", async (event) => {
-      event.preventDefault();
-      const item = this.actor.items.get(event.currentTarget.closest(".item")?.dataset.itemId);
-      if (item) await twbvOpenCarrierLoadPicker(this.actor, item);
-    });
     html.find(".consumable-use").on("click", this._onConsumableUse.bind(this));
     html.find(".item-toggle-equip").on("click", this._onToggleEquip.bind(this));
-    html.find(".twbv-floating-favorites").on("dblclick", (event) => {
-      event.preventDefault();
-      event.currentTarget.classList.toggle("is-collapsed");
-    });
-    html.find(".twbv-body-slot-unequip").on("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const item = this.actor.items.get(String(event.currentTarget.dataset.itemId ?? ""));
-      if (item) await item.update({"system.equipped": false, "system.equipStatus": 0});
-    });
-    html.find(".twbv-body-line-create").on("click", this._onBodyLineCreate.bind(this));
-    html.find(".twbv-body-line-reset").on("click", this._onBodyLineReset.bind(this));
-    html.find(".twbv-body-custom-line").on("pointerdown", this._onBodyLineMoveStart.bind(this));
-    html.find(".twbv-body-line-end").on("pointerdown", this._onBodyLineResizeStart.bind(this));
-    html.find(".twbv-body-line-delete").on("click", this._onBodyLineDelete.bind(this));
-    html.find(".twbv-body-slot-handle").on("pointerdown", this._onBodySlotMoveStart.bind(this));
-    html.find(".twbv-equip-slot, .twbv-body-slot").on("dragover", (event) => event.preventDefault());
-    html.find(".twbv-equip-slot, .twbv-body-slot").on("drop", this._onEquipmentSlotDrop.bind(this));
+    html.find(".twbv-equip-slot").on("dragover", (event) => event.preventDefault());
+    html.find(".twbv-equip-slot").on("drop", this._onEquipmentSlotDrop.bind(this));
 
     html.find(".twbv-item-toggle-active, .twbv-item-toggle-equipped").on("change", async (event) => {
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
@@ -3004,7 +1849,7 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
 
-  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",skill:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,equipSlot:"",handMode:"main",equippedHand:"main",actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
+  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
   _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,cost:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
   async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
   async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(applyVeuToFormula(item.system.damage||'1d4'))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
@@ -3012,47 +1857,6 @@ class TWBVPersonagemSheet extends ActorSheet {
   async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){const roll=await (new Roll(applyVeuToFormula(`${item.system.damage||'1d4'}${mod.modifier||''}`))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name} - ${mod.name}`});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
   async _onWeaponReload(event){event.preventDefault(); const weapon=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!weapon) return; const ammoName=weapon.system.ammo; const max=Number(weapon.system.shots??0), cur=Number(weapon.system.currentShots??0); const mag=this.actor.items.find(i=>i.type==='consumable'&&i.name===ammoName&&i.system.subtype==='magazine'); if(!mag) return ui.notifications.warn(`Nenhum carregador compatível encontrado: ${ammoName}`); const k=Object.keys(mag.system.charges?.charges??{})[0]; const ch=mag.system.charges?.charges?.[k]; const avail=Number(ch?.value??0); const load=Math.min(max-cur,avail); if(load<=0) return; await weapon.update({'system.currentShots':cur+load}); await mag.update({[`system.charges.charges.${k}.value`]: avail-load});}
   async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
-
-  async _onWeaponDamage(event){
-    event.preventDefault();
-    const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId);
-    if(!item) return;
-    const damageMods = twbvGetWeaponMods(item).filter((mod)=>String(mod.damage ?? "").trim());
-    await twbvRenderWeaponDamageRoll(this.actor, item, damageMods);
-  }
-
-  async _onWeaponRoll(event){
-    event.preventDefault();
-    const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId);
-    if(!item) return;
-    await twbvRollWeaponAttack(this.actor, item);
-  }
-
-  async _onWeaponMod(event){
-    event.preventDefault();
-    const row=event.currentTarget.closest('.item');
-    const item=this.actor.items.get(row?.dataset.itemId);
-    const key=event.currentTarget.dataset.modKey;
-    const mod=item?.system?.actions?.additional?.[key];
-    if(!item||!mod) return;
-    const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0);
-    if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`);
-    if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)});
-    if(mod.type==='damage'){
-      const damagePart=String(mod.damage ?? mod.modifier ?? "").trim();
-      await twbvRenderWeaponDamageRoll(this.actor, item, [{ ...mod, damage: damagePart }]);
-      return;
-    }
-    const modifier=String(mod.modifier ?? "").trim();
-    ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou <strong>${mod.name}</strong>${modifier ? ` (${modifier} para acertar)` : ""}.</p>`});
-  }
-
-  async _onWeaponReload(event){
-    event.preventDefault();
-    const weapon=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId);
-    if(!weapon) return;
-    await twbvOpenWeaponAmmoPicker(this.actor, weapon);
-  }
 
   async _onItemCreate(event){
     event.preventDefault();
@@ -3062,7 +1866,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       ? this._buildWeaponDefaults()
       : resolvedType === "consumable"
         ? this._buildConsumableDefaults()
-        : twbvGetDefaultItemSystem(resolvedType);
+        : {};
     try {
       await twbvCreateActorItem(this.actor, requestedType, nextSystem);
     } catch (error) {
@@ -3082,238 +1886,8 @@ class TWBVPersonagemSheet extends ActorSheet {
       ui.notifications?.error(`Falha ao criar ${TWBV_ITEM_TYPES[requestedType] ?? "item"}. Veja o console.`);
     }
   }
-  async _onToggleEquip(event){
-    event.preventDefault();
-    const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId);
-    if(!item) return;
-    const isEquipped=Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0)===1);
-    const nextEquipped = !isEquipped;
-    const update={'system.equipped': nextEquipped,'system.equipStatus': nextEquipped ? 1 : 0};
-    if (nextEquipped) {
-      if (["arma", "weapon"].includes(item.type)) {
-        const hand = await twbvChooseWeaponHand(item);
-        if (!hand) return;
-        update["system.handMode"] = hand;
-        update["system.equippedHand"] = hand;
-        await twbvUnequipWeaponOccupants(this.actor, item, hand);
-      }
-      const bodySlot = twbvGetBodySlotKey(item);
-      const targetSlots = ["arma", "weapon"].includes(item.type)
-        ? twbvGetWeaponBodySlots({ type: item.type, system: { ...item.system, equippedHand: update["system.equippedHand"] ?? item.system?.equippedHand } })
-        : [bodySlot];
-      if (item.type === "armadura") update["system.equipSlot"] = bodySlot || "chest";
-      for (const bodySlot of targetSlots) {
-        if (!bodySlot) continue;
-        if (["arma", "weapon"].includes(item.type)) continue;
-        const occupying = this.actor.items.find((candidate) =>
-          candidate.id !== item.id &&
-          Boolean(candidate.system?.equipped ?? Number(candidate.system?.equipStatus ?? 0) === 1) &&
-          (["arma", "weapon"].includes(candidate.type) ? twbvGetWeaponBodySlots(candidate).includes(bodySlot) : twbvGetBodySlotKey(candidate) === bodySlot)
-        );
-        if (occupying) await occupying.update({"system.equipped": false, "system.equipStatus": 0});
-      }
-    }
-    await item.update(update);
-  }
-
-  async _chooseWeaponEquipHand(item) {
-    return twbvChooseWeaponHand(item);
-  }
-
-  _onBodySlotMoveStart(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-    const slot = event.currentTarget.closest(".twbv-body-slot");
-    const map = event.currentTarget.closest(".twbv-body-map");
-    const slotKey = String(slot?.dataset.slotKey ?? "").trim();
-    if (!slot || !map || !slotKey) return;
-
-    const mapRect = map.getBoundingClientRect();
-    const slotRect = slot.getBoundingClientRect();
-    const offsetX = event.clientX - slotRect.left;
-    const offsetY = event.clientY - slotRect.top;
-
-    const move = (moveEvent) => {
-      const left = Math.clamp(((moveEvent.clientX - mapRect.left - offsetX) / mapRect.width) * 100, 0, 92);
-      const top = Math.clamp(((moveEvent.clientY - mapRect.top - offsetY) / mapRect.height) * 100, 0, 92);
-      slot.style.left = `${left}%`;
-      slot.style.top = `${top}%`;
-      slot.style.right = "auto";
-      slot.dataset.nextLeft = String(Math.round(left * 10) / 10);
-      slot.dataset.nextTop = String(Math.round(top * 10) / 10);
-    };
-
-    const done = async () => {
-      document.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerup", done);
-      const left = Number(slot.dataset.nextLeft);
-      const top = Number(slot.dataset.nextTop);
-      if (!Number.isFinite(left) || !Number.isFinite(top)) return;
-      const current = twbvNormalizeBodySlotPositions(this.actor.getFlag("world-behind-the-veil", "bodySlotPositions"));
-      current[slotKey] = { left, top };
-      await twbvSetBodySlotPositions(this.actor, current);
-    };
-
-    document.addEventListener("pointermove", move);
-    document.addEventListener("pointerup", done, { once: true });
-  }
-
-  async _onBodyLineCreate(event) {
-    event.preventDefault();
-    const saved = this.actor.getFlag("world-behind-the-veil", "bodyMapLines");
-    const lines = twbvNormalizeBodyLines(saved);
-    lines.push({ key: foundry.utils.randomID(), left: 42, top: 42, width: 18, angle: 0 });
-    await twbvSetBodyLines(this.actor, lines);
-  }
-
-  async _onBodyLineReset(event) {
-    event.preventDefault();
-    await twbvSetBodyLines(this.actor, TWBV_DEFAULT_BODY_LINES);
-  }
-
-  async _onBodyLineDelete(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const id = String(event.currentTarget.closest(".twbv-body-custom-line")?.dataset.lineId ?? "");
-    if (!id) return;
-    const saved = this.actor.getFlag("world-behind-the-veil", "bodyMapLines");
-    const lines = twbvNormalizeBodyLines(saved)
-      .filter((line) => String(line?.key ?? "") !== id);
-    await twbvSetBodyLines(this.actor, lines);
-  }
-
-  _updateBodyLine(lineId, patch) {
-    const saved = this.actor.getFlag("world-behind-the-veil", "bodyMapLines");
-    const lines = twbvNormalizeBodyLines(saved);
-    const index = lines.findIndex((line) => String(line?.key ?? "") === lineId);
-    if (index === -1) return null;
-    lines[index] = { ...lines[index], ...patch };
-    return lines;
-  }
-
-  _onBodyLineMoveStart(event) {
-    if (event.target?.closest?.(".twbv-body-line-end, .twbv-body-line-delete")) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const line = event.currentTarget.closest(".twbv-body-custom-line");
-    const map = event.currentTarget.closest(".twbv-body-map");
-    const lineId = String(line?.dataset.lineId ?? "");
-    if (!line || !map || !lineId) return;
-
-    const mapRect = map.getBoundingClientRect();
-    const lineRect = line.getBoundingClientRect();
-    const offsetX = event.clientX - lineRect.left;
-    const offsetY = event.clientY - lineRect.top;
-    let next = null;
-
-    const move = (moveEvent) => {
-      const left = Math.clamp(((moveEvent.clientX - mapRect.left - offsetX) / mapRect.width) * 100, 0, 98);
-      const top = Math.clamp(((moveEvent.clientY - mapRect.top - offsetY) / mapRect.height) * 100, 0, 98);
-      line.style.left = `${left}%`;
-      line.style.top = `${top}%`;
-      next = { left: Math.round(left * 10) / 10, top: Math.round(top * 10) / 10 };
-    };
-
-    const done = async () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", done);
-      if (!next) return;
-      const lines = this._updateBodyLine(lineId, next);
-      if (lines) await twbvSetBodyLines(this.actor, lines);
-    };
-
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", done, { once: true });
-  }
-
-  _onBodyLineResizeStart(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    const line = event.currentTarget.closest(".twbv-body-custom-line");
-    const map = event.currentTarget.closest(".twbv-body-map");
-    const lineId = String(line?.dataset.lineId ?? "");
-    if (!line || !map || !lineId) return;
-
-    const mapRect = map.getBoundingClientRect();
-    let next = null;
-
-    const move = (moveEvent) => {
-      const originX = line.offsetLeft;
-      const originY = line.offsetTop;
-      const pointerX = moveEvent.clientX - mapRect.left;
-      const pointerY = moveEvent.clientY - mapRect.top;
-      const dx = pointerX - originX;
-      const dy = pointerY - originY;
-      const widthPx = Math.max(18, Math.sqrt((dx * dx) + (dy * dy)));
-      const width = Math.clamp((widthPx / mapRect.width) * 100, 3, 80);
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-      line.style.width = `${width}%`;
-      line.style.transform = `rotate(${angle}deg)`;
-      next = { width: Math.round(width * 10) / 10, angle: Math.round(angle * 10) / 10 };
-    };
-
-    const done = async () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", done);
-      if (!next) return;
-      const lines = this._updateBodyLine(lineId, next);
-      if (lines) await twbvSetBodyLines(this.actor, lines);
-    };
-
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", done, { once: true });
-  }
-
-  async _onEquipmentSlotDrop(event){
-    event.preventDefault();
-    const slotEl = event.currentTarget;
-    const slotKey = String(slotEl?.dataset.slotKey ?? "").trim();
-    if (!slotKey) return;
-    const slotDef = twbvGetSlotDefinition(slotKey);
-    if (!slotDef) return;
-    const data = twbvReadDropData(event);
-    if (data?.type !== "Item") return;
-
-    const dropped = await Item.implementation.fromDropData(data);
-    if (!dropped) return;
-    let actorItem = dropped.parent === this.actor ? this.actor.items.get(dropped.id) : null;
-
-    if (!actorItem) {
-      const payload = await twbvResolveDroppedItemData(data);
-      if (!payload) return;
-      if (!twbvCanSlotAcceptItem(slotDef, payload.type)) return ui.notifications?.warn(`Slot ${slotDef.label} não aceita ${TWBV_ITEM_TYPES[payload.type] ?? payload.type}.`);
-      if (payload.type === "armadura" || ["arma", "weapon"].includes(payload.type)) payload.system.equipSlot = slotKey;
-      if (["arma", "weapon"].includes(payload.type)) {
-        payload.system.equipSlot = String(payload.system.equipSlot ?? "").match(/weapon(Main|Off)/) ? "" : payload.system.equipSlot;
-        payload.system.handMode = slotKey === "weaponOff" ? "off" : "main";
-        payload.system.equippedHand = payload.system.handMode;
-      }
-      payload.system.equipped = true;
-      payload.system.equipStatus = 1;
-      const created = await this.actor.createEmbeddedDocuments("Item", [payload]);
-      actorItem = created?.[0] ?? null;
-      console.log("[TWBV] Item dropado e equipado em slot.", { actor: this.actor.name, item: actorItem?.name, slot: slotKey });
-      return;
-    }
-
-    if (!twbvCanSlotAcceptItem(slotDef, actorItem.type)) return ui.notifications?.warn(`Slot ${slotDef.label} não aceita ${TWBV_ITEM_TYPES[actorItem.type] ?? actorItem.type}.`);
-    const occupying = this.actor.items.find((candidate) =>
-      candidate.id !== actorItem.id &&
-      Boolean(candidate.system?.equipped ?? Number(candidate.system?.equipStatus ?? 0) === 1) &&
-      twbvGetBodySlotKey(candidate) === slotKey
-    );
-    if (occupying) await occupying.update({"system.equipped": false, "system.equipStatus": 0});
-    const update = {"system.equipped": true, "system.equipStatus": 1};
-    if (actorItem.type === "armadura" || ["arma", "weapon"].includes(actorItem.type)) update["system.equipSlot"] = slotKey;
-    if (["arma", "weapon"].includes(actorItem.type)) {
-      update["system.equipSlot"] = String(actorItem.system?.equipSlot ?? "").match(/weapon(Main|Off)/) ? "" : String(actorItem.system?.equipSlot ?? "");
-      update["system.handMode"] = slotKey === "weaponOff" ? "off" : "main";
-      update["system.equippedHand"] = update["system.handMode"];
-    }
-    await actorItem.update(update);
-    console.log("[TWBV] Item equipado em slot.", { actor: this.actor.name, item: actorItem.name, slot: slotKey });
-  }
+  async _onToggleEquip(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const isEquipped=Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0)===1); await item.update({'system.equipped': !isEquipped,'system.equipStatus': !isEquipped ? 1 : 0});}
+  async _onEquipmentSlotDrop(event){event.preventDefault(); const slotEl=event.currentTarget; const slotKey=String(slotEl?.dataset.slotKey??"").trim(); if(!slotKey) return; const raw=event.originalEvent?.dataTransfer?.getData('text/plain') ?? event.dataTransfer?.getData('text/plain'); if(!raw) return; let data; try{data=JSON.parse(raw);}catch(_){return;} if(data?.type!=="Item") return; const dropped=await Item.implementation.fromDropData(data); if(!dropped) return; const actorItem=this.actor.items.get(dropped.id); if(!actorItem) return ui.notifications?.warn("Arraste um item do próprio personagem."); const slotDef=TWBV_EQUIPMENT_SLOT_DEFS.find(s=>s.key===slotKey); if(!slotDef) return; if(!slotDef.accepts.includes(actorItem.type)) return ui.notifications?.warn(`Slot ${slotDef.label} não aceita ${actorItem.type}.`); await actorItem.update({'system.equipSlot': slotKey,'system.equipped': true,'system.equipStatus': 1});}
 
   _buildCustomItemDialogContent(type, itemData = {}, options = {}) {
     const dialogVersion = String(options.dialogVersion ?? "");
@@ -3848,27 +2422,23 @@ function twbvApplyRollAdjustments(root) {
 
 Hooks.once("init", async () => {
   console.log(`[TWBV] Inicializando sistema The World Behind the Veil (${TWBV_LOCAL_BUILD})`);
-  globalThis.TWBV = foundry.utils.mergeObject(globalThis.TWBV ?? {}, {
-    rollWeaponAttackByUuid: twbvRollWeaponAttackByUuid,
-    rollWeaponDamageByUuid: twbvRollWeaponDamageByUuid
-  }, { inplace: false });
 
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
 
   Handlebars.registerHelper("ifEquals", function (arg1, arg2, options) { return arg1 == arg2 ? options.fn(this) : options.inverse(this); });
   Handlebars.registerHelper("isWeaponType", function (type, options) { return ["arma", "weapon"].includes(String(type ?? "")) ? options.fn(this) : options.inverse(this); });
   await loadTemplates(TWBV_HANDLEBARS_PARTIALS);
-  twbvApplyActorTypeConfig();
-  twbvPatchActorCreationDefaults();
   twbvApplyItemTypeOrderConfig();
   twbvPatchItemCreateDialog();
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("world-behind-the-veil", TWBVWeaponSheet, { types:["weapon","arma"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
-  Items.registerSheet("world-behind-the-veil", TWBVAmmoSheet, { types:["municao"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
-  twbvRegisterActorSheets();
+  Actors.registerSheet("world-behind-the-veil", TWBVPersonagemSheet, {
+    types: ["personagem", "despertos", "semi-despertos", "sombras"],
+    makeDefault: true
+  });
 });
 
 function twbvNormalizeAnyItemTypeDialog(app, html) {
@@ -3880,33 +2450,11 @@ function twbvNormalizeAnyItemTypeDialog(app, html) {
 Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
 Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
-Hooks.on("hotbarDrop", async (_bar, data, slot) => {
-  if (data?.type !== "Item" || !data.uuid) return false;
-  const item = await fromUuid(data.uuid);
-  if (!item || !["arma", "weapon"].includes(String(item.type ?? ""))) return false;
-  const command = `await globalThis.TWBV.rollWeaponAttackByUuid("${item.uuid}");`;
-  let macro = game.macros?.find((entry) => entry.name === `${item.name} - Atirar` && entry.command === command);
-  if (!macro) {
-    macro = await Macro.create({
-      name: `${item.name} - Atirar`,
-      type: "script",
-      img: item.img,
-      command,
-      flags: { "world-behind-the-veil": { itemUuid: item.uuid, action: "attack" } }
-    });
-  }
-  await game.user.assignHotbarMacro(macro, slot);
-  return false;
-});
-
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
   if (!root || typeof root.querySelector !== "function") return;
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
-  root.querySelectorAll(".twbv-chat-damage-button").forEach((btn) => btn.addEventListener("click", async () => {
-    await twbvAppendWeaponDamageToChat(message, btn.dataset.weaponUuid);
-  }));
   root.querySelectorAll(".twbv-roll-adjust").forEach((btn)=> btn.addEventListener("click", ()=> openRollAdjustDialog(message)));
   root.querySelectorAll(".twbv-adjust-remove").forEach((btn)=> btn.addEventListener("click", async ()=> {
     const idx = Number(btn.dataset.adjustIndex ?? -1);
@@ -3942,8 +2490,7 @@ Hooks.on("preCreateItem", (item, createData) => {
     armadura: "Armadura",
     weapon: "Arma",
     consumable: "Consumível",
-    municao: "Munição",
-    modificacao: "Modificação",
+  modificacao: "Modificação",
     equipamento: "Equipamento"
   };
   const nextName = fallbackByType[type] ?? "Item";
@@ -3953,47 +2500,33 @@ Hooks.on("preCreateItem", (item, createData) => {
 Hooks.on("createItem", async (item) => {
   if (!game.user?.isGM) return;
   if (item.isEmbedded) return;
-  await twbvEnsureMainItemFolders();
 
   const type = String(item.type ?? "").trim();
-  const selectedSlot = String(item.system?.equipSlot ?? "").trim();
-  if (["arma", "weapon", "armadura"].includes(type) && !selectedSlot) {
-    if (item.folder) await item.update({ folder: null });
-    return;
-  }
   const folderNameByType = {
     vantagem: "Vantagens",
     desvantagem: "Desvantagens",
-    habilidadeEspecial: "Habilidade Especial",
+    habilidadeEspecial: "Habilidades Especiais",
     complicacao: "Complicações",
     arma: "Armas",
     weapon: "Armas",
     armadura: "Armaduras",
     consumable: "Consumíveis",
-    municao: "Munições",
     modificacao: "Modificações",
-    equipamento: ""
+    equipamento: "Equipamentos"
   };
   const folderName = folderNameByType[type];
   if (!folderName) return;
-  const mainFolder = twbvGetMainItemFolderConfig(type);
-  if (!mainFolder) return;
-  const targetFolderName = mainFolder.name;
-  const folderColor = mainFolder?.color ?? "#6f54b8";
-  const folderSort = mainFolder ? (TWBV_ITEM_MAIN_FOLDER_ORDER.indexOf(mainFolder) + 1) * 100000 : undefined;
 
-  let folder = game.folders?.find((f) => f.type === "Item" && f.name === targetFolderName);
+  let folder = game.folders?.find((f) => f.type === "Item" && f.name === folderName);
   if (!folder) {
-    folder = await Folder.create({ name: targetFolderName, type: "Item", color: folderColor, sort: folderSort });
-  } else if (folder.color !== folderColor || (folderSort && folder.sort !== folderSort)) {
-    await folder.update({ color: folderColor, ...(folderSort ? { sort: folderSort } : {}) });
+    folder = await Folder.create({ name: folderName, type: "Item", color: "#6f54b8" });
   }
   if (!folder) return;
   if (item.folder?.id === folder.id) return;
   await item.update({ folder: folder.id });
 });
 
-async function twbvEnsureItemFolderPath(folderNames = [], color = "#6f54b8") {
+async function twbvEnsureItemFolderPath(folderNames = []) {
   let parent = null;
   for (const rawName of folderNames) {
     const name = String(rawName ?? "").trim();
@@ -4004,9 +2537,7 @@ async function twbvEnsureItemFolderPath(folderNames = [], color = "#6f54b8") {
       ((parent && f.folder?.id === parent.id) || (!parent && !f.folder))
     );
     if (!folder) {
-      folder = await Folder.create({ name, type: "Item", color, folder: parent?.id ?? null });
-    } else if (folder.color !== color) {
-      await folder.update({ color });
+      folder = await Folder.create({ name, type: "Item", color: "#6f54b8", folder: parent?.id ?? null });
     }
     parent = folder ?? parent;
   }
@@ -4017,21 +2548,19 @@ async function twbvRouteArmorToSlotFolder(item) {
   if (!game.user?.isGM) return;
   if (!item || item.isEmbedded) return;
   if (String(item.type ?? "") !== "armadura") return;
-  if (await twbvClearUnselectedEquipmentFolder(item)) return;
   const slotKey = String(item.system?.equipSlot ?? "").trim();
   if (!slotKey) return;
   const slotLabelByKey = {
     head: "Cabeça",
     chest: "Peito",
     legs: "Pernas",
-    boots: "Botas",
     gloves: "Luva",
     belt: "Cinto",
     ringLeft: "Anel Esq.",
     ringRight: "Anel Dir."
   };
   const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
-  const target = await twbvEnsureItemFolderPath(["Armaduras", slotFolderName], twbvGetMainItemFolderConfig("armadura")?.color);
+  const target = await twbvEnsureItemFolderPath(["Armaduras", slotFolderName]);
   if (!target) return;
   if (item.folder?.id === target.id) return;
   await item.update({ folder: target.id });
@@ -4051,7 +2580,6 @@ async function twbvRouteWeaponToSlotFolder(item) {
   if (!game.user?.isGM) return;
   if (!item || item.isEmbedded) return;
   if (!["weapon", "arma"].includes(String(item.type ?? ""))) return;
-  if (await twbvClearUnselectedEquipmentFolder(item)) return;
   const slotKey = String(item.system?.equipSlot ?? "").trim();
   if (!slotKey) return;
   const slotLabelByKey = {
@@ -4066,7 +2594,7 @@ async function twbvRouteWeaponToSlotFolder(item) {
     sniper: "Sniper"
   };
   const slotFolderName = slotLabelByKey[slotKey] ?? slotKey;
-  const target = await twbvEnsureItemFolderPath(["Armas", slotFolderName], twbvGetMainItemFolderConfig("arma")?.color);
+  const target = await twbvEnsureItemFolderPath(["Armas", slotFolderName]);
   if (!target) return;
   if (item.folder?.id === target.id) return;
   await item.update({ folder: target.id });
@@ -4100,11 +2628,6 @@ class TWBVItemSheetBase extends ItemSheet {
     context.item = this.item;
     context.document = this.item;
     context.system = this.item.system ?? {};
-    context.typeLabel = TWBV_ITEM_TYPES[this.item?.type] ?? this.item?.type ?? "Item";
-    context.categoryLabel = String(context.system?.category ?? "").trim()
-      ? (TWBV_ITEM_TYPES[String(context.system.category).trim()] ?? String(context.system.category).trim())
-      : "";
-    context.displayCategory = context.categoryLabel || String(context.system?.category ?? "");
     context.owner = this.item.isOwner;
     context.editable = this.isEditable;
     return context;
@@ -4197,242 +2720,8 @@ class TWBVItemSheetBase extends ItemSheet {
   }
 }
 
-async function twbvClearUnselectedEquipmentFolder(item) {
-  if (!game.user?.isGM) return false;
-  if (!item || item.isEmbedded) return false;
-  const type = String(item.type ?? "").trim();
-  if (!["arma", "weapon", "armadura"].includes(type)) return false;
-  const selectedSlot = String(item.system?.equipSlot ?? "").trim();
-  if (selectedSlot) return false;
-  if (item.folder) await item.update({ folder: null });
-  return true;
-}
-
-async function twbvNormalizeWorldItemFolders() {
-  if (!game.user?.isGM) return;
-  await twbvEnsureMainItemFolders();
-  for (const item of game.items ?? []) {
-    if (item.isEmbedded) continue;
-    const type = String(item.type ?? "").trim();
-    if (type === "armadura") {
-      await twbvRouteArmorToSlotFolder(item);
-      continue;
-    }
-    if (["arma", "weapon"].includes(type)) {
-      await twbvRouteWeaponToSlotFolder(item);
-      continue;
-    }
-    const main = twbvGetMainItemFolderConfig(type);
-    if (!main) continue;
-    const target = await twbvEnsureItemFolderPath([main.name], main.color);
-    if (target && item.folder?.id !== target.id) await item.update({ folder: target.id });
-  }
-}
-
-class TWBVWeaponSheet extends TWBVItemSheetBase {
-  static get defaultOptions(){
-    return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]});
-  }
-  get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; }
-  getData(options = {}) {
-    const context = super.getData(options);
-    const actor = this.item?.parent instanceof Actor ? this.item.parent : null;
-    context.actorSkills = Array.from(actor?.system?.pericias ?? [])
-      .map((skill, index) => ({
-        index,
-        name: String(skill?.nome ?? "").trim(),
-        die: SKILL_DICE.includes(Number(skill?.dado)) ? Number(skill.dado) : 4,
-        bonus: Number.isFinite(Number(skill?.bonus)) ? Number(skill.bonus) : 0,
-        attr: String(skill?.atributo ?? "destreza").toLowerCase()
-      }))
-      .filter((skill) => skill.name);
-    return context;
-  }
-  activateListeners(html){
-    super.activateListeners(html);
-    html.find('.mod-create').on('click', async (e)=>{
-      e.preventDefault();
-      const key=foundry.utils.randomID(8);
-      await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});
-    });
-    html.find('.mod-delete').on('click', async (e)=>{
-      e.preventDefault();
-      const key=e.currentTarget.closest('.mod-row')?.dataset.modKey;
-      if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});
-    });
-    html.find(".twbv-weapon-slot-option").on("click", async (event)=>{
-      event.preventDefault();
-      const option=event.currentTarget;
-      const input=option?.querySelector?.(".twbv-weapon-slot-check");
-      const next=String(input?.value??"").trim();
-      if(!next) return;
-      const currentSlot=String(this.item.system?.equipSlot??"").trim();
-      const currentCategory=String(this.item.system?.category??"").trim();
-      const shouldClear=currentSlot===next;
-      html.find(".twbv-weapon-slot-check").prop("checked", false);
-      if(!shouldClear && input) input.checked=true;
-      html.find('input[name="system.equipSlot"]').val(shouldClear ? "" : next);
-      const update={"system.equipSlot": shouldClear ? "" : next};
-      if(shouldClear && currentCategory===next) update["system.category"]="";
-      if(!shouldClear && !currentCategory) update["system.category"]=next;
-      await this.item.update(update);
-    });
-    html.find(".twbv-weapon-hand-option").on("click", async (event)=>{
-      event.preventDefault();
-      const option=event.currentTarget;
-      const input=option?.querySelector?.(".twbv-weapon-hand-check");
-      const next=String(input?.value??"main").trim();
-      if(!["main","off","two"].includes(next)) return;
-      html.find(".twbv-weapon-hand-check").prop("checked", false);
-      if(input) input.checked=true;
-      html.find('input[name="system.handMode"]').val(next);
-      const update={"system.handMode": next, "system.equippedHand": next};
-      const actor = this.item?.parent instanceof Actor ? this.item.parent : null;
-      if (actor && this.item.system?.equipped) {
-        await twbvUnequipWeaponOccupants(actor, this.item, next);
-      }
-      await this.item.update(update);
-    });
-    html.find('input[name="system.equipped"]').on("change", async (event)=>{
-      const checked=Boolean(event.currentTarget?.checked);
-      const actor = this.item?.parent instanceof Actor ? this.item.parent : null;
-      const update={"system.equipped": checked, "system.equipStatus": checked ? 1 : 0};
-      if (checked) {
-        const hand = await twbvChooseWeaponHand(this.item);
-        if (!hand) {
-          event.currentTarget.checked = false;
-          html.find('input[name="system.equipStatus"]').val("0");
-          return;
-        }
-        update["system.handMode"] = hand;
-        update["system.equippedHand"] = hand;
-        html.find(".twbv-weapon-hand-check").prop("checked", false);
-        html.find(`.twbv-weapon-hand-check[value="${hand}"]`).prop("checked", true);
-        html.find('input[name="system.handMode"]').val(hand);
-        await twbvUnequipWeaponOccupants(actor, this.item, hand);
-      }
-      html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0");
-      await this.item.update(update);
-    });
-    html.find(".twbv-weapon-mod-drop-zone").on("dragover", (event)=>event.preventDefault());
-    html.find(".twbv-weapon-mod-drop-zone").on("drop", this._onWeaponModificationDrop.bind(this));
-    html.find(".twbv-weapon-reload-magazine").on("click", this._onReloadWeaponSheet.bind(this));
-    html.find(".twbv-weapon-pick-ammo").on("click", this._onReloadWeaponSheet.bind(this));
-    html.find(".twbv-weapon-skill-picker-button").on("click", this._openWeaponSkillPicker.bind(this));
-  }
-
-  _openWeaponSkillPicker(event) {
-    event.preventDefault();
-    const actor = this.item?.parent instanceof Actor ? this.item.parent : null;
-    const skills = Array.from(actor?.system?.pericias ?? [])
-      .map((skill) => ({
-        name: String(skill?.nome ?? "").trim(),
-        die: SKILL_DICE.includes(Number(skill?.dado)) ? Number(skill.dado) : 4,
-        bonus: Number.isFinite(Number(skill?.bonus)) ? Number(skill.bonus) : 0,
-        attr: String(skill?.atributo ?? "destreza").toLowerCase()
-      }))
-      .filter((skill) => skill.name);
-
-    if (!actor || !skills.length) {
-      ui.notifications?.warn("Coloque a arma em uma ficha com perícias cadastradas para escolher a perícia padrão.");
-      return;
-    }
-
-    const current = String(this.item.system?.skill ?? "").trim();
-    const content = `<div class="twbv-weapon-skill-picker">${skills.map((skill, index) => {
-      const attr = SKILL_ATTRIBUTES.find((entry) => entry.key === skill.attr);
-      const attrLabel = attr?.label ?? skill.attr;
-      const selected = skill.name === current ? " is-selected" : "";
-      return `<button type="button" class="twbv-weapon-skill-choice${selected}" data-skill-index="${index}"><strong>${skill.name}</strong><span>${attrLabel} • ${buildDieLabel(skill.die, skill.bonus)}</span></button>`;
-    }).join("")}</div>`;
-
-    const dialog = new Dialog({
-      title: `Perícia padrão - ${this.item.name}`,
-      content,
-      buttons: { close: { label: "Fechar" } },
-      render: (html) => {
-        const root = resolveDialogRoot(html);
-        applyDialogWindowClass(root ?? html, "wbtv-weapon-skill-dialog");
-        root?.querySelectorAll?.(".twbv-weapon-skill-choice").forEach((button) => {
-          button.addEventListener("click", async () => {
-            const skill = skills[Number(button.dataset.skillIndex ?? -1)];
-            const skillName = String(skill?.name ?? "").trim();
-            if (!skillName) return;
-            await this.item.update({ "system.skill": skillName, "system.actions.trait": skillName });
-            dialog.close();
-            this.render(true);
-          });
-        });
-      }
-    });
-    dialog.render(true);
-  }
-
-  async _onWeaponModificationDrop(event) {
-    event.preventDefault();
-    const data = twbvReadDropData(event);
-    if (data?.type !== "Item") return;
-    const dropped = await Item.implementation.fromDropData(data);
-
-    if (dropped && String(dropped.type ?? "") === "municao") {
-      if (twbvIsAmmoBox(dropped)) {
-        return ui.notifications?.warn("Caixas carregam pentes/carregadores. Para a arma, use um pente, carregador, clip, cartucho, projétil, cilindro ou célula.");
-      }
-      const currentShots = Math.max(0, twbvNumberOrZero(dropped.system?.currentShots));
-      if (currentShots <= 0) return ui.notifications?.warn(`${dropped.name} está vazio. Carregue-o usando uma caixa de munição.`);
-      const capacity = Math.max(0, twbvNumberOrZero(dropped.system?.shots || currentShots));
-      await this.item.update({
-        "system.ammo": dropped.name,
-        "system.ammoSourceUuid": dropped.uuid,
-        "system.ammoSourceName": dropped.name,
-        "system.reloadType": dropped.system?.reloadType ?? "magazine",
-        "system.shots": capacity,
-        "system.currentShots": Math.min(currentShots, capacity || currentShots)
-      });
-      if (dropped.isEmbedded) await dropped.update({ "system.currentShots": 0 });
-      ui.notifications?.info(`${this.item.name} carregada com ${dropped.name}.`);
-      return;
-    }
-
-    if (!dropped || String(dropped.type ?? "") !== "modificacao") {
-      return ui.notifications?.warn("Arraste uma Modificação ou uma Munição/Carregador para a arma.");
-    }
-
-    const mode = String(event.currentTarget?.dataset?.dropMode ?? "").trim();
-    const isAmmo = mode === "ammo" || twbvIsAmmoModification(dropped);
-    if (isAmmo) {
-      await this.item.update(twbvBuildWeaponAmmoUpdateFromModification(dropped, this.item));
-      ui.notifications?.info(`${dropped.name} carregada como munição de ${this.item.name}.`);
-      return;
-    }
-
-    const key = foundry.utils.randomID(8);
-    await this.item.update({[`system.actions.additional.${key}`]: twbvBuildWeaponModFromModification(dropped)});
-    ui.notifications?.info(`${dropped.name} adicionada às modificações de ${this.item.name}.`);
-  }
-
-  async _onReloadWeaponSheet(event) {
-    event.preventDefault();
-    const actor = this.item?.parent instanceof Actor ? this.item.parent : null;
-    if (!actor) return ui.notifications?.warn("Coloque a arma em uma ficha para escolher munições do inventário.");
-    await twbvOpenWeaponAmmoPicker(actor, this.item);
-  }
-}
+class TWBVWeaponSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','weapon-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/weapon-sheet.hbs`; } activateListeners(html){ super.activateListeners(html); html.find('.mod-create').on('click', async (e)=>{e.preventDefault(); const key=foundry.utils.randomID(8); await this.item.update({[`system.actions.additional.${key}`]:{name:'Nova Modificação',type:'trait',dice:null,resourcesUsed:null,modifier:'',override:'',ap:null,uuid:null,macroActor:'default',isHeavyWeapon:false}});}); html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});}); html.find(".twbv-weapon-slot-option").on("click", async (event)=>{event.preventDefault(); const option=event.currentTarget; const input=option?.querySelector?.(".twbv-weapon-slot-check"); const next=String(input?.value??"").trim(); if(!next) return; html.find(".twbv-weapon-slot-check").prop("checked", false); if(input) input.checked=true; html.find('input[name="system.equipSlot"]').val(next); await this.item.update({"system.equipSlot": next, "system.category": this.item.system?.category || next});}); html.find('input[name="system.equipped"]').on("change", async (event)=>{const checked=Boolean(event.currentTarget?.checked); html.find('input[name="system.equipStatus"]').val(checked ? "1" : "0"); await this.item.update({"system.equipped": checked, "system.equipStatus": checked ? 1 : 0});}); }}
 class TWBVConsumableSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','consumable-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/consumable-sheet.hbs`; }}
-class TWBVAmmoSheet extends TWBVItemSheetBase {
-  static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','ammo-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); }
-  get template(){ return `systems/${game.system.id}/templates/item/ammo-sheet.hbs`; }
-  getData(options = {}) {
-    const context = super.getData(options);
-    context.reloadTypeLabel = TWBV_AMMO_RELOAD_LABELS[String(context.system?.reloadType ?? "box")] ?? "Caixa";
-    return context;
-  }
-  async _updateObject(event, formData) {
-    formData["system.category"] = "municao";
-    formData["system.ammoType"] = formData["system.reloadType"] ?? "box";
-    await super._updateObject(event, formData);
-  }
-}
 class TWBVArmorSheet extends TWBVItemSheetBase {
   static get defaultOptions(){
     return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','armor-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'description'}]});
@@ -4440,22 +2729,14 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
   get template(){ return `systems/${game.system.id}/templates/item/armor-sheet.hbs`; }
   activateListeners(html){
     super.activateListeners(html);
-    html.find(".twbv-armor-slot-option").on("click", async (event) => {
-      event.preventDefault();
-      const input = event.currentTarget?.querySelector?.(".twbv-armor-slot-check");
+    html.find(".twbv-armor-slot-check").on("change", async (event) => {
+      const input = event.currentTarget;
       const next = String(input?.value ?? "").trim();
       if (!next) return;
-      const currentSlot = String(this.item.system?.equipSlot ?? "").trim();
-      const currentCategory = String(this.item.system?.category ?? "").trim();
-      const autoCategory = `armadura:${next}`;
-      const shouldClear = currentSlot === next;
       html.find(".twbv-armor-slot-check").prop("checked", false);
-      if (!shouldClear && input) input.checked = true;
-      html.find('input[name="system.equipSlot"]').val(shouldClear ? "" : next);
-      const update = {"system.equipSlot": shouldClear ? "" : next};
-      if (shouldClear && currentCategory === autoCategory) update["system.category"] = "";
-      if (!shouldClear && !currentCategory) update["system.category"] = autoCategory;
-      await this.item.update(update);
+      input.checked = true;
+      html.find('input[name="system.equipSlot"]').val(next);
+      await this.item.update({"system.equipSlot": next, "system.category": this.item.system?.category || `armadura:${next}`});
     });
     html.find('input[name="system.equipped"]').on("change", async (event) => {
       const checked = Boolean(event.currentTarget?.checked);
@@ -4466,7 +2747,7 @@ class TWBVArmorSheet extends TWBVItemSheetBase {
     html.find('.mod-delete').on('click', async (e)=>{e.preventDefault(); const key=e.currentTarget.closest('.mod-row')?.dataset.modKey; if(key) await this.item.update({[`system.actions.additional.-=${key}`]:null});});
   }
 }
-class TWBVBasicItemSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet'],tabs:[{navSelector:'.sheet-tabs',contentSelector:'.sheet-body',initial:'general'}]}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
+class TWBVBasicItemSheet extends TWBVItemSheetBase { static get defaultOptions(){ return foundry.utils.mergeObject(super.defaultOptions,{classes:['twbv','sheet','item','twbv-basic-item-sheet']}); } get template(){ return `systems/${game.system.id}/templates/item/basic-item-sheet.hbs`; }}
 
 
 function twbvEnhanceDiceTray(root) {
@@ -4537,7 +2818,6 @@ function twbvInjectCustomDiceTray(root) {
       .map(([die, qty]) => `${qty}d${die}${state.veu ? "x" : ""}`)
       .join(" + ");
     const despertoFormula = state.desperto ? `1d${state.despertoDie}${state.veu ? "x" : ""}` : "—";
-    const trayBreakdown = twbvDiceTermBreakdownHtml(roll);
     const content = `
       <section class="twbv-roll-chat">
         <header class="twbv-roll-chat__header">
@@ -4547,18 +2827,10 @@ function twbvInjectCustomDiceTray(root) {
           <div class="twbv-roll-card">
             <div class="twbv-roll-card__label">Dados Comuns</div>
             <div class="twbv-roll-card__die">${commonFormula || "—"}</div>
-            <div class="twbv-roll-card__value twbv-roll-card__value--breakdown"><div class="twbv-roll-breakdown">${trayBreakdown}</div></div>
           </div>
           <div class="twbv-roll-card">
-            <div class="twbv-roll-card__label">Variantes</div>
+            <div class="twbv-roll-card__label">Desperto</div>
             <div class="twbv-roll-card__die">${despertoFormula}</div>
-            <div class="twbv-roll-card__value twbv-roll-card__value--breakdown">
-              <div class="twbv-roll-breakdown">
-                <div class="twbv-roll-breakdown__row"><span>Desperto</span><strong>${despertoFormula}</strong></div>
-                <div class="twbv-roll-breakdown__row"><span>Bônus</span><strong>${state.mod >= 0 ? "+" : ""}${state.mod}</strong></div>
-                <div class="twbv-roll-breakdown__row is-total"><span>Total</span><strong>${total}</strong></div>
-              </div>
-            </div>
           </div>
         </div>
         <footer class="twbv-roll-chat__total">Resultado: <strong title="Dados comuns: ${commonFormula || "—"} | Desperto: ${despertoFormula} | Modificador: ${state.mod >= 0 ? "+" : ""}${state.mod}">${total}</strong></footer>
@@ -4678,12 +2950,7 @@ Hooks.on('renderSidebarTab', (app, html) => {
   twbvInjectCustomDiceTray(html?.[0] ?? html);
 });
 Hooks.on("ready", () => {
-  console.log("[TWBV] Tipos de Actor carregados.", Array.from(game?.system?.documentTypes?.Actor ?? []));
   console.log("[TWBV] Tipos de Item carregados.", Array.from(game?.system?.documentTypes?.Item ?? []));
-  twbvApplyActorTypeConfig();
-  twbvPatchActorCreationDefaults();
-  twbvRegisterActorSheets();
-  void twbvNormalizeWorldItemFolders();
   twbvInstallItemDirectoryCreateInterceptor();
   twbvInstallGlobalItemFieldPersistence();
   twbvApplyItemTypeOrderConfig();

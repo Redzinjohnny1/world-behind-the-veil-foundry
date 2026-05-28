@@ -1,1 +1,65 @@
-<form class="{{cssClass}} item-sheet consumable-sheet" autocomplete="off"><header class="sheet-header"><img src="{{item.img}}" data-edit="img" title="{{item.name}}" /><div class="header-fields"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do consumível" /><input name="system.category" type="text" value="{{system.category}}" placeholder="Categoria" /></div></header><nav class="sheet-tabs tabs" data-group="primary"><a class="item" data-tab="general">Geral</a><a class="item" data-tab="charges">Cargas</a><a class="item" data-tab="description">Descrição</a></nav><section class="sheet-body"><div class="tab" data-group="primary" data-tab="general"><div class="form-group"><label>Quantidade</label><input type="number" name="system.quantity" value="{{system.quantity}}" /></div><div class="form-group"><label>Peso</label><input type="number" step="0.1" name="system.weight" value="{{system.weight}}" /></div><div class="form-group"><label>Preço</label><input type="number" name="system.price" value="{{system.price}}" /></div><div class="form-group"><label>Subtipo</label><input type="text" name="system.subtype" value="{{system.subtype}}" /></div></div><div class="tab" data-group="primary" data-tab="charges"><div class="form-group"><label>Possui Cargas</label><input type="checkbox" name="system.charges.hasCharges" {{checked system.charges.hasCharges}} /></div><div class="form-group"><label>Valor Atual</label><input type="number" name="system.charges.charges.main.value" value="{{system.charges.charges.main.value}}" /></div><div class="form-group"><label>Valor Máximo</label><input type="number" name="system.charges.charges.main.max" value="{{system.charges.charges.main.max}}" /></div></div><div class="tab" data-group="primary" data-tab="description"><div class="form-group stacked"><label>Descrição</label>{{editor system.description target="system.description" button=true owner=owner editable=editable}}</div></div></section></form>
+<form class="{{cssClass}} item-sheet consumable-sheet twbv-item-sheet twbv-themed-item-sheet twbv-elegant-item-sheet twbv-consumable-sheet" autocomplete="off">
+  <header class="twbv-consumable-hero twbv-item-hero">
+    <div class="twbv-consumable-icon-wrap twbv-item-icon-wrap">
+      <img class="profile-img twbv-consumable-img twbv-item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    </div>
+    <div class="twbv-consumable-title-block twbv-item-title-block">
+      <span class="twbv-consumable-kicker twbv-item-kicker">Consumível</span>
+      <h1 class="charname">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Nome do consumível" />
+      </h1>
+      <div class="twbv-consumable-meta-grid twbv-item-meta-grid">
+        <label>Categoria<input name="system.category" type="text" value="{{system.category}}" placeholder="Categoria" /></label>
+        <label>Subtipo<input type="text" name="system.subtype" value="{{system.subtype}}" placeholder="regular, carregador, poção..." /></label>
+      </div>
+    </div>
+  </header>
+
+  <section class="twbv-consumable-summary twbv-item-summary">
+    <article><span>Quantidade</span><strong>{{system.quantity}}</strong></article>
+    <article><span>Peso</span><strong>{{system.weight}}</strong></article>
+    <article><span>Custo</span><strong>{{system.cost}}</strong></article>
+    <article><span>Cargas</span><strong>{{system.charges.charges.main.value}} / {{system.charges.charges.main.max}}</strong></article>
+  </section>
+
+  <nav class="sheet-tabs tabs twbv-consumable-tabs twbv-item-tabs" data-group="primary">
+    <a class="item" data-tab="general">Geral</a>
+    <a class="item" data-tab="charges">Cargas</a>
+    <a class="item" data-tab="description">Descrição</a>
+  </nav>
+
+  <section class="sheet-body twbv-consumable-body twbv-item-body">
+    <div class="tab" data-group="primary" data-tab="general">
+      <section class="twbv-consumable-panel twbv-item-panel">
+        <h2>Controle</h2>
+        <div class="twbv-consumable-grid twbv-item-grid">
+          <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
+          <label>Peso<input type="number" step="0.1" name="system.weight" value="{{system.weight}}" min="0" /></label>
+          <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
+          <label>Tags<input type="text" name="system.tags" value="{{system.tags}}" placeholder="cura, alquimia, munição..." /></label>
+        </div>
+      </section>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="charges">
+      <section class="twbv-consumable-panel twbv-item-panel">
+        <h2>Cargas e Uso</h2>
+        <div class="twbv-consumable-grid twbv-item-grid">
+          <label class="twbv-consumable-check twbv-item-check"><input type="checkbox" name="system.charges.hasCharges" {{checked system.charges.hasCharges}} /> Possui cargas</label>
+          <label>Carga atual<input type="number" name="system.charges.charges.main.value" value="{{system.charges.charges.main.value}}" min="0" step="1" /></label>
+          <label>Carga máxima<input type="number" name="system.charges.charges.main.max" value="{{system.charges.charges.main.max}}" min="0" step="1" /></label>
+          <label class="twbv-consumable-check twbv-item-check"><input type="checkbox" name="system.destroyOnEmpty" {{checked system.destroyOnEmpty}} /> Destruir ao esvaziar</label>
+          <label class="twbv-consumable-check twbv-item-check"><input type="checkbox" name="system.messageOnUse" {{checked system.messageOnUse}} /> Enviar mensagem ao usar</label>
+        </div>
+      </section>
+    </div>
+
+    <div class="tab" data-group="primary" data-tab="description">
+      <section class="twbv-consumable-panel twbv-item-panel">
+        <h2>Descrição</h2>
+        <label class="twbv-consumable-description twbv-item-description">{{editor system.description target="system.description" button=true owner=owner editable=editable}}</label>
+        <label class="twbv-consumable-notes twbv-item-notes">Notas<textarea name="system.notes" rows="6">{{system.notes}}</textarea></label>
+      </section>
+    </div>
+  </section>
+</form>

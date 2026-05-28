@@ -1,10 +1,10 @@
 {
   "Actor": {
     "types": [
+      "personagem",
       "despertos",
       "semi-despertos",
-      "sombras",
-      "personagem"
+      "sombras"
     ],
     "templates": {
       "base": {
@@ -102,7 +102,6 @@
       "habilidadeEspecial",
       "complicacao",
       "modificacao",
-      "municao",
       "weapon"
     ],
     "templates": {
@@ -168,7 +167,6 @@
       "equipStatus": 1,
       "favorite": false,
       "category": "",
-      "skill": "",
       "rangeType": 1,
       "rof": 1,
       "ap": 0,
@@ -177,8 +175,6 @@
       "shots": 0,
       "currentShots": 0,
       "ammo": "",
-      "ammoSourceUuid": "",
-      "ammoSourceName": "",
       "reloadType": "magazine",
       "isHeavyWeapon": false,
       "mods": 0,
@@ -233,7 +229,6 @@
       "equipStatus": 1,
       "favorite": false,
       "category": "",
-      "skill": "",
       "damage": "",
       "range": "",
       "rangeType": 1,
@@ -244,8 +239,6 @@
       "shots": 0,
       "currentShots": 0,
       "ammo": "",
-      "ammoSourceUuid": "",
-      "ammoSourceName": "",
       "reloadType": "magazine",
       "isHeavyWeapon": false,
       "mods": 0,
@@ -302,28 +295,13 @@
         "inventory"
       ],
       "category": "modificacao",
-      "modType": "mod",
       "modifier": "",
       "ap": 0,
       "damage": "",
       "range": "",
       "rof": 0,
       "shots": 0,
-      "currentShots": 0,
-      "reloadType": "magazine"
-    },
-    "municao": {
-      "templates": [
-        "base",
-        "inventory"
-      ],
-      "category": "municao",
-      "ammoType": "box",
-      "reloadType": "box",
-      "shots": 0,
-      "currentShots": 0,
-      "caliber": "",
-      "compatibleWeapon": ""
+      "currentShots": 0
     }
   }
 }

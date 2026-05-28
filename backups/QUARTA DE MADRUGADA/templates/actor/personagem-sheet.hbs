@@ -1,4 +1,4 @@
-<form class="twbv-sheet {{cssClass}} twbv-actor-kind-{{actorKind}}" autocomplete="off">
+<form class="twbv-sheet {{cssClass}}" autocomplete="off">
   <header class="twbv-top-frame twbv-ornate">
     <h1 class="twbv-title">
       <input name="name" type="text" value="{{actor.name}}" placeholder="Nome do Personagem" />
@@ -57,20 +57,6 @@
         </section>
       </section>
     </div>
-
-    <aside class="twbv-floating-favorites" title="Clique duas vezes para recolher/abrir favoritos">
-      <header><i class="fas fa-star"></i><span>Favoritos</span></header>
-      <div class="twbv-floating-favorites-list">
-        {{#each equipment.favorite as |item|}}
-          <article class="twbv-floating-favorite item item-type-{{item.type}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" draggable="true">
-            <img src="{{item.img}}" alt="{{item.name}}" />
-            <div><strong>{{item.name}}</strong><span>{{item.typeLabel}}</span></div>
-          </article>
-        {{else}}
-          <p>Nenhum favorito.</p>
-        {{/each}}
-      </div>
-    </aside>
   </header>
 
   <nav class="sheet-tabs tabs twbv-tabs" data-group="primary">
@@ -144,12 +130,12 @@
               <article class="twbv-condition-meter twbv-condition-meter--wounds ferimentos-nivel-{{system.ferimentos}}">
                 <h3>Ferimentos</h3>
                 <div class="twbv-condition-controls">
-                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="{{woundMax}}" data-adjust="-1" aria-label="Reduzir ferimentos">−</button>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="5" data-adjust="-1" aria-label="Reduzir ferimentos">−</button>
                   <div class="twbv-condition-core">
-                    <input type="number" name="system.ferimentos" value="{{system.ferimentos}}" min="0" max="{{woundMax}}" />
-                    <span>/{{woundMax}}</span>
+                    <input type="number" name="system.ferimentos" value="{{system.ferimentos}}" min="0" max="5" />
+                    <span>/5</span>
                   </div>
-                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="{{woundMax}}" data-adjust="1" aria-label="Aumentar ferimentos">+</button>
+                  <button type="button" class="twbv-condition-adjust" data-path="system.ferimentos" data-min="0" data-max="5" data-adjust="1" aria-label="Aumentar ferimentos">+</button>
                 </div>
               </article>
 
@@ -230,7 +216,7 @@
           <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Vantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="vantagem" data-label="Vantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar vantagem</button></div></div>
           <div class="twbv-item-card-list">
             {{#each vantagens as |item|}}
-              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
+              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-gem"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
@@ -247,7 +233,7 @@
           <div class="twbv-item-tab-header twbv-item-tab-header--habilidades"><h2>Habilidades especiais</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--habilidades" data-type="habilidadeEspecial" data-label="Habilidade Especial" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar habilidade</button></div></div>
           <div class="twbv-item-card-list">
             {{#each habilidadesEspeciais as |item|}}
-              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
+              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-scroll"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
@@ -267,7 +253,7 @@
           <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Desvantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="desvantagem" data-label="Desvantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar desvantagem</button></div></div>
           <div class="twbv-item-card-list">
             {{#each desvantagens as |item|}}
-              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
+              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-skull"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
@@ -280,23 +266,6 @@
             {{else}}<p class="twbv-adv-empty">Nenhuma desvantagem cadastrada.</p>{{/each}}
           </div>
         </div>
-        <div class="twbv-item-section">
-          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Complicações</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="complicacao" data-label="Complicação" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar complicação</button></div></div>
-          <div class="twbv-item-card-list">
-            {{#each complicacoes as |item|}}
-              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
-                <div class="twbv-item-card-layout">
-                  <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-exclamation-triangle"></i>{{/if}}</div>
-                  <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="item" data-type="complicacao" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="item"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="twbv-item-card-meta">Fonte: {{#if item.fonte}}{{item.fonte}}{{else}}-{{/if}}</div>
-                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
-                  </div>
-                </div>
-              </article>
-            {{else}}<p class="twbv-adv-empty">Nenhuma complicação cadastrada.</p>{{/each}}
-          </div>
-        </div>
       </div>
     </div>
     <div class="tab" data-group="primary" data-tab="equipamento">
@@ -304,61 +273,45 @@
         <section class="equipment-tab-wrap">
           <header class="equipment-header">
             <h2>Equipamentos</h2>
+            <div class="twbv-item-tab-adders">
+              <a class="item-create" data-type="arma"><i class="fas fa-plus"></i> Arma</a>
+              <a class="item-create" data-type="consumable"><i class="fas fa-plus"></i> Consumível</a>
+            </div>
           </header>
 
-          <div class="twbv-equipment-view-switch">
-            <label><input type="radio" name="twbv-equipment-view" /><span><i class="fas fa-list"></i> Inventário</span></label>
-            <label><input type="radio" name="twbv-equipment-view" checked /><span><i class="fas fa-street-view"></i> Corpo</span></label>
-          </div>
-
-          <section class="equipment-section twbv-equipment-body-panel">
-            <header class="twbv-body-map-header">
-              <h3>Slots Corporais</h3>
-              <div class="twbv-body-map-actions">
-                <p>Equipe ou arraste itens para o ponto correspondente.</p>
-                <button type="button" class="twbv-body-line-create"><i class="fas fa-plus"></i> Linha</button>
-                <button type="button" class="twbv-body-line-reset"><i class="fas fa-undo"></i> Limpar linhas</button>
-              </div>
-            </header>
-            <div class="twbv-body-map">
-              <div class="twbv-body-aura"></div>
-              <img class="twbv-body-map-img" src="systems/world-behind-the-veil/assets/background/humanBodyRoxo.gif" alt="Mapa corporal" />
-              {{#each bodyLines as |line|}}
-                <div class="twbv-body-custom-line" data-line-id="{{line.id}}" style="{{line.style}}">
-                  <button type="button" class="twbv-body-line-delete" title="Remover linha"><i class="fas fa-times"></i></button>
-                  <span class="twbv-body-line-end" title="Redimensionar e girar"></span>
-                </div>
+          <section class="equipment-section favorites">
+            <h3>Favoritos</h3>
+            <div class="equipment-grid">
+              {{#each equipment.favorite as |item|}}
+                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
               {{/each}}
-              {{#each bodySlots as |slot|}}
-                <article class="twbv-body-slot twbv-body-slot--{{slot.key}}" data-slot-key="{{slot.key}}" style="{{slot.positionStyle}}">
-                  <span class="twbv-body-slot-line"></span>
-                  <div class="twbv-body-slot-card">
-                    <button type="button" class="twbv-body-slot-handle" title="Mover slot"><i class="fas fa-arrows-alt"></i></button>
-                    <div class="twbv-body-slot-img">
-                      {{#if slot.item}}
-                        <img src="{{slot.item.img}}" alt="{{slot.item.name}}" />
-                      {{else}}
-                        <i class="fas fa-plus"></i>
-                      {{/if}}
-                    </div>
-                    <div class="twbv-body-slot-text">
-                      <strong>{{slot.label}}</strong>
-                      {{#if slot.item}}
-                        <span>{{slot.item.name}}</span>
-                        <button type="button" class="twbv-body-slot-unequip" data-item-id="{{slot.item.id}}"><i class="fas fa-link-slash"></i> Desequipar</button>
-                      {{else}}
-                        <span>Vazio</span>
-                      {{/if}}
+            </div>
+          </section>
+
+          <section class="equipment-section slots">
+            <h3>Slots de Equipamento</h3>
+            <div class="equipment-grid">
+              {{#each equipmentSlots as |slot|}}
+                <article class="equipment-card twbv-equip-slot" data-slot-key="{{slot.key}}">
+                  <div class="equipment-card-header">
+                    <div class="equipment-title-block">
+                      <div class="equipment-name">{{slot.label}}</div>
+                      <div class="equipment-category">Arraste aqui</div>
                     </div>
                   </div>
+                  {{#if slot.item}}
+                    <div class="equipment-name">{{slot.item.name}}</div>
+                    <div class="equipment-category">{{slot.item.typeLabel}}</div>
+                  {{else}}
+                    <div class="equipment-category">Vazio</div>
+                  {{/if}}
                 </article>
               {{/each}}
             </div>
           </section>
 
-          <div class="twbv-equipment-subpanel twbv-equipment-inventory-panel">
           <section class="equipment-section weapons">
-            <div class="equipment-section-title"><h3>Armas</h3><a class="item-create" data-type="arma"><i class="fas fa-plus"></i> Mais arma</a></div>
+            <h3>Armas</h3>
             <div class="equipment-grid">
               {{#each equipment.weapons as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -366,17 +319,8 @@
             </div>
           </section>
 
-          <section class="equipment-section armors">
-            <div class="equipment-section-title"><h3>Armaduras</h3><a class="item-create" data-type="armadura"><i class="fas fa-plus"></i> Mais armadura</a></div>
-            <div class="equipment-grid">
-              {{#each equipment.armors as |item|}}
-                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
-              {{/each}}
-            </div>
-          </section>
-
           <section class="equipment-section magazines">
-            <div class="equipment-section-title"><h3>Carregadores</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Mais carregador</a></div>
+            <h3>Carregadores</h3>
             <div class="equipment-grid">
               {{#each equipment.magazines as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -384,17 +328,8 @@
             </div>
           </section>
 
-          <section class="equipment-section ammunitions">
-            <div class="equipment-section-title"><h3>Munições</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Mais munição</a></div>
-            <div class="equipment-grid">
-              {{#each equipment.ammunitions as |item|}}
-                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
-              {{/each}}
-            </div>
-          </section>
-
           <section class="equipment-section consumables">
-            <div class="equipment-section-title"><h3>Consumíveis</h3><a class="item-create" data-type="consumable"><i class="fas fa-plus"></i> Mais consumível</a></div>
+            <h3>Consumíveis</h3>
             <div class="equipment-grid">
               {{#each equipment.consumables as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -403,14 +338,13 @@
           </section>
 
           <section class="equipment-section others">
-            <div class="equipment-section-title"><h3>Outros</h3><a class="item-create" data-type="modificacao"><i class="fas fa-plus"></i> Mais modificação</a></div>
+            <h3>Outros</h3>
             <div class="equipment-grid">
               {{#each equipment.others as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
               {{/each}}
             </div>
           </section>
-          </div>
         </section>
       </div>
     </div>

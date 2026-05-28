@@ -1,0 +1,59 @@
+<form class="{{cssClass}} twbv-item-sheet twbv-themed-item-sheet twbv-elegant-item-sheet twbv-ammo-sheet" autocomplete="off">
+  <header class="twbv-item-hero">
+    <div class="twbv-item-icon-wrap">
+      <img class="profile-img twbv-item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    </div>
+    <div class="twbv-item-title-block">
+      <span class="twbv-item-kicker">Munição</span>
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome da munição" /></h1>
+      <div class="twbv-item-meta-grid">
+        <label>Calibre<input type="text" name="system.caliber" value="{{system.caliber}}" placeholder="Ex.: 9mm, USP, calibre 12" /></label>
+        <label>Compatível com<input type="text" name="system.compatibleWeapon" value="{{system.compatibleWeapon}}" placeholder="Ex.: Pistolas" /></label>
+      </div>
+    </div>
+  </header>
+
+  <section class="twbv-item-summary">
+    <article><span>Tipo</span><strong>{{reloadTypeLabel}}</strong></article>
+    <article><span>Munição</span><strong>{{system.currentShots}} / {{system.shots}}</strong></article>
+    <article><span>Peso</span><strong>{{system.weight}}</strong></article>
+    <article><span>Custo</span><strong>{{system.cost}}</strong></article>
+  </section>
+
+  <nav class="sheet-tabs tabs twbv-item-tabs" data-group="primary">
+    <a class="item" data-tab="general">Geral</a>
+    <a class="item" data-tab="description">Descrição</a>
+  </nav>
+
+  <section class="sheet-body twbv-item-body">
+    <div class="tab twbv-item-panel" data-group="primary" data-tab="general">
+      <h2>Controle de Munição</h2>
+      <div class="twbv-item-grid">
+        <label>Tipo
+          <select name="system.reloadType">
+            <option value="box" {{#ifEquals system.reloadType "box"}}selected{{/ifEquals}}>Caixa</option>
+            <option value="magazine" {{#ifEquals system.reloadType "magazine"}}selected{{/ifEquals}}>Pente</option>
+            <option value="loader" {{#ifEquals system.reloadType "loader"}}selected{{/ifEquals}}>Carregador</option>
+            <option value="clip" {{#ifEquals system.reloadType "clip"}}selected{{/ifEquals}}>Clip</option>
+            <option value="shell" {{#ifEquals system.reloadType "shell"}}selected{{/ifEquals}}>Cartucho</option>
+            <option value="round" {{#ifEquals system.reloadType "round"}}selected{{/ifEquals}}>Projétil</option>
+            <option value="cylinder" {{#ifEquals system.reloadType "cylinder"}}selected{{/ifEquals}}>Cilindro</option>
+            <option value="cell" {{#ifEquals system.reloadType "cell"}}selected{{/ifEquals}}>Célula</option>
+          </select>
+        </label>
+        <label>Capacidade<input type="number" name="system.shots" value="{{system.shots}}" min="0" step="1" /></label>
+        <label>Munição atual<input type="number" name="system.currentShots" value="{{system.currentShots}}" min="0" step="1" /></label>
+        <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
+        <label>Peso<input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" /></label>
+        <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
+      </div>
+      <input type="hidden" name="system.category" value="municao" />
+      <input type="hidden" name="system.ammoType" value="{{system.reloadType}}" />
+    </div>
+
+    <div class="tab twbv-item-panel" data-group="primary" data-tab="description">
+      <h2>Descrição</h2>
+      <label class="twbv-item-description">{{editor system.description target="system.description" button=true owner=owner editable=editable}}</label>
+    </div>
+  </section>
+</form>

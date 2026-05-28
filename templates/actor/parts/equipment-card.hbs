@@ -1,9 +1,9 @@
-<div class="equipment-card item" data-item-id="{{item._id}}">
+<div class="equipment-card twbv-equipment-card item item-type-{{item.type}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" draggable="true">
   <div class="equipment-card-header">
     <img class="equipment-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     <div class="equipment-title-block">
       <div class="equipment-name">{{item.name}}</div>
-      <div class="equipment-category">{{item.system.category}}</div>
+      <div class="equipment-category">{{#if item.system.categoryLabel}}{{item.system.categoryLabel}}{{else}}{{item.typeLabel}}{{/if}}</div>
     </div>
     <div class="equipment-actions-top">
       <a class="item-toggle-equip" title="{{#if item.isEquipped}}Desequipar{{else}}Equipar{{/if}}"><i class="fas {{#if item.isEquipped}}fa-link-slash{{else}}fa-link{{/if}}"></i></a>
@@ -12,20 +12,62 @@
       <a class="item-delete" title="Excluir"><i class="fas fa-trash"></i></a>
     </div>
   </div>
+
   {{#if item.equipSlot}}<div class="equipment-slot-label">Slot: {{item.equipSlot}}</div>{{/if}}
-  {{#ifEquals item.type "weapon"}}
-  <div class="weapon-stats"><span>Dano: {{item.system.damage}}</span><span>AP: {{item.system.ap}}</span><span>Alcance: {{item.system.range}}</span><span>CdT: {{item.system.rof}}</span></div>
+
+  {{#isWeaponType item.type}}
+  <div class="equipment-slot-label twbv-weapon-hand-state">
+    Empunhadura: {{item.equippedHandLabel}}{{#if item.isEquipped}} · Equipado{{else}} · Guardado{{/if}}
+  </div>
+  <div class="weapon-stats">
+    <span>Dano: {{item.system.damage}}</span>
+    <span>AP: {{item.system.ap}}</span>
+    <span>Alcance: {{item.system.range}}</span>
+    <span>CdT: {{item.system.rof}}</span>
+  </div>
+  {{#if item.system.skill}}<div class="equipment-slot-label">Perícia: {{item.system.skill}}</div>{{/if}}
   <div class="ammo-row"><span>Munição</span><span>{{item.system.currentShots}} / {{item.system.shots}}</span></div>
   <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.ammoPercent}}%;"></div></div>
-  <div class="weapon-buttons"><a class="weapon-roll"><i class="fas fa-dice-d20"></i> Atirar</a><a class="weapon-damage"><i class="fas fa-burst"></i> Dano</a><a class="weapon-reload"><i class="fas fa-rotate"></i> Reload</a></div>
+  {{#if item.system.ammo}}<div class="equipment-slot-label">Munição: {{item.system.ammo}}</div>{{/if}}
+  <div class="weapon-buttons">
+    <a class="item-toggle-equip twbv-equip-command"><i class="fas {{#if item.isEquipped}}fa-link-slash{{else}}fa-link{{/if}}"></i> {{#if item.isEquipped}}Desequipar{{else}}Equipar{{/if}}</a>
+    <a class="weapon-roll"><i class="fas fa-dice-d20"></i> Atirar</a>
+    <a class="weapon-damage"><i class="fas fa-burst"></i> Dano</a>
+    <a class="weapon-reload"><i class="fas fa-rotate"></i> Recarregar</a>
+  </div>
   <div class="weapon-mods">{{#each item.system.actions.additional as |mod key|}}<a class="weapon-mod" data-mod-key="{{key}}">{{mod.name}}</a>{{/each}}</div>
+  {{/isWeaponType}}
+
+  {{#ifEquals item.type "armadura"}}
+  <div class="weapon-stats">
+    <span>Proteção: {{item.system.protection}}</span>
+    <span>Penalidade: {{item.system.penalty}}</span>
+    <span>Peso: {{item.system.weight}}</span>
+  </div>
+  <div class="consumable-buttons"><a class="item-toggle-equip twbv-equip-command"><i class="fas {{#if item.isEquipped}}fa-link-slash{{else}}fa-link{{/if}}"></i> {{#if item.isEquipped}}Desequipar{{else}}Equipar{{/if}}</a></div>
   {{/ifEquals}}
+
   {{#ifEquals item.type "consumable"}}
-  <div class="consumable-stats"><span>Qtd: {{item.system.quantity}}</span><span>Peso: {{item.system.weight}}</span><span>Preço: {{item.system.price}}</span></div>
+  <div class="consumable-stats"><span>Qtd: {{item.system.quantity}}</span><span>Peso: {{item.system.weight}}</span><span>Custo: {{item.system.cost}}</span></div>
   {{#if item.system.charges.hasCharges}}
   <div class="charges-row"><span>Cargas</span><span>{{item.system.mainCharge.value}} / {{item.system.mainCharge.max}}</span></div>
   <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.chargePercent}}%;"></div></div>
   {{/if}}
   <div class="consumable-buttons"><a class="consumable-use"><i class="fas fa-hand"></i> Usar</a></div>
+  {{/ifEquals}}
+
+  {{#ifEquals item.type "municao"}}
+  <div class="consumable-stats">
+    <span>Tipo: {{item.system.reloadTypeLabel}}</span>
+    <span>Calibre: {{item.system.caliber}}</span>
+    <span>Qtd: {{item.system.quantity}}</span>
+  </div>
+  <div class="ammo-row"><span>Munição</span><span>{{item.system.currentShots}} / {{item.system.shots}}</span></div>
+  <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.ammoPercent}}%;"></div></div>
+  {{#unless item.isAmmoBox}}<div class="consumable-buttons"><a class="ammo-load-carrier"><i class="fas fa-box-open"></i> Carregar</a></div>{{/unless}}
+  {{/ifEquals}}
+
+  {{#ifEquals item.type "modificacao"}}
+  <div class="consumable-stats"><span>Uso: {{item.system.modType}}</span><span>Bônus: {{item.system.modifier}}</span><span>Dano: {{item.system.damage}}</span></div>
   {{/ifEquals}}
 </div>

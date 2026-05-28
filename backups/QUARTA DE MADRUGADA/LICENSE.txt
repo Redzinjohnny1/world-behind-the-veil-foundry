@@ -1,0 +1,8 @@
+Copyright (c) 2026 The World Behind the Veil Team
+
+All rights reserved.
+
+Permission is granted to use, copy, and modify this software for personal and non-commercial use.
+Redistribution of modified or unmodified copies must retain this notice.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.

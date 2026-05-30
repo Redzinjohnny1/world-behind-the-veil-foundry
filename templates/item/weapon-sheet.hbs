@@ -1,7 +1,7 @@
 <form class="{{cssClass}} item-sheet weapon-sheet twbv-item-sheet twbv-themed-item-sheet twbv-weapon-sheet" autocomplete="off">
   <header class="twbv-weapon-hero">
     <div class="twbv-weapon-icon-wrap">
-      <img class="profile-img twbv-weapon-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+      <img class="profile-img twbv-weapon-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" draggable="true" />
     </div>
 
     <div class="twbv-weapon-title-block">
@@ -97,6 +97,10 @@
         <label>
           Dano
           <input type="text" name="system.damage" value="{{system.damage}}" />
+        </label>
+        <label>
+          Ampliação
+          <input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" />
         </label>
         <label>
           Alcance

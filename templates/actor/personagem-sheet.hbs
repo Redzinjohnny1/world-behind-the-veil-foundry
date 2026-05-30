@@ -57,20 +57,6 @@
         </section>
       </section>
     </div>
-
-    <aside class="twbv-floating-favorites" title="Clique duas vezes para recolher/abrir favoritos">
-      <header><i class="fas fa-star"></i><span>Favoritos</span></header>
-      <div class="twbv-floating-favorites-list">
-        {{#each equipment.favorite as |item|}}
-          <article class="twbv-floating-favorite item item-type-{{item.type}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" draggable="true">
-            <img src="{{item.img}}" alt="{{item.name}}" />
-            <div><strong>{{item.name}}</strong><span>{{item.typeLabel}}</span></div>
-          </article>
-        {{else}}
-          <p>Nenhum favorito.</p>
-        {{/each}}
-      </div>
-    </aside>
   </header>
 
   <nav class="sheet-tabs tabs twbv-tabs" data-group="primary">
@@ -88,38 +74,44 @@
     <div class="tab" data-group="primary" data-tab="principal">
       <div class="twbv-principal-grid twbv-principal-main">
         <section class="twbv-panel twbv-ornate twbv-attributes-panel">
+          <h2 class="twbv-attributes-title">Atributos</h2>
           <div class="attributes-art-grid" role="group" aria-label="Atributos">
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-forca">Força</h3><label>Dado<select name="system.atributos.forca.passo">{{#select system.atributos.forca.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="forca" title="Rolar Força">🎲</button></section>
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-destreza">Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="destreza" title="Rolar Destreza">🎲</button></section>
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-constituicao">Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="constituicao" title="Rolar Constituição">🎲</button></section>
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-inteligencia">Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="inteligencia" title="Rolar Inteligência">🎲</button></section>
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-influencia">Influência</h3><label>Dado<select name="system.atributos.influencia.passo">{{#select system.atributos.influencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="influencia" title="Rolar Influência">🎲</button></section>
-              <section class="twbv-attribute-card"><h3 class="twbv-attr-intuicao">Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="intuicao" title="Rolar Intuição">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="forca" title="Configurar bônus de Força"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-forca">Força</h3><label>Dado<select name="system.atributos.forca.passo">{{#select system.atributos.forca.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="forca" title="Rolar Força">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="destreza" title="Configurar bônus de Destreza"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-destreza">Destreza</h3><label>Dado<select name="system.atributos.destreza.passo">{{#select system.atributos.destreza.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="destreza" title="Rolar Destreza">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="constituicao" title="Configurar bônus de Constituição"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-constituicao">Constituição</h3><label>Dado<select name="system.atributos.constituicao.passo">{{#select system.atributos.constituicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="constituicao" title="Rolar Constituição">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="inteligencia" title="Configurar bônus de Inteligência"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-inteligencia">Inteligência</h3><label>Dado<select name="system.atributos.inteligencia.passo">{{#select system.atributos.inteligencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="inteligencia" title="Rolar Inteligência">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="influencia" title="Configurar bônus de Influência"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-influencia">Influência</h3><label>Dado<select name="system.atributos.influencia.passo">{{#select system.atributos.influencia.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="influencia" title="Rolar Influência">🎲</button></section>
+              <section class="twbv-attribute-card"><button type="button" class="twbv-attr-config" data-attr="intuicao" title="Configurar bônus de Intuição"><i class="fas fa-cog"></i></button><h3 class="twbv-attr-intuicao">Intuição</h3><label>Dado<select name="system.atributos.intuicao.passo">{{#select system.atributos.intuicao.passo}}{{#each @root.attributeOptions as |opt|}}<option value="{{opt.value}}">{{opt.label}}</option>{{/each}}{{/select}}</select></label><button type="button" class="twbv-attr-roll" data-attr="intuicao" title="Rolar Intuição">🎲</button></section>
           </div>
         </section>
 
         <div class="twbv-right-column">
-          <section class="twbv-panel twbv-ornate twbv-defense-panel">
-            <h2 class="twbv-condition-title twbv-defense-title">Defesa</h2>
+          <section class="twbv-panel twbv-ornate twbv-defense-condition-panel">
+            <div class="twbv-defense-condition-tabs">
+              <label><input type="radio" name="twbv-defense-condition-view" value="defense" checked /><span>Defesas</span></label>
+              <label><input type="radio" name="twbv-defense-condition-view" value="conditions" /><span>Condições</span></label>
+            </div>
+
+            <div class="twbv-defense-condition-pane twbv-defense-condition-pane--defense">
             <div class="twbv-defense-grid">
-              <article class="twbv-defense-box" data-tooltip="{{defesaApararTooltip}}">
+              <article class="twbv-defense-box" data-twbv-tooltip="{{defesaApararTooltip}}">
                 <h3>Aparar</h3>
                                 <input type="number" name="system.defesa.aparar" value="{{system.defesa.aparar}}" min="0" />
               </article>
-              <article class="twbv-defense-box" data-tooltip="{{defesaResistenciaTooltip}}">
+              <article class="twbv-defense-box" data-twbv-tooltip="{{defesaResistenciaTooltip}}">
                 <h3>Resistência</h3>
                                 <input type="number" name="system.defesa.resistencia" value="{{system.defesa.resistencia}}" min="0" />
               </article>
-              <article class="twbv-defense-box" data-tooltip="{{defesaDesviarTooltip}}">
+              <article class="twbv-defense-box" data-twbv-tooltip="{{defesaDesviarTooltip}}">
                 <h3>Desviar</h3>
                 <input type="number" name="system.defesa.desviar" value="{{system.defesa.desviar}}" min="0" />
               </article>
-              <article class="twbv-defense-box" data-tooltip="{{defesaResistenciaMagicaTooltip}}">
+              <article class="twbv-defense-box" data-twbv-tooltip="{{defesaResistenciaMagicaTooltip}}">
                 <h3>Resistência Mágica</h3>
                 <input type="number" name="system.defesa.resistenciaMagica" value="{{system.defesa.resistenciaMagica}}" min="0" />
               </article>
             </div>
-            <div class="twbv-size-move-grid">
+              <div class="twbv-size-move-grid">
               <article class="twbv-size-move-box">
                 <h3>Tamanho</h3>
                 <input type="number" name="system.tamanho" value="{{system.tamanho}}" />
@@ -135,11 +127,10 @@
                   </div>
                 </div>
               </article>
+              </div>
             </div>
-          </section>
 
-          <section class="twbv-panel twbv-ornate twbv-utility-panel">
-            <h2 class="twbv-condition-title">Condições</h2>
+            <div class="twbv-defense-condition-pane twbv-defense-condition-pane--conditions">
             <div class="twbv-condition-board">
               <article class="twbv-condition-meter twbv-condition-meter--wounds ferimentos-nivel-{{system.ferimentos}}">
                 <h3>Ferimentos</h3>
@@ -175,11 +166,30 @@
                   <label class="twbv-condition-check-item"><input type="checkbox" name="system.condicao6" {{checked system.condicao6}} />Condição 6</label>
                 </div>
               </article>
+              </div>
             </div>
           </section>
           <section class="twbv-panel twbv-ornate twbv-favorites-panel">
-            <h2>Favoritos</h2>
-            <div class="twbv-favorites-placeholder">Armas favoritas, magias e outros favoritos.</div>
+            <div class="twbv-favorites-header">
+              <h2>Favoritos</h2>
+              <div class="twbv-favorites-tools">
+                <span>{{favorites.length}}</span>
+                <button type="button" class="twbv-open-floating-favorites" title="Abrir favoritos flutuantes"><i class="fas fa-star"></i></button>
+              </div>
+            </div>
+            <div class="twbv-favorites-list">
+              {{#each favorites as |item|}}
+                <article class="twbv-favorite-card item item-edit item-type-{{item.type}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" draggable="true">
+                  <img src="{{item.img}}" alt="{{item.name}}" />
+                  <div>
+                    <strong>{{item.name}}</strong>
+                    <span>{{item.typeLabel}}</span>
+                  </div>
+                </article>
+              {{else}}
+                <p class="twbv-favorites-empty">Marque itens com estrela para aparecerem aqui.</p>
+              {{/each}}
+            </div>
           </section>
         </div>
 
@@ -225,76 +235,100 @@
     </div>
 
     <div class="tab" data-group="primary" data-tab="vantagens">
-      <div class="twbv-panel twbv-ornate">
-        <div class="twbv-item-section">
-          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Vantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="vantagem" data-label="Vantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar vantagem</button></div></div>
+      <div class="twbv-panel twbv-ornate twbv-traits-page">
+        <div class="twbv-item-section twbv-trait-section twbv-trait-section--advantage">
+          <div class="twbv-item-tab-header twbv-trait-header"><h2>Vantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-trait-division-create twbv-trait-create twbv-trait-create--division"><i class="fas fa-layer-group"></i> Criar Divisao</button><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-trait-create twbv-trait-create--advantage" data-type="vantagem" data-label="Vantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar Vantagem</button></div></div>
           <div class="twbv-item-card-list">
-            {{#each vantagens as |item|}}
+            {{#unless vantagemHasContent}}<p class="twbv-adv-empty twbv-trait-empty">Nenhuma vantagem cadastrada.</p>{{/unless}}
+            {{#each vantagemItemsSemDivisao as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-gem"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="item" data-type="vantagem"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="item"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="twbv-item-card-meta">Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="vantagem"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">{{#if item.categoria}}Categoria: {{item.categoria}} &middot; {{/if}}Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
                     <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
-            {{else}}<p class="twbv-adv-empty">Nenhuma vantagem cadastrada.</p>{{/each}}
+            {{/each}}
+            {{#each vantagemDivisoes as |division|}}
+              <section class="twbv-trait-division" data-division-id="{{division.id}}" data-division-name="{{division.name}}">
+                <header class="twbv-trait-division-header">
+                  <span aria-hidden="true"></span>
+                  {{#if division.isManual}}<button type="button" class="twbv-trait-division-delete" data-division-id="{{division.id}}" data-division-name="{{division.name}}" title="Remover divisao"><i class="fas fa-trash"></i></button>{{/if}}
+                </header>
+                <div class="twbv-item-card-list twbv-item-card-list--division" data-division-id="{{division.id}}" data-division-name="{{division.name}}">
+                  {{#each division.items as |item|}}
+                    <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
+                      <div class="twbv-item-card-layout">
+                        <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-gem"></i>{{/if}}</div>
+                        <div class="twbv-item-card-content">
+                          <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="vantagem"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                          <div class="twbv-item-card-meta">Categoria: {{item.categoria}}{{#if item.requisitos}} &middot; Requisito/Tier: {{item.requisitos}}{{/if}}</div>
+                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descricao.{{/if}}</p>
+                        </div>
+                      </div>
+                    </article>
+                  {{else}}<p class="twbv-trait-division-empty" aria-hidden="true"></p>{{/each}}
+                </div>
+              </section>
+            {{/each}}
           </div>
         </div>
-        <div class="twbv-item-section">
-          <div class="twbv-item-tab-header twbv-item-tab-header--habilidades"><h2>Habilidades especiais</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--habilidades" data-type="habilidadeEspecial" data-label="Habilidade Especial" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar habilidade</button></div></div>
+        <div class="twbv-item-section twbv-trait-section twbv-trait-section--special">
+          <div class="twbv-item-tab-header twbv-trait-header"><h2>Habilidades Especiais</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-trait-create twbv-trait-create--special" data-type="habilidadeEspecial" data-label="Habilidade Especial" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar Hab. Esp.</button></div></div>
           <div class="twbv-item-card-list">
             {{#each habilidadesEspeciais as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-scroll"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="item" data-type="habilidadeEspecial"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="item"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="habilidadeEspecial"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">Categoria: {{#if item.categoria}}{{item.categoria}}{{else}}-{{/if}}</div>
                     <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
-            {{else}}<p class="twbv-adv-empty">Nenhuma habilidade especial cadastrada.</p>{{/each}}
+            {{else}}<p class="twbv-adv-empty twbv-trait-empty">Nenhuma habilidade especial cadastrada.</p>{{/each}}
           </div>
         </div>
       </div>
     </div>
     <div class="tab" data-group="primary" data-tab="desvantagens">
-      <div class="twbv-panel twbv-ornate">
-        <div class="twbv-item-section">
-          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Desvantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="desvantagem" data-label="Desvantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar desvantagem</button></div></div>
+      <div class="twbv-panel twbv-ornate twbv-traits-page">
+        <div class="twbv-item-section twbv-trait-section twbv-trait-section--hindrance">
+          <div class="twbv-item-tab-header twbv-trait-header"><h2>Desvantagens</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-trait-create twbv-trait-create--hindrance" data-type="desvantagem" data-label="Desvantagem" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar Desv.</button></div></div>
           <div class="twbv-item-card-list">
             {{#each desvantagens as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-skull"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="item" data-type="desvantagem" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="item"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="twbv-item-card-meta">Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="desvantagem" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">{{#if item.categoria}}Categoria: {{item.categoria}} &middot; {{/if}}Requisito/Tier: {{#if item.requisitos}}{{item.requisitos}}{{else}}-{{/if}}</div>
                     <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
-            {{else}}<p class="twbv-adv-empty">Nenhuma desvantagem cadastrada.</p>{{/each}}
+            {{else}}<p class="twbv-adv-empty twbv-trait-empty">Nenhuma desvantagem cadastrada.</p>{{/each}}
           </div>
         </div>
-        <div class="twbv-item-section">
-          <div class="twbv-item-tab-header twbv-item-tab-header--vantagens"><h2>Complicações</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-item-create--vantagens" data-type="complicacao" data-label="Complicação" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar complicação</button></div></div>
+        <div class="twbv-item-section twbv-trait-section twbv-trait-section--complication">
+          <div class="twbv-item-tab-header twbv-trait-header"><h2>Complicações</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-trait-create twbv-trait-create--complication" data-type="complicacao" data-label="Complicação" data-dialog-version="2"><i class="fas fa-plus"></i> Adicionar Complic.</button></div></div>
           <div class="twbv-item-card-list">
             {{#each complicacoes as |item|}}
               <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
                 <div class="twbv-item-card-layout">
                   <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-exclamation-triangle"></i>{{/if}}</div>
                   <div class="twbv-item-card-content">
-                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="item" data-type="complicacao" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="item"><i class="fas fa-trash"></i></button></div></div>
-                    <div class="twbv-item-card-meta">Fonte: {{#if item.fonte}}{{item.fonte}}{{else}}-{{/if}}</div>
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="complicacao" data-dialog-version="2"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">{{#if item.categoria}}Categoria: {{item.categoria}} &middot; {{/if}}Fonte: {{#if item.fonte}}{{item.fonte}}{{else}}-{{/if}}</div>
                     <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descrição.{{/if}}</p>
                   </div>
                 </div>
               </article>
-            {{else}}<p class="twbv-adv-empty">Nenhuma complicação cadastrada.</p>{{/each}}
+            {{else}}<p class="twbv-adv-empty twbv-trait-empty">Nenhuma complicação cadastrada.</p>{{/each}}
           </div>
         </div>
       </div>
@@ -307,8 +341,8 @@
           </header>
 
           <div class="twbv-equipment-view-switch">
-            <label><input type="radio" name="twbv-equipment-view" /><span><i class="fas fa-list"></i> Inventário</span></label>
-            <label><input type="radio" name="twbv-equipment-view" checked /><span><i class="fas fa-street-view"></i> Corpo</span></label>
+            <label><input type="radio" name="twbv-equipment-view" value="inventory" {{#ifEquals equipmentView "inventory"}}checked{{/ifEquals}} /><span><i class="fas fa-list"></i> Inventário</span></label>
+            <label><input type="radio" name="twbv-equipment-view" value="body" {{#ifEquals equipmentView "body"}}checked{{/ifEquals}} /><span><i class="fas fa-street-view"></i> Corpo</span></label>
           </div>
 
           <section class="equipment-section twbv-equipment-body-panel">
@@ -357,35 +391,35 @@
           </section>
 
           <div class="twbv-equipment-subpanel twbv-equipment-inventory-panel">
-          <section class="equipment-section weapons">
-            <div class="equipment-section-title"><h3>Armas</h3><a class="item-create" data-type="arma"><i class="fas fa-plus"></i> Mais arma</a></div>
-            <div class="equipment-grid">
-              {{#each equipment.weapons as |item|}}
-                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
-              {{/each}}
-            </div>
-          </section>
+            <section class="equipment-section weapons">
+              <div class="equipment-section-title"><h3>Armas</h3><a class="item-create" data-type="arma"><i class="fas fa-plus"></i> Arma</a></div>
+              <div class="equipment-grid">
+                {{#each equipment.weapons as |item|}}
+                  {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+                {{/each}}
+              </div>
+            </section>
 
-          <section class="equipment-section armors">
-            <div class="equipment-section-title"><h3>Armaduras</h3><a class="item-create" data-type="armadura"><i class="fas fa-plus"></i> Mais armadura</a></div>
-            <div class="equipment-grid">
-              {{#each equipment.armors as |item|}}
-                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
-              {{/each}}
-            </div>
-          </section>
+            <section class="equipment-section armors">
+              <div class="equipment-section-title"><h3>Armaduras</h3><a class="item-create" data-type="armadura"><i class="fas fa-plus"></i> Armadura</a></div>
+              <div class="equipment-grid">
+                {{#each equipment.armors as |item|}}
+                  {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+                {{/each}}
+              </div>
+            </section>
 
-          <section class="equipment-section magazines">
-            <div class="equipment-section-title"><h3>Carregadores</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Mais carregador</a></div>
-            <div class="equipment-grid">
-              {{#each equipment.magazines as |item|}}
-                {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
-              {{/each}}
-            </div>
-          </section>
+            <section class="equipment-section magazines">
+              <div class="equipment-section-title"><h3>Carregadores</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Carregador</a></div>
+              <div class="equipment-grid">
+                {{#each equipment.magazines as |item|}}
+                  {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
+                {{/each}}
+              </div>
+            </section>
 
           <section class="equipment-section ammunitions">
-            <div class="equipment-section-title"><h3>Munições</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Mais munição</a></div>
+            <div class="equipment-section-title"><h3>Munições</h3><a class="item-create" data-type="municao"><i class="fas fa-plus"></i> Munição</a></div>
             <div class="equipment-grid">
               {{#each equipment.ammunitions as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -394,7 +428,7 @@
           </section>
 
           <section class="equipment-section consumables">
-            <div class="equipment-section-title"><h3>Consumíveis</h3><a class="item-create" data-type="consumable"><i class="fas fa-plus"></i> Mais consumível</a></div>
+            <div class="equipment-section-title"><h3>Consumíveis</h3><a class="item-create" data-type="consumable"><i class="fas fa-plus"></i> Consumível</a></div>
             <div class="equipment-grid">
               {{#each equipment.consumables as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -403,7 +437,7 @@
           </section>
 
           <section class="equipment-section others">
-            <div class="equipment-section-title"><h3>Outros</h3><a class="item-create" data-type="modificacao"><i class="fas fa-plus"></i> Mais modificação</a></div>
+            <div class="equipment-section-title"><h3>Outros</h3><a class="item-create" data-type="modificacao"><i class="fas fa-plus"></i> Modificação</a></div>
             <div class="equipment-grid">
               {{#each equipment.others as |item|}}
                 {{> "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs" item=item}}
@@ -414,7 +448,27 @@
         </section>
       </div>
     </div>
-    <div class="tab" data-group="primary" data-tab="poderes"><div class="twbv-panel twbv-ornate"><h2>Poderes</h2><p>Em construção.</p></div></div>
+    <div class="tab" data-group="primary" data-tab="poderes">
+      <div class="twbv-panel twbv-ornate twbv-traits-page twbv-powers-page">
+        <div class="twbv-item-section twbv-trait-section twbv-trait-section--power">
+          <div class="twbv-item-tab-header twbv-trait-header"><h2>Poderes</h2><div class="twbv-item-create-actions"><button type="button" class="twbv-item-create twbv-item-create--fancy twbv-trait-create twbv-trait-create--power" data-type="poder" data-label="Poder" data-dialog-version="2"><i class="fas fa-plus"></i> Poder</button></div></div>
+          <div class="twbv-item-card-list">
+            {{#each poderes as |item|}}
+              <article class="twbv-item-card twbv-item-card--fantasy twbv-item-card--collapsible is-collapsed" data-item-id="{{item.id}}" data-item-uuid="{{item.uuid}}" data-item-type="{{item.type}}" draggable="true">
+                <div class="twbv-item-card-layout">
+                  <div class="twbv-item-card-icon">{{#if item.icon}}<img src="{{item.icon}}" alt="{{item.name}}" />{{else}}<i class="fas fa-wand-magic-sparkles"></i>{{/if}}</div>
+                  <div class="twbv-item-card-content">
+                    <div class="twbv-item-card-head twbv-item-card-head--toggle"><h3>{{item.name}}</h3><div class="twbv-item-card-actions"><button type="button" class="twbv-item-edit" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}" data-type="poder"><i class="fas fa-edit"></i></button><button type="button" class="twbv-item-delete" data-item-id="{{item.id}}" data-source-type="{{item.sourceType}}" data-list-key="{{item.listKey}}"><i class="fas fa-trash"></i></button></div></div>
+                    <div class="twbv-item-card-meta">{{#if item.skill}}Pericia: {{item.skill}}{{else}}Pericia: -{{/if}} &middot; Mana: {{item.manaCost}}{{#if item.damage}} &middot; Dano: {{item.damage}}{{/if}}{{#if item.areaEffectLabel}} &middot; Area: {{item.areaEffectLabel}}{{/if}}{{#if item.categoria}} &middot; Categoria: {{item.categoria}}{{/if}}</div>
+                    <p class="twbv-item-effect">{{#if item.descricao}}{{item.descricao}}{{else}}Sem descricao.{{/if}}</p>
+                  </div>
+                </div>
+              </article>
+            {{else}}<p class="twbv-adv-empty twbv-trait-empty">Nenhum poder cadastrado.</p>{{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="tab" data-group="primary" data-tab="historia"><div class="twbv-panel twbv-ornate"><h2>História</h2><p>Em construção.</p></div></div>
     <div class="tab" data-group="primary" data-tab="avancos">
       <section class="twbv-panel twbv-ornate">

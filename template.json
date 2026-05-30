@@ -100,6 +100,7 @@
       "vantagem",
       "desvantagem",
       "habilidadeEspecial",
+      "poder",
       "complicacao",
       "modificacao",
       "municao",
@@ -138,7 +139,32 @@
     "habilidadeEspecial": {
       "templates": [
         "base"
-      ]
+      ],
+      "itemKind": "",
+      "category": "",
+      "source": "",
+      "requirements": "",
+      "skill": "",
+      "manaCost": 0,
+      "damage": "",
+      "areaEffect": "none",
+      "charges": "",
+      "favorite": false
+    },
+    "poder": {
+      "templates": [
+        "base",
+        "ranked"
+      ],
+      "category": "",
+      "source": "",
+      "requirements": "",
+      "skill": "",
+      "manaCost": 0,
+      "damage": "",
+      "areaEffect": "none",
+      "charges": "",
+      "favorite": false
     },
     "complicacao": {
       "templates": [

@@ -16,6 +16,7 @@
   <section class="twbv-item-summary">
     <article><span>Tipo</span><strong>{{reloadTypeLabel}}</strong></article>
     <article><span>Munição</span><strong>{{system.currentShots}} / {{system.shots}}</strong></article>
+    <article><span>PA</span><strong>{{#if system.ap}}{{system.ap}}{{else}}0{{/if}}</strong></article>
     <article><span>Peso</span><strong>{{system.weight}}</strong></article>
     <article><span>Custo</span><strong>{{system.cost}}</strong></article>
   </section>
@@ -43,7 +44,7 @@
         </label>
         <label>Capacidade<input type="number" name="system.shots" value="{{system.shots}}" min="0" step="1" /></label>
         <label>Munição atual<input type="number" name="system.currentShots" value="{{system.currentShots}}" min="0" step="1" /></label>
-        <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
+        <label>PA<input type="number" name="system.ap" value="{{system.ap}}" step="1" /></label>
         <label>Peso<input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" /></label>
         <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
       </div>

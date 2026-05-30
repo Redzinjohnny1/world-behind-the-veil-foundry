@@ -21,6 +21,7 @@ const TWBV_ITEM_TYPES = {
   vantagem: "Vantagem",
   desvantagem: "Desvantagem",
   habilidadeEspecial: "Habilidade Especial",
+  poder: "Poder",
   complicacao: "Complicação",
   equipamento: "Equipamento",
   arma: "Arma",
@@ -84,7 +85,7 @@ const TWBV_HANDLEBARS_PARTIALS = [
   "systems/world-behind-the-veil/templates/actor/parts/equipment-card.hbs"
 ];
 
-const TWBV_LOCAL_BUILD = "weapon-hand-equip-flow-2026-05-28-0302";
+const TWBV_LOCAL_BUILD = "damage-amplification-ammo-cleanup-2026-05-28-1256";
 
 const TWBV_ITEM_ICONS = {
   arma: "icons/svg/sword.svg",
@@ -97,6 +98,7 @@ const TWBV_ITEM_ICONS = {
   vantagem: "icons/svg/item-bag.svg",
   desvantagem: "icons/svg/item-bag.svg",
   habilidadeEspecial: "icons/svg/book.svg",
+  poder: "icons/svg/upgrade.svg",
   complicacao: "icons/svg/item-bag.svg"
 };
 
@@ -161,7 +163,7 @@ function summarizeItemActiveEffects(item) {
 
 
 
-const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "municao", "vantagem", "desvantagem", "habilidadeEspecial", "modificacao"];
+const TWBV_ITEM_CREATE_ORDER = ["arma", "armadura", "consumable", "municao", "vantagem", "desvantagem", "habilidadeEspecial", "poder", "modificacao"];
 
 const TWBV_ITEM_MAIN_FOLDER_ORDER = [
   { name: "Armas", types: ["arma", "weapon"], color: "#7c4dff" },
@@ -171,6 +173,7 @@ const TWBV_ITEM_MAIN_FOLDER_ORDER = [
   { name: "Vantagens", types: ["vantagem"], color: "#2f79c8" },
   { name: "Desvantagens", types: ["desvantagem"], color: "#c95470" },
   { name: "Habilidade Especial", types: ["habilidadeEspecial"], color: "#7aa05a" },
+  { name: "Poderes", types: ["poder"], color: "#6f62d8" },
   { name: "Modificação", types: ["modificacao"], color: "#c06f3a" }
 ];
 
@@ -273,7 +276,9 @@ function twbvPatchItemCreateDialog() {
   if (typeof originalCreateDialog !== "function") return;
 
   itemClass.createDialog = function(data = {}, options = {}) {
-    const nextOptions = foundry.utils.mergeObject(options, { types: [...TWBV_ITEM_CREATE_ORDER] }, { overwrite: true, inplace: false });
+    const supported = Array.from(game?.system?.documentTypes?.Item ?? []);
+    const types = TWBV_ITEM_CREATE_ORDER.filter((type) => type !== "poder" && supported.includes(type));
+    const nextOptions = foundry.utils.mergeObject(options, { types }, { overwrite: true, inplace: false });
     return originalCreateDialog.call(this, data, nextOptions);
   };
 
@@ -288,16 +293,48 @@ function twbvNormalizeItemCreateTypeSelect(root) {
 
   const optionByValue = new Map(Array.from(select.options ?? []).map((opt) => [String(opt.value ?? ""), opt]));
   const selected = String(select.value ?? "");
+  const supported = Array.from(game?.system?.documentTypes?.Item ?? []);
 
   while (select.firstChild) select.removeChild(select.firstChild);
 
   for (const type of TWBV_ITEM_CREATE_ORDER) {
+    if (type === "poder" && supported.includes("habilidadeEspecial")) {
+      const fake = document.createElement("option");
+      fake.value = "__twbvPoder";
+      fake.textContent = "Poder";
+      select.appendChild(fake);
+      continue;
+    }
     const option = optionByValue.get(type);
     if (option) select.appendChild(option);
   }
 
   const fallback = select.options[0]?.value ?? "";
-  select.value = TWBV_ITEM_CREATE_ORDER.includes(selected) ? selected : fallback;
+  select.value = selected === "poder" ? "__twbvPoder" : (TWBV_ITEM_CREATE_ORDER.includes(selected) || selected === "__twbvPoder" ? selected : fallback);
+  const form = select.closest("form");
+  if (form && !form._twbvPowerFallbackSubmit) {
+    form.addEventListener("submit", () => {
+      if (select.value !== "__twbvPoder") return;
+      select.value = "habilidadeEspecial";
+      const ensureHidden = (name, value) => {
+        let input = form.querySelector(`input[type="hidden"][name="${name}"]`);
+        if (!input) {
+          input = document.createElement("input");
+          input.type = "hidden";
+          input.name = name;
+          form.appendChild(input);
+        }
+        input.value = value;
+      };
+      ensureHidden("system.itemKind", "poder");
+      ensureHidden("system.category", "poder");
+      ensureHidden("system.categoria", "poder");
+      const nameInput = form.querySelector('input[name="name"]');
+      const name = String(nameInput?.value ?? "").trim();
+      if (nameInput && (!name || /^item(?:\s*\(\d+\))?$/i.test(name))) nameInput.value = "Poder";
+    }, true);
+    form._twbvPowerFallbackSubmit = true;
+  }
 }
 
 function twbvGetMainItemFolderConfig(type) {
@@ -321,10 +358,13 @@ async function twbvEnsureMainItemFolders() {
 
 function twbvResolveSupportedItemType(preferredType) {
   const preferred = String(preferredType ?? "equipamento").trim() || "equipamento";
+  if (preferred === "poder") return "habilidadeEspecial";
   const aliases = preferred === "arma" ? ["arma", "weapon"] : preferred === "weapon" ? ["arma", "weapon"] : [preferred];
   const supported = Array.from(game?.system?.documentTypes?.Item ?? []);
   if (!supported.length) return aliases[0];
-  return aliases.find((type) => supported.includes(type)) ?? preferred;
+  const supportedAlias = aliases.find((type) => supported.includes(type));
+  if (supportedAlias) return supportedAlias;
+  return supported.includes("equipamento") ? "equipamento" : supported[0];
 }
 
 function twbvGetItemIcon(type) {
@@ -332,6 +372,7 @@ function twbvGetItemIcon(type) {
 }
 
 function twbvGetItemDefaultName(type, system = {}) {
+  if (String(type ?? "").trim() === "poder" || String(system?.itemKind ?? system?.kind ?? "").trim() === "poder") return "Poder";
   const resolved = twbvResolveSupportedItemType(type);
   const slot = String(system?.equipSlot ?? "").trim();
   if (resolved === "armadura" && slot) return TWBV_ARMOR_SLOT_LABELS[slot] ?? "Armadura";
@@ -340,7 +381,26 @@ function twbvGetItemDefaultName(type, system = {}) {
 }
 
 function twbvIsActorItemType(type) {
-  return ["weapon", "arma", "armadura", "consumable", "municao", "equipamento", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(String(type ?? ""));
+  return ["weapon", "arma", "armadura", "consumable", "municao", "equipamento", "modificacao", "vantagem", "desvantagem", "habilidadeEspecial", "poder", "complicacao"].includes(String(type ?? ""));
+}
+
+function twbvIsPowerItemDocument(itemOrData) {
+  const type = String(itemOrData?.type ?? "").trim();
+  const system = itemOrData?.system ?? {};
+  return type === "poder" || (type === "habilidadeEspecial" && String(system?.itemKind ?? system?.kind ?? "").trim() === "poder");
+}
+
+function twbvGetPowerAreaLabel(value) {
+  const key = String(value ?? "").trim();
+  const labels = {
+    none: "",
+    "burst-small": "Explosao pequena",
+    "burst-medium": "Explosao media",
+    "burst-large": "Explosao grande",
+    "cone-small": "Cone pequeno",
+    "cone-large": "Cone grande"
+  };
+  return labels[key] ?? key;
 }
 
 function twbvIsEquipmentItemType(type) {
@@ -625,6 +685,7 @@ function twbvBuildWeaponAmmoUpdateFromModification(itemOrData, weapon) {
     "system.reloadType": reloadType,
     "system.shots": capacity,
     "system.currentShots": Math.min(current, capacity || current),
+    "system.ammoAp": twbvNumberOrZero(system.ap),
     "system.ammoSourceUuid": String(itemOrData?.uuid ?? ""),
     "system.ammoSourceName": String(itemOrData?.name ?? "").trim()
   };
@@ -638,6 +699,19 @@ function twbvGetWeaponTraitBonusDetails(weapon) {
   return twbvGetWeaponMods(weapon)
     .map((mod) => ({ name: String(mod.name ?? "Modificação").trim(), value: twbvNumberOrZero(String(mod.modifier ?? "").replace(",", ".")) }))
     .filter((mod) => mod.value !== 0);
+}
+
+async function twbvGetWeaponAmmoArmorPiercing(weapon) {
+  const sourceUuid = String(weapon?.system?.ammoSourceUuid ?? "").trim();
+  if (sourceUuid) {
+    try {
+      const ammo = await fromUuid(sourceUuid);
+      if (ammo) return twbvNumberOrZero(ammo.system?.ap);
+    } catch (error) {
+      console.warn("[TWBV] Não foi possível ler a PA da munição.", { weapon: weapon?.name, sourceUuid, error });
+    }
+  }
+  return twbvNumberOrZero(weapon?.system?.ammoAp ?? weapon?.system?.ammoAP);
 }
 
 function twbvFormatSignedNumber(value) {
@@ -696,6 +770,7 @@ async function twbvOpenWeaponAmmoPicker(actor, weapon) {
             "system.ammo": ammo.name,
             "system.ammoSourceUuid": ammo.uuid,
             "system.ammoSourceName": ammo.name,
+            "system.ammoAp": twbvNumberOrZero(ammo.system?.ap),
             "system.reloadType": ammo.system?.reloadType ?? "magazine",
             "system.shots": capacity,
             "system.currentShots": Math.min(loaded, capacity || loaded)
@@ -770,13 +845,18 @@ function twbvBuildWeaponAttackExtras(weapon, bonusDetails = [], nextShots = 0, m
       <h4>Modificações de acerto</h4>
       <div class="twbv-attack-mod-list">${mods}</div>
       ${ammo}
-      <button type="button" class="twbv-chat-damage-button" data-weapon-uuid="${escapeHtmlAttr(weapon?.uuid ?? "")}">
-        <i class="fas fa-burst"></i> Dano
-      </button>
+      <div class="twbv-chat-damage-actions">
+        <button type="button" class="twbv-chat-damage-button" data-damage-mode="normal" data-weapon-uuid="${escapeHtmlAttr(weapon?.uuid ?? "")}">
+          <i class="fas fa-burst"></i> Dano
+        </button>
+        <button type="button" class="twbv-chat-damage-button twbv-chat-damage-button--amplified" data-damage-mode="amplified" data-weapon-uuid="${escapeHtmlAttr(weapon?.uuid ?? "")}">
+          <i class="fas fa-bolt"></i> Dano Ampliado
+        </button>
+      </div>
     </div>`;
 }
 
-async function twbvAppendWeaponDamageToChat(message, weaponUuid) {
+async function twbvAppendWeaponDamageToChat(message, weaponUuid, { amplified = false } = {}) {
   const weapon = await fromUuid(String(weaponUuid ?? ""));
   const actor = weapon?.actor;
   if (!weapon || !actor) {
@@ -784,7 +864,7 @@ async function twbvAppendWeaponDamageToChat(message, weaponUuid) {
     return;
   }
   const damageMods = twbvGetWeaponMods(weapon).filter((mod) => String(mod.damage ?? "").trim());
-  const damageContent = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods);
+  const damageContent = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods, { amplified });
   if (!damageContent) return;
   const current = String(message.content ?? "");
   const wrapper = document.createElement("div");
@@ -820,8 +900,6 @@ async function twbvRollWeaponSkill(actor, weapon, extraBonus = 0, attackState = 
   const totalBonus = skillBonus + attrBonus + modBonus;
   const currentShots = Number.isFinite(Number(attackState.currentShots)) ? Number(attackState.currentShots) : Number(weapon.system?.currentShots ?? 0);
   const maxShots = Number.isFinite(Number(attackState.maxShots)) ? Number(attackState.maxShots) : Number(weapon.system?.shots ?? 0);
-  const ammoText = maxShots > 0 ? ` • Munição ${currentShots}/${maxShots}` : "";
-  const modText = modBonus ? ` • Modificações ${twbvFormatSignedNumber(modBonus)}` : "";
   const bonusDetails = twbvGetWeaponTraitBonusDetails(weapon);
   const rollBonusDetails = [
     skillBonus ? { label: "Perícia", value: skillBonus } : null,
@@ -833,7 +911,7 @@ async function twbvRollWeaponSkill(actor, weapon, extraBonus = 0, attackState = 
   if (twbvActorUsesAwakenedDie(actor)) {
     await renderDualDieResult({
       title: `${weapon.name} - ${skillName}`,
-      subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${modText}${ammoText}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
+      subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
       dieA: skillDie,
       labelA: "Perícia",
       dieB: awakenedDie,
@@ -846,14 +924,15 @@ async function twbvRollWeaponSkill(actor, weapon, extraBonus = 0, attackState = 
       dieDisplayB: `d${awakenedDie}`,
       bonusDetailsA: rollBonusDetails,
       actor,
-      extraContent: attackExtras
+      extraContent: attackExtras,
+      extraContentPlacement: "top"
     });
     return true;
   }
 
   await renderSingleDieResult({
     title: `${weapon.name} - ${skillName}`,
-    subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${modText}${ammoText}${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
+    subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
     die: skillDie,
     label: "Perícia",
     bonus: totalBonus,
@@ -862,7 +941,8 @@ async function twbvRollWeaponSkill(actor, weapon, extraBonus = 0, attackState = 
     dieDisplay: buildDieLabel(skillDie, skillBonus),
     bonusDetails: rollBonusDetails,
     actor,
-    extraContent: attackExtras
+    extraContent: attackExtras,
+    extraContentPlacement: "top"
   });
   return true;
 }
@@ -900,10 +980,168 @@ async function twbvRollWeaponDamageByUuid(itemUuid) {
   await twbvRenderWeaponDamageRoll(item.actor, item, damageMods);
 }
 
+async function twbvRollWeaponAmplifiedDamageByUuid(itemUuid) {
+  const item = await fromUuid(String(itemUuid ?? ""));
+  if (!item?.actor) return ui.notifications?.warn("Arma não encontrada.");
+  const damageMods = twbvGetWeaponMods(item).filter((mod) => String(mod.damage ?? "").trim());
+  await twbvRenderWeaponDamageRoll(item.actor, item, damageMods, { amplified: true });
+}
+
 async function twbvRollWeaponAttackByUuid(itemUuid) {
   const item = await fromUuid(String(itemUuid ?? ""));
   if (!item?.actor) return ui.notifications?.warn("Arma não encontrada.");
   await twbvRollWeaponAttack(item.actor, item);
+}
+
+async function twbvRollPowerSkill(actor, power, { returnContentOnly = false } = {}) {
+  if (!actor || !power) return;
+  const skillName = String(power.system?.skill ?? power.system?.pericia ?? "").trim();
+  if (!skillName) return ui.notifications?.warn(`${power.name} nao tem pericia atribuida.`);
+  const skill = findSkillByName(actor.system, skillName);
+  if (!skill) return ui.notifications?.warn(`Pericia "${skillName}" nao encontrada em ${actor.name}.`);
+  const manaCost = Math.max(0, twbvNumberOrZero(power.system?.manaCost ?? power.system?.mana ?? power.system?.costMana));
+  const currentMana = Math.max(0, twbvNumberOrZero(actor.system?.mana?.value));
+  if (manaCost > currentMana) {
+    const content = `<section class="twbv-power-chat twbv-power-chat--warning"><strong>${escapeHtml(actor.name)}</strong> tentou usar <strong>${escapeHtml(power.name)}</strong>, mas nao tem Mana suficiente. Custo: ${manaCost} | Mana atual: ${currentMana}.</section>`;
+    if (returnContentOnly) {
+      ui.notifications?.warn(`${actor.name} nao tem Mana suficiente para usar ${power.name}.`);
+      return { content, contentWithAdjust: content, total: null, reroll: null };
+    }
+    await ChatMessage.create({ speaker: ChatMessage.getSpeaker({ actor }), content, type: CONST.CHAT_MESSAGE_TYPES.OTHER });
+    return ui.notifications?.warn(`${actor.name} nao tem Mana suficiente para usar ${power.name}.`);
+  }
+  if (manaCost > 0) await actor.update({ "system.mana.value": currentMana - manaCost });
+  const manaText = manaCost > 0 ? ` Mana -${manaCost}` : "";
+  const attr = getSkillAttributeMeta(String(skill?.atributo ?? "forca").toLowerCase());
+  const attrData = actor.system?.atributos?.[attr.key] ?? {};
+  const attrBonus = Number(attrData.bonus ?? 0);
+  const attrDie = normalizeAttributeStep(attrData.passo ?? 4);
+  const awakenedDie = resolveAwakenedDie(attrDie);
+  const skillDie = SKILL_DICE.includes(Number(skill.dado)) ? Number(skill.dado) : 4;
+  const skillBonus = Number(skill.bonus ?? 0);
+  const ferimentoPenalty = getGlobalRollPenalty(actor.system);
+  const totalBonus = skillBonus + attrBonus;
+  const bonusDetails = [
+    skillBonus ? { label: "Pericia", value: skillBonus } : null,
+    attrBonus ? { label: attr.label, value: attrBonus } : null
+  ].filter(Boolean);
+  if (twbvActorUsesAwakenedDie(actor)) {
+    return renderDualDieResult({
+      title: `${power.name} - ${skillName}`,
+      subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
+      dieA: skillDie,
+      labelA: "Pericia",
+      dieB: awakenedDie,
+      labelB: "Desperto",
+      bonusA: totalBonus,
+      bonusB: 0,
+      finalModifier: ferimentoPenalty.value,
+      finalModifierLabel: ferimentoPenalty.label,
+      dieDisplayA: buildDieLabel(skillDie, skillBonus),
+      dieDisplayB: `d${awakenedDie}`,
+      bonusDetailsA: bonusDetails,
+      actor,
+      returnContentOnly
+    });
+  }
+  return renderSingleDieResult({
+    title: `${power.name} - ${skillName}`,
+    subtitle: `<span class="twbv-skill-attr twbv-attr-${attr.key}">${attr.label}</span>${ferimentoPenalty.label ? ` • ${ferimentoPenalty.label}` : ""}`,
+    die: skillDie,
+    label: "Pericia",
+    bonus: totalBonus,
+    finalModifier: ferimentoPenalty.value,
+    finalModifierLabel: ferimentoPenalty.label,
+    dieDisplay: buildDieLabel(skillDie, skillBonus),
+    bonusDetails,
+    actor,
+    returnContentOnly
+  });
+}
+
+async function twbvAppendPowerRollToChat(message, powerUuid) {
+  const power = await fromUuid(String(powerUuid ?? ""));
+  if (!power?.actor) return ui.notifications?.warn("Poder nao encontrado.");
+  const rollContent = await twbvRollPowerSkill(power.actor, power, { returnContentOnly: true });
+  if (!rollContent?.content) return;
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = String(message.content ?? "");
+  const safeUuid = CSS.escape(String(power.uuid));
+  const card = wrapper.querySelector(`.twbv-power-chat[data-power-uuid="${safeUuid}"]`) ?? wrapper.querySelector(".twbv-power-chat");
+  if (!card) return twbvRollPowerSkill(power.actor, power);
+  let target = card.querySelector(".twbv-power-roll-result");
+  if (!target) {
+    card.insertAdjacentHTML("beforeend", `<div class="twbv-power-roll-result"></div>`);
+    target = card.querySelector(".twbv-power-roll-result");
+  }
+  target.insertAdjacentHTML("beforeend", `<div class="twbv-power-roll-entry">${rollContent.content}</div>`);
+  await message.update({ content: wrapper.innerHTML });
+}
+
+async function twbvRollPowerDamageByUuid(powerUuid) {
+  const power = await fromUuid(String(powerUuid ?? ""));
+  if (!power?.actor) return ui.notifications?.warn("Poder nao encontrado.");
+  const formula = String(power.system?.damage ?? power.system?.dano ?? "").trim();
+  if (!formula) return ui.notifications?.warn(`${power.name} nao tem dano configurado.`);
+  return twbvCreateFormulaRollChat({
+    actor: power.actor,
+    formula,
+    title: `Dano - ${power.name}`,
+    label: "Dano",
+    type: CONST.CHAT_MESSAGE_TYPES.ROLL
+  });
+}
+
+async function twbvRollPowerSkillByUuid(powerUuid) {
+  const power = await fromUuid(String(powerUuid ?? ""));
+  if (!power?.actor) return ui.notifications?.warn("Poder nao encontrado.");
+  return twbvRollPowerSkill(power.actor, power);
+}
+
+async function twbvCreatePowerChatCard(actor, power) {
+  if (!actor || !power) return;
+  const skillName = String(power.system?.skill ?? power.system?.pericia ?? "").trim();
+  const category = String(power.system?.category ?? power.system?.categoria ?? "").trim();
+  const requirements = String(power.system?.requirements ?? power.system?.requisitos ?? power.system?.tier ?? "").trim();
+  const source = String(power.system?.source ?? power.system?.fonte ?? "").trim();
+  const manaCost = Math.max(0, twbvNumberOrZero(power.system?.manaCost ?? power.system?.mana ?? power.system?.costMana));
+  const damage = String(power.system?.damage ?? power.system?.dano ?? "").trim();
+  const area = String(power.system?.areaEffect ?? power.system?.area ?? "").trim();
+  const areaLabel = twbvGetPowerAreaLabel(area);
+  const description = String(power.system?.description ?? power.system?.descricao ?? "").trim();
+  const effect = String(power.system?.effectsSummary ?? "").trim() || description || "Sem efeito descrito.";
+  const icon = power.img ? `<img src="${escapeHtmlAttr(power.img)}" alt="${escapeHtmlAttr(power.name)}" />` : `<i class="fas fa-wand-magic-sparkles"></i>`;
+  const meta = [
+    skillName ? `Pericia: ${escapeHtml(skillName)}` : "",
+    manaCost ? `Mana: ${manaCost}` : "Mana: 0",
+    damage ? `Dano: ${escapeHtml(damage)}` : "",
+    areaLabel ? `Area: ${escapeHtml(areaLabel)}` : "",
+    category ? `Categoria: ${escapeHtml(category)}` : "",
+    requirements ? `Requisito/Tier: ${escapeHtml(requirements)}` : "",
+    source ? `Fonte: ${escapeHtml(source)}` : ""
+  ].filter(Boolean).join(" &middot; ");
+  return ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `
+      <section class="twbv-roll-chat twbv-power-chat" data-power-uuid="${escapeHtmlAttr(power.uuid)}">
+        <header class="twbv-power-chat__head">
+          <div class="twbv-power-chat__icon">${icon}</div>
+          <div>
+            <span>Poder</span>
+            <h3>${escapeHtml(power.name)}</h3>
+            ${meta ? `<p>${meta}</p>` : ""}
+          </div>
+        </header>
+        <div class="twbv-power-chat__actions">
+          <button type="button" class="twbv-power-effect-toggle"><i class="fas fa-eye"></i> Efeito</button>
+          <button type="button" class="twbv-power-roll-button" data-power-uuid="${escapeHtmlAttr(power.uuid)}"><i class="fas fa-dice-d20"></i> Rolar Pericia</button>
+          ${damage ? `<button type="button" class="twbv-power-damage-button" data-power-uuid="${escapeHtmlAttr(power.uuid)}"><i class="fas fa-burst"></i> Dano</button>` : ""}
+        </div>
+        <div class="twbv-power-chat__effect" hidden>${escapeHtml(effect)}</div>
+        <div class="twbv-power-roll-result"></div>
+      </section>`,
+    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+  });
 }
 
 function twbvGetSlotDefinition(slotKey) {
@@ -960,18 +1198,78 @@ function twbvMergeItemCreationFormData(type, formData = {}) {
 }
 
 async function twbvCreateActorItem(actor, requestedType, system = {}) {
-  const type = twbvResolveSupportedItemType(requestedType);
+  const requested = String(requestedType ?? "equipamento").trim() || "equipamento";
+  const type = twbvResolveSupportedItemType(requested);
+  const displayType = requested === "poder" ? "poder" : type;
+  const nextSystem = foundry.utils.deepClone(system ?? {});
+  if (requested === "poder" && type !== "poder") {
+    nextSystem.itemKind = "poder";
+    nextSystem.category = nextSystem.category || "poder";
+    nextSystem.categoria = nextSystem.categoria || "poder";
+    nextSystem.manaCost = Number.isFinite(Number(nextSystem.manaCost)) ? Number(nextSystem.manaCost) : 0;
+    nextSystem.damage = String(nextSystem.damage ?? "");
+    nextSystem.areaEffect = String(nextSystem.areaEffect ?? "none");
+  }
   const isWeapon = ["arma", "weapon"].includes(type);
   const isConsumable = type === "consumable";
   const isAmmo = type === "municao";
-  const name = isWeapon ? "Nova Arma" : isConsumable ? "Novo Consumível" : isAmmo ? "Nova Munição" : `${TWBV_ITEM_TYPES[type] ?? "Item"} ${actor?.items?.size + 1}`;
+  const name = isWeapon ? "Nova Arma" : isConsumable ? "Novo Consumível" : isAmmo ? "Nova Munição" : `${TWBV_ITEM_TYPES[displayType] ?? "Item"} ${actor?.items?.size + 1}`;
   console.log("[TWBV] Clique criar item na ficha.", {
     actor: actor?.name,
     requestedType,
     resolvedType: type,
     supportedTypes: Array.from(game?.system?.documentTypes?.Item ?? [])
   });
-  return actor.createEmbeddedDocuments("Item", [{ name, type, img: twbvGetItemIcon(type), system }]);
+  return actor.createEmbeddedDocuments("Item", [{ name, type, img: twbvGetItemIcon(displayType), system: nextSystem }]);
+}
+
+function twbvIsTraitItemType(type) {
+  return ["vantagem", "desvantagem", "habilidadeEspecial", "poder", "complicacao"].includes(String(type ?? ""));
+}
+
+function twbvBuildTraitItemData(type, source = {}) {
+  const requested = String(type ?? "").trim();
+  const resolved = twbvResolveSupportedItemType(type);
+  const displayType = requested === "poder" ? "poder" : resolved;
+  const system = twbvGetDefaultItemSystem(resolved);
+  const sourceSystem = source?.system ?? {};
+  const name = String(source?.name ?? source?.nome ?? twbvGetItemDefaultName(displayType, system)).trim() || twbvGetItemDefaultName(displayType, system);
+  const mergedSystem = foundry.utils.mergeObject(system, {
+    source: source?.fonte ?? source?.source ?? sourceSystem.fonte ?? sourceSystem.source ?? system.source,
+    fonte: source?.fonte ?? source?.source ?? sourceSystem.fonte ?? sourceSystem.source ?? system.fonte,
+    category: source?.categoria ?? source?.category ?? sourceSystem.categoria ?? sourceSystem.category ?? system.category,
+    categoria: source?.categoria ?? source?.category ?? sourceSystem.categoria ?? sourceSystem.category ?? system.categoria,
+    requirements: source?.requisitos ?? source?.requirements ?? source?.tier ?? sourceSystem.requisitos ?? sourceSystem.requirements ?? sourceSystem.tier ?? system.requirements,
+    requisitos: source?.requisitos ?? source?.requirements ?? source?.tier ?? sourceSystem.requisitos ?? sourceSystem.requirements ?? sourceSystem.tier ?? system.requisitos,
+    skill: source?.skill ?? source?.pericia ?? sourceSystem.skill ?? sourceSystem.pericia ?? system.skill,
+    description: source?.descricao ?? source?.description ?? sourceSystem.descricao ?? sourceSystem.description ?? system.description,
+    descricao: source?.descricao ?? source?.description ?? sourceSystem.descricao ?? sourceSystem.description ?? system.descricao,
+    effectsSummary: source?.effectsSummary ?? sourceSystem.effectsSummary ?? system.effectsSummary,
+    severity: source?.severity ?? sourceSystem.severity ?? system.severity,
+    favorite: Boolean(source?.favorite ?? sourceSystem.favorite ?? system.favorite),
+    isArcaneBackground: Boolean(source?.isArcaneBackground ?? sourceSystem.isArcaneBackground ?? system.isArcaneBackground),
+    hasCharges: Boolean(source?.hasCharges ?? sourceSystem.hasCharges ?? system.hasCharges),
+    charges: source?.cargas ?? source?.charges ?? sourceSystem.cargas ?? sourceSystem.charges ?? system.charges,
+    activeEffects: Array.isArray(source?.activeEffects) ? source.activeEffects : (Array.isArray(sourceSystem.activeEffects) ? sourceSystem.activeEffects : system.activeEffects)
+  }, { inplace: false });
+  if (requested === "poder" && resolved !== "poder") {
+    mergedSystem.itemKind = "poder";
+    mergedSystem.category = mergedSystem.category || "poder";
+    mergedSystem.categoria = mergedSystem.categoria || "poder";
+    mergedSystem.manaCost = Number.isFinite(Number(mergedSystem.manaCost)) ? Number(mergedSystem.manaCost) : 0;
+    mergedSystem.damage = String(mergedSystem.damage ?? "");
+    mergedSystem.areaEffect = String(mergedSystem.areaEffect ?? "none");
+  }
+  return { name, type: resolved, img: source?.img ?? source?.icon ?? sourceSystem.icon ?? twbvGetItemIcon(displayType), system: mergedSystem };
+}
+
+async function twbvCreateAndOpenActorTraitItem(actor, type, source = null) {
+  if (!actor) return null;
+  const data = twbvBuildTraitItemData(type, source ?? {});
+  const created = await actor.createEmbeddedDocuments("Item", [data]);
+  const item = created?.[0] ?? null;
+  item?.sheet?.render(true);
+  return item;
 }
 
 function twbvGetDefaultItemSystem(type) {
@@ -987,6 +1285,7 @@ function twbvGetDefaultItemSystem(type) {
       equipped: false,
       tags: "",
       damage: "",
+      damageRaise: "1d6",
       range: "",
       bonus: "",
       notes: "",
@@ -1080,6 +1379,7 @@ function twbvGetDefaultItemSystem(type) {
       modifier: "",
       ap: 0,
       damage: "",
+      damageRaise: "1d6",
       range: "",
       rof: 0,
       shots: 0,
@@ -1103,7 +1403,8 @@ function twbvGetDefaultItemSystem(type) {
       shots: 0,
       currentShots: 0,
       caliber: "",
-      compatibleWeapon: ""
+      compatibleWeapon: "",
+      ap: 0
     };
   }
   if (resolved === "equipamento") {
@@ -1117,6 +1418,34 @@ function twbvGetDefaultItemSystem(type) {
       equipped: false,
       tags: "",
       category: ""
+    };
+  }
+  if (["vantagem", "desvantagem", "habilidadeEspecial", "poder", "complicacao"].includes(resolved)) {
+    return {
+      active: true,
+      description: "",
+      effectsSummary: "",
+      skill: "",
+      manaCost: 0,
+      damage: "",
+      areaEffect: "none",
+      quantity: 1,
+      weight: 0,
+      cost: 0,
+      equipped: false,
+      tags: "",
+      source: "",
+      fonte: "",
+      category: "",
+      categoria: "",
+      requirements: "",
+      requisitos: "",
+      severity: resolved === "complicacao" ? "Menor" : "",
+      favorite: false,
+      isArcaneBackground: false,
+      hasCharges: false,
+      charges: "",
+      activeEffects: []
     };
   }
   return {};
@@ -1289,6 +1618,127 @@ const SKILL_ATTRIBUTES = [
   { key: "intuicao", label: "Intuição", iconPath: "icons/svg/d20-black.svg" },
   { key: "influencia", label: "Influência", iconPath: "icons/svg/d20-black.svg" }
 ];
+
+function twbvFlattenAuditChanges(value, prefix = "") {
+  if (Array.isArray(value)) {
+    return value.flatMap((entry, index) => twbvFlattenAuditChanges(entry, prefix ? `${prefix}.${index}` : String(index)));
+  }
+  if (value && typeof value === "object") {
+    const entries = [];
+    for (const [key, entry] of Object.entries(value)) {
+      const path = prefix ? `${prefix}.${key}` : key;
+      if (entry && typeof entry === "object") entries.push(...twbvFlattenAuditChanges(entry, path));
+      else entries.push([path, entry]);
+    }
+    return entries;
+  }
+  return prefix ? [[prefix, value]] : [];
+}
+
+function twbvIsAuditableSheetPath(path) {
+  return path === "name" || path === "img" || String(path ?? "").startsWith("system.");
+}
+
+function twbvAuditValuesEqual(previous, next) {
+  if (previous === next) return true;
+  return JSON.stringify(previous ?? null) === JSON.stringify(next ?? null);
+}
+
+function twbvAuditAttributeLabel(key) {
+  return SKILL_ATTRIBUTES.find((entry) => entry.key === key)?.label ?? key;
+}
+
+function twbvAuditSkillName(actor, index, fallback = "") {
+  const skill = actor?.system?.pericias?.[Number(index)] ?? null;
+  return String(skill?.nome ?? fallback ?? `Perícia ${Number(index) + 1}`).trim();
+}
+
+function twbvAuditFieldLabel(document, path, previous, next) {
+  const parts = String(path ?? "").split(".");
+  if (path === "name") return "Nome";
+  if (path === "img") return "Imagem";
+  if (parts[0] !== "system") return path;
+  if (parts[1] === "atributos" && parts[2]) {
+    const attr = twbvAuditAttributeLabel(parts[2]);
+    if (parts[3] === "passo") return `${attr} - Dado`;
+    if (parts[3] === "bonus") return `${attr} - Bônus`;
+    return `${attr} - ${parts.slice(3).join(".")}`;
+  }
+  if (parts[1] === "pericias" && Number.isInteger(Number(parts[2]))) {
+    const index = Number(parts[2]);
+    const previousName = previous && typeof previous === "object" ? previous.nome : "";
+    const nextName = next && typeof next === "object" ? next.nome : "";
+    const skillName = twbvAuditSkillName(document, index, nextName || previousName);
+    const field = parts[3] ?? "";
+    if (field === "dado") return `Perícia ${skillName} - Dado`;
+    if (field === "bonus") return `Perícia ${skillName} - Bônus`;
+    if (field === "atributo") return `Perícia ${skillName} - Atributo`;
+    if (field === "nome") return `Perícia ${index + 1} - Nome`;
+    if (field === "locked") return `Perícia ${skillName} - Travada`;
+    return `Perícia ${skillName} - ${field || "Dados"}`;
+  }
+  const labels = {
+    "system.eco": "Eco",
+    "system.ferimentos": "Ferimentos",
+    "system.fadiga": "Fadiga",
+    "system.damage": "Dano",
+    "system.damageRaise": "Ampliação",
+    "system.range": "Alcance",
+    "system.ap": "PA",
+    "system.currentShots": "Munição atual",
+    "system.shots": "Capacidade",
+    "system.ammo": "Munição",
+    "system.skill": "Perícia",
+    "system.equipped": "Equipado",
+    "system.handMode": "Empunhadura"
+  };
+  return labels[path] ?? String(path).replace(/^system\./, "");
+}
+
+function twbvAuditFormatValue(path, value) {
+  if (value === undefined || value === null || value === "") return "vazio";
+  if (typeof value === "boolean") return value ? "sim" : "não";
+  if (/\.passo$|\.dado$/.test(String(path)) && Number.isFinite(Number(value))) return `d${Number(value)}`;
+  if (typeof value === "object") return JSON.stringify(value);
+  return String(value);
+}
+
+function twbvCollectAuditEntries(document, changed = {}) {
+  return twbvFlattenAuditChanges(changed)
+    .filter(([path]) => twbvIsAuditableSheetPath(path))
+    .map(([path, next]) => {
+      const previous = foundry.utils.getProperty(document, path);
+      if (twbvAuditValuesEqual(previous, next)) return null;
+      return {
+        path,
+        label: twbvAuditFieldLabel(document, path, previous, next),
+        previous: twbvAuditFormatValue(path, previous),
+        next: twbvAuditFormatValue(path, next)
+      };
+    })
+    .filter(Boolean);
+}
+
+async function twbvSendSheetAuditMessage(document, entries = [], userId = game.user?.id) {
+  const user = game.users?.get(userId) ?? game.user;
+  if (!entries.length || userId !== game.user?.id || user?.isGM) return;
+  const actor = document instanceof Actor ? document : document?.parent instanceof Actor ? document.parent : null;
+  const sheetName = actor?.name ?? document?.name ?? "Ficha";
+  const itemText = document instanceof Item ? `/${document.name}` : "";
+  const main = entries[0];
+  const extra = entries.length > 1 ? ` +${entries.length - 1}` : "";
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `
+      <section class="twbv-sheet-audit">
+        <span class="twbv-sheet-audit__tag">Ficha</span>
+        <span>${escapeHtml(user?.name ?? "Usuário")} mexeu em ${escapeHtml(sheetName)}${escapeHtml(itemText)}:</span>
+        <strong>${escapeHtml(main.label)}</strong>
+        <span>${escapeHtml(main.previous)} &rarr; ${escapeHtml(main.next)}${extra}</span>
+      </section>`,
+    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+  });
+}
 
 function getSkillHalfForDefense(actorSystem, skillName) {
   const target = String(skillName ?? "").trim().toUpperCase();
@@ -1499,6 +1949,49 @@ function twbvDiceTermBreakdownHtml(roll) {
   return rows.join("");
 }
 
+async function twbvCreateFormulaRollChat({ actor = null, formula, title = "Rolagem", label = "Resultado", type = CONST.CHAT_MESSAGE_TYPES.OTHER } = {}) {
+  const safeFormula = String(formula ?? "").trim();
+  if (!safeFormula) return null;
+  const roll = await (new Roll(safeFormula)).evaluate();
+  await showDice3dRoll(roll);
+  const total = Number(roll.total ?? 0);
+  const breakdown = twbvDiceTermBreakdownHtml(roll);
+  const content = `
+    <section class="twbv-roll-chat">
+      <header class="twbv-roll-chat__header">
+        <h3>${escapeHtml(title)}</h3>
+      </header>
+      <div class="twbv-roll-chat__grid">
+        <details class="twbv-roll-card twbv-roll-card--compact twbv-roll-card--total is-selected">
+          <summary>
+            <span class="twbv-roll-card__label">${escapeHtml(label)}</span>
+            <span class="twbv-roll-card__die">${escapeHtml(safeFormula)}</span>
+            <span class="twbv-roll-card__value">${total}</span>
+            ${twbvChatRerollButtons()}
+          </summary>
+          <div class="twbv-roll-card__value--breakdown">
+            <div class="twbv-roll-breakdown">
+              ${breakdown}
+              <div class="twbv-roll-breakdown__row is-total"><span>Total</span><strong>${total}</strong></div>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+    </section>`;
+  const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+  return ChatMessage.create({
+    speaker: actor ? ChatMessage.getSpeaker({ actor }) : ChatMessage.getSpeaker(),
+    content: contentWithAdjust,
+    type,
+    rolls: [roll],
+    flags: {"world-behind-the-veil": {
+      rollAdjust: { baseTotal: total, chain: [], baseContent: content },
+      reroll: { mode: "formula", actorUuid: actor?.uuid ?? "", args: { formula: safeFormula, title, label, type } }
+    }}
+  });
+}
+
 async function twbvEvaluateFormulaDetailed(formula, label = "Dados") {
   const text = String(formula ?? "").replace(/\s+/g, "");
   const tokens = text.match(/[+\-]?(?:\d*d\d+|\d+)/gi) ?? [];
@@ -1512,10 +2005,14 @@ async function twbvEvaluateFormulaDetailed(formula, label = "Dados") {
     if (diceMatch) {
       const count = Math.max(1, Number(diceMatch[1] || 1));
       const faces = Number(diceMatch[2]);
+      const baseRoll = await (new Roll(`${count}d${faces}`)).evaluate();
+      await showDice3dRoll(baseRoll);
+      const baseValues = Array.from(baseRoll.dice?.[0]?.results ?? [])
+        .map((result) => Number(result.result ?? result.count ?? 0))
+        .filter((value) => Number.isFinite(value));
+      while (baseValues.length < count) baseValues.push(await rollSingleDie(faces).then((roll) => Number(roll.total ?? 0)));
       for (let index = 0; index < count; index += 1) {
-        const baseRoll = await rollSingleDie(faces);
-        await showDice3dRoll(baseRoll);
-        const rolls = [Number(baseRoll.total ?? 0)];
+        const rolls = [Number(baseValues[index] ?? 0)];
         rolls.push(...(await rollVeuExtrasFromFirst(faces, rolls[0])));
         const subtotal = rolls.reduce((sum, value) => sum + Number(value ?? 0), 0) * sign;
         total += subtotal;
@@ -1543,6 +2040,81 @@ async function twbvEvaluateFormulaDetailed(formula, label = "Dados") {
   return { total, rows: rows.join("") || `<div class="twbv-roll-breakdown__row"><span>${escapeHtml(label)}</span><strong>0</strong></div>` };
 }
 
+async function twbvEvaluateDamagePartsTogether(parts = []) {
+  const entries = [];
+  const rows = [];
+  let total = 0;
+
+  for (const part of parts) {
+    const label = String(part?.label ?? "Dano");
+    const text = String(part?.formula ?? "").replace(/\s+/g, "");
+    const tokens = text.match(/[+\-]?(?:\d*d\d+|\d+)/gi) ?? [];
+    for (const rawToken of tokens) {
+      const sign = rawToken.startsWith("-") ? -1 : 1;
+      const token = rawToken.replace(/^[+\-]/, "");
+      const diceMatch = token.match(/^(\d*)d(\d+)$/i);
+      if (diceMatch) {
+        const count = Math.max(1, Number(diceMatch[1] || 1));
+        const faces = Number(diceMatch[2]);
+        entries.push({ label, sign, count, faces });
+        continue;
+      }
+      const flat = Number(token) * sign;
+      if (Number.isFinite(flat) && flat !== 0) {
+        total += flat;
+        rows.push(`<div class="twbv-roll-breakdown__row"><span>${escapeHtml(label)}</span><strong>${twbvFormatSignedLabel(flat)}</strong></div>`);
+      }
+    }
+  }
+
+  const baseFormula = entries.map((entry) => `${entry.count}d${entry.faces}`).join("+");
+  const baseRoll = baseFormula ? await (new Roll(baseFormula)).evaluate() : null;
+  if (baseRoll) await showDice3dRoll(baseRoll);
+  const baseDice = Array.from(baseRoll?.dice ?? []);
+
+  const pendingExtras = [];
+  entries.forEach((entry, entryIndex) => {
+    const values = Array.from(baseDice[entryIndex]?.results ?? [])
+      .map((result) => Number(result.result ?? result.count ?? 0))
+      .filter((value) => Number.isFinite(value));
+    while (values.length < entry.count) values.push(0);
+    entry.rolls = values.map((value) => [value]);
+    entry.rolls.forEach((chain) => {
+      if (chain[0] === entry.faces) pendingExtras.push({ entry, chain });
+    });
+  });
+
+  while (pendingExtras.length) {
+    const wave = pendingExtras.splice(0);
+    const extraFormula = wave.map((item) => `1d${item.entry.faces}`).join("+");
+    const extraRoll = await (new Roll(extraFormula)).evaluate();
+    await showDice3dRoll(extraRoll);
+    const extraDice = Array.from(extraRoll?.dice ?? []);
+    wave.forEach((item, index) => {
+      const value = Number(extraDice[index]?.results?.[0]?.result ?? extraDice[index]?.results?.[0]?.count ?? 0);
+      item.chain.push(value);
+      if (value === item.entry.faces) pendingExtras.push(item);
+    });
+  }
+
+  const groupedRows = new Map();
+  for (const entry of entries) {
+    for (const chain of entry.rolls ?? []) {
+      const subtotal = chain.reduce((sum, value) => sum + Number(value ?? 0), 0) * entry.sign;
+      total += subtotal;
+      const chainText = formatVeuChainText(entry.faces, chain).replaceAll("+VÃƒâ€°U", " + Véu").replaceAll("+VÃ‰U", " + Véu");
+      const group = groupedRows.get(entry.label) ?? [];
+      group.push(`${entry.sign < 0 ? "-" : ""}${escapeHtml(chainText)} = ${subtotal}`);
+      groupedRows.set(entry.label, group);
+    }
+  }
+  for (const [label, parts] of groupedRows.entries()) {
+    rows.push(`<div class="twbv-roll-breakdown__row"><span>${escapeHtml(label)}</span><strong>${parts.join(" | ")}</strong></div>`);
+  }
+
+  return { total, rows: rows.join("") || `<div class="twbv-roll-breakdown__row"><span>Dano</span><strong>0</strong></div>` };
+}
+
 function escapeHtmlAttr(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -1568,67 +2140,91 @@ function twbvNormalizeDamageFormulaPart(value, { base = false } = {}) {
   return `+${text}`;
 }
 
-function twbvBuildWeaponDamageFormula(weapon, damageMods = []) {
+function twbvGetWeaponAmplificationFormula(weapon) {
+  const candidates = [
+    weapon?.system?.damageRaise,
+    weapon?.system?.raiseDamage,
+    weapon?.system?.amplificationDamage,
+    weapon?.system?.bonusDamage
+  ];
+  const value = candidates.map((entry) => String(entry ?? "").trim()).find(Boolean) ?? "1d6";
+  return twbvNormalizeDamageFormulaPart(value);
+}
+
+function twbvBuildWeaponDamageFormula(weapon, damageMods = [], { amplified = false } = {}) {
   const base = twbvNormalizeDamageFormulaPart(weapon?.system?.damage, { base: true });
   const extras = damageMods
     .map((mod) => twbvNormalizeDamageFormulaPart(mod?.damage ?? mod?.modifier ?? ""))
     .filter(Boolean);
+  if (amplified) extras.push(twbvGetWeaponAmplificationFormula(weapon));
   return `${base}${extras.join("")}`;
 }
 
-async function twbvBuildWeaponDamageChatContent(actor, weapon, damageMods = []) {
-  const formula = twbvBuildWeaponDamageFormula(weapon, damageMods);
+function twbvChatRerollButtons({ damage = false, weaponUuid = "", amplified = false } = {}) {
+  const freeTitle = "Rerrolar gratuitamente";
+  const ecoTitle = "Gastar 1 Eco para rerrolar o dano";
+  if (damage) {
+    return `<div class="twbv-chat-reroll-actions">
+      <button type="button" class="twbv-chat-reroll twbv-chat-reroll--free" title="${freeTitle}" data-reroll-kind="damage" data-weapon-uuid="${escapeHtmlAttr(weaponUuid)}" data-damage-mode="${amplified ? "amplified" : "normal"}"><i class="fas fa-rotate-right"></i></button>
+      <button type="button" class="twbv-chat-reroll twbv-chat-reroll--eco" title="${ecoTitle}" data-reroll-kind="damage-eco" data-weapon-uuid="${escapeHtmlAttr(weaponUuid)}" data-damage-mode="${amplified ? "amplified" : "normal"}">Éco</button>
+    </div>`;
+  }
+  return `<div class="twbv-chat-reroll-actions">
+    <button type="button" class="twbv-chat-reroll twbv-chat-reroll--free" title="${freeTitle}" data-reroll-kind="stored"><i class="fas fa-rotate-right"></i></button>
+    <button type="button" class="twbv-chat-reroll twbv-chat-reroll--eco" title="Gastar 1 Eco para rerrolar esta rolagem" data-reroll-kind="stored-eco">Éco</button>
+  </div>`;
+}
+
+async function twbvBuildWeaponDamageChatContent(actor, weapon, damageMods = [], { amplified = false } = {}) {
+  const formula = twbvBuildWeaponDamageFormula(weapon, damageMods, { amplified });
   let detailedRoll;
+  let amplificationFormula = "";
   try {
     const baseFormula = twbvNormalizeDamageFormulaPart(weapon?.system?.damage, { base: true });
-    const baseRoll = await twbvEvaluateFormulaDetailed(baseFormula, "Dano");
-    const modRolls = [];
+    const rollParts = [{ label: "Dano", formula: baseFormula }];
     for (const mod of damageMods) {
       const modFormula = twbvNormalizeDamageFormulaPart(mod?.damage ?? mod?.modifier ?? "");
-      if (modFormula) modRolls.push(await twbvEvaluateFormulaDetailed(modFormula, mod?.name ?? "Modificação"));
+      if (modFormula) rollParts.push({ label: mod?.name ?? "Modificação", formula: modFormula });
     }
-    detailedRoll = {
-      total: baseRoll.total + modRolls.reduce((sum, entry) => sum + entry.total, 0),
-      rows: `${baseRoll.rows}${modRolls.map((entry) => entry.rows).join("")}`
-    };
+    amplificationFormula = amplified ? twbvGetWeaponAmplificationFormula(weapon) : "";
+    if (amplificationFormula) rollParts.push({ label: "Ampliação", formula: amplificationFormula });
+    detailedRoll = await twbvEvaluateDamagePartsTogether(rollParts);
   } catch (error) {
     console.error("[TWBV] Fórmula de dano inválida.", { weapon: weapon?.name, formula, error });
     ui.notifications?.error(`Fórmula de dano inválida em ${weapon?.name ?? "arma"}: ${formula}`);
     return null;
   }
-  const modText = damageMods.length
-    ? damageMods.map((mod) => `<span>${escapeHtml(mod.name ?? "Modificação")} ${escapeHtml(twbvNormalizeDamageFormulaPart(mod.damage ?? mod.modifier ?? ""))}</span>`).join("")
-    : `<span>Nenhuma modificação de dano</span>`;
-  const damageBonusRows = damageMods.length ? "" : `<div class="twbv-roll-breakdown__row"><span>Bônus</span><strong>+0</strong></div>`;
+  const weaponAp = twbvNumberOrZero(weapon?.system?.ap);
+  const ammoAp = await twbvGetWeaponAmmoArmorPiercing(weapon);
+  const modAp = damageMods.reduce((sum, mod) => sum + twbvNumberOrZero(mod?.ap), 0);
+  const totalAp = weaponAp + ammoAp + modAp;
+  const ammoName = String(weapon?.system?.ammoSourceName ?? weapon?.system?.ammo ?? "").trim();
+  const paTooltip = `Arma ${weaponAp} + Munição ${ammoAp} + Modificações ${modAp} = ${totalAp}`;
+  const damageRows = `
+    <div class="twbv-roll-breakdown">
+      ${ammoName ? `<div class="twbv-roll-breakdown__row"><span>Munição</span><strong>${escapeHtml(ammoName)}</strong></div>` : ""}
+      <div class="twbv-roll-breakdown__row"><span title="${escapeHtmlAttr(paTooltip)}">PA</span><strong title="${escapeHtmlAttr(paTooltip)}">${ammoAp}</strong></div>
+      ${amplified ? `<div class="twbv-roll-breakdown__row"><span>Ampliação</span><strong>${escapeHtml(amplificationFormula || "+1d6")}</strong></div>` : ""}
+      ${detailedRoll.rows}
+      <div class="twbv-roll-breakdown__row is-total"><span>Dano Total</span><strong>${Number(detailedRoll.total ?? 0)}</strong></div>
+    </div>`;
+  const renderedDamageRows = damageRows.replace(/\s*<div class="twbv-roll-breakdown__row"><span>Amplia[\s\S]*?<\/div>/, "");
   return `
-    <section class="twbv-roll-chat twbv-damage-chat">
-      <header class="twbv-roll-chat__header">
-        <h3>${escapeHtml(weapon?.name ?? "Arma")} - Dano</h3>
-        <p>${escapeHtml(formula)}${weapon?.system?.ammo ? ` • ${escapeHtml(weapon.system.ammo)}` : ""}</p>
-      </header>
-      <div class="twbv-roll-chat__grid twbv-damage-chat__grid">
-        <div class="twbv-roll-card is-selected">
-          <div class="twbv-roll-card__label">Fórmula</div>
-          <div class="twbv-roll-card__die">${escapeHtml(formula)}</div>
-          <div class="twbv-roll-card__value twbv-roll-card__value--breakdown">
-            <div class="twbv-roll-breakdown">
-              ${detailedRoll.rows}
-              ${damageBonusRows}
-              <div class="twbv-roll-breakdown__row is-total"><span>Total</span><strong>${Number(detailedRoll.total ?? 0)}</strong></div>
-            </div>
-          </div>
-        </div>
-        <div class="twbv-roll-card">
-          <div class="twbv-roll-card__label">Modificações</div>
-          <div class="twbv-damage-mod-list">${modText}</div>
-        </div>
-      </div>
-      <footer class="twbv-roll-chat__total">Dano Total<strong>${Number(detailedRoll.total ?? 0)}</strong></footer>
+    <section class="twbv-roll-chat twbv-damage-chat twbv-damage-chat--compact">
+      <details class="twbv-roll-card twbv-roll-card--compact twbv-roll-card--damage-total is-selected">
+        <summary>
+          <span class="twbv-roll-card__label">Dano Total</span>
+          <span class="twbv-roll-card__die">${escapeHtml(amplified ? "Ampliado" : "Normal")}</span>
+          <span class="twbv-roll-card__value">${Number(detailedRoll.total ?? 0)}</span>
+          ${twbvChatRerollButtons({ damage: true, weaponUuid: weapon?.uuid ?? "", amplified })}
+        </summary>
+        <div class="twbv-roll-card__value--breakdown">${renderedDamageRows}</div>
+      </details>
     </section>`;
 }
 
-async function twbvRenderWeaponDamageRoll(actor, weapon, damageMods = []) {
-  const content = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods);
+async function twbvRenderWeaponDamageRoll(actor, weapon, damageMods = [], { amplified = false } = {}) {
+  const content = await twbvBuildWeaponDamageChatContent(actor, weapon, damageMods, { amplified });
   if (!content) return null;
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -1655,7 +2251,9 @@ function renderDualDieResult({
   subtitleClass = "",
   finalModifier = 0,
   finalModifierLabel = "",
-  extraContent = ""
+  extraContent = "",
+  extraContentPlacement = "grid",
+  returnContentOnly = false
 }) {
   return (async () => {
     const safeDieA = Number(dieA);
@@ -1709,14 +2307,34 @@ function renderDualDieResult({
       const hoverText = `Rolagens: ${rollBreakdown}${effectiveBonus !== 0 ? ` | Bônus: ${effectiveBonus > 0 ? '+' : ''}${effectiveBonus}` : ''} | Total: ${modified}`;
       const breakdown = twbvRollBreakdownHtml({ title: label, die: dieFaces, rolls: selectedRolls, bonus: effectiveBonus, bonusDetails });
       return `
-      <div class="twbv-roll-card ${selected ? "is-selected" : ""}">
-        <div class="twbv-roll-card__label">${label}</div>
-        <div class="twbv-roll-card__die">${dieDisplay}${veuAtivado ? ' • Véu' : ''}</div>
-        <div class="twbv-roll-card__value twbv-roll-card__value--breakdown" title="${hoverText}">${breakdown}</div>
-      </div>`;
+      <details class="twbv-roll-card twbv-roll-card--compact ${selected ? "is-selected" : ""}" title="${escapeHtmlAttr(hoverText)}">
+        <summary>
+          <span class="twbv-roll-card__label">${label}</span>
+          <span class="twbv-roll-card__die">${dieDisplay}${veuAtivado ? ' • Véu' : ''}</span>
+          <span class="twbv-roll-card__value">${escapeHtml(valueLabel)}</span>
+        </summary>
+        <div class="twbv-roll-card__value--breakdown">${breakdown}</div>
+      </details>`;
     };
     const totalLabel = `${total}`;
     const totalHoverText = `${winnerExpr}${appliedModifier !== 0 ? ` | Modificador(${appliedModifier > 0 ? '+' : ''}${appliedModifier})=${total}` : ''}`;
+    const topContent = extraContentPlacement === "top" ? extraContent : "";
+    const gridContent = extraContentPlacement === "top" ? "" : extraContent;
+    const totalChoiceBlock = (label, dieText, bonusValue, resultTotal, selected) => `
+      <div class="twbv-roll-choice-breakdown ${selected ? "is-total" : ""}">
+        <div class="twbv-roll-choice-breakdown__top">
+          <span>${escapeHtml(label)}</span>
+          <span>Bônus ${twbvFormatSignedLabel(bonusValue)}</span>
+          <strong>Total ${resultTotal}</strong>
+        </div>
+        <div class="twbv-roll-choice-breakdown__dice">${escapeHtml(dieText)}</div>
+      </div>`;
+    const totalDetails = `
+      <div class="twbv-roll-breakdown twbv-roll-breakdown--choices">
+        ${totalChoiceBlock("Perícia", formatVeuChainText(safeDieA, rollAData.rolls), skillBonus, skillTotal, winnerIsSkill)}
+        ${totalChoiceBlock("Desperto", formatVeuChainText(safeDieB, rollBData.rolls), effectiveBonusB, awakenedTotal, !winnerIsSkill)}
+        ${appliedModifier !== 0 ? `<div class="twbv-roll-breakdown__row"><span>Mod.</span><strong>${baseTotal} ${twbvFormatSignedLabel(appliedModifier)} = ${total}</strong></div>` : ""}
+      </div>`;
 
     const modifierDetails = appliedModifier !== 0
       ? `<span class="twbv-roll-chat__modifier"> Dado ${baseTotal}${finalModifierLabel ? ` • ${finalModifierLabel}` : ` • Mod ${appliedModifier > 0 ? "+" : ""}${appliedModifier}`}</span>`
@@ -1728,21 +2346,37 @@ function renderDualDieResult({
           <h3>${title}</h3>
           ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
         </header>
+        ${topContent}
         <div class="twbv-roll-chat__grid">
-          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, safeDieA, skillDieResult, skillBonus, skillTotal, skillTotal === total, rollAData.rolls, bonusDetailsA)}
-          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, safeDieB, awakenedDieResult, effectiveBonusB, awakenedTotal, awakenedTotal === total, rollBData.rolls, bonusDetailsB)}
-          ${extraContent || ""}
+          ${dieCard(labelA, dieDisplayA ?? `d${dieA}`, safeDieA, skillDieResult, skillBonus, skillTotal, winnerIsSkill, rollAData.rolls, bonusDetailsA)}
+          ${dieCard(labelB, dieDisplayB ?? `d${dieB}`, safeDieB, awakenedDieResult, effectiveBonusB, awakenedTotal, !winnerIsSkill, rollBData.rolls, bonusDetailsB)}
+          <details class="twbv-roll-card twbv-roll-card--compact twbv-roll-card--total is-selected" title="${escapeHtmlAttr(totalHoverText)}">
+            <summary>
+              <span class="twbv-roll-card__label">Total</span>
+              <span class="twbv-roll-card__die">${escapeHtml(winnerLabel)}</span>
+              <span class="twbv-roll-card__value">${totalLabel}</span>
+              ${twbvChatRerollButtons()}
+            </summary>
+            <div class="twbv-roll-card__value--breakdown">${totalDetails}</div>
+          </details>
+          ${gridContent || ""}
           <div class="twbv-chat-damage-result"></div>
         </div>
-        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong title="${escapeHtmlAttr(totalHoverText)}">${totalLabel}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
+        <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">🎲 +</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+    const reroll = {
+      mode: "dual",
+      actorUuid: actor?.uuid ?? "",
+      args: { title, dieA, labelA, dieB, labelB, bonus, bonusA, bonusB, dieDisplayA, dieDisplayB, bonusDetailsA, bonusDetailsB, subtitle, subtitleClass, finalModifier, finalModifierLabel, extraContent, extraContentPlacement }
+    };
+    if (returnContentOnly) return { content, contentWithAdjust, total, reroll };
 
     const persistedMessage = await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: contentWithAdjust,
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content }, reroll }}
     });
     return persistedMessage;
   })();
@@ -1760,7 +2394,9 @@ function renderSingleDieResult({
   subtitleClass = "",
   finalModifier = 0,
   finalModifierLabel = "",
-  extraContent = ""
+  extraContent = "",
+  extraContentPlacement = "grid",
+  returnContentOnly = false
 }) {
   return (async () => {
     const safeDie = Number(die);
@@ -1782,31 +2418,57 @@ function renderSingleDieResult({
     const modifierDetails = appliedModifier !== 0
       ? `<span class="twbv-roll-chat__modifier"> Dado ${modified}${finalModifierLabel ? ` • ${finalModifierLabel}` : ` • Mod ${appliedModifier > 0 ? "+" : ""}${appliedModifier}`}</span>`
       : "";
+    const topContent = extraContentPlacement === "top" ? extraContent : "";
+    const gridContent = extraContentPlacement === "top" ? "" : extraContent;
     const content = `
       <section class="twbv-roll-chat">
         <header class="twbv-roll-chat__header">
           <h3>${title}</h3>
           ${subtitle ? `<p class="${subtitleClass}">${subtitle}</p>` : ""}
         </header>
+        ${topContent}
         <div class="twbv-roll-chat__grid">
-          <div class="twbv-roll-card is-selected">
-            <div class="twbv-roll-card__label">${label}</div>
-            <div class="twbv-roll-card__die">${dieDisplay ?? `d${safeDie}`}${veuAtivado ? ' • Véu' : ''}</div>
-            <div class="twbv-roll-card__value twbv-roll-card__value--breakdown" title="Rolagens: ${rolls.join(' + ')} | Total: ${modified}">
+          <details class="twbv-roll-card twbv-roll-card--compact is-selected" title="Rolagens: ${rolls.join(' + ')} | Total: ${modified}">
+            <summary>
+              <span class="twbv-roll-card__label">${label}</span>
+              <span class="twbv-roll-card__die">${dieDisplay ?? `d${safeDie}`}${veuAtivado ? ' • Véu' : ''}</span>
+              <span class="twbv-roll-card__value">${escapeHtml(valueLabel)}</span>
+            </summary>
+            <div class="twbv-roll-card__value--breakdown">
               ${twbvRollBreakdownHtml({ title: label, die: safeDie, rolls, bonus: effectiveBonus, bonusDetails })}
             </div>
-          </div>
-          ${extraContent || ""}
+          </details>
+          <details class="twbv-roll-card twbv-roll-card--compact twbv-roll-card--total is-selected">
+            <summary>
+              <span class="twbv-roll-card__label">Total</span>
+              <span class="twbv-roll-card__die">${label}</span>
+              <span class="twbv-roll-card__value">${total}</span>
+              ${twbvChatRerollButtons()}
+            </summary>
+            <div class="twbv-roll-card__value--breakdown">
+              <div class="twbv-roll-breakdown">
+                <div class="twbv-roll-breakdown__row is-total"><span>${label}</span><strong>${valueLabel}</strong></div>
+                ${appliedModifier !== 0 ? `<div class="twbv-roll-breakdown__row"><span>Mod.</span><strong>${modified} ${twbvFormatSignedLabel(appliedModifier)} = ${total}</strong></div>` : ""}
+              </div>
+            </div>
+          </details>
+          ${gridContent || ""}
           <div class="twbv-chat-damage-result"></div>
         </div>
-        <footer class="twbv-roll-chat__total">Resultado:${modifierDetails}<strong>${total}</strong></footer><div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">+ Ajustar</button></div>
+        <div class="twbv-roll-chat__top-adjust"><button type="button" class="twbv-roll-adjust" title="Ajustar resultado">+ Ajustar</button></div>
       </section>`;
     const contentWithAdjust = `${content}<!--TWBV_ADJUST-->${buildRollAdjustSection(total, [])}`;
+    const reroll = {
+      mode: "single",
+      actorUuid: actor?.uuid ?? "",
+      args: { title, die, label, bonus, dieDisplay, bonusDetails, subtitle, subtitleClass, finalModifier, finalModifierLabel, extraContent, extraContentPlacement }
+    };
+    if (returnContentOnly) return { content, contentWithAdjust, total, reroll };
     return ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor }),
       content: contentWithAdjust,
       type: CONST.CHAT_MESSAGE_TYPES.OTHER,
-      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content }, reroll }}
     });
   })();
 }
@@ -1862,6 +2524,163 @@ function applyDialogWindowClass(dialogLike, className) {
   const windowApp = root.closest?.(".window-app");
   if (windowApp) windowApp.classList.add(className);
   return windowApp ?? null;
+}
+
+function twbvGetFavoriteItems(actor) {
+  return Array.from(actor?.items ?? [])
+    .filter((item) => Boolean(item.system?.favorite))
+    .map((item) => ({
+      id: item.id,
+      uuid: item.uuid,
+      name: item.name,
+      img: item.img,
+      type: twbvIsPowerItemDocument(item) ? "poder" : item.type,
+      typeLabel: TWBV_ITEM_TYPES[twbvIsPowerItemDocument(item) ? "poder" : item.type] ?? item.type
+    }));
+}
+
+function twbvRenderGlobalFavorites(actor, { toggle = false } = {}) {
+  if (!actor) return;
+  const existing = document.querySelector(".twbv-global-favorites");
+  if (toggle && existing?.dataset.actorUuid === actor.uuid) {
+    existing.remove();
+    return;
+  }
+  existing?.remove();
+
+  const favorites = twbvGetFavoriteItems(actor);
+  const savedPosition = (() => {
+    try { return JSON.parse(localStorage.getItem("twbvGlobalFavoritesState") ?? "{}"); }
+    catch (_error) { return {}; }
+  })();
+  const left = Number.isFinite(Number(savedPosition.left)) ? Number(savedPosition.left) : 78;
+  const top = Number.isFinite(Number(savedPosition.top)) ? Number(savedPosition.top) : 140;
+  const width = Number.isFinite(Number(savedPosition.width)) ? Math.clamp(Number(savedPosition.width), 120, 420) : 190;
+  const height = Number.isFinite(Number(savedPosition.height)) ? Math.clamp(Number(savedPosition.height), 92, 520) : 0;
+  const locked = Boolean(savedPosition.locked);
+  const sizeStyle = `width:${width}px;${height ? ` height:${height}px;` : ""}`;
+  const itemsHtml = favorites.length
+    ? favorites.map((item) => `
+      <article class="twbv-global-favorite" data-item-id="${escapeHtmlAttr(item.id)}" role="button" tabindex="0">
+        <img src="${escapeHtmlAttr(item.img)}" alt="${escapeHtmlAttr(item.name)}" />
+        <div><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.typeLabel)}</span></div>
+      </article>`).join("")
+    : `<p class="twbv-global-favorites__empty">Nenhum favorito marcado.</p>`;
+
+  document.body.insertAdjacentHTML("beforeend", `
+    <aside class="twbv-global-favorites${locked ? " is-size-locked" : ""}" data-actor-uuid="${escapeHtmlAttr(actor.uuid)}" style="left:${left}px; top:${top}px; ${sizeStyle}">
+      <header class="twbv-global-favorites__header">
+        <div class="twbv-global-favorites__title"><i class="fas fa-star"></i><span>${escapeHtml(actor.name)}</span></div>
+        <button type="button" class="twbv-global-favorites__lock" title="${locked ? "Destravar tamanho" : "Travar tamanho"}"><i class="fas ${locked ? "fa-lock" : "fa-lock-open"}"></i></button>
+        <button type="button" class="twbv-global-favorites__toggle" title="Recolher favoritos"><i class="fas fa-compress-alt"></i></button>
+        <button type="button" class="twbv-global-favorites__close" title="Fechar favoritos"><i class="fas fa-times"></i></button>
+      </header>
+      <div class="twbv-global-favorites__list">${itemsHtml}</div>
+      <div class="twbv-global-favorites__resize" title="Redimensionar favoritos" aria-label="Redimensionar favoritos"></div>
+    </aside>`);
+
+  const panel = document.querySelector(".twbv-global-favorites");
+  if (!panel) return;
+  panel.querySelector(".twbv-global-favorites__toggle")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    panel.classList.toggle("is-collapsed");
+  });
+  panel.querySelector(".twbv-global-favorites__close")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    panel.remove();
+  });
+  panel.querySelector(".twbv-global-favorites__lock")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const isLocked = panel.classList.toggle("is-size-locked");
+    const icon = event.currentTarget.querySelector("i");
+    icon?.classList.toggle("fa-lock", isLocked);
+    icon?.classList.toggle("fa-lock-open", !isLocked);
+    event.currentTarget.title = isLocked ? "Destravar tamanho" : "Travar tamanho";
+    twbvSaveGlobalFavoritesState(panel);
+  });
+  panel.querySelector(".twbv-global-favorites__title")?.addEventListener("click", (event) => {
+    if (!panel.classList.contains("is-collapsed")) return;
+    event.preventDefault();
+    panel.classList.remove("is-collapsed");
+  });
+  panel.querySelectorAll(".twbv-global-favorite").forEach((entry) => {
+    entry.addEventListener("click", () => actor.items.get(entry.dataset.itemId)?.sheet.render(true));
+    entry.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      actor.items.get(entry.dataset.itemId)?.sheet.render(true);
+    });
+  });
+  twbvEnableGlobalFavoritesDrag(panel);
+  twbvEnableGlobalFavoritesResize(panel);
+}
+
+function twbvEnableGlobalFavoritesDrag(panel) {
+  const header = panel?.querySelector(".twbv-global-favorites__header");
+  if (!panel || !header) return;
+  header.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    event.preventDefault();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const rect = panel.getBoundingClientRect();
+    const onMove = (moveEvent) => {
+      const width = panel.offsetWidth;
+      const height = panel.offsetHeight;
+      const nextLeft = Math.clamp(rect.left + moveEvent.clientX - startX, 4, window.innerWidth - width - 4);
+      const nextTop = Math.clamp(rect.top + moveEvent.clientY - startY, 4, window.innerHeight - height - 4);
+      panel.style.left = `${nextLeft}px`;
+      panel.style.top = `${nextTop}px`;
+    };
+    const onUp = () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+      twbvSaveGlobalFavoritesState(panel);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp, { once: true });
+  });
+}
+
+function twbvEnableGlobalFavoritesResize(panel) {
+  const handle = panel?.querySelector(".twbv-global-favorites__resize");
+  if (!panel || !handle) return;
+  handle.addEventListener("pointerdown", (event) => {
+    if (panel.classList.contains("is-size-locked")) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startWidth = panel.offsetWidth;
+    const startHeight = panel.offsetHeight;
+    const onMove = (moveEvent) => {
+      const nextWidth = Math.clamp(startWidth + moveEvent.clientX - startX, 120, 420);
+      const nextHeight = Math.clamp(startHeight + moveEvent.clientY - startY, 92, 520);
+      panel.style.width = `${nextWidth}px`;
+      panel.style.height = `${nextHeight}px`;
+    };
+    const onUp = () => {
+      document.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerup", onUp);
+      twbvSaveGlobalFavoritesState(panel);
+    };
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", onUp, { once: true });
+  });
+}
+
+function twbvSaveGlobalFavoritesState(panel) {
+  if (!panel) return;
+  localStorage.setItem("twbvGlobalFavoritesState", JSON.stringify({
+    left: Number.parseFloat(panel.style.left) || panel.getBoundingClientRect().left,
+    top: Number.parseFloat(panel.style.top) || panel.getBoundingClientRect().top,
+    width: panel.offsetWidth,
+    height: panel.offsetHeight,
+    locked: panel.classList.contains("is-size-locked")
+  }));
 }
 class TWBVPersonagemSheet extends ActorSheet {
   static get defaultOptions() {
@@ -2098,17 +2917,23 @@ class TWBVPersonagemSheet extends ActorSheet {
       icon: item.img,
       img: item.img,
       img: item.img,
-      type: item.type,
-      typeLabel: TWBV_ITEM_TYPES[item.type] ?? item.type,
+      type: twbvIsPowerItemDocument(item) ? "poder" : item.type,
+      sourceType: "item",
+      listKey: "",
+      typeLabel: TWBV_ITEM_TYPES[twbvIsPowerItemDocument(item) ? "poder" : item.type] ?? item.type,
       active: Boolean(item.system?.active),
       equipped: Boolean(item.system?.equipped),
       tier: String(item.system?.tier ?? "").trim(),
       severity: String(item.system?.severity ?? "").trim(),
       description: String(item.system?.description ?? "").trim(),
-      descricao: String(item.system?.descricao ?? item.system?.description ?? "").trim(),
-      fonte: String(item.system?.fonte ?? item.system?.source ?? "").trim(),
-      categoria: String(item.system?.categoria ?? item.system?.category ?? "").trim(),
-      requisitos: String(item.system?.requisitos ?? item.system?.requirements ?? item.system?.tier ?? "").trim(),
+      descricao: String(item.system?.description ?? item.system?.descricao ?? "").trim(),
+      fonte: String(item.system?.source ?? item.system?.fonte ?? "").trim(),
+      categoria: String(item.system?.category ?? item.system?.categoria ?? "").trim(),
+      requisitos: String(item.system?.requirements ?? item.system?.requisitos ?? item.system?.tier ?? "").trim(),
+      skill: String(item.system?.skill ?? item.system?.pericia ?? "").trim(),
+      manaCost: parseNumber(item.system?.manaCost ?? item.system?.mana ?? item.system?.costMana),
+      areaEffect: String(item.system?.areaEffect ?? item.system?.area ?? "").trim(),
+      areaEffectLabel: twbvGetPowerAreaLabel(item.system?.areaEffect ?? item.system?.area),
       effectsSummary: summarizeItemActiveEffects(item),
       quantity: parseNumber(item.system?.quantity, 1),
       weight: parseNumber(item.system?.weight),
@@ -2149,32 +2974,77 @@ class TWBVPersonagemSheet extends ActorSheet {
       isWeapon: ["arma", "weapon"].includes(item.type)
     });
 
-    const mapSystemEntry = (entry, fallbackType) => ({
+    const mapSystemEntry = (entry, fallbackType, listKey = "") => ({
       id: String(entry?.id ?? foundry.utils.randomID()),
       name: String(entry?.nome ?? entry?.name ?? "").trim(),
       icon: String(entry?.icon ?? "").trim(),
       type: fallbackType,
+      sourceType: "system",
+      listKey,
       typeLabel: TWBV_ITEM_TYPES[fallbackType] ?? fallbackType,
       fonte: String(entry?.fonte ?? entry?.source ?? "").trim(),
       categoria: String(entry?.categoria ?? entry?.category ?? "").trim(),
       requisitos: String(entry?.requisitos ?? entry?.requirements ?? "").trim(),
+      skill: String(entry?.skill ?? entry?.pericia ?? "").trim(),
       severity: String(entry?.severity ?? "").trim(),
       descricao: String(entry?.descricao ?? entry?.description ?? "").trim()
     });
 
     const vantagensEmbedded = actorItems.filter((item) => item.type === "vantagem").map(mapItem);
-    const habilidadesEmbedded = actorItems.filter((item) => item.type === "habilidadeEspecial").map(mapItem);
+    const habilidadesEmbedded = actorItems.filter((item) => item.type === "habilidadeEspecial" && !twbvIsPowerItemDocument(item)).map(mapItem);
+    const poderesEmbedded = actorItems.filter(twbvIsPowerItemDocument).map(mapItem);
     const desvantagensEmbedded = actorItems.filter((item) => item.type === "desvantagem").map(mapItem);
     const complicacoesEmbedded = actorItems.filter((item) => item.type === "complicacao").map(mapItem);
 
-    context.vantagens = vantagensEmbedded.length ? vantagensEmbedded : Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem"));
-    context.habilidadesEspeciais = habilidadesEmbedded.length ? habilidadesEmbedded : Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial"));
-    context.desvantagens = desvantagensEmbedded.length ? desvantagensEmbedded : Array.from(this.actor.system?.desvantagens ?? []).map((entry) => mapSystemEntry(entry, "desvantagem"));
-    context.complicacoes = complicacoesEmbedded.length ? complicacoesEmbedded : Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao"));
+    context.vantagens = vantagensEmbedded.length ? vantagensEmbedded : Array.from(this.actor.system?.vantagens ?? []).map((entry) => mapSystemEntry(entry, "vantagem", "vantagens"));
+    context.habilidadesEspeciais = habilidadesEmbedded.length ? habilidadesEmbedded : Array.from(this.actor.system?.habilidadesEspeciais ?? []).map((entry) => mapSystemEntry(entry, "habilidadeEspecial", "habilidadesEspeciais"));
+    context.poderes = poderesEmbedded.length ? poderesEmbedded : Array.from(this.actor.system?.poderes ?? []).map((entry) => mapSystemEntry(entry, "poder", "poderes"));
+    context.desvantagens = desvantagensEmbedded.length ? desvantagensEmbedded : Array.from(this.actor.system?.desvantagens ?? []).map((entry) => mapSystemEntry(entry, "desvantagem", "desvantagens"));
+    context.complicacoes = complicacoesEmbedded.length ? complicacoesEmbedded : Array.from(this.actor.system?.complicacoes ?? []).map((entry) => mapSystemEntry(entry, "complicacao", "complicacoes"));
+    const savedVantagemDivisions = Array.from(this.actor.system?.vantagemDivisoes ?? [])
+      .map((entry) => ({
+        id: String(entry?.id ?? foundry.utils.randomID()).trim() || foundry.utils.randomID(),
+        name: String(entry?.name ?? entry?.nome ?? "").trim()
+      }))
+      .filter((entry) => entry.name);
+    const vantagemDivisionByKey = new Map();
+    for (const division of savedVantagemDivisions) {
+      vantagemDivisionByKey.set(division.name.toLocaleLowerCase("pt-BR"), { ...division, items: [], isManual: true });
+    }
+    const vantagemItemsSemDivisao = [];
+    for (const item of context.vantagens) {
+      const category = String(item.categoria ?? "").trim();
+      if (!category) {
+        vantagemItemsSemDivisao.push(item);
+        continue;
+      }
+      const key = category.toLocaleLowerCase("pt-BR");
+      if (!vantagemDivisionByKey.has(key)) {
+        vantagemDivisionByKey.set(key, {
+          id: `category-${key.replace(/[^a-z0-9_-]+/gi, "-")}`,
+          name: category,
+          items: [],
+          isManual: false
+        });
+      }
+      vantagemDivisionByKey.get(key).items.push(item);
+    }
+    context.vantagemItemsSemDivisao = vantagemItemsSemDivisao;
+    context.vantagemDivisoes = Array.from(vantagemDivisionByKey.values());
+    context.vantagemHasContent = context.vantagens.length > 0 || context.vantagemDivisoes.length > 0;
     context.equipamentos = actorItems.filter((item) => twbvIsEquipmentItemType(item.type)).map(mapItem);
     const weapons=actorItems.filter(i=>["arma","weapon"].includes(i.type)); const armors=actorItems.filter(i=>i.type==="armadura"); const consumables=actorItems.filter(i=>i.type==="consumable"); const ammoItems=actorItems.filter(i=>i.type==="municao"); const magazines=ammoItems.filter(i=>!twbvIsAmmoBox(i)); const ammunitions=ammoItems.filter(i=>twbvIsAmmoBox(i));
     for (const item of [...weapons,...armors,...consumables,...ammoItems]) { const sys=item.system; if(["arma","weapon","municao"].includes(item.type)){const c=Number(sys.currentShots??0),m=Number(sys.shots??0); sys.ammoPercent=m>0?Math.clamp((c/m)*100,0,100):0; sys.reloadTypeLabel=TWBV_AMMO_RELOAD_LABELS[sys.reloadType]??sys.reloadType;} if(item.type==="consumable"&&sys.charges?.hasCharges){const charge=Object.values(sys.charges.charges??{})[0]; sys.mainCharge=charge; if(charge){const v=Number(charge.value??0),m=Number(charge.max??0); sys.chargePercent=m>0?Math.clamp((v/m)*100,0,100):0;}} }
-    context.equipment={favorite:actorItems.filter(i=>twbvIsEquipmentItemType(i.type)&&i.system?.favorite).map(mapEquipmentCardItem),weapons:weapons.map(mapEquipmentCardItem),armors:armors.map(mapEquipmentCardItem),magazines:magazines.map(mapEquipmentCardItem),ammunitions:ammunitions.map(mapEquipmentCardItem),consumables:consumables.map(mapEquipmentCardItem),others:actorItems.filter(i=>["equipamento","modificacao"].includes(i.type)).map(mapEquipmentCardItem)};
+    const favoriteItems = actorItems
+      .filter((item) => Boolean(item.system?.favorite))
+      .map((item) => ({
+        ...mapItem(item),
+        _id: item.id,
+        img: item.img,
+        system: item.system ?? {}
+      }));
+    context.favorites = favoriteItems;
+    context.equipment={favorite:favoriteItems,weapons:weapons.map(mapEquipmentCardItem),armors:armors.map(mapEquipmentCardItem),magazines:magazines.map(mapEquipmentCardItem),ammunitions:ammunitions.map(mapEquipmentCardItem),consumables:consumables.map(mapEquipmentCardItem),others:actorItems.filter(i=>["equipamento","modificacao"].includes(i.type)).map(mapEquipmentCardItem)};
     const slotItemByKey = new Map();
     for (const item of actorItems) {
       const equipped = Boolean(item.system?.equipped ?? Number(item.system?.equipStatus ?? 0) === 1);
@@ -2195,6 +3065,7 @@ class TWBVPersonagemSheet extends ActorSheet {
       id: line.key,
       style: twbvGetBodyLineStyle(line)
     }));
+    context.equipmentView = this._equipmentView === "body" ? "body" : "inventory";
     context.activeBonuses = actorItems
       .filter((item) => Boolean(item.system?.active) && summarizeItemActiveEffects(item))
       .map((item) => ({
@@ -2260,8 +3131,10 @@ class TWBVPersonagemSheet extends ActorSheet {
 
     if (!Array.isArray(this.actor.system?.vantagens)) this.actor.system.vantagens = [];
     if (!Array.isArray(this.actor.system?.habilidadesEspeciais)) this.actor.system.habilidadesEspeciais = [];
+    if (!Array.isArray(this.actor.system?.poderes)) this.actor.system.poderes = [];
     if (!Array.isArray(this.actor.system?.desvantagens)) this.actor.system.desvantagens = [];
     if (!Array.isArray(this.actor.system?.complicacoes)) this.actor.system.complicacoes = [];
+    if (!Array.isArray(this.actor.system?.vantagemDivisoes)) this.actor.system.vantagemDivisoes = [];
 
     const atributos = foundry.utils.deepClone(this.actor.system.atributos ?? {});
     const keys = ["forca", "destreza", "constituicao", "inteligencia", "influencia", "intuicao"];
@@ -2295,8 +3168,21 @@ class TWBVPersonagemSheet extends ActorSheet {
 
   activateListeners(html) {
     super.activateListeners(html);
+    this._cleanupLegacyTraitPlaceholders();
+
+    const defenseConditionView = this._defenseConditionView === "conditions" ? "conditions" : "defense";
+    html.find(`input[name="twbv-defense-condition-view"][value="${defenseConditionView}"]`).prop("checked", true);
+    html.find('input[name="twbv-defense-condition-view"]').on("change", (event) => {
+      this._defenseConditionView = String(event.currentTarget?.value ?? "defense") === "conditions" ? "conditions" : "defense";
+    });
+
+    html.find('input[name="twbv-equipment-view"]').on("change", (event) => {
+      const next = String(event.currentTarget?.value ?? "inventory").trim();
+      this._equipmentView = next === "body" ? "body" : "inventory";
+    });
 
     html.find(".twbv-condition-adjust").on("click", async (event) => {
+      this._defenseConditionView = "conditions";
       const button = event.currentTarget;
       const path = button.dataset.path;
       const adjust = Number(button.dataset.adjust ?? 0);
@@ -2518,8 +3404,7 @@ class TWBVPersonagemSheet extends ActorSheet {
                 });
               }
               if (Number.isFinite(bonusDie) && bonusDie > 0) {
-                const bonusRoll = await (new Roll(`1d${bonusDie}`)).evaluate();
-                await bonusRoll.toMessage({ speaker: ChatMessage.getSpeaker({ actor: this.actor }), flavor: `Dado extra (${skill.nome || `Perícia ${index + 1}`})` });
+                await twbvCreateFormulaRollChat({ actor: this.actor, formula: `1d${bonusDie}`, title: "Dado extra", label: "Dado Extra" });
               }
             }
           },
@@ -2534,12 +3419,56 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".twbv-move-roll").on("click", async () => {
       const atletismo = findSkillByName(this.actor.system, "ATLETISMO");
       const die = SKILL_DICE.includes(Number(atletismo?.dado)) ? Number(atletismo.dado) : 4;
-      const roll = await (new Roll(`1d${die}`)).evaluate();
-      if (game?.dice3d?.showForRoll) await game.dice3d.showForRoll(roll, game.user, true);
-      await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: `Corrida (${atletismo?.nome || "Atletismo"}): d${die}`
+      await twbvCreateFormulaRollChat({
+        actor: this.actor,
+        formula: `1d${die}`,
+        title: `Corrida (${atletismo?.nome || "Atletismo"})`,
+        label: "Movimento"
       });
+    });
+
+    html.find(".twbv-attr-config").on("click", async (event) => {
+      event.preventDefault();
+      const labels = {
+        forca: "Força",
+        destreza: "Destreza",
+        constituicao: "Constituição",
+        inteligencia: "Inteligência",
+        influencia: "Influência",
+        intuicao: "Intuição"
+      };
+      const attributeKey = String(event.currentTarget.dataset.attr ?? "");
+      const label = labels[attributeKey] ?? attributeKey;
+      if (!attributeKey) return;
+      await this._onSubmit(event, { preventClose: true, preventRender: true });
+      const currentBonus = Number(this.actor.system.atributos?.[attributeKey]?.bonus ?? 0);
+      const dialog = new Dialog({
+        title: `${label} Adicional`,
+        content: `<form class="twbv-attr-config-dialog">
+          <label>${label} adicional
+            <input type="number" name="bonus" value="${Number.isFinite(currentBonus) ? currentBonus : 0}" step="1" />
+          </label>
+        </form>`,
+        buttons: {
+          apply: {
+            label: "Salvar",
+            callback: async (dialogHtml) => {
+              const root = resolveDialogRoot(dialogHtml);
+              const value = Number(root?.querySelector('input[name="bonus"]')?.value ?? 0);
+              await this.actor.update({ [`system.atributos.${attributeKey}.bonus`]: Number.isFinite(value) ? value : 0 });
+            }
+          },
+          clear: {
+            label: "Zerar",
+            callback: async () => {
+              await this.actor.update({ [`system.atributos.${attributeKey}.bonus`]: 0 });
+            }
+          }
+        },
+        default: "apply",
+        render: (html) => applyDialogWindowClass(html ?? dialog, "wbtv-attr-config-dialog")
+      });
+      dialog.render(true);
     });
 
     html.find(".twbv-attr-roll").on("click", async (event) => {
@@ -2865,15 +3794,20 @@ class TWBVPersonagemSheet extends ActorSheet {
       event.preventDefault();
       const requestedType = String(event.currentTarget.dataset.type ?? "equipamento");
       const type = twbvResolveSupportedItemType(requestedType);
-      const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
-      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(type)) {
-        await this._openCustomItemDialog(type, null, { dialogVersion });
+      if (twbvIsTraitItemType(requestedType) || twbvIsTraitItemType(type)) {
+        await twbvCreateAndOpenActorTraitItem(this.actor, requestedType);
         return;
       }
       const system = twbvGetDefaultItemSystem(type);
-      const name = type === "municao" ? "Nova Munição" : `${TWBV_ITEM_TYPES[type] ?? "Item"} ${this.actor.items.size + 1}`;
+      const displayType = requestedType === "poder" ? "poder" : type;
+      if (requestedType === "poder" && type !== "poder") {
+        system.itemKind = "poder";
+        system.category = system.category || "poder";
+        system.categoria = system.categoria || "poder";
+      }
+      const name = type === "municao" ? "Nova Munição" : `${TWBV_ITEM_TYPES[displayType] ?? "Item"} ${this.actor.items.size + 1}`;
       try {
-        await this.actor.createEmbeddedDocuments("Item", [{ type, name, img: twbvGetItemIcon(type), system }]);
+        await this.actor.createEmbeddedDocuments("Item", [{ type, name, img: twbvGetItemIcon(displayType), system }]);
       } catch (error) {
         console.error("[TWBV] Falha ao criar item customizado na ficha.", { requestedType, resolvedType: type, error });
         ui.notifications?.error(`Falha ao criar ${TWBV_ITEM_TYPES[requestedType] ?? "item"}. Veja o console.`);
@@ -2890,34 +3824,36 @@ class TWBVPersonagemSheet extends ActorSheet {
         if (!listKey) return;
         const entry = Array.from(this.actor.system?.[listKey] ?? []).find((v) => String(v?.id ?? "") === itemId);
         if (!entry) return;
-        const dialogVersion = String(event.currentTarget.dataset.dialogVersion ?? "");
-        await this._openCustomItemDialog(type, entry, { listKey, dialogVersion });
+        const item = await twbvCreateAndOpenActorTraitItem(this.actor, type, entry);
+        if (item) {
+          const updated = Array.from(this.actor.system?.[listKey] ?? []).filter((v) => String(v?.id ?? "") !== itemId);
+          await this.actor.update({ [`system.${listKey}`]: updated });
+        }
         return;
       }
       const item = this.actor.items.get(itemId);
       if (!item) return;
-      if (["vantagem", "desvantagem", "habilidadeEspecial", "complicacao"].includes(item.type)) {
-        await this._openCustomItemDialog(item.type, item);
-        return;
-      }
       item.sheet?.render(true);
     });
 
     html.find(".twbv-item-delete").on("click", async (event) => {
       event.preventDefault();
-      const itemId = String(event.currentTarget.dataset.itemId ?? "");
-      if (!itemId) return;
-      const sourceType = String(event.currentTarget.dataset.sourceType ?? "item");
-      if (sourceType === "system") {
-        const listKey = String(event.currentTarget.dataset.listKey ?? "");
-        if (!listKey) return;
-        const updated = Array.from(this.actor.system?.[listKey] ?? []).filter((entry) => String(entry?.id ?? "") !== itemId);
-        await this.actor.update({ [`system.${listKey}`]: updated });
-        await this.render(true);
-        return;
-      }
-      await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+      await this._deleteItemFromSheetButton(event.currentTarget);
     });
+
+    html.find(".twbv-trait-division-create").on("click", this._onVantagemDivisionCreate.bind(this));
+    html.find(".twbv-trait-division-delete").on("click", this._onVantagemDivisionDelete.bind(this));
+    html.find(".twbv-trait-division, .twbv-item-card-list--division").on("dragover", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.currentTarget.classList.add("is-drop-target");
+    });
+    html.find(".twbv-trait-division, .twbv-item-card-list--division").on("dragleave", (event) => {
+      event.stopPropagation();
+      event.currentTarget.classList.remove("is-drop-target");
+    });
+    html.find(".twbv-trait-division, .twbv-item-card-list--division").on("drop", this._onVantagemDivisionDrop.bind(this));
+    html.find(".twbv-trait-section .twbv-item-card-icon").on("click", this._onTraitCardIconChat.bind(this));
 
     html.find(".twbv-item-card-head--toggle").on("click", (event) => {
       if (event.target.closest(".twbv-item-card-actions")) return;
@@ -2929,14 +3865,55 @@ class TWBVPersonagemSheet extends ActorSheet {
       const itemId = String(event.currentTarget.dataset.itemId ?? "");
       const item = this.actor.items.get(itemId);
       if (!item) return;
-      const transfer = event.originalEvent?.dataTransfer ?? event.dataTransfer;
-      transfer?.setData("text/plain", JSON.stringify({ type: "Item", uuid: item.uuid }));
-      transfer?.setData("application/json", JSON.stringify({ type: "Item", uuid: item.uuid }));
+      twbvSetItemDragData(event, item);
       event.currentTarget.classList.add("is-dragging");
     }).off("dragend.twbv-item").on("dragend.twbv-item", (event) => {
       event.currentTarget.classList.remove("is-dragging");
     });
+    html.find(".equipment-img").off("click.twbv-img").on("click.twbv-img", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      const item = this.actor.items.get(event.currentTarget.closest(".item")?.dataset.itemId);
+      if (item) await twbvOpenItemImagePicker(item);
+    }).off("dragstart.twbv-img").on("dragstart.twbv-img", (event) => {
+      const item = this.actor.items.get(event.currentTarget.closest(".item")?.dataset.itemId);
+      twbvSetItemDragData(event, item);
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    });
     const root = html?.[0] ?? html;
+    if (root && !root._twbvTraitDeleteDelegated) {
+      root.addEventListener("click", async (event) => {
+        const button = event.target?.closest?.(".twbv-item-delete");
+        if (!button || !root.contains(button)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        await this._deleteItemFromSheetButton(button);
+      }, true);
+      root._twbvTraitDeleteDelegated = true;
+    }
+    if (root && !root._twbvEquipmentIconDelegated) {
+      root.addEventListener("dragstart", (event) => {
+        const img = event.target?.closest?.(".equipment-img");
+        if (!img || !root.contains(img)) return;
+        const item = this.actor.items.get(img.closest(".item")?.dataset.itemId);
+        twbvSetItemDragData(event, item);
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+      }, true);
+      root.addEventListener("click", async (event) => {
+        const img = event.target?.closest?.(".equipment-img");
+        if (!img || !root.contains(img)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        const item = this.actor.items.get(img.closest(".item")?.dataset.itemId);
+        if (item) await twbvOpenItemImagePicker(item);
+      }, true);
+      root._twbvEquipmentIconDelegated = true;
+    }
     if (root && !root._twbvCreateDelegated) {
       root.addEventListener("click", (event) => {
         if (event.defaultPrevented) return;
@@ -2950,6 +3927,10 @@ class TWBVPersonagemSheet extends ActorSheet {
     html.find(".item-edit").on("click", (e)=>{e.preventDefault(); const i=this.actor.items.get(e.currentTarget.closest(".item")?.dataset.itemId); if(i) i.sheet.render(true);});
     html.find(".item-delete").on("click", async (e)=>{e.preventDefault(); const id=e.currentTarget.closest(".item")?.dataset.itemId; if(id) await this.actor.deleteEmbeddedDocuments("Item",[id]);});
     html.find(".item-toggle-favorite").on("click", this._onToggleFavorite.bind(this));
+    html.find(".twbv-open-floating-favorites").on("click", (event) => {
+      event.preventDefault();
+      twbvRenderGlobalFavorites(this.actor, { toggle: true });
+    });
     html.find(".weapon-roll").on("click", this._onWeaponRoll.bind(this));
     html.find(".weapon-damage").on("click", this._onWeaponDamage.bind(this));
     html.find(".weapon-mod").on("click", this._onWeaponMod.bind(this));
@@ -2961,10 +3942,6 @@ class TWBVPersonagemSheet extends ActorSheet {
     });
     html.find(".consumable-use").on("click", this._onConsumableUse.bind(this));
     html.find(".item-toggle-equip").on("click", this._onToggleEquip.bind(this));
-    html.find(".twbv-floating-favorites").on("dblclick", (event) => {
-      event.preventDefault();
-      event.currentTarget.classList.toggle("is-collapsed");
-    });
     html.find(".twbv-body-slot-unequip").on("click", async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -3004,12 +3981,12 @@ class TWBVPersonagemSheet extends ActorSheet {
 
 
 
-  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",skill:"",damage:"",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,equipSlot:"",handMode:"main",equippedHand:"main",actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
+  _buildWeaponDefaults() { return {description:"",notes:"",source:"",swid:"arma",quantity:1,weight:0,cost:0,equippable:true,equipStatus:1,favorite:false,category:"",skill:"",damage:"",damageRaise:"1d6",range:"",rangeType:1,rof:1,ap:0,parry:0,minStr:"",shots:0,currentShots:0,ammo:"",reloadType:"magazine",isHeavyWeapon:false,mods:0,equipSlot:"",handMode:"main",equippedHand:"main",actions:{trait:"Atirar",traitMod:"",dmgMod:"",additional:{}},bonusDamageDie:6,bonusDamageDice:1,templates:{cone:false,stream:false,small:false,medium:false,large:false,scone:false}}; }
   _buildConsumableDefaults() { return {description:"",notes:"",source:"",swid:"consumivel",quantity:1,weight:0,cost:0,equippable:false,equipStatus:1,favorite:false,category:"",subtype:"regular",charges:{hasCharges:false,charges:{main:{id:"main",value:1,max:1,sort:0,name:"Cargas",rechargeType:"finite"}}},messageOnUse:true,destroyOnEmpty:false}; }
   async _onToggleFavorite(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(item) await item.update({'system.favorite': !item.system.favorite});}
-  async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const roll=await (new Roll(applyVeuToFormula(item.system.damage||'1d4'))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name}`});}
+  async _onWeaponDamage(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; await twbvCreateFormulaRollChat({actor:this.actor, formula:applyVeuToFormula(item.system.damage||'1d4'), title:`Dano - ${item.name}`, label:"Dano"});}
   async _onWeaponRoll(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const c=Number(item.system.currentShots??0),max=Number(item.system.shots??0); if(max>0&&c<=0) return ui.notifications.warn(`${item.name} está sem munição.`); if(max>0) await item.update({'system.currentShots':Math.max(c-1,0)}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p><strong>${item.name}</strong> atacou. Munição: ${Math.max(c-1,0)}/${max}</p>`});}
-  async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){const roll=await (new Roll(applyVeuToFormula(`${item.system.damage||'1d4'}${mod.modifier||''}`))).evaluate(); await roll.toMessage({speaker:ChatMessage.getSpeaker({actor:this.actor}), flavor:`Dano - ${item.name} - ${mod.name}`});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
+  async _onWeaponMod(event){event.preventDefault(); const row=event.currentTarget.closest('.item'); const item=this.actor.items.get(row?.dataset.itemId); const key=event.currentTarget.dataset.modKey; const mod=item?.system?.actions?.additional?.[key]; if(!item||!mod) return; const c=Number(item.system.currentShots??0), cost=Number(mod.resourcesUsed??0); if(cost>c) return ui.notifications.warn(`${item.name} não tem munição suficiente para usar ${mod.name}.`); if(cost>0) await item.update({'system.currentShots':Math.max(c-cost,0)}); if(mod.type==='damage'){await twbvCreateFormulaRollChat({actor:this.actor, formula:applyVeuToFormula(`${item.system.damage||'1d4'}${mod.modifier||''}`), title:`Dano - ${item.name} - ${mod.name}`, label:"Dano"});} else ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${item.name} usou ${mod.name}.</p>`});}
   async _onWeaponReload(event){event.preventDefault(); const weapon=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!weapon) return; const ammoName=weapon.system.ammo; const max=Number(weapon.system.shots??0), cur=Number(weapon.system.currentShots??0); const mag=this.actor.items.find(i=>i.type==='consumable'&&i.name===ammoName&&i.system.subtype==='magazine'); if(!mag) return ui.notifications.warn(`Nenhum carregador compatível encontrado: ${ammoName}`); const k=Object.keys(mag.system.charges?.charges??{})[0]; const ch=mag.system.charges?.charges?.[k]; const avail=Number(ch?.value??0); const load=Math.min(max-cur,avail); if(load<=0) return; await weapon.update({'system.currentShots':cur+load}); await mag.update({[`system.charges.charges.${k}.value`]: avail-load});}
   async _onConsumableUse(event){event.preventDefault(); const item=this.actor.items.get(event.currentTarget.closest('.item')?.dataset.itemId); if(!item) return; const k=Object.keys(item.system.charges?.charges??{})[0]; const ch=item.system.charges?.charges?.[k]; if(item.system.charges?.hasCharges&&(!ch||ch.value<=0)) return ui.notifications.warn(`${item.name} não possui cargas restantes.`); if(item.system.charges?.hasCharges) await item.update({[`system.charges.charges.${k}.value`]: ch.value-1}); ChatMessage.create({speaker:ChatMessage.getSpeaker({actor:this.actor}),content:`<p>${this.actor.name} usou <strong>${item.name}</strong>.</p>`});}
 
@@ -3578,6 +4555,228 @@ class TWBVPersonagemSheet extends ActorSheet {
     }, true);
   }
 
+  async _deleteItemFromSheetButton(button) {
+    const itemId = String(button?.dataset?.itemId ?? "").trim();
+    if (!itemId) return;
+    const sourceType = String(button?.dataset?.sourceType ?? "item");
+    if (sourceType === "system") {
+      const listKey = String(button?.dataset?.listKey ?? "").trim();
+      if (!listKey) return;
+      const updated = Array.from(this.actor.system?.[listKey] ?? []).filter((entry) => String(entry?.id ?? "") !== itemId);
+      await this.actor.update({ [`system.${listKey}`]: updated });
+      await this.render(true);
+      return;
+    }
+    if (!this.actor.items.get(itemId)) return;
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  }
+
+  async _cleanupLegacyTraitPlaceholders() {
+    if (this.actor.getFlag("world-behind-the-veil", "cleanedTraitPlaceholders")) return;
+    const placeholderNames = new Set(["41", "asda"]);
+    const embeddedIds = Array.from(this.actor.items ?? [])
+      .filter((item) => twbvIsTraitItemType(item.type))
+      .filter((item) => placeholderNames.has(String(item.name ?? "").trim().toLocaleLowerCase("pt-BR")))
+      .map((item) => item.id);
+    const updateData = {};
+    for (const listKey of ["vantagens", "habilidadesEspeciais", "desvantagens", "complicacoes"]) {
+      const current = Array.from(this.actor.system?.[listKey] ?? []);
+      const cleaned = current.filter((entry) => {
+        const name = String(entry?.nome ?? entry?.name ?? "").trim().toLocaleLowerCase("pt-BR");
+        return !placeholderNames.has(name);
+      });
+      if (cleaned.length !== current.length) updateData[`system.${listKey}`] = cleaned;
+    }
+    try {
+      if (embeddedIds.length) await this.actor.deleteEmbeddedDocuments("Item", embeddedIds);
+      if (Object.keys(updateData).length) await this.actor.update(updateData);
+      await this.actor.setFlag("world-behind-the-veil", "cleanedTraitPlaceholders", true);
+    } catch (error) {
+      console.warn("[TWBV] Falha ao limpar placeholders de vantagens/habilidades.", error);
+    }
+  }
+
+  async _onVantagemDivisionCreate(event) {
+    event.preventDefault();
+    let dialogRef = null;
+    dialogRef = new Dialog({
+      title: "Criar divisao",
+      content: `
+        <form class="twbv-division-dialog">
+          <label>Nome da divisao</label>
+          <input type="text" name="name" placeholder="Ex: Linha de combate" autofocus />
+          <p>Vantagens com a mesma Categoria aparecem dentro dessa divisao.</p>
+        </form>
+      `,
+      buttons: {
+        save: {
+          label: "Criar",
+          callback: async (html) => {
+            const root = resolveDialogRoot(html);
+            const name = String(root?.querySelector('input[name="name"]')?.value ?? "").trim();
+            if (!name) {
+              ui.notifications?.warn("Informe um nome para a divisao.");
+              return false;
+            }
+            const current = Array.from(this.actor.system?.vantagemDivisoes ?? []);
+            const exists = current.some((entry) => String(entry?.name ?? entry?.nome ?? "").trim().toLocaleLowerCase("pt-BR") === name.toLocaleLowerCase("pt-BR"));
+            if (!exists) current.push({ id: foundry.utils.randomID(), name });
+            await this.actor.update({ "system.vantagemDivisoes": current });
+            await this.render(true);
+            await dialogRef?.close();
+          }
+        },
+        cancel: { label: "Cancelar" }
+      },
+      default: "save"
+    });
+    dialogRef.render(true);
+  }
+
+  async _onVantagemDivisionDelete(event) {
+    event.preventDefault();
+    const divisionId = String(event.currentTarget?.dataset?.divisionId ?? "").trim();
+    const divisionName = String(event.currentTarget?.dataset?.divisionName ?? "").trim();
+    const current = Array.from(this.actor.system?.vantagemDivisoes ?? []);
+    const remaining = current.filter((entry) => String(entry?.id ?? "") !== divisionId);
+    const updateData = { "system.vantagemDivisoes": remaining };
+    if (divisionName) {
+      const categoryKey = divisionName.toLocaleLowerCase("pt-BR");
+      const itemUpdates = Array.from(this.actor.items ?? [])
+        .filter((item) => item.type === "vantagem")
+        .filter((item) => String(item.system?.category ?? item.system?.categoria ?? "").trim().toLocaleLowerCase("pt-BR") === categoryKey)
+        .map((item) => ({ _id: item.id, "system.category": "", "system.categoria": "" }));
+      if (itemUpdates.length) await this.actor.updateEmbeddedDocuments("Item", itemUpdates);
+      const legacyVantagens = Array.from(this.actor.system?.vantagens ?? []);
+      if (legacyVantagens.length) {
+        updateData["system.vantagens"] = legacyVantagens.map((entry) => {
+          const category = String(entry?.categoria ?? entry?.category ?? "").trim().toLocaleLowerCase("pt-BR");
+          if (category !== categoryKey) return entry;
+          return { ...entry, categoria: "", category: "" };
+        });
+      }
+    }
+    await this.actor.update(updateData);
+    await this.render(true);
+  }
+
+  async _onVantagemDivisionDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget?.classList?.remove?.("is-drop-target");
+    const dropTarget = event.currentTarget?.closest?.(".twbv-trait-division") ?? event.currentTarget;
+    const divisionName = String(dropTarget?.dataset?.divisionName ?? event.currentTarget?.dataset?.divisionName ?? "").trim();
+    if (!divisionName) return;
+
+    const card = event.target?.closest?.(".twbv-item-card[data-item-id]");
+    let item = null;
+    const data = twbvReadDropData(event);
+    if (data?.type === "Item") {
+      const dropped = await Item.implementation.fromDropData(data);
+      if (dropped?.type === "vantagem") {
+        item = dropped.parent === this.actor ? this.actor.items.get(dropped.id) : null;
+        if (!item) {
+          const source = typeof dropped.toObject === "function" ? dropped.toObject() : dropped;
+          const created = await this.actor.createEmbeddedDocuments("Item", [{
+            ...source,
+            system: {
+              ...(source.system ?? {}),
+              category: divisionName,
+              categoria: divisionName
+            }
+          }]);
+          item = created?.[0] ?? null;
+        }
+      }
+    }
+    if (!item && card) item = this.actor.items.get(String(card.dataset.itemId ?? ""));
+
+    if (item?.type === "vantagem") {
+      await item.update({ "system.category": divisionName, "system.categoria": divisionName });
+      await this.render(true);
+      return;
+    }
+
+    const legacyId = String(card?.dataset?.itemId ?? "").trim();
+    if (legacyId) {
+      const vantagens = Array.from(this.actor.system?.vantagens ?? []);
+      const index = vantagens.findIndex((entry) => String(entry?.id ?? "") === legacyId);
+      if (index >= 0) {
+        vantagens[index] = { ...vantagens[index], category: divisionName, categoria: divisionName };
+        await this.actor.update({ "system.vantagens": vantagens });
+        await this.render(true);
+      }
+    }
+  }
+
+  async _onTraitCardIconChat(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const card = event.currentTarget?.closest?.(".twbv-item-card[data-item-id]");
+    if (!card) return;
+    const itemId = String(card.dataset.itemId ?? "").trim();
+    const type = String(card.dataset.itemType ?? "").trim();
+    const sourceType = String(card.querySelector(".twbv-item-edit")?.dataset?.sourceType ?? "item");
+    const listKey = String(card.querySelector(".twbv-item-edit")?.dataset?.listKey ?? "").trim();
+    let data = null;
+
+    if (sourceType === "system" && listKey) {
+      const entry = Array.from(this.actor.system?.[listKey] ?? []).find((candidate) => String(candidate?.id ?? "") === itemId);
+      if (entry) {
+        data = {
+          name: String(entry?.nome ?? entry?.name ?? "Item").trim(),
+          type,
+          icon: String(entry?.icon ?? "").trim(),
+          categoria: String(entry?.categoria ?? entry?.category ?? "").trim(),
+          requisitos: String(entry?.requisitos ?? entry?.requirements ?? "").trim(),
+          fonte: String(entry?.fonte ?? entry?.source ?? "").trim(),
+          descricao: String(entry?.descricao ?? entry?.description ?? "").trim()
+        };
+      }
+    } else {
+      const item = this.actor.items.get(itemId);
+      if (item) {
+        if (twbvIsPowerItemDocument(item)) return twbvCreatePowerChatCard(this.actor, item);
+        data = {
+          name: item.name,
+          type: item.type,
+          icon: item.img,
+          categoria: String(item.system?.category ?? item.system?.categoria ?? "").trim(),
+          requisitos: String(item.system?.requirements ?? item.system?.requisitos ?? item.system?.tier ?? "").trim(),
+          fonte: String(item.system?.source ?? item.system?.fonte ?? "").trim(),
+          descricao: String(item.system?.description ?? item.system?.descricao ?? "").trim()
+        };
+      }
+    }
+
+    if (!data) return;
+    const typeLabel = TWBV_ITEM_TYPES[data.type] ?? data.type ?? "Item";
+    const meta = [
+      data.categoria ? `Categoria: ${escapeHtml(data.categoria)}` : "",
+      data.requisitos ? `Requisito/Tier: ${escapeHtml(data.requisitos)}` : "",
+      data.fonte ? `Fonte: ${escapeHtml(data.fonte)}` : ""
+    ].filter(Boolean).join(" &middot; ");
+    const icon = data.icon ? `<img src="${escapeHtmlAttr(data.icon)}" alt="${escapeHtmlAttr(data.name)}" />` : `<i class="fas fa-gem"></i>`;
+    await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: `
+        <details class="twbv-trait-chat-card twbv-trait-chat-card--${escapeHtmlAttr(data.type)}">
+          <summary>
+            <div class="twbv-trait-chat-card__icon">${icon}</div>
+            <div class="twbv-trait-chat-card__heading">
+              <span>${escapeHtml(typeLabel)}</span>
+              <h3>${escapeHtml(data.name || typeLabel)}</h3>
+            </div>
+          </summary>
+          <div class="twbv-trait-chat-card__body">
+            ${meta ? `<p class="twbv-trait-chat-card__meta">${meta}</p>` : ""}
+            <div class="twbv-trait-chat-card__text">${escapeHtml(data.descricao || "Sem descricao.")}</div>
+          </div>
+        </details>`,
+      type: CONST.CHAT_MESSAGE_TYPES.OTHER
+    });
+  }
+
   async _openCustomItemDialog(type, item = null, options = {}) {
     const defaultsByType = {
       vantagem: { title: "Nova Vantagem", severity: "", tierLabel: "Requisito/Tier" },
@@ -3627,6 +4826,7 @@ class TWBVPersonagemSheet extends ActorSheet {
           vantagem: "vantagens",
           desvantagem: "desvantagens",
           habilidadeEspecial: "habilidadesEspeciais",
+          poder: "poderes",
           complicacao: "complicacoes"
         };
         const listKey = options.listKey ?? listKeyByType[type];
@@ -3850,7 +5050,8 @@ Hooks.once("init", async () => {
   console.log(`[TWBV] Inicializando sistema The World Behind the Veil (${TWBV_LOCAL_BUILD})`);
   globalThis.TWBV = foundry.utils.mergeObject(globalThis.TWBV ?? {}, {
     rollWeaponAttackByUuid: twbvRollWeaponAttackByUuid,
-    rollWeaponDamageByUuid: twbvRollWeaponDamageByUuid
+    rollWeaponDamageByUuid: twbvRollWeaponDamageByUuid,
+    rollWeaponAmplifiedDamageByUuid: twbvRollWeaponAmplifiedDamageByUuid
   }, { inplace: false });
 
   CONFIG.Actor.dataModels = CONFIG.Actor.dataModels || {};
@@ -3867,7 +5068,7 @@ Hooks.once("init", async () => {
   Items.registerSheet("world-behind-the-veil", TWBVConsumableSheet, { types:["consumable"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVAmmoSheet, { types:["municao"], makeDefault:true });
   Items.registerSheet("world-behind-the-veil", TWBVArmorSheet, { types:["armadura"], makeDefault:true });
-  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","complicacao","equipamento","modificacao"], makeDefault:true });
+  Items.registerSheet("world-behind-the-veil", TWBVBasicItemSheet, { types:["vantagem","desvantagem","habilidadeEspecial","poder","complicacao","equipamento","modificacao"], makeDefault:true });
   twbvRegisterActorSheets();
 });
 
@@ -3880,33 +5081,468 @@ function twbvNormalizeAnyItemTypeDialog(app, html) {
 Hooks.on("renderDialog", twbvNormalizeAnyItemTypeDialog);
 Hooks.on("renderDialogV2", twbvNormalizeAnyItemTypeDialog);
 
+Hooks.on("preUpdateActor", (actor, changed, options = {}) => {
+  options._twbvSheetAudit = twbvCollectAuditEntries(actor, changed);
+});
+
+Hooks.on("updateActor", async (actor, _changed, options, userId) => {
+  await twbvSendSheetAuditMessage(actor, options?._twbvSheetAudit ?? [], userId);
+});
+
+Hooks.on("preUpdateItem", (item, changed, options = {}) => {
+  options._twbvSheetAudit = twbvCollectAuditEntries(item, changed);
+});
+
+Hooks.on("updateItem", async (item, _changed, options, userId) => {
+  if (!(item?.parent instanceof Actor)) return;
+  await twbvSendSheetAuditMessage(item, options?._twbvSheetAudit ?? [], userId);
+});
+
+function twbvIsWeaponItem(item) {
+  return Boolean(item && ["arma", "weapon"].includes(String(item.type ?? "")));
+}
+
+function twbvWeaponAttackCommand(item) {
+  return `await globalThis.TWBV.rollWeaponAttackByUuid("${item.uuid}");`;
+}
+
+function twbvBuildWeaponAttackMacroData(item) {
+  return {
+    name: `${item.name} - Atirar`,
+    type: "script",
+    img: item.img,
+    command: twbvWeaponAttackCommand(item),
+    flags: { "world-behind-the-veil": { itemUuid: item.uuid, action: "attack" } }
+  };
+}
+
+function twbvFindWeaponByUuidSync(uuid) {
+  const id = String(uuid ?? "").trim();
+  if (!id) return null;
+  try {
+    const direct = typeof fromUuidSync === "function" ? fromUuidSync(id) : null;
+    if (twbvIsWeaponItem(direct)) return direct;
+  } catch (_) {}
+  const itemId = id.match(/(?:^|\.)Item\.([^."']+)/)?.[1] ?? id;
+  const worldItem = game.items?.get?.(itemId);
+  if (twbvIsWeaponItem(worldItem)) return worldItem;
+  for (const actor of game.actors ?? []) {
+    const item = actor.items?.get?.(itemId);
+    if (twbvIsWeaponItem(item)) return item;
+  }
+  return null;
+}
+
+function twbvFindWeaponByActorAndItemIds(actorId, itemId) {
+  const safeActorId = String(actorId ?? "").trim();
+  const safeItemId = String(itemId ?? "").trim();
+  if (!safeItemId) return null;
+  const actor = safeActorId ? game.actors?.get?.(safeActorId) : null;
+  const actorItem = actor?.items?.get?.(safeItemId);
+  if (twbvIsWeaponItem(actorItem)) return actorItem;
+  return twbvFindWeaponByUuidSync(safeItemId);
+}
+
+function twbvCandidateActorsForMacroLookup() {
+  const actors = [];
+  for (const token of canvas?.tokens?.controlled ?? []) {
+    if (token.actor && !actors.includes(token.actor)) actors.push(token.actor);
+  }
+  if (game.user?.character && !actors.includes(game.user.character)) actors.push(game.user.character);
+  for (const actor of game.actors ?? []) {
+    if (!actors.includes(actor)) actors.push(actor);
+  }
+  return actors;
+}
+
+function twbvNormalizeWeaponMacroLookupName(name) {
+  return String(name ?? "")
+    .replace(/\s+-\s+Atirar$/i, "")
+    .replace(/^(?:Tela|Ficha|Item)\s+/i, "")
+    .trim();
+}
+
+function twbvFindWeaponForMacroData(data = {}) {
+  const flags = data?.flags ?? {};
+  const systemFlag = flags["world-behind-the-veil"] ?? {};
+  const candidateUuids = [data?.uuid, data?.documentUuid, data?.itemUuid, systemFlag?.itemUuid, flags?.core?.sourceId];
+  const candidateItemIds = [data?.id, data?.itemId, data?._id, data?.data?._id, data?.data?.itemId, systemFlag?.itemId];
+  const candidateActorIds = [data?.actorId, data?.data?.actorId, systemFlag?.actorId];
+  const command = String(data?.command ?? "");
+  for (const match of command.matchAll(/(?:Actor|Scene|Token|Item|Compendium)\.[^"'\s;)]+(?:\.Item\.[^"'\s;)]+)?/g)) {
+    candidateUuids.push(match[0]);
+  }
+  for (const match of command.matchAll(/fromUuid(?:Sync)?\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateUuids.push(match[1]);
+  }
+  for (const match of command.matchAll(/game\.items\.get\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateItemIds.push(match[1]);
+  }
+  const candidateNames = [];
+  for (const match of command.matchAll(/getName\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateNames.push(twbvNormalizeWeaponMacroLookupName(match[1]));
+  }
+  for (const match of command.matchAll(/\.items\.get\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateItemIds.push(match[1]);
+  }
+  for (const match of command.matchAll(/game\.actors\.get\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateActorIds.push(match[1]);
+  }
+  for (const match of command.matchAll(/game\.actors\.get\(\s*["']([^"']+)["']\s*\)\.items\.get\(\s*["']([^"']+)["']\s*\)/g)) {
+    candidateActorIds.push(match[1]);
+    candidateItemIds.push(match[2]);
+    const item = twbvFindWeaponByActorAndItemIds(match[1], match[2]);
+    if (item) return item;
+  }
+  for (const actorId of candidateActorIds) {
+    for (const itemId of candidateItemIds) {
+      const item = twbvFindWeaponByActorAndItemIds(actorId, itemId);
+      if (item) return item;
+    }
+  }
+  for (const uuid of candidateUuids) {
+    const item = twbvFindWeaponByUuidSync(uuid);
+    if (item) return item;
+  }
+  for (const itemId of candidateItemIds) {
+    const item = twbvFindWeaponByUuidSync(itemId);
+    if (item) return item;
+  }
+
+  const macroName = twbvNormalizeWeaponMacroLookupName(data?.name);
+  if (macroName) candidateNames.push(macroName);
+  const macroImg = String(data?.img ?? "").trim();
+  for (const actor of twbvCandidateActorsForMacroLookup()) {
+    const weapons = Array.from(actor.items ?? []).filter(twbvIsWeaponItem);
+    const exact = weapons.find((item) => candidateNames.includes(item.name) && (!macroImg || item.img === macroImg));
+    if (exact) return exact;
+    const byName = weapons.find((item) => candidateNames.includes(item.name));
+    if (byName) return byName;
+    const byImg = macroImg ? weapons.find((item) => item.img === macroImg) : null;
+    if (byImg) return byImg;
+  }
+  return null;
+}
+
+async function twbvResolveDroppedWeaponItem(data = {}) {
+  const direct = twbvFindWeaponForMacroData(data);
+  if (direct) return direct;
+  const byIds = twbvFindWeaponByActorAndItemIds(data?.actorId ?? data?.data?.actorId, data?.itemId ?? data?.id ?? data?._id ?? data?.data?._id);
+  if (byIds) return byIds;
+  const candidateUuids = [data?.uuid, data?.documentUuid, data?.itemUuid, data?.flags?.core?.sourceId];
+  for (const uuid of candidateUuids) {
+    try {
+      const item = uuid ? await fromUuid(String(uuid)) : null;
+      if (twbvIsWeaponItem(item)) return item;
+    } catch (_) {}
+  }
+  return null;
+}
+
+function twbvMacroLooksLikeItemSheet(data = {}) {
+  const command = String(data?.command ?? "");
+  const name = String(data?.name ?? "").trim();
+  return /^(?:Tela|Ficha|Item)\s+/i.test(name) || /\.sheet(?:\?|\.)?\.?render\s*\(/.test(command) || /render\s*\(\s*true\s*\)/.test(command);
+}
+
+async function twbvConvertWeaponMacroToAttack(macro, sourceData = null) {
+  if (!macro?.isOwner) return false;
+  const data = sourceData ?? macro.toObject?.() ?? macro;
+  const item = twbvFindWeaponForMacroData(data);
+  if (!item) return false;
+  const next = twbvBuildWeaponAttackMacroData(item);
+  if (macro.command === next.command && macro.name === next.name && macro.img === next.img) return true;
+  await macro.update(next);
+  return true;
+}
+
+function twbvPatchWeaponSheetMacros() {
+  const proto = globalThis.Macro?.prototype;
+  if (!proto || proto._twbvWeaponSheetMacroPatched) return;
+  const originalExecute = proto.execute;
+  proto.execute = async function (...args) {
+    const data = this?.toObject?.() ?? this;
+    const item = twbvMacroLooksLikeItemSheet(data) ? twbvFindWeaponForMacroData(data) : null;
+    if (item?.actor) {
+      await twbvConvertWeaponMacroToAttack(this, data);
+      return twbvRollWeaponAttack(item.actor, item);
+    }
+    return originalExecute.apply(this, args);
+  };
+  proto._twbvWeaponSheetMacroPatched = true;
+}
+
 Hooks.on("hotbarDrop", async (_bar, data, slot) => {
-  if (data?.type !== "Item" || !data.uuid) return false;
-  const item = await fromUuid(data.uuid);
-  if (!item || !["arma", "weapon"].includes(String(item.type ?? ""))) return false;
-  const command = `await globalThis.TWBV.rollWeaponAttackByUuid("${item.uuid}");`;
+  const item = await twbvResolveDroppedWeaponItem(data);
+  const requestedAttack = data?.action === "attack" || data?.["world-behind-the-veil"]?.action === "attack";
+  if (!item) {
+    const macroId = String(data?.id ?? data?.macroId ?? data?._id ?? "").trim();
+    const macro = macroId ? game.macros?.get?.(macroId) : null;
+    const macroItem = macro ? twbvFindWeaponForMacroData(macro.toObject?.() ?? macro) : null;
+    if (!macroItem) return requestedAttack ? false : true;
+    const nextMacroData = twbvBuildWeaponAttackMacroData(macroItem);
+    const attackMacro = game.macros?.find((entry) => entry.name === nextMacroData.name && entry.command === nextMacroData.command)
+      ?? await Macro.create(nextMacroData);
+    await game.user.assignHotbarMacro(attackMacro, slot);
+    return false;
+  }
+  const command = twbvWeaponAttackCommand(item);
   let macro = game.macros?.find((entry) => entry.name === `${item.name} - Atirar` && entry.command === command);
   if (!macro) {
-    macro = await Macro.create({
-      name: `${item.name} - Atirar`,
-      type: "script",
-      img: item.img,
-      command,
-      flags: { "world-behind-the-veil": { itemUuid: item.uuid, action: "attack" } }
-    });
+    macro = await Macro.create(twbvBuildWeaponAttackMacroData(item));
   }
   await game.user.assignHotbarMacro(macro, slot);
   return false;
 });
+
+Hooks.on("preCreateMacro", (macro, data) => {
+  const source = data ?? macro?.toObject?.() ?? {};
+  const hasWeaponSource = Boolean(source?.uuid || source?.documentUuid || source?.itemUuid || source?.flags?.core?.sourceId || source?.flags?.["world-behind-the-veil"]?.itemUuid || twbvMacroLooksLikeItemSheet(source));
+  if (!hasWeaponSource) return;
+  const item = twbvFindWeaponForMacroData(source);
+  if (!item) return;
+  macro.updateSource(twbvBuildWeaponAttackMacroData(item));
+});
+
+Hooks.on("createMacro", async (macro) => {
+  const data = macro?.toObject?.() ?? macro;
+  if (!twbvMacroLooksLikeItemSheet(data) && data?.flags?.["world-behind-the-veil"]?.action !== "attack") return;
+  await twbvConvertWeaponMacroToAttack(macro, data);
+});
+
+Hooks.once("ready", async () => {
+  twbvPatchWeaponSheetMacros();
+  for (const macro of game.macros ?? []) {
+    const data = macro?.toObject?.() ?? macro;
+    if (twbvMacroLooksLikeItemSheet(data)) await twbvConvertWeaponMacroToAttack(macro, data);
+  }
+});
+
+async function twbvRerollStoredChatMessage(message, { spendEco = false } = {}) {
+  const reroll = foundry.utils.deepClone(message.getFlag("world-behind-the-veil", "reroll") ?? {});
+  const actor = reroll.actorUuid ? await fromUuid(reroll.actorUuid) : null;
+  if (reroll.actorUuid && !actor) return ui.notifications?.warn("Ator da rolagem não encontrado para rerrolar.");
+  if (spendEco && !(await twbvSpendEcoForActor(actor))) return null;
+  const currentContent = twbvGetBaseChatContent(message.content);
+  let nextMessage = null;
+  if (reroll.mode === "dual") {
+    if (!actor) return ui.notifications?.warn("Ator da rolagem não encontrado para rerrolar.");
+    nextMessage = await renderDualDieResult({ ...(reroll.args ?? {}), actor, returnContentOnly: true });
+  }
+  else if (reroll.mode === "single") {
+    if (!actor) return ui.notifications?.warn("Ator da rolagem não encontrado para rerrolar.");
+    nextMessage = await renderSingleDieResult({ ...(reroll.args ?? {}), actor, returnContentOnly: true });
+  }
+  else if (reroll.mode === "formula") nextMessage = await twbvCreateFormulaRollChat({ ...(reroll.args ?? {}), actor });
+  else return ui.notifications?.warn("Essa rolagem ainda não tem dados suficientes para rerrolar.");
+  const nextContent = twbvGetBaseChatContent(nextMessage?.content ?? "");
+  if (nextMessage?.delete) await nextMessage.delete();
+  const compareContent = twbvAppendRerollOption(currentContent, nextContent);
+  await message.update({ content: compareContent });
+  return null;
+}
+
+function twbvGetBaseChatContent(content) {
+  const marker = '<!--TWBV_ADJUST-->';
+  const text = String(content ?? "");
+  return text.includes(marker) ? text.split(marker)[0] : text;
+}
+
+function twbvGetSelectedRerollContent(content) {
+  const baseContent = twbvGetBaseChatContent(content);
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = baseContent;
+  const selected = wrapper.querySelector(".twbv-reroll-option.is-selected");
+  return selected?.innerHTML ?? baseContent;
+}
+
+function twbvBuildRerollCompareContent(previousContent, nextContent) {
+  return `<div class="twbv-reroll-compare" data-selected="1">
+    <div class="twbv-reroll-option is-muted" data-reroll-option="0" role="button" tabindex="0" title="Usar esta rolagem">
+      ${previousContent}
+    </div>
+    <div class="twbv-reroll-option is-selected" data-reroll-option="1" role="button" tabindex="0" title="Usar esta rolagem">
+      ${nextContent}
+    </div>
+  </div>`;
+}
+
+function twbvAppendRerollOption(existingContent, nextContent) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = String(existingContent ?? "");
+  const compare = wrapper.querySelector(".twbv-reroll-compare");
+  if (!compare) return twbvBuildRerollCompareContent(existingContent, nextContent);
+  const options = Array.from(compare.querySelectorAll(":scope > .twbv-reroll-option"));
+  options.forEach((option) => {
+    option.classList.remove("is-selected");
+    option.classList.add("is-muted");
+  });
+  const nextIndex = options.length;
+  compare.dataset.selected = String(nextIndex);
+  compare.insertAdjacentHTML("beforeend", `
+    <div class="twbv-reroll-option is-selected" data-reroll-option="${nextIndex}" role="button" tabindex="0" title="Usar esta rolagem">
+      ${nextContent}
+    </div>`);
+  return wrapper.innerHTML;
+}
+
+async function twbvSelectRerollOption(message, compareIndex, optionIndex) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = String(message.content ?? "");
+  const compare = wrapper.querySelectorAll(".twbv-reroll-compare")[compareIndex];
+  if (!compare) return;
+  compare.dataset.selected = String(optionIndex);
+  compare.querySelectorAll(".twbv-reroll-option").forEach((option, index) => {
+    option.classList.toggle("is-selected", index === optionIndex);
+    option.classList.toggle("is-muted", index !== optionIndex);
+  });
+  await message.update({ content: wrapper.innerHTML });
+}
+
+function twbvGetCompareAndOptionIndex(root, option) {
+  const compare = option?.closest?.(".twbv-reroll-compare");
+  if (!compare) return null;
+  const compareIndex = Array.from(root.querySelectorAll(".twbv-reroll-compare")).indexOf(compare);
+  const optionIndex = Array.from(compare.querySelectorAll(":scope > .twbv-reroll-option")).indexOf(option);
+  if (compareIndex < 0 || optionIndex < 0) return null;
+  return { compareIndex, optionIndex };
+}
+
+async function twbvSpendEcoForActor(actor) {
+  if (!actor) {
+    ui.notifications?.warn("Essa rolagem não tem ator vinculado para gastar Eco.");
+    return false;
+  }
+  const current = Number(actor.system?.eco ?? 0);
+  if (current <= 0) {
+    ui.notifications?.warn(`${actor.name} não tem Eco suficiente.`);
+    return false;
+  }
+  await actor.update({ "system.eco": Math.max(0, current - 1) });
+  return true;
+}
+
+async function twbvRerollDamageInChat(message, button, { spendEco = false } = {}) {
+  const weapon = await fromUuid(String(button?.dataset?.weaponUuid ?? ""));
+  if (!weapon?.actor) return ui.notifications?.warn("Arma não encontrada para rerrolar dano.");
+  if (spendEco && !(await twbvSpendEcoForActor(weapon.actor))) return;
+  const damageMods = twbvGetWeaponMods(weapon).filter((mod) => String(mod.damage ?? "").trim());
+  const damageContent = await twbvBuildWeaponDamageChatContent(weapon.actor, weapon, damageMods, { amplified: button?.dataset?.damageMode === "amplified" });
+  if (!damageContent) return;
+  const marker = '<!--TWBV_ADJUST-->';
+  const all = String(message.content ?? "");
+  const baseContent = all.includes(marker) ? all.split(marker)[0] : all;
+  const afterMarker = all.includes(marker) ? `${marker}${all.split(marker).slice(1).join(marker)}` : "";
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = baseContent;
+  const target = wrapper.querySelector(".twbv-chat-damage-result");
+  if (target) {
+    target.innerHTML = twbvAppendRerollOption(target.innerHTML, damageContent);
+  }
+  else wrapper.insertAdjacentHTML("beforeend", `<div class="twbv-chat-damage-result">${damageContent}</div>`);
+  const nextBaseContent = wrapper.innerHTML;
+  const update = { content: `${nextBaseContent}${afterMarker}` };
+  const adjust = foundry.utils.deepClone(message.getFlag("world-behind-the-veil", "rollAdjust") ?? {});
+  if (adjust && Object.keys(adjust).length) update["flags.world-behind-the-veil.rollAdjust"] = { ...adjust, baseContent: nextBaseContent };
+  await message.update(update);
+}
+
+function twbvSetItemDragData(event, item) {
+  if (!item) return;
+  const transfer = event?.originalEvent?.dataTransfer ?? event?.dataTransfer;
+  const data = {
+    type: "Item",
+    action: ["arma", "weapon"].includes(String(item.type ?? "")) ? "attack" : "item",
+    uuid: item.uuid,
+    documentUuid: item.uuid,
+    itemUuid: item.uuid,
+    id: item.id,
+    itemId: item.id,
+    actorId: item.actor?.id ?? null,
+    "world-behind-the-veil": {
+      action: ["arma", "weapon"].includes(String(item.type ?? "")) ? "attack" : "item",
+      itemUuid: item.uuid,
+      itemId: item.id,
+      actorId: item.actor?.id ?? null
+    }
+  };
+  transfer?.setData("text/plain", JSON.stringify(data));
+  transfer?.setData("application/json", JSON.stringify(data));
+  transfer?.setData("text/x-foundry-item", JSON.stringify(data));
+  transfer?.setData("text/x-foundry-drop", JSON.stringify(data));
+  if (transfer) {
+    transfer.effectAllowed = "copy";
+    try {
+      const img = item.img ? document.querySelector(`img[src="${CSS.escape(item.img)}"]`) : null;
+      if (img) transfer.setDragImage(img, 24, 24);
+    } catch (_) {}
+  }
+}
+
+async function twbvOpenItemImagePicker(item) {
+  if (!item?.isOwner) return;
+  new FilePicker({
+    type: "image",
+    current: item.img,
+    callback: async (path) => {
+      if (!path) return;
+      await item.update({ img: path });
+    }
+  }).render(true);
+}
 
 Hooks.on("renderChatMessage", (message, html) => {
   const root = html?.[0] ?? html;
   if (!root || typeof root.querySelector !== "function") return;
   if (!root.querySelector(".twbv-roll-chat")) return;
   root.classList.add("twbv-chat-message");
+  if (message.getFlag("world-behind-the-veil", "reroll") && !root.querySelector(".twbv-chat-reroll")) {
+    const target = root.querySelector(".twbv-roll-chat__top-adjust") ?? root.querySelector(".twbv-roll-chat");
+    target?.insertAdjacentHTML?.("afterbegin", twbvChatRerollButtons());
+  }
   root.querySelectorAll(".twbv-chat-damage-button").forEach((btn) => btn.addEventListener("click", async () => {
-    await twbvAppendWeaponDamageToChat(message, btn.dataset.weaponUuid);
+    await twbvAppendWeaponDamageToChat(message, btn.dataset.weaponUuid, { amplified: btn.dataset.damageMode === "amplified" });
   }));
+  root.querySelectorAll(".twbv-power-effect-toggle").forEach((btn) => btn.addEventListener("click", (event) => {
+    event.preventDefault();
+    const effect = btn.closest(".twbv-power-chat")?.querySelector(".twbv-power-chat__effect");
+    if (!effect) return;
+    effect.hidden = !effect.hidden;
+    btn.classList.toggle("is-active", !effect.hidden);
+  }));
+  root.querySelectorAll(".twbv-power-roll-button").forEach((btn) => btn.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    await twbvAppendPowerRollToChat(message, btn.dataset.powerUuid);
+  }));
+  root.querySelectorAll(".twbv-power-damage-button").forEach((btn) => btn.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    await twbvRollPowerDamageByUuid(btn.dataset.powerUuid);
+  }));
+  root.querySelectorAll(".twbv-chat-reroll").forEach((btn) => btn.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const kind = btn.dataset.rerollKind;
+    if (kind === "stored") return twbvRerollStoredChatMessage(message);
+    if (kind === "stored-eco") return twbvRerollStoredChatMessage(message, { spendEco: true });
+    if (kind === "damage") return twbvRerollDamageInChat(message, btn);
+    if (kind === "damage-eco") return twbvRerollDamageInChat(message, btn, { spendEco: true });
+  }));
+  root.querySelectorAll(".twbv-reroll-option").forEach((option) => {
+    const select = async (event) => {
+      if (event.target?.closest?.(".twbv-chat-reroll, .twbv-roll-adjust, .twbv-adjust-remove")) return;
+      const indexes = twbvGetCompareAndOptionIndex(root, option);
+      if (!indexes) return;
+      await twbvSelectRerollOption(message, indexes.compareIndex, indexes.optionIndex);
+    };
+    option.addEventListener("click", select);
+    option.addEventListener("keydown", async (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      await select(event);
+    });
+  });
   root.querySelectorAll(".twbv-roll-adjust").forEach((btn)=> btn.addEventListener("click", ()=> openRollAdjustDialog(message)));
   root.querySelectorAll(".twbv-adjust-remove").forEach((btn)=> btn.addEventListener("click", async ()=> {
     const idx = Number(btn.dataset.adjustIndex ?? -1);
@@ -3944,9 +5580,11 @@ Hooks.on("preCreateItem", (item, createData) => {
     consumable: "Consumível",
     municao: "Munição",
     modificacao: "Modificação",
+    poder: "Poder",
     equipamento: "Equipamento"
   };
-  const nextName = fallbackByType[type] ?? "Item";
+  const effectiveType = twbvIsPowerItemDocument(item) ? "poder" : type;
+  const nextName = fallbackByType[effectiveType] ?? "Item";
   item.updateSource({ name: nextName });
 });
 
@@ -3955,7 +5593,7 @@ Hooks.on("createItem", async (item) => {
   if (item.isEmbedded) return;
   await twbvEnsureMainItemFolders();
 
-  const type = String(item.type ?? "").trim();
+  const type = twbvIsPowerItemDocument(item) ? "poder" : String(item.type ?? "").trim();
   const selectedSlot = String(item.system?.equipSlot ?? "").trim();
   if (["arma", "weapon", "armadura"].includes(type) && !selectedSlot) {
     if (item.folder) await item.update({ folder: null });
@@ -3972,6 +5610,7 @@ Hooks.on("createItem", async (item) => {
     consumable: "Consumíveis",
     municao: "Munições",
     modificacao: "Modificações",
+    poder: "Poderes",
     equipamento: ""
   };
   const folderName = folderNameByType[type];
@@ -4107,6 +5746,12 @@ class TWBVItemSheetBase extends ItemSheet {
     context.displayCategory = context.categoryLabel || String(context.system?.category ?? "");
     context.owner = this.item.isOwner;
     context.editable = this.isEditable;
+    context.isPowerItem = twbvIsPowerItemDocument(this.item);
+    context.isTraitItem = twbvIsTraitItemType(this.item?.type) || context.isPowerItem;
+    context.skillOptions = Array.from(this.item?.actor?.system?.pericias ?? [])
+      .map((skill) => String(skill?.nome ?? "").trim())
+      .filter(Boolean);
+    context.traitItemClass = context.isTraitItem ? `twbv-basic-item-sheet--${context.isPowerItem ? "poder" : this.item.type}` : "";
     return context;
   }
 
@@ -4179,6 +5824,25 @@ class TWBVItemSheetBase extends ItemSheet {
     super.activateListeners(html);
     this._bindDirectFieldPersistence(html?.[0] ?? html);
     this._ensureManualSaveButton(html?.[0] ?? html);
+    const root = html?.[0] ?? html;
+    const isWeapon = twbvIsWeaponItem(this.item);
+    if (isWeapon) {
+      html.find(".profile-img, .twbv-weapon-img").attr("draggable", "true").off("dragstart.twbv-hotbar-weapon").on("dragstart.twbv-hotbar-weapon", (event) => {
+        twbvSetItemDragData(event, this.item);
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      });
+      if (root && !root._twbvWeaponSheetDragDelegated) {
+        root.addEventListener("dragstart", (event) => {
+          const img = event.target?.closest?.(".profile-img, .twbv-weapon-img");
+          if (!img || !root.contains(img)) return;
+          twbvSetItemDragData(event, this.item);
+          event.stopPropagation();
+          event.stopImmediatePropagation?.();
+        }, true);
+        root._twbvWeaponSheetDragDelegated = true;
+      }
+    }
   }
 
   _ensureManualSaveButton(root) {
@@ -4192,6 +5856,7 @@ class TWBVItemSheetBase extends ItemSheet {
     button.addEventListener("click", async () => {
       await twbvSaveItemFieldsFromRoot(this.item, root);
       ui.notifications?.info(`${this.item.name} salvo.`);
+      await this.close();
     });
     form.appendChild(button);
   }
@@ -4385,6 +6050,7 @@ class TWBVWeaponSheet extends TWBVItemSheetBase {
         "system.ammo": dropped.name,
         "system.ammoSourceUuid": dropped.uuid,
         "system.ammoSourceName": dropped.name,
+        "system.ammoAp": twbvNumberOrZero(dropped.system?.ap),
         "system.reloadType": dropped.system?.reloadType ?? "magazine",
         "system.shots": capacity,
         "system.currentShots": Math.min(currentShots, capacity || currentShots)
@@ -4570,7 +6236,7 @@ function twbvInjectCustomDiceTray(root) {
       content: contentWithAdjust,
       type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       rolls: [roll],
-      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content } }}
+      flags: {"world-behind-the-veil": { rollAdjust: { baseTotal: total, chain: [], baseContent: content }, reroll: { mode: "formula", actorUuid: "", args: { formula, title: "Rolagem de Bandeja", label: "Resultado", type: CONST.CHAT_MESSAGE_TYPES.ROLL } } }}
     });
     state.history.unshift(chatMessage?.value ?? formula);
     state.history = state.history.slice(0, 50);

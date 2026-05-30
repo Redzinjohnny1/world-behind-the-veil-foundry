@@ -1,4 +1,4 @@
-<form class="{{cssClass}} twbv-item-sheet twbv-basic-item-sheet twbv-themed-item-sheet twbv-elegant-item-sheet" autocomplete="off">
+<form class="{{cssClass}} twbv-item-sheet twbv-basic-item-sheet twbv-themed-item-sheet twbv-elegant-item-sheet {{traitItemClass}}" autocomplete="off">
   <header class="twbv-item-hero">
     <div class="twbv-item-icon-wrap">
       <img class="profile-img twbv-item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
@@ -14,34 +14,85 @@
   </header>
 
   <section class="twbv-item-summary">
+    {{#if isTraitItem}}
+    {{#if isPowerItem}}
+    <article><span>Mana</span><strong>{{system.manaCost}}</strong></article>
+    <article><span>Dano</span><strong>{{#if system.damage}}{{system.damage}}{{else}}-{{/if}}</strong></article>
+    <article><span>Area</span><strong>{{#if system.areaEffect}}{{system.areaEffect}}{{else}}-{{/if}}</strong></article>
+    <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{else}}
+    <article><span>Fonte</span><strong>{{#if system.source}}{{system.source}}{{else}}-{{/if}}</strong></article>
+    <article><span>Categoria</span><strong>{{#if system.category}}{{system.category}}{{else}}-{{/if}}</strong></article>
+    <article><span>Requisito</span><strong>{{#if system.requirements}}{{system.requirements}}{{else}}-{{/if}}</strong></article>
+    <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{/if}}
+    {{else}}
     <article><span>Quantidade</span><strong>{{system.quantity}}</strong></article>
     <article><span>Peso</span><strong>{{system.weight}}</strong></article>
     <article><span>Custo</span><strong>{{system.cost}}</strong></article>
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{/if}}
   </section>
 
   <nav class="sheet-tabs tabs twbv-item-tabs" data-group="primary">
     <a class="item" data-tab="general">Geral</a>
-    {{#ifEquals item.type "modificacao"}}<a class="item" data-tab="effects">Efeitos</a>{{/ifEquals}}
     <a class="item" data-tab="description">Descrição</a>
+    <a class="item" data-tab="effects">Efeitos</a>
   </nav>
 
   <section class="sheet-body twbv-item-body">
     <div class="tab twbv-item-panel" data-group="primary" data-tab="general">
-      <h2>Controle</h2>
+      <h2>{{#if isTraitItem}}Dados{{else}}Controle{{/if}}</h2>
       <div class="twbv-item-grid">
+        {{#if isTraitItem}}
+        <label>Tipo<input type="text" value="{{typeLabel}}" disabled /></label>
+        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou referência" /></label>
+        <label>Categoria<input type="text" name="system.category" value="{{system.category}}" placeholder="Categoria" /></label>
+        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pré-requisito, tier ou condição" /></label>
+        {{#if isPowerItem}}
+        <label>Pericia da rolagem
+          {{#if skillOptions.length}}
+          <select name="system.skill">
+            <option value="">Nenhuma</option>
+            {{#each skillOptions as |skill|}}
+            <option value="{{skill}}" {{#ifEquals ../system.skill skill}}selected{{/ifEquals}}>{{skill}}</option>
+            {{/each}}
+          </select>
+          {{else}}
+          <input type="text" name="system.skill" value="{{system.skill}}" placeholder="Nome da pericia" />
+          {{/if}}
+        </label>
+        <label>Custo de Mana<input type="number" name="system.manaCost" value="{{system.manaCost}}" min="0" step="1" /></label>
+        <label>Dano da magia<input type="text" name="system.damage" value="{{system.damage}}" placeholder="Ex: 2d6, 3d8+2" /></label>
+        <label>Area de efeito
+          <select name="system.areaEffect">
+            <option value="none" {{#ifEquals system.areaEffect "none"}}selected{{/ifEquals}}>Nenhuma</option>
+            <option value="burst-small" {{#ifEquals system.areaEffect "burst-small"}}selected{{/ifEquals}}>Explosao pequena</option>
+            <option value="burst-medium" {{#ifEquals system.areaEffect "burst-medium"}}selected{{/ifEquals}}>Explosao media</option>
+            <option value="burst-large" {{#ifEquals system.areaEffect "burst-large"}}selected{{/ifEquals}}>Explosao grande</option>
+            <option value="cone-small" {{#ifEquals system.areaEffect "cone-small"}}selected{{/ifEquals}}>Cone pequeno</option>
+            <option value="cone-large" {{#ifEquals system.areaEffect "cone-large"}}selected{{/ifEquals}}>Cone grande</option>
+          </select>
+        </label>
+        {{/if}}
+        {{#ifEquals item.type "desvantagem"}}<label>Severidade<input type="text" name="system.severity" value="{{system.severity}}" placeholder="Menor, Maior..." /></label>{{/ifEquals}}
+        {{#ifEquals item.type "complicacao"}}<label>Severidade<input type="text" name="system.severity" value="{{system.severity}}" placeholder="Menor, Maior..." /></label>{{/ifEquals}}
+        <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
+        <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
+        {{else}}
         <label>Tipo<input type="text" value="{{typeLabel}}" disabled /></label>
         <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
         <label>Peso<input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.1" /></label>
         <label>Custo<input type="number" name="system.cost" value="{{system.cost}}" min="0" step="1" /></label>
         <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
         <label class="twbv-item-check"><input type="checkbox" name="system.equipped" {{checked system.equipped}} /> Equipado</label>
+        {{/if}}
       </div>
     </div>
 
-    {{#ifEquals item.type "modificacao"}}
     <div class="tab twbv-item-panel" data-group="primary" data-tab="effects">
-      <h2>Efeitos da Modificação</h2>
+      <h2>Efeitos</h2>
+      {{#ifEquals item.type "modificacao"}}
       <div class="twbv-item-grid">
         <label>Uso
           <select name="system.modType">
@@ -50,15 +101,20 @@
         </label>
         <label>Bônus para acertar<input type="text" name="system.modifier" value="{{system.modifier}}" placeholder="+1" /></label>
         <label>Dano extra<input type="text" name="system.damage" value="{{system.damage}}" placeholder="+1d6" /></label>
+        <label>Ampliação<input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" /></label>
         <label>AP<input type="number" name="system.ap" value="{{system.ap}}" step="1" /></label>
       </div>
+      {{/ifEquals}}
+      <label class="twbv-item-notes">Resumo de efeitos<textarea name="system.effectsSummary" rows="7">{{system.effectsSummary}}</textarea></label>
     </div>
-    {{/ifEquals}}
 
     <div class="tab twbv-item-panel" data-group="primary" data-tab="description">
       <h2>Descrição</h2>
+      {{#if isTraitItem}}
+      <label class="twbv-item-description">DescriÃ§Ã£o<textarea name="system.description" rows="9">{{system.description}}</textarea></label>
+      {{else}}
       <label class="twbv-item-description">{{editor system.description target="system.description" button=true owner=owner editable=editable}}</label>
-      <label class="twbv-item-notes">Resumo de efeitos<textarea name="system.effectsSummary" rows="3">{{system.effectsSummary}}</textarea></label>
+      {{/if}}
     </div>
   </section>
 </form>

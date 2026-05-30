@@ -1,6 +1,6 @@
 <div class="equipment-card twbv-equipment-card item item-type-{{item.type}}" data-item-id="{{item._id}}" data-item-uuid="{{item.uuid}}" draggable="true">
   <div class="equipment-card-header">
-    <img class="equipment-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+    <img class="equipment-img" src="{{item.img}}" title="{{item.name}}" draggable="true" />
     <div class="equipment-title-block">
       <div class="equipment-name">{{item.name}}</div>
       <div class="equipment-category">{{#if item.system.categoryLabel}}{{item.system.categoryLabel}}{{else}}{{item.typeLabel}}{{/if}}</div>
@@ -60,7 +60,6 @@
   <div class="consumable-stats">
     <span>Tipo: {{item.system.reloadTypeLabel}}</span>
     <span>Calibre: {{item.system.caliber}}</span>
-    <span>Qtd: {{item.system.quantity}}</span>
   </div>
   <div class="ammo-row"><span>Munição</span><span>{{item.system.currentShots}} / {{item.system.shots}}</span></div>
   <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.ammoPercent}}%;"></div></div>

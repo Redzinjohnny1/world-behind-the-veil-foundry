@@ -1,0 +1,923 @@
+[
+  {
+    "_id": "4a1dccab94175c15",
+    "name": "Má Aparência",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Feio (1 ponto): sua aparência é marcante, desagradável ou causa má primeira impressão. Você sofre -1 em Testes sociais onde beleza, confiança ou boa aparência são importantes.\nMuito Feio (2 pontos): sua aparência é difícil de ignorar e costuma gerar desconforto, rejeição ou desconfiança. Você sofre -2 em Testes sociais onde aparência, sedução, confiança ou boa impressão sejam importantes.\nHorrível (3 pontos): sua aparência é perturbadora, deformada ou assustadora o bastante para provocar medo, repulsa ou hostilidade. Você sofre -3 em Testes sociais onde sua aparência atrapalhe diretamente a interação.\nObservação: Má Aparência pode atrapalhar sedução, negociação, disfarces e interações sociais delicadas, mas pode ajudar narrativamente em cenas de intimidação, se o Mestre permitir.",
+      "effectsSummary": "Feio (1 ponto): sua aparência é marcante, desagradável ou causa má primeira impressão. Você sofre -1 em Testes sociais onde beleza, confiança ou boa aparência são importantes.\nMuito Feio (2 pontos): sua aparência é difícil de ignorar e costuma gerar desconforto, rejeição ou desconfiança. Você sofre -2 em Testes sociais onde aparência, sedução, confiança ou boa impressão sejam importantes.\nHorrível (3 pontos): sua aparência é perturbadora, deformada ou assustadora o bastante para provocar medo, repulsa ou hostilidade. Você sofre -3 em Testes sociais onde sua aparência atrapalhe diretamente a interação.\nObservação: Má Aparência pode atrapalhar sedução, negociação, disfarces e interações sociais delicadas, mas pode ajudar narrativamente em cenas de intimidação, se o Mestre permitir.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 100000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "02d16e44a0be6929",
+    "name": "Corpo Cansado",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Cansaço Leve (1 ponto): seu corpo é preguiçoso, sedentário, envelhecido ou pouco resistente. Você sofre -1 em Testes de Constituição para resistir a cansaço, esforço prolongado, marchas, corridas ou atividades físicas intensas.\nCorpo Desgastado (2 pontos): seu corpo sente o peso do esforço com frequência. Você sofre -2 em Testes de Constituição para resistir a cansaço, fadiga, longas jornadas, privação de sono ou esforço físico prolongado.\nCorpo Debilitado (3 pontos): seu corpo é extremamente limitado, seja por idade, doença, sedentarismo severo, dores crônicas ou desgaste profundo. Você sofre -3 em Testes de Constituição ligados a esforço físico, resistência, fadiga ou recuperação.",
+      "effectsSummary": "Cansaço Leve (1 ponto): seu corpo é preguiçoso, sedentário, envelhecido ou pouco resistente. Você sofre -1 em Testes de Constituição para resistir a cansaço, esforço prolongado, marchas, corridas ou atividades físicas intensas.\nCorpo Desgastado (2 pontos): seu corpo sente o peso do esforço com frequência. Você sofre -2 em Testes de Constituição para resistir a cansaço, fadiga, longas jornadas, privação de sono ou esforço físico prolongado.\nCorpo Debilitado (3 pontos): seu corpo é extremamente limitado, seja por idade, doença, sedentarismo severo, dores crônicas ou desgaste profundo. Você sofre -3 em Testes de Constituição ligados a esforço físico, resistência, fadiga ou recuperação.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 200000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "02278242a03fc4d6",
+    "name": "Frágil",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Frágil (1 ponto): seu corpo é mais sensível a dor, impacto ou ferimentos. Você sofre -1 em Testes de Constituição para resistir a dano, trauma físico, venenos, doenças ou efeitos que exijam resistência corporal.\nMuito Frágil (2 pontos): seu corpo se machuca com facilidade e demora mais para se recuperar. Você sofre -2 em Testes de Constituição para resistir a dano, trauma físico, venenos, doenças ou efeitos que exijam resistência corporal.",
+      "effectsSummary": "Frágil (1 ponto): seu corpo é mais sensível a dor, impacto ou ferimentos. Você sofre -1 em Testes de Constituição para resistir a dano, trauma físico, venenos, doenças ou efeitos que exijam resistência corporal.\nMuito Frágil (2 pontos): seu corpo se machuca com facilidade e demora mais para se recuperar. Você sofre -2 em Testes de Constituição para resistir a dano, trauma físico, venenos, doenças ou efeitos que exijam resistência corporal.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 300000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "31078a1c7dba0944",
+    "name": "Lento",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Lento (1 ponto): você se move devagar ou demora para reagir. Seu deslocamento é reduzido em 1 quadrado e sua carta de Iniciativa é reduzida em 1.\nMuito Lento (2 pontos): sua movimentação é pesada, limitada ou atrasada. Seu deslocamento é reduzido em 2 quadrados, sua carta de Iniciativa é reduzida em 2 e você sofre -1 em Testes ligados a perseguições, corrida ou movimentação rápida.",
+      "effectsSummary": "Lento (1 ponto): você se move devagar ou demora para reagir. Seu deslocamento é reduzido em 1 quadrado e sua carta de Iniciativa é reduzida em 1.\nMuito Lento (2 pontos): sua movimentação é pesada, limitada ou atrasada. Seu deslocamento é reduzido em 2 quadrados, sua carta de Iniciativa é reduzida em 2 e você sofre -1 em Testes ligados a perseguições, corrida ou movimentação rápida.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 400000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "a2812ffccc72a1e7",
+    "name": "Deficiência Física",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Limitação Leve (1 ponto): você possui uma deficiência, lesão ou limitação física que afeta parte do seu corpo. Escolha uma opção: perna comprometida, braço comprometido, mão comprometida, coluna/quadril comprometidos ou outra limitação semelhante. Você sofre -1 em Testes diretamente afetados por essa deficiência.\nLimitação Moderada (2 pontos): sua deficiência afeta sua rotina e sua atuação em campo com frequência. Você sofre -2 em Testes diretamente afetados por essa deficiência. Se a limitação afetar locomoção, seu deslocamento também é reduzido em 1 quadrado.\nLimitação Grave (3 pontos): sua deficiência é severa, como ausência de um membro, mobilidade muito limitada ou dependência constante de prótese, cadeira de rodas, muletas ou suporte equivalente. Você sofre -3 em Testes diretamente afetados por essa deficiência. Se a limitação afetar locomoção, seu deslocamento também é reduzido em 2 quadrados.",
+      "effectsSummary": "Limitação Leve (1 ponto): você possui uma deficiência, lesão ou limitação física que afeta parte do seu corpo. Escolha uma opção: perna comprometida, braço comprometido, mão comprometida, coluna/quadril comprometidos ou outra limitação semelhante. Você sofre -1 em Testes diretamente afetados por essa deficiência.\nLimitação Moderada (2 pontos): sua deficiência afeta sua rotina e sua atuação em campo com frequência. Você sofre -2 em Testes diretamente afetados por essa deficiência. Se a limitação afetar locomoção, seu deslocamento também é reduzido em 1 quadrado.\nLimitação Grave (3 pontos): sua deficiência é severa, como ausência de um membro, mobilidade muito limitada ou dependência constante de prótese, cadeira de rodas, muletas ou suporte equivalente. Você sofre -3 em Testes diretamente afetados por essa deficiência. Se a limitação afetar locomoção, seu deslocamento também é reduzido em 2 quadrados.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 500000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "6fe4ba149d7f22f4",
+    "name": "Doente",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Doença Leve (1 ponto): você possui uma condição recorrente que exige cuidado ou atenção. Você sofre -1 em Testes de Constituição quando a doença puder atrapalhar, como esforço físico, recuperação, resistência ou privação.\nDoença Moderada (2 pontos): sua condição interfere com frequência na sua rotina. Você sofre -2 em Testes de Constituição relacionados à doença e pode precisar de remédios, repouso ou tratamento regular.\nDoença Grave (3 pontos): sua condição é severa, perigosa ou debilitante. Você sofre -3 em Testes de Constituição relacionados à doença, e crises podem surgir em momentos de grande esforço, estresse ou exposição a condições ruins.",
+      "effectsSummary": "Doença Leve (1 ponto): você possui uma condição recorrente que exige cuidado ou atenção. Você sofre -1 em Testes de Constituição quando a doença puder atrapalhar, como esforço físico, recuperação, resistência ou privação.\nDoença Moderada (2 pontos): sua condição interfere com frequência na sua rotina. Você sofre -2 em Testes de Constituição relacionados à doença e pode precisar de remédios, repouso ou tratamento regular.\nDoença Grave (3 pontos): sua condição é severa, perigosa ou debilitante. Você sofre -3 em Testes de Constituição relacionados à doença, e crises podem surgir em momentos de grande esforço, estresse ou exposição a condições ruins.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 600000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "016d35781d78a8ee",
+    "name": "Dependente de Medicamento",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Uso Controlado (1 ponto): você precisa de remédios, substâncias ou tratamento regular para manter sua condição estável. Se ficar sem acesso ao tratamento por muito tempo, pode sofrer -1 em Testes de Constituição relacionados à sua condição.\nDependência Crítica (2 pontos): seu corpo depende diretamente de medicamento, tratamento ou substância específica para funcionar bem. Se ficar sem acesso ao tratamento, você sofre -2 em Testes de Constituição relacionados à sua condição e pode sofrer crises em momentos de estresse, esforço ou privação.",
+      "effectsSummary": "Uso Controlado (1 ponto): você precisa de remédios, substâncias ou tratamento regular para manter sua condição estável. Se ficar sem acesso ao tratamento por muito tempo, pode sofrer -1 em Testes de Constituição relacionados à sua condição.\nDependência Crítica (2 pontos): seu corpo depende diretamente de medicamento, tratamento ou substância específica para funcionar bem. Se ficar sem acesso ao tratamento, você sofre -2 em Testes de Constituição relacionados à sua condição e pode sofrer crises em momentos de estresse, esforço ou privação.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 700000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "63c738920ba7a6dd",
+    "name": "Marca Visível",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Marca Discreta (1 ponto): você possui cicatrizes, tatuagens, deformidades, queimaduras, símbolos ou traços físicos que podem identificá-lo. Você sofre -1 em Testes para se disfarçar, esconder sua identidade ou negar que esteve em algum lugar.\nMarca Evidente (2 pontos): sua marca é difícil de esconder e facilmente lembrada. Você sofre -2 em Testes para disfarce, infiltração ou ocultação de identidade.",
+      "effectsSummary": "Marca Discreta (1 ponto): você possui cicatrizes, tatuagens, deformidades, queimaduras, símbolos ou traços físicos que podem identificá-lo. Você sofre -1 em Testes para se disfarçar, esconder sua identidade ou negar que esteve em algum lugar.\nMarca Evidente (2 pontos): sua marca é difícil de esconder e facilmente lembrada. Você sofre -2 em Testes para disfarce, infiltração ou ocultação de identidade.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 800000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "b64619c57e17d660",
+    "name": "Alergia Grave",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Alergia Moderada (1 ponto): você possui uma alergia perigosa a uma substância, alimento, medicamento, ambiente ou criatura específica. Quando exposto, sofre -1 em Testes de Constituição para resistir aos efeitos.\nAlergia Severa (2 pontos): sua alergia pode causar reações graves. Quando exposto, sofre -2 em Testes de Constituição para resistir aos efeitos, e uma falha pode gerar fadiga, sufocamento, dor intensa ou incapacidade temporária, conforme a cena.",
+      "effectsSummary": "Alergia Moderada (1 ponto): você possui uma alergia perigosa a uma substância, alimento, medicamento, ambiente ou criatura específica. Quando exposto, sofre -1 em Testes de Constituição para resistir aos efeitos.\nAlergia Severa (2 pontos): sua alergia pode causar reações graves. Quando exposto, sofre -2 em Testes de Constituição para resistir aos efeitos, e uma falha pode gerar fadiga, sufocamento, dor intensa ou incapacidade temporária, conforme a cena.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 900000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "cb7bd90be63de553",
+    "name": "Sono Pesado",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Sono Pesado (1 ponto): você tem dificuldade para acordar rapidamente ou perceber ameaças enquanto dorme. Você sofre -1 em Testes de Percepção ou Intuição para notar invasões, alarmes, barulhos, movimentações ou perigos durante o repouso.",
+      "effectsSummary": "Sono Pesado (1 ponto): você tem dificuldade para acordar rapidamente ou perceber ameaças enquanto dorme. Você sofre -1 em Testes de Percepção ou Intuição para notar invasões, alarmes, barulhos, movimentações ou perigos durante o repouso.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1 ponto",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1000000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "beae0d6e3146dec7",
+    "name": "Corpo Pesado",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Sobrepeso (1 ponto): seu corpo é pesado ou difícil de mover com agilidade. Você sofre -1 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, e seu deslocamento é reduzido em 1 quadrado.\nGordo (2 pontos): seu peso atrapalha sua mobilidade com frequência. Você sofre -2 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, seu deslocamento é reduzido em 2 quadrados, sua carta de Iniciativa é reduzida em 1 e seu Atletismo não pode passar de d8+3.\nObesidade (3 pontos): seu peso limita severamente sua movimentação e resistência física. Você sofre -3 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, seu deslocamento é reduzido em 3 quadrados, sua carta de Iniciativa é reduzida em 2 e seu Atletismo não pode passar de d6+1.",
+      "effectsSummary": "Sobrepeso (1 ponto): seu corpo é pesado ou difícil de mover com agilidade. Você sofre -1 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, e seu deslocamento é reduzido em 1 quadrado.\nGordo (2 pontos): seu peso atrapalha sua mobilidade com frequência. Você sofre -2 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, seu deslocamento é reduzido em 2 quadrados, sua carta de Iniciativa é reduzida em 1 e seu Atletismo não pode passar de d8+3.\nObesidade (3 pontos): seu peso limita severamente sua movimentação e resistência física. Você sofre -3 em Testes ligados a corrida, escalada, saltos, perseguições ou movimentação rápida, seu deslocamento é reduzido em 3 quadrados, sua carta de Iniciativa é reduzida em 2 e seu Atletismo não pode passar de d6+1.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1100000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "f7279803b73b6218",
+    "name": "Baixa Estatura",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Pequeno (1 ponto): você tem no máximo 1,50 m de altura. Você sofre -1 em Testes para ações que exijam Força, alcance físico ou imponência. Ataques diretos contra você sofrem -1 para acertar, desde que não sejam ataques em área.\nNanismo (3 pontos): você tem no máximo 1,10 m de altura. Você sofre -3 em Testes para ações que exijam Força, alcance físico ou imponência. Ataques diretos contra você sofrem -3 para acertar, desde que não sejam ataques em área.",
+      "effectsSummary": "Pequeno (1 ponto): você tem no máximo 1,50 m de altura. Você sofre -1 em Testes para ações que exijam Força, alcance físico ou imponência. Ataques diretos contra você sofrem -1 para acertar, desde que não sejam ataques em área.\nNanismo (3 pontos): você tem no máximo 1,10 m de altura. Você sofre -3 em Testes para ações que exijam Força, alcance físico ou imponência. Ataques diretos contra você sofrem -3 para acertar, desde que não sejam ataques em área.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-3 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1200000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "5c6d11334487b8e8",
+    "name": "Grande Demais",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Grande (1 ponto): você tem no mínimo 1,90 m de altura. Você sofre -1 em Testes para se esconder, passar despercebido, usar disfarces ou se mover em espaços apertados.\nMuito Grande (2 pontos): você tem no mínimo 2,10 m de altura. Você sofre -2 em Testes para se esconder, passar despercebido, usar disfarces, entrar em veículos pequenos ou se mover em espaços apertados.",
+      "effectsSummary": "Grande (1 ponto): você tem no mínimo 1,90 m de altura. Você sofre -1 em Testes para se esconder, passar despercebido, usar disfarces ou se mover em espaços apertados.\nMuito Grande (2 pontos): você tem no mínimo 2,10 m de altura. Você sofre -2 em Testes para se esconder, passar despercebido, usar disfarces, entrar em veículos pequenos ou se mover em espaços apertados.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1300000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "137859f7a4199812",
+    "name": "Mãos Trêmulas",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Tremor Leve (1 ponto): suas mãos tremem sob pressão, dor, medo ou estresse. Você sofre -1 em Testes que exijam precisão manual, como Medicina, Ladinagem, Eletrônica, disparos precisos ou manipulação delicada.\nTremor Forte (2 pontos): seus tremores são frequentes e difíceis de controlar. Você sofre -2 em Testes que exijam precisão manual, especialmente em situações de perigo, pressa ou tensão.",
+      "effectsSummary": "Tremor Leve (1 ponto): suas mãos tremem sob pressão, dor, medo ou estresse. Você sofre -1 em Testes que exijam precisão manual, como Medicina, Ladinagem, Eletrônica, disparos precisos ou manipulação delicada.\nTremor Forte (2 pontos): seus tremores são frequentes e difíceis de controlar. Você sofre -2 em Testes que exijam precisão manual, especialmente em situações de perigo, pressa ou tensão.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1400000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "22e6e4e1b46b73f3",
+    "name": "Desastrado",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Desajeitado (1 ponto): você tem dificuldade com coordenação, equilíbrio ou cuidado físico. Você sofre -1 em Testes para evitar quedas, derrubar objetos, fazer movimentos delicados ou agir com precisão corporal.\nMuito Desajeitado (2 pontos): sua falta de coordenação causa problemas frequentes. Você sofre -2 em Testes ligados a equilíbrio, furtividade física, movimentos delicados, escalada, saltos ou ações que exijam controle corporal.",
+      "effectsSummary": "Desajeitado (1 ponto): você tem dificuldade com coordenação, equilíbrio ou cuidado físico. Você sofre -1 em Testes para evitar quedas, derrubar objetos, fazer movimentos delicados ou agir com precisão corporal.\nMuito Desajeitado (2 pontos): sua falta de coordenação causa problemas frequentes. Você sofre -2 em Testes ligados a equilíbrio, furtividade física, movimentos delicados, escalada, saltos ou ações que exijam controle corporal.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1500000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "b7115975fa506824",
+    "name": "Sensível à Dor",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Dor Intensa (1 ponto): você sente dor de forma mais intensa que o normal. Quando estiver ferido, abalado ou sob tortura, sofre -1 em Testes para manter concentração, resistir interrogatório, agir sob pressão ou continuar lutando.\nDor Incapacitante (2 pontos): a dor afeta muito sua capacidade de reação. Quando estiver ferido, abalado ou sob tortura, sofre -2 em Testes para manter concentração, resistir interrogatório, agir sob pressão ou continuar lutando.",
+      "effectsSummary": "Dor Intensa (1 ponto): você sente dor de forma mais intensa que o normal. Quando estiver ferido, abalado ou sob tortura, sofre -1 em Testes para manter concentração, resistir interrogatório, agir sob pressão ou continuar lutando.\nDor Incapacitante (2 pontos): a dor afeta muito sua capacidade de reação. Quando estiver ferido, abalado ou sob tortura, sofre -2 em Testes para manter concentração, resistir interrogatório, agir sob pressão ou continuar lutando.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1600000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "d10bbe189c049a35",
+    "name": "Cicatrização Lenta",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Recuperação Difícil (1 ponto): seu corpo demora mais para se recuperar de ferimentos, doenças ou desgaste físico. Você sofre -1 em qualquer Teste ligado a cura, recuperação, repouso ou resistência a sequelas.\nRecuperação Complicada (2 pontos): seus ferimentos fecham devagar e qualquer dano pode se tornar um problema maior. Você sofre -2 em qualquer Teste ligado a cura, recuperação, repouso ou resistência a sequelas.",
+      "effectsSummary": "Recuperação Difícil (1 ponto): seu corpo demora mais para se recuperar de ferimentos, doenças ou desgaste físico. Você sofre -1 em qualquer Teste ligado a cura, recuperação, repouso ou resistência a sequelas.\nRecuperação Complicada (2 pontos): seus ferimentos fecham devagar e qualquer dano pode se tornar um problema maior. Você sofre -2 em qualquer Teste ligado a cura, recuperação, repouso ou resistência a sequelas.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1700000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "b1472253676e0190",
+    "name": "Metabolismo Fraco",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Metabolismo Instável (1 ponto): seu corpo reage mal a mudanças de alimentação, sono, temperatura ou esforço. Você sofre -1 em qualquer Teste ligado a jejum, privação, intoxicação, frio, calor ou desgaste físico.\nMetabolismo Debilitado (2 pontos): seu corpo tem grande dificuldade para manter equilíbrio físico. Você sofre -2 em qualquer Teste ligado a jejum, privação, intoxicação, frio, calor ou desgaste físico.",
+      "effectsSummary": "Metabolismo Instável (1 ponto): seu corpo reage mal a mudanças de alimentação, sono, temperatura ou esforço. Você sofre -1 em qualquer Teste ligado a jejum, privação, intoxicação, frio, calor ou desgaste físico.\nMetabolismo Debilitado (2 pontos): seu corpo tem grande dificuldade para manter equilíbrio físico. Você sofre -2 em qualquer Teste ligado a jejum, privação, intoxicação, frio, calor ou desgaste físico.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1800000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "6d72af2dda7d630a",
+    "name": "Corpo Fraco",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Força Limitada (1 ponto): seu corpo tem pouca força física. Você sofre -1 em Testes ligados a levantar peso, empurrar, puxar, carregar, arrombar, agarrar ou qualquer ação que dependa diretamente de Força.\nForça Muito Limitada (2 pontos): sua fraqueza física atrapalha com frequência. Você sofre -2 em Testes ligados a levantar peso, empurrar, puxar, carregar, arrombar, agarrar ou qualquer ação que dependa diretamente de Força.",
+      "effectsSummary": "Força Limitada (1 ponto): seu corpo tem pouca força física. Você sofre -1 em Testes ligados a levantar peso, empurrar, puxar, carregar, arrombar, agarrar ou qualquer ação que dependa diretamente de Força.\nForça Muito Limitada (2 pontos): sua fraqueza física atrapalha com frequência. Você sofre -2 em Testes ligados a levantar peso, empurrar, puxar, carregar, arrombar, agarrar ou qualquer ação que dependa diretamente de Força.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 1900000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "23bdd111b628e269",
+    "name": "Dor Crônica",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Dor Recorrente (1 ponto): você sofre dores frequentes em uma parte do corpo. Você sofre -1 em qualquer Teste ligado a esforço físico, concentração, repouso ou atividades prolongadas quando a dor estiver afetando a cena.\nDor Debilitante (2 pontos): sua dor é intensa, constante ou difícil de ignorar. Você sofre -2 em qualquer Teste ligado a esforço físico, concentração, repouso ou atividades prolongadas quando a dor estiver afetando a cena.",
+      "effectsSummary": "Dor Recorrente (1 ponto): você sofre dores frequentes em uma parte do corpo. Você sofre -1 em qualquer Teste ligado a esforço físico, concentração, repouso ou atividades prolongadas quando a dor estiver afetando a cena.\nDor Debilitante (2 pontos): sua dor é intensa, constante ou difícil de ignorar. Você sofre -2 em qualquer Teste ligado a esforço físico, concentração, repouso ou atividades prolongadas quando a dor estiver afetando a cena.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 2000000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "447c444b354096cc",
+    "name": "Insônia",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Sono Ruim (1 ponto): ao tentar dormir, faça um Teste de Constituição com -1. Se falhar, você não se recupera naquela noite e não recebe os efeitos de um descanso completo. Cada noite mal dormida acumula mais -1 nesse Teste. A cada 2 noites mal dormidas, você recebe 1 ponto de Fadiga até conseguir dormir.\nInsônia Crônica (2 pontos): ao tentar dormir, faça um Teste de Constituição com -2. Se falhar, você não se recupera naquela noite e não recebe os efeitos de um descanso completo. Cada noite mal dormida acumula mais -2 nesse Teste. A cada 2 noites mal dormidas, você recebe 1 ponto de Fadiga até conseguir dormir.\nRecuperação: cada noite dormida reduz a penalidade acumulada em 1 para Sono Ruim ou em 2 para Insônia Crônica, além de remover 1 ponto de Fadiga.\nObservação: o personagem pode usar remédios para conseguir dormir, mas isso pode gerar uso contínuo, dependência ou vício. Converse com o Mestre ao escolher essa desvantagem.",
+      "effectsSummary": "Sono Ruim (1 ponto): ao tentar dormir, faça um Teste de Constituição com -1. Se falhar, você não se recupera naquela noite e não recebe os efeitos de um descanso completo. Cada noite mal dormida acumula mais -1 nesse Teste. A cada 2 noites mal dormidas, você recebe 1 ponto de Fadiga até conseguir dormir.\nInsônia Crônica (2 pontos): ao tentar dormir, faça um Teste de Constituição com -2. Se falhar, você não se recupera naquela noite e não recebe os efeitos de um descanso completo. Cada noite mal dormida acumula mais -2 nesse Teste. A cada 2 noites mal dormidas, você recebe 1 ponto de Fadiga até conseguir dormir.\nRecuperação: cada noite dormida reduz a penalidade acumulada em 1 para Sono Ruim ou em 2 para Insônia Crônica, além de remover 1 ponto de Fadiga.\nObservação: o personagem pode usar remédios para conseguir dormir, mas isso pode gerar uso contínuo, dependência ou vício. Converse com o Mestre ao escolher essa desvantagem.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 2100000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "8bdf802ad72bb0dd",
+    "name": "Olfato Sensível",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Sensibilidade Leve (1 ponto): cheiros fortes, sangue, decomposição, produtos químicos ou ambientes insalubres podem atrapalhar você. Você sofre -1 em qualquer Teste ligado a resistir náusea, tontura, distração ou desconforto causado por odores intensos.\nSensibilidade Extrema (2 pontos): odores fortes afetam você com facilidade. Você sofre -2 em qualquer Teste ligado a resistir náusea, tontura, distração ou desconforto causado por cheiros intensos, podendo precisar se afastar ou agir com dificuldade em ambientes contaminados.",
+      "effectsSummary": "Sensibilidade Leve (1 ponto): cheiros fortes, sangue, decomposição, produtos químicos ou ambientes insalubres podem atrapalhar você. Você sofre -1 em qualquer Teste ligado a resistir náusea, tontura, distração ou desconforto causado por odores intensos.\nSensibilidade Extrema (2 pontos): odores fortes afetam você com facilidade. Você sofre -2 em qualquer Teste ligado a resistir náusea, tontura, distração ou desconforto causado por cheiros intensos, podendo precisar se afastar ou agir com dificuldade em ambientes contaminados.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 2200000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  },
+  {
+    "_id": "041b9b2e2d6a0f10",
+    "name": "Má Postura",
+    "type": "desvantagem",
+    "img": "icons/svg/downgrade.svg",
+    "system": {
+      "active": true,
+      "description": "Postura Ruim (1 ponto): sua postura, coluna ou forma de se mover causa desconforto em esforços prolongados. Você sofre -1 em qualquer Teste ligado a carregar peso, permanecer muito tempo em pé, correr, escalar ou resistir a longas jornadas.\nPostura Comprometida (2 pontos): sua postura limita sua mobilidade e resistência com frequência. Você sofre -2 em qualquer Teste ligado a carregar peso, permanecer muito tempo em pé, correr, escalar, se abaixar, se espremer ou resistir a longas jornadas.",
+      "effectsSummary": "Postura Ruim (1 ponto): sua postura, coluna ou forma de se mover causa desconforto em esforços prolongados. Você sofre -1 em qualquer Teste ligado a carregar peso, permanecer muito tempo em pé, correr, escalar ou resistir a longas jornadas.\nPostura Comprometida (2 pontos): sua postura limita sua mobilidade e resistência com frequência. Você sofre -2 em qualquer Teste ligado a carregar peso, permanecer muito tempo em pé, correr, escalar, se abaixar, se espremer ou resistir a longas jornadas.",
+      "source": "Desvantagens Físicas",
+      "category": "Físicas",
+      "categoria": "Físicas",
+      "requirements": "",
+      "requisitos": "",
+      "severity": "1-2 pontos",
+      "favorite": false,
+      "activeEffects": []
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "category": "Físicas",
+        "tab": "Fisicas",
+        "intro": "Desvantagens Físicas representam limitações do corpo, da saúde, da aparência, dos sentidos ou da resistência do personagem. Elas podem nascer de doenças, ferimentos antigos, condições naturais, envelhecimento, deformidades, dores constantes, dificuldades motoras ou qualquer outro traço que afete a presença física do personagem no mundo.\nEssas Desvantagens costumam aparecer em cenas de esforço, combate, perseguição, recuperação, sobrevivência, disfarce ou interação social quando a aparência e o corpo do personagem importam. Elas não definem todo o personagem, mas mostram que seu corpo carrega marcas, limites ou fragilidades que podem pesar em momentos importantes."
+      }
+    },
+    "sort": 2300000,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.0",
+      "coreVersion": "13.350",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    }
+  }
+]
+

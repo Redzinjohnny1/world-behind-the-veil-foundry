@@ -22,6 +22,12 @@
           "dadoNormal": "d10",
           "dadoDesperto": "d12"
         },
+        "initiative": {
+          "modifier": 0,
+          "card": "",
+          "finalCard": "",
+          "source": ""
+        },
         "atributos": {
           "forca": {
             "passo": 4,
@@ -48,10 +54,25 @@
             "bonus": 0
           }
         },
-        "pericias": [],
+        "pericias": [
+          {
+            "nome": "SEM PERÍCIA",
+            "atributo": "forca",
+            "dado": 4,
+            "bonus": -2,
+            "locked": false,
+            "descricao": "Use esta perícia quando o personagem tentar uma ação sem treinamento específico. Ela representa improviso, tentativa instintiva e conhecimento insuficiente para a área.",
+            "source": "Padrão da ficha"
+          }
+        ],
         "mana": {
           "value": 0,
           "max": 3
+        },
+        "dano": {
+          "bonus": 0,
+          "armas": 0,
+          "poderes": 0
         },
         "fadiga": 0,
         "tamanho": 0,
@@ -67,6 +88,55 @@
           "resistencia": 0,
           "desviar": 4,
           "resistenciaMagica": 0
+        },
+        "dinheiro": {
+          "modo": "moderno",
+          "moeda": "USD",
+          "valor": 0,
+          "conversaoAtiva": false,
+          "taxaBancaria": 0,
+          "saldos": {
+            "USD": 0,
+            "BRL": 0,
+            "EUR": 0,
+            "GBP": 0,
+            "JPY": 0,
+            "CNY": 0,
+            "CHF": 0,
+            "CAD": 0,
+            "AUD": 0,
+            "MXN": 0,
+            "INR": 0
+          },
+          "registros": [],
+          "cobre": 0,
+          "prata": 0,
+          "ouro": 0,
+          "platina": 0,
+          "medievalConversao": {
+            "cobrePorPrata": 100,
+            "prataPorOuro": 100,
+            "ouroPorPlatina": 10
+          }
+        },
+        "historia": {
+          "antecedente": {
+            "idade": "",
+            "genero": "",
+            "altura": "",
+            "olhos": "",
+            "cabelo": "",
+            "ocupacao": "",
+            "residencia": "",
+            "afiliacao": "",
+            "marcas": "",
+            "relacoes": "",
+            "aparencia": "",
+            "objetivos": "",
+            "biografia": ""
+          },
+          "album": [],
+          "albumSections": []
         }
       }
     },
@@ -101,16 +171,20 @@
       "desvantagem",
       "habilidadeEspecial",
       "poder",
-      "complicacao",
       "modificacao",
       "municao",
+      "pericia",
       "weapon"
     ],
     "templates": {
       "base": {
         "active": true,
         "description": "",
-        "effectsSummary": ""
+        "effectsSummary": "",
+        "initiative": {
+          "modifier": 0,
+          "source": ""
+        }
       },
       "ranked": {
         "tier": "",
@@ -147,7 +221,19 @@
       "skill": "",
       "manaCost": 0,
       "damage": "",
+      "damageType": "",
       "areaEffect": "none",
+      "arcaneAbility": {
+        "enabled": false,
+        "skill": ""
+      },
+      "spellEffects": [],
+      "castPreset": {
+        "damageSteps": 0,
+        "targetSteps": 0,
+        "areaPreset": "none",
+        "areaSize": 1
+      },
       "charges": "",
       "favorite": false
     },
@@ -162,15 +248,21 @@
       "skill": "",
       "manaCost": 0,
       "damage": "",
+      "damageType": "",
       "areaEffect": "none",
+      "arcaneAbility": {
+        "enabled": false,
+        "skill": ""
+      },
+      "spellEffects": [],
+      "castPreset": {
+        "damageSteps": 0,
+        "targetSteps": 0,
+        "areaPreset": "none",
+        "areaSize": 1
+      },
       "charges": "",
       "favorite": false
-    },
-    "complicacao": {
-      "templates": [
-        "base",
-        "ranked"
-      ]
     },
     "equipamento": {
       "templates": [
@@ -350,6 +442,17 @@
       "currentShots": 0,
       "caliber": "",
       "compatibleWeapon": ""
+    },
+    "pericia": {
+      "templates": [
+        "base"
+      ],
+      "atributo": "forca",
+      "dado": 4,
+      "bonus": 0,
+      "descricao": "",
+      "source": "",
+      "favorite": false
     }
   }
 }

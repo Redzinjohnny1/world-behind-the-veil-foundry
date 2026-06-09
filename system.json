@@ -2,7 +2,8 @@
   "id": "world-behind-the-veil",
   "title": "The World Behind the Veil",
   "description": "Sistema customizado para Foundry VTT - The World Behind the Veil",
-  "version": "0.1.0",
+  "version": "0.1.15",
+  "background": "systems/world-behind-the-veil/assets/background/login-background.png",
   "compatibility": {
     "minimum": "13",
     "verified": "13",
@@ -44,6 +45,40 @@
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       }
+    },
+    {
+      "name": "pericias",
+      "label": "Perícias",
+      "type": "Item",
+      "path": "packs/pericias",
+      "system": "world-behind-the-veil",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "desvantagens",
+      "label": "Desvantagens",
+      "type": "Item",
+      "path": "packs/desvantagens",
+      "system": "world-behind-the-veil",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "The World Behind the Veil",
+      "sorting": "a",
+      "packs": [
+        "atalhos",
+        "pericias",
+        "desvantagens"
+      ],
+      "color": "#5b3f8f"
     }
   ]
 }

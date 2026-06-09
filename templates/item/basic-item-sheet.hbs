@@ -4,27 +4,50 @@
       <img class="profile-img twbv-item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" />
     </div>
     <div class="twbv-item-title-block">
-      <span class="twbv-item-kicker">{{typeLabel}}</span>
+      <span class="twbv-item-kicker">{{#if isPowerItem}}Poder{{else}}{{typeLabel}}{{/if}}</span>
       <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Nome do item" /></h1>
       <div class="twbv-item-meta-grid">
+        {{#if isSkillItem}}
+        <label>Atributo
+          <select name="system.atributo">
+            {{#each skillAttributeOptions as |attr|}}
+            <option value="{{attr.key}}" {{#ifEquals ../system.atributo attr.key}}selected{{/ifEquals}}>{{attr.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Dado inicial<input type="number" name="system.dado" value="{{system.dado}}" min="4" max="12" step="2" /></label>
+        {{else}}
+        {{#if isPowerItem}}
+        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou referencia" /></label>
+        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pre-requisito, tier ou condicao" /></label>
+        {{else}}
         <label>Categoria<input type="text" name="system.category" value="{{displayCategory}}" placeholder="Categoria" /></label>
         <label>Tags<input type="text" name="system.tags" value="{{system.tags}}" placeholder="tags" /></label>
+        {{/if}}
+        {{/if}}
       </div>
     </div>
   </header>
 
   <section class="twbv-item-summary">
     {{#if isTraitItem}}
+    {{#if isSkillItem}}
+    <article><span>Atributo</span><strong>{{system.atributo}}</strong></article>
+    <article><span>Dado</span><strong>d{{system.dado}}</strong></article>
+    <article><span>B&ocirc;nus</span><strong>{{system.bonus}}</strong></article>
+    <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{else}}
     {{#if isPowerItem}}
     <article><span>Mana</span><strong>{{system.manaCost}}</strong></article>
     <article><span>Dano</span><strong>{{#if system.damage}}{{system.damage}}{{else}}-{{/if}}</strong></article>
-    <article><span>Area</span><strong>{{#if system.areaEffect}}{{system.areaEffect}}{{else}}-{{/if}}</strong></article>
+    <article><span>&Aacute;rea</span><strong>{{#if powerAreaLabel}}{{powerAreaLabel}}{{else}}-{{/if}}</strong></article>
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
     {{else}}
     <article><span>Fonte</span><strong>{{#if system.source}}{{system.source}}{{else}}-{{/if}}</strong></article>
     <article><span>Categoria</span><strong>{{#if system.category}}{{system.category}}{{else}}-{{/if}}</strong></article>
     <article><span>Requisito</span><strong>{{#if system.requirements}}{{system.requirements}}{{else}}-{{/if}}</strong></article>
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{/if}}
     {{/if}}
     {{else}}
     <article><span>Quantidade</span><strong>{{system.quantity}}</strong></article>
@@ -36,21 +59,35 @@
 
   <nav class="sheet-tabs tabs twbv-item-tabs" data-group="primary">
     <a class="item" data-tab="general">Geral</a>
-    <a class="item" data-tab="description">Descrição</a>
+    <a class="item" data-tab="description">Descri&ccedil;&atilde;o</a>
     <a class="item" data-tab="effects">Efeitos</a>
   </nav>
 
   <section class="sheet-body twbv-item-body">
-    <div class="tab twbv-item-panel" data-group="primary" data-tab="general">
+    <div class="tab twbv-item-panel {{#if isPowerItem}}twbv-power-general-panel{{/if}}" data-group="primary" data-tab="general">
       <h2>{{#if isTraitItem}}Dados{{else}}Controle{{/if}}</h2>
       <div class="twbv-item-grid">
         {{#if isTraitItem}}
-        <label>Tipo<input type="text" value="{{typeLabel}}" disabled /></label>
-        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou referência" /></label>
-        <label>Categoria<input type="text" name="system.category" value="{{system.category}}" placeholder="Categoria" /></label>
-        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pré-requisito, tier ou condição" /></label>
+        {{#if isSkillItem}}
+        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" /></label>
+        <label>Atributo padr&atilde;o
+          <select name="system.atributo">
+            {{#each skillAttributeOptions as |attr|}}
+            <option value="{{attr.key}}" {{#ifEquals ../system.atributo attr.key}}selected{{/ifEquals}}>{{attr.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Dado inicial<input type="number" name="system.dado" value="{{system.dado}}" min="4" max="12" step="2" /></label>
+        <label>B&ocirc;nus<input type="number" name="system.bonus" value="{{system.bonus}}" step="1" /></label>
+        <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
+        <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
+        {{else}}
+        <input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" />
+        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" /></label>
+        <input type="text" name="system.requirement" value="{{system.requirement}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" />
+        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" /></label>
         {{#if isPowerItem}}
-        <label>Pericia da rolagem
+        <label>Per&iacute;cia da rolagem
           {{#if skillOptions.length}}
           <select name="system.skill">
             <option value="">Nenhuma</option>
@@ -59,26 +96,42 @@
             {{/each}}
           </select>
           {{else}}
-          <input type="text" name="system.skill" value="{{system.skill}}" placeholder="Nome da pericia" />
+          <input type="text" name="system.skill" value="{{system.skill}}" placeholder="Nome da per&iacute;cia" />
           {{/if}}
         </label>
         <label>Custo de Mana<input type="number" name="system.manaCost" value="{{system.manaCost}}" min="0" step="1" /></label>
         <label>Dano da magia<input type="text" name="system.damage" value="{{system.damage}}" placeholder="Ex: 2d6, 3d8+2" /></label>
-        <label>Area de efeito
+        <label>Tipo de dano<input type="text" name="system.damageType" value="{{system.damageType}}" placeholder="Fogo, corte, sombra..." /></label>
+        <label class="twbv-power-area-field">&Aacute;rea de efeito
           <select name="system.areaEffect">
-            <option value="none" {{#ifEquals system.areaEffect "none"}}selected{{/ifEquals}}>Nenhuma</option>
-            <option value="burst-small" {{#ifEquals system.areaEffect "burst-small"}}selected{{/ifEquals}}>Explosao pequena</option>
-            <option value="burst-medium" {{#ifEquals system.areaEffect "burst-medium"}}selected{{/ifEquals}}>Explosao media</option>
-            <option value="burst-large" {{#ifEquals system.areaEffect "burst-large"}}selected{{/ifEquals}}>Explosao grande</option>
-            <option value="cone-small" {{#ifEquals system.areaEffect "cone-small"}}selected{{/ifEquals}}>Cone pequeno</option>
-            <option value="cone-large" {{#ifEquals system.areaEffect "cone-large"}}selected{{/ifEquals}}>Cone grande</option>
+            {{#each powerAreaOptions as |area|}}
+            <option value="{{area.value}}" {{#ifEquals ../powerAreaValue area.value}}selected{{/ifEquals}}>{{area.label}}</option>
+            {{/each}}
           </select>
+          <button type="button" class="twbv-power-area-preview"><i class="fas fa-ruler-combined"></i> Pr&eacute;via</button>
         </label>
         {{/if}}
         {{#ifEquals item.type "desvantagem"}}<label>Severidade<input type="text" name="system.severity" value="{{system.severity}}" placeholder="Menor, Maior..." /></label>{{/ifEquals}}
-        {{#ifEquals item.type "complicacao"}}<label>Severidade<input type="text" name="system.severity" value="{{system.severity}}" placeholder="Menor, Maior..." /></label>{{/ifEquals}}
         <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
+        {{#if isPowerItem}}
         <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
+        <section class="twbv-power-arcane-panel">
+          <input type="hidden" name="system.arcaneAbility.enabled" value="{{#if system.arcaneAbility.enabled}}true{{else}}false{{/if}}" />
+          <input type="hidden" class="twbv-power-arcane-value" name="system.arcaneAbility.skill" value="{{system.arcaneAbility.skill}}" />
+          <span class="twbv-power-arcane-title">Habilidade Arcana</span>
+          <div class="twbv-power-arcane-options">
+            {{#each arcaneAbilityOptions as |ability|}}
+            <label class="twbv-power-arcane-option {{#ifEquals ../system.arcaneAbility.skill ability.name}}is-selected{{/ifEquals}}" data-arcane-skill="{{ability.name}}">
+              <input type="checkbox" class="twbv-power-arcane-choice" value="{{ability.name}}" {{#ifEquals ../system.arcaneAbility.skill ability.name}}checked{{/ifEquals}} />
+              <span>{{ability.name}}</span>
+            </label>
+            {{/each}}
+          </div>
+        </section>
+        {{else}}
+        <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
+        {{/if}}
+        {{/if}}
         {{else}}
         <label>Tipo<input type="text" value="{{typeLabel}}" disabled /></label>
         <label>Quantidade<input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1" /></label>
@@ -91,27 +144,299 @@
     </div>
 
     <div class="tab twbv-item-panel" data-group="primary" data-tab="effects">
+      {{#if hasItemEffectWorkbench}}
+      <div class="twbv-effects-workbench twbv-item-effects-workbench">
+        <header class="twbv-effects-hero">
+          <div>
+            <span class="twbv-effects-kicker">Active Effects</span>
+            <h2>Efeitos do item</h2>
+          </div>
+          <i class="fas fa-wand-sparkles"></i>
+        </header>
+
+        <section class="twbv-effect-composer">
+          <div class="twbv-effect-kind-grid" role="group" aria-label="Tipo de efeito">
+            <button type="button" class="twbv-effect-kind is-active" data-effect-kind="Atributos"><i class="fas fa-dumbbell"></i><span>Atributos</span></button>
+            <button type="button" class="twbv-effect-kind" data-effect-kind="Defesas e recursos"><i class="fas fa-shield-alt"></i><span>Defesas</span></button>
+            <button type="button" class="twbv-effect-kind" data-effect-kind="Dano"><i class="fas fa-burst"></i><span>Dano</span></button>
+            <button type="button" class="twbv-effect-kind" data-effect-kind="Pericias"><i class="fas fa-dice-d20"></i><span>Per&iacute;cias</span></button>
+            <button type="button" class="twbv-effect-kind" data-effect-kind="__custom"><i class="fas fa-code"></i><span>Custom</span></button>
+          </div>
+          <label class="twbv-effect-icon-field">&Iacute;cone
+            <span class="twbv-effect-icon-control">
+              <button type="button" class="twbv-effect-icon-pick" title="Escolher &iacute;cone">
+                <img src="icons/svg/aura.svg" alt="&Iacute;cone do efeito" data-effect-icon-preview />
+              </button>
+              <input type="text" name="twbvEffectIcon" value="icons/svg/aura.svg" />
+            </span>
+          </label>
+          <label>Nome
+            <input type="text" name="twbvEffectName" placeholder="Ex.: Penalidade de Destreza" />
+          </label>
+          <label>Campo afetado
+            <select name="twbvEffectTarget">
+              {{#each effectTargetOptions as |option|}}
+                <option value="{{option.key}}" data-effect-option-group="{{option.group}}">{{option.label}}</option>
+              {{/each}}
+              <option value="__custom">Caminho customizado</option>
+            </select>
+          </label>
+          <label class="twbv-effect-custom-path" hidden>Caminho
+            <input type="text" name="twbvEffectCustomPath" placeholder="system.atributos.intuicao.bonus" />
+          </label>
+          <label>Modo
+            <select name="twbvEffectMode">
+              {{#each effectModeOptions as |option|}}
+                <option value="{{option.value}}">{{option.label}}</option>
+              {{/each}}
+            </select>
+          </label>
+          <label>Valor
+            <input type="text" name="twbvEffectValue" value="-1" />
+          </label>
+          <label>Dura&ccedil;&atilde;o
+            <select name="twbvEffectDuration">
+              <option value="permanent">Permanente</option>
+              <option value="temporary">Tempor&aacute;rio</option>
+            </select>
+          </label>
+          <label class="twbv-effect-rounds" hidden>Rodadas
+            <input type="number" name="twbvEffectRounds" value="5" min="1" step="1" />
+          </label>
+          <label class="twbv-effect-description">Descri&ccedil;&atilde;o
+            <input type="text" name="twbvEffectDescription" placeholder="Resumo opcional para lembrar o que este efeito faz" />
+          </label>
+          <button type="button" class="twbv-effect-quick-add"><i class="fas fa-plus"></i> Adicionar efeito</button>
+        </section>
+
+        <section class="twbv-effect-sections">
+          <article class="twbv-effect-section">
+            <header><i class="fas fa-hourglass-half"></i><span>Tempor&aacute;rios</span></header>
+            <ol class="twbv-active-effect-list">
+              {{#each itemSheetEffects.temporary as |effect|}}
+                <li class="twbv-active-effect" data-effect-id="{{effect.id}}">
+                  <details>
+                    <summary>
+                      <img src="{{effect.img}}" alt="{{effect.name}}" />
+                      <strong>{{effect.name}}</strong>
+                      <span>{{effect.durationLabel}}</span>
+                      <div class="twbv-effect-controls">
+                        <button type="button" class="twbv-effect-action" data-action="toggle" title="Ativar/desativar"><i class="fas fa-power-off"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="edit" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="delete" title="Apagar"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </summary>
+                    <div class="twbv-effect-change-list">
+                      {{#each effect.changes as |change|}}
+                        <p><b>{{change.label}}</b><span>{{change.modeLabel}} {{change.value}}</span></p>
+                      {{/each}}
+                      {{#if effect.description}}<em>{{effect.description}}</em>{{/if}}
+                    </div>
+                  </details>
+                </li>
+              {{else}}
+                <li class="twbv-effect-empty">Nenhum efeito tempor&aacute;rio ativo.</li>
+              {{/each}}
+            </ol>
+          </article>
+
+          <article class="twbv-effect-section">
+            <header><i class="fas fa-infinity"></i><span>Permanentes</span></header>
+            <ol class="twbv-active-effect-list">
+              {{#each itemSheetEffects.permanent as |effect|}}
+                <li class="twbv-active-effect" data-effect-id="{{effect.id}}">
+                  <details>
+                    <summary>
+                      <img src="{{effect.img}}" alt="{{effect.name}}" />
+                      <strong>{{effect.name}}</strong>
+                      <span>Ativo</span>
+                      <div class="twbv-effect-controls">
+                        <button type="button" class="twbv-effect-action" data-action="toggle" title="Ativar/desativar"><i class="fas fa-power-off"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="edit" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="delete" title="Apagar"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </summary>
+                    <div class="twbv-effect-change-list">
+                      {{#each effect.changes as |change|}}
+                        <p><b>{{change.label}}</b><span>{{change.modeLabel}} {{change.value}}</span></p>
+                      {{/each}}
+                      {{#if effect.description}}<em>{{effect.description}}</em>{{/if}}
+                    </div>
+                  </details>
+                </li>
+              {{else}}
+                <li class="twbv-effect-empty">Nenhum efeito permanente ativo.</li>
+              {{/each}}
+            </ol>
+          </article>
+
+          <article class="twbv-effect-section">
+            <header><i class="fas fa-power-off"></i><span>Inativos</span></header>
+            <ol class="twbv-active-effect-list">
+              {{#each itemSheetEffects.inactive as |effect|}}
+                <li class="twbv-active-effect is-disabled" data-effect-id="{{effect.id}}">
+                  <details>
+                    <summary>
+                      <img src="{{effect.img}}" alt="{{effect.name}}" />
+                      <strong>{{effect.name}}</strong>
+                      <span>Desativado</span>
+                      <div class="twbv-effect-controls">
+                        <button type="button" class="twbv-effect-action" data-action="toggle" title="Ativar/desativar"><i class="fas fa-power-off"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="edit" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button type="button" class="twbv-effect-action" data-action="delete" title="Apagar"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </summary>
+                    <div class="twbv-effect-change-list">
+                      {{#each effect.changes as |change|}}
+                        <p><b>{{change.label}}</b><span>{{change.modeLabel}} {{change.value}}</span></p>
+                      {{/each}}
+                      {{#if effect.description}}<em>{{effect.description}}</em>{{/if}}
+                    </div>
+                  </details>
+                </li>
+              {{else}}
+                <li class="twbv-effect-empty">Nenhum efeito inativo.</li>
+              {{/each}}
+            </ol>
+          </article>
+        </section>
+      </div>
+      {{else}}
       <h2>Efeitos</h2>
+      {{#if isPowerItem}}
+      <section class="twbv-power-effect-builder">
+        <header>
+          <div>
+            <strong>Molde no lan&ccedil;amento</strong>
+            <span>Configure aqui quais ajustes aparecem quando este poder for lan&ccedil;ado.</span>
+          </div>
+          <div class="twbv-power-effect-adders">
+            <button type="button" class="twbv-power-effect-add" data-effect-type="damage"><i class="fas fa-plus"></i> Dano</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="effect"><i class="fas fa-plus"></i> Efeito</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="target"><i class="fas fa-plus"></i> Alvo</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="sphere"><i class="fas fa-plus"></i> Esfera</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="cone"><i class="fas fa-plus"></i> Cone</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="line"><i class="fas fa-plus"></i> Linha</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="glyph"><i class="fas fa-plus"></i> Glifo</button>
+            <button type="button" class="twbv-power-effect-add" data-effect-type="custom"><i class="fas fa-plus"></i> Custom</button>
+          </div>
+        </header>
+        <section class="twbv-power-mold-grid twbv-power-sheet-preset" data-base-damage="{{system.damage}}" data-base-area="{{powerAreaValue}}" data-base-mana="{{system.manaCost}}">
+          <article class="twbv-power-mold-card twbv-power-mold-card--damage">
+            <header>
+              <i class="fas fa-bolt"></i>
+              <div>
+                <span>Dano escolhido</span>
+                <strong data-sheet-damage-output>{{#if system.damage}}{{system.damage}}{{else}}-{{/if}}</strong>
+              </div>
+            </header>
+            <div class="twbv-power-mold-controls">
+              <button type="button" class="twbv-mold-step twbv-mold-step--minus" data-sheet-preset-step="damage" data-step="-1" title="Diminuir dano"><i class="fas fa-minus"></i></button>
+              <input type="number" name="twbvPreset.damageSteps" value="{{system.castPreset.damageSteps}}" min="0" step="1" />
+              <button type="button" class="twbv-mold-step twbv-mold-step--plus" data-sheet-preset-step="damage" data-step="1" title="Aumentar dano"><i class="fas fa-plus"></i></button>
+            </div>
+            <footer><span><i class="fas fa-tint"></i> Mana do dano</span><strong data-sheet-damage-cost>0</strong></footer>
+          </article>
+          <article class="twbv-power-mold-card twbv-power-mold-card--area">
+            <header>
+              <i class="fas fa-ruler-combined"></i>
+              <div>
+                <span>&Aacute;rea moldada</span>
+                <strong data-sheet-area-title>{{#if powerAreaLabel}}{{powerAreaLabel}}{{else}}Nenhuma{{/if}}</strong>
+              </div>
+            </header>
+            <button type="button" class="twbv-power-area-toggle" data-sheet-area-toggle><i class="fas fa-th-large"></i> Escolher &aacute;rea</button>
+            <div class="twbv-power-area-picker" data-sheet-area-picker hidden>
+              <div class="twbv-power-area-options">
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="sphere-1"><i class="fas fa-dot-circle"></i><span>Explos&atilde;o</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="cone-3"><i class="fas fa-play"></i><span>Cone</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="line-6"><i class="fas fa-minus"></i><span>Linha</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="glyph-1"><i class="fas fa-draw-polygon"></i><span>Glifo</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="aura-1"><i class="fas fa-sun"></i><span>Aura</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="touch"><i class="fas fa-hand-sparkles"></i><span>Toque</span></button>
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="target"><i class="fas fa-crosshairs"></i><span>Alvo</span></button>
+              </div>
+            </div>
+            <input type="hidden" name="twbvPreset.areaPreset" value="{{system.castPreset.areaPreset}}" data-sheet-area-value />
+            <div class="twbv-power-area-adjust" data-sheet-area-adjust>
+              <div>
+                <span>&Aacute;rea escolhida</span>
+                <strong data-sheet-selected-area>{{#if system.castPreset.areaPreset}}{{system.castPreset.areaPreset}}{{else}}&Aacute;rea base{{/if}}</strong>
+                <p data-sheet-area-summary>Use -/+ para preparar o tamanho.</p>
+              </div>
+              <div class="twbv-power-mold-controls">
+                <button type="button" class="twbv-mold-step twbv-mold-step--minus" data-sheet-preset-step="area" data-step="-1" title="Diminuir &aacute;rea"><i class="fas fa-minus"></i></button>
+                <input type="number" name="twbvPreset.areaSize" value="{{system.castPreset.areaSize}}" min="1" step="1" />
+                <button type="button" class="twbv-mold-step twbv-mold-step--plus" data-sheet-preset-step="area" data-step="1" title="Aumentar &aacute;rea"><i class="fas fa-plus"></i></button>
+              </div>
+            </div>
+            <footer><span><i class="fas fa-tint"></i> Mana da &aacute;rea</span><strong data-sheet-area-cost>0</strong></footer>
+            <div class="twbv-power-target-inline" data-sheet-target-adjust>
+              <header>
+                <i class="fas fa-crosshairs"></i>
+                <div>
+                  <span>Alvos</span>
+                  <strong data-sheet-target-output>1 alvo</strong>
+                </div>
+              </header>
+              <div class="twbv-power-mold-controls" data-sheet-target-controls>
+                <button type="button" class="twbv-mold-step twbv-mold-step--minus" data-sheet-preset-step="target" data-step="-1" title="Diminuir alvos"><i class="fas fa-minus"></i></button>
+                <input type="number" name="twbvPreset.targetSteps" value="{{system.castPreset.targetSteps}}" min="0" step="1" />
+                <button type="button" class="twbv-mold-step twbv-mold-step--plus" data-sheet-preset-step="target" data-step="1" title="Aumentar alvos"><i class="fas fa-plus"></i></button>
+              </div>
+              <footer><span><i class="fas fa-tint"></i> Mana de alvos</span><strong data-sheet-target-cost>0</strong></footer>
+            </div>
+          </article>
+        </section>
+        <section class="twbv-power-effect-final">
+          <article class="twbv-power-mana-card twbv-power-mana-card--current"><i class="fas fa-gem"></i><span>Mana atual</span><strong>{{actorManaCurrent}}</strong></article>
+          <article class="twbv-power-mana-card twbv-power-mana-card--cost"><i class="fas fa-fire"></i><span>Mana gasta</span><strong data-sheet-total-cost>{{system.manaCost}}</strong></article>
+          <button type="button" class="twbv-power-preview-grid" data-sheet-preview-grid><i class="fas fa-ruler-combined"></i> Pr&eacute;via do grid</button>
+        </section>
+        <div class="twbv-power-effect-list">
+          {{#each powerEffects as |effect index|}}
+          <article class="twbv-power-effect-row" data-index="{{index}}">
+            <input type="hidden" name="system.spellEffects.{{index}}.id" value="{{effect.id}}" />
+            <label>Segmento
+              <select name="system.spellEffects.{{index}}.type">
+                {{#each ../powerEffectTypeOptions as |option|}}
+                <option value="{{option.value}}" {{#ifEquals effect.type option.value}}selected{{/ifEquals}}>{{option.label}}</option>
+                {{/each}}
+              </select>
+            </label>
+            <label>Nome<input type="text" name="system.spellEffects.{{index}}.label" value="{{effect.label}}" /></label>
+            <label>Custo por passo<input type="number" name="system.spellEffects.{{index}}.manaPerStep" value="{{effect.manaPerStep}}" min="0" step="1" /></label>
+            <label>Passo<input type="text" name="system.spellEffects.{{index}}.stepLabel" value="{{effect.stepLabel}}" placeholder="+1d6, +1 quadrado..." /></label>
+            <label class="twbv-power-effect-wide">Resumo<input type="text" name="system.spellEffects.{{index}}.description" value="{{effect.description}}" placeholder="Texto que aparece no chat" /></label>
+            <button type="button" class="twbv-power-effect-remove" data-index="{{index}}" title="Remover molde"><i class="fas fa-trash"></i></button>
+          </article>
+          {{else}}
+          <p class="twbv-tab-empty">Nenhum molde configurado. Use os bot&otilde;es acima para adicionar.</p>
+          {{/each}}
+        </div>
+      </section>
+      {{/if}}
       {{#ifEquals item.type "modificacao"}}
       <div class="twbv-item-grid">
         <label>Uso
           <select name="system.modType">
-            <option value="mod" {{#ifEquals system.modType "mod"}}selected{{/ifEquals}}>Modificação</option>
+            <option value="mod" {{#ifEquals system.modType "mod"}}selected{{/ifEquals}}>Modifica&ccedil;&atilde;o</option>
           </select>
         </label>
-        <label>Bônus para acertar<input type="text" name="system.modifier" value="{{system.modifier}}" placeholder="+1" /></label>
+        <label>B&ocirc;nus para acertar<input type="text" name="system.modifier" value="{{system.modifier}}" placeholder="+1" /></label>
         <label>Dano extra<input type="text" name="system.damage" value="{{system.damage}}" placeholder="+1d6" /></label>
-        <label>Ampliação<input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" /></label>
+        <label>Amplia&ccedil;&atilde;o<input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" /></label>
         <label>AP<input type="number" name="system.ap" value="{{system.ap}}" step="1" /></label>
       </div>
       {{/ifEquals}}
       <label class="twbv-item-notes">Resumo de efeitos<textarea name="system.effectsSummary" rows="7">{{system.effectsSummary}}</textarea></label>
+      {{/if}}
     </div>
 
-    <div class="tab twbv-item-panel" data-group="primary" data-tab="description">
-      <h2>Descrição</h2>
+    <div class="tab twbv-item-panel {{#if isPowerItem}}twbv-power-description-panel{{/if}}" data-group="primary" data-tab="description">
+      <h2>Descri&ccedil;&atilde;o</h2>
       {{#if isTraitItem}}
-      <label class="twbv-item-description">DescriÃ§Ã£o<textarea name="system.description" rows="9">{{system.description}}</textarea></label>
+      <label class="twbv-item-description">Descri&ccedil;&atilde;o<textarea name="system.description" rows="9">{{system.description}}</textarea></label>
       {{else}}
       <label class="twbv-item-description">{{editor system.description target="system.description" button=true owner=owner editable=editable}}</label>
       {{/if}}

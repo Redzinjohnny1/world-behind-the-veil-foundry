@@ -1,0 +1,32 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" aria-hidden="true">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="66%">
+      <stop offset="0" stop-color="#3d80ff" stop-opacity="0.42"/>
+      <stop offset="0.42" stop-color="#1a0f2f"/>
+      <stop offset="1" stop-color="#050309"/>
+    </radialGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7d58a"/>
+      <stop offset="0.18" stop-color="#352035"/>
+      <stop offset="0.52" stop-color="#050408"/>
+      <stop offset="0.82" stop-color="#6b4a2a"/>
+      <stop offset="1" stop-color="#f0c976"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 1 0 0 0 0 0.82 0 0 0 0 0.44 0 0 0 0.95 0" result="gold"/>
+      <feMerge><feMergeNode in="gold"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="symbolGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="0" stdDeviation="18" flood-color="#3d80ff" flood-opacity="0.95"/>
+      <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#000" flood-opacity="0.85"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" rx="132" fill="#050309"/>
+  <rect x="54" y="54" width="916" height="916" rx="104" fill="url(#frame)" filter="url(#glow)"/>
+  <rect x="92" y="92" width="840" height="840" rx="82" fill="url(#bg)" stroke="#7d5b35" stroke-width="12"/>
+  <path d="M152 162h156M716 162h156M152 862h156M716 862h156" stroke="#f1d38a" stroke-width="13" stroke-linecap="round" opacity=".76"/>
+  <circle cx="512" cy="512" r="316" fill="#3d80ff" opacity=".13"/>
+  <g filter="url(#symbolGlow)"><rect x="342" y="342" width="340" height="340" rx="54" fill="none" stroke="#8bc0ff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/><path fill="none" stroke="#8bc0ff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" d="M512 342V232M512 792V682M342 512H232M792 512H682M430 430h164v164H430z"/></g>
+</svg>
+

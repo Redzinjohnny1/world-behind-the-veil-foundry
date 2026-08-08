@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <pattern id="grid" width="70" height="70" patternUnits="userSpaceOnUse">
+      <path d="M70 0H0V70" fill="none" stroke="#5d5a66" stroke-width="2" opacity=".55"/>
+    </pattern>
+    <radialGradient id="tokenA"><stop stop-color="#df9b53"/><stop offset=".58" stop-color="#6c301d"/><stop offset="1" stop-color="#180b12"/></radialGradient>
+    <radialGradient id="tokenB"><stop stop-color="#d8c8ff"/><stop offset=".58" stop-color="#68459d"/><stop offset="1" stop-color="#160d25"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5 0 10z" fill="#ffcc67"/></marker>
+  </defs>
+  <rect width="1200" height="700" fill="#32313a"/>
+  <rect width="1200" height="700" fill="url(#grid)"/>
+
+  <text x="600" y="48" text-anchor="middle" fill="#fff2c7" font-family="Arial, sans-serif" font-size="30" font-weight="700">VERIFICAÇÃO DE COBERTURA ENTRE TOKENS</text>
+  <text x="600" y="78" text-anchor="middle" fill="#cdb7df" font-family="Arial, sans-serif" font-size="18">3 quinas válidas + 1 linha central; a última quina na direção do disparo é ignorada</text>
+
+  <!-- Linhas válidas -->
+  <g fill="none" stroke="#8b5cf6" stroke-width="6" opacity=".95" filter="url(#glow)">
+    <path d="M220 500L850 130"/>
+    <path d="M360 500L990 130"/>
+    <path d="M220 640L850 270"/>
+    <path d="M290 570L920 200" stroke="#5ee7ff" stroke-width="7"/>
+  </g>
+
+  <!-- Linha descartada -->
+  <path d="M360 640L990 270" fill="none" stroke="#ff596e" stroke-width="5" stroke-dasharray="15 12" opacity=".8"/>
+
+  <!-- Atacante -->
+  <rect x="220" y="500" width="140" height="140" rx="8" fill="#17121e" stroke="#d9b775" stroke-width="4"/>
+  <circle cx="290" cy="570" r="57" fill="url(#tokenA)" stroke="#f0b76e" stroke-width="5"/>
+  <path d="M266 590q24-60 48 0M260 548q30-26 60 0" fill="none" stroke="#ffe3b0" stroke-width="7" stroke-linecap="round"/>
+  <text x="290" y="675" text-anchor="middle" fill="#fff2cf" font-family="Arial, sans-serif" font-size="22" font-weight="700">ATACANTE</text>
+
+  <!-- Alvo -->
+  <rect x="850" y="130" width="140" height="140" rx="8" fill="#17121e" stroke="#b59aff" stroke-width="4"/>
+  <circle cx="920" cy="200" r="57" fill="url(#tokenB)" stroke="#c9a8ff" stroke-width="5"/>
+  <path d="M892 190q28-30 56 0M895 218q25 22 50 0" fill="none" stroke="#f3eaff" stroke-width="7" stroke-linecap="round"/>
+  <text x="920" y="112" text-anchor="middle" fill="#fff2cf" font-family="Arial, sans-serif" font-size="22" font-weight="700">ALVO</text>
+
+  <!-- Pontos -->
+  <g fill="#efe6ff" stroke="#4d2479" stroke-width="4">
+    <circle cx="850" cy="130" r="10"/><circle cx="990" cy="130" r="10"/><circle cx="850" cy="270" r="10"/><circle cx="920" cy="200" r="11"/>
+  </g>
+  <circle cx="990" cy="270" r="12" fill="#ff596e" stroke="#5c101b" stroke-width="4"/>
+  <path d="M975 255l30 30m0-30l-30 30" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Legenda e chamada -->
+  <path d="M1045 375C1015 350 1005 315 995 285" fill="none" stroke="#ffcc67" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="890" y="380" width="270" height="88" rx="12" fill="#160d22" stroke="#ffcc67" stroke-width="3"/>
+  <text x="1025" y="415" text-anchor="middle" fill="#ffdd91" font-family="Arial, sans-serif" font-size="19" font-weight="700">QUINA IGNORADA</text>
+  <text x="1025" y="443" text-anchor="middle" fill="#f6e9ca" font-family="Arial, sans-serif" font-size="16">é a mais distante do atacante</text>
+
+  <g font-family="Arial, sans-serif" font-size="17">
+    <line x1="500" y1="620" x2="555" y2="620" stroke="#8b5cf6" stroke-width="6"/><text x="570" y="626" fill="#eee6ff">Linhas externas válidas</text>
+    <line x1="500" y1="650" x2="555" y2="650" stroke="#5ee7ff" stroke-width="7"/><text x="570" y="656" fill="#d7fbff">Linha central</text>
+    <line x1="790" y1="620" x2="845" y2="620" stroke="#ff596e" stroke-width="5" stroke-dasharray="12 8"/><text x="860" y="626" fill="#ffd5da">Linha descartada</text>
+  </g>
+</svg>

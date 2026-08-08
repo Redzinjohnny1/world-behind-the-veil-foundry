@@ -30,12 +30,15 @@
   {{#if item.system.skill}}<div class="equipment-slot-label">Per&iacute;cia: {{item.system.skill}}</div>{{/if}}
   <div class="ammo-row"><span>Muni&ccedil;&atilde;o</span><span>{{item.system.currentShots}} / {{item.system.shots}}</span></div>
   <div class="ammo-bar"><div class="ammo-fill" style="width: {{item.system.ammoPercent}}%;"></div></div>
-  {{#if item.system.ammo}}<div class="equipment-slot-label">Muni&ccedil;&atilde;o: {{item.system.ammo}}</div>{{/if}}
+  {{#if item.system.ammo}}<div class="equipment-slot-label">Pente acoplado: {{item.system.ammo}}</div>{{else}}{{#unless item.isMelee}}<div class="equipment-slot-label">Sem pente acoplado</div>{{/unless}}{{/if}}
   <div class="weapon-buttons">
-    <a class="item-toggle-equip twbv-equip-command"><i class="fas {{#if item.isEquipped}}fa-link-slash{{else}}fa-link{{/if}}"></i> {{#if item.isEquipped}}Desequipar{{else}}Equipar{{/if}}</a>
-    <a class="weapon-roll"><i class="fas fa-dice-d20"></i> Atirar</a>
+    <a class="weapon-roll"><i class="fas fa-dice-d20"></i> Rolar</a>
     <a class="weapon-damage"><i class="fas fa-burst"></i> Dano</a>
-    <a class="weapon-reload"><i class="fas fa-rotate"></i> Recarregar</a>
+    {{#unless item.isMelee}}
+    <a class="weapon-reload"><i class="fas fa-rotate"></i> Trocar pente</a>
+    {{#if item.hasLoadedAmmo}}<a class="weapon-unload"><i class="fas fa-eject"></i> Remover pente</a>{{/if}}
+    {{/unless}}
+    <a class="item-toggle-equip twbv-equip-command"><i class="fas {{#if item.isEquipped}}fa-link-slash{{else}}fa-link{{/if}}"></i> {{#if item.isEquipped}}Desequipar{{else}}Equipar{{/if}}</a>
   </div>
   <div class="weapon-mods">{{#each item.system.actions.additional as |mod key|}}<a class="weapon-mod" data-mod-key="{{key}}">{{mod.name}}</a>{{/each}}</div>
   {{/isWeaponType}}

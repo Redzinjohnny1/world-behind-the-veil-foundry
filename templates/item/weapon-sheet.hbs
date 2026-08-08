@@ -100,7 +100,7 @@
         </label>
         <label>
           Ampliação
-          <input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" />
+          <input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="Automático: menor dado" />
         </label>
         <label>
           Alcance
@@ -133,17 +133,42 @@
 
       <div class="twbv-armor-slot-group twbv-weapon-slot-group">
         <span class="twbv-armor-slot-title">Slot de Arma</span>
-        <div class="twbv-armor-slot-options">
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shortBlade" {{#ifEquals system.equipSlot "shortBlade"}}checked{{/ifEquals}} /><span>Lâmina curta</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="longBlade" {{#ifEquals system.equipSlot "longBlade"}}checked{{/ifEquals}} /><span>Lâmina Longa</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="blunt" {{#ifEquals system.equipSlot "blunt"}}checked{{/ifEquals}} /><span>Contusivo/Corporal</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="pistol" {{#ifEquals system.equipSlot "pistol"}}checked{{/ifEquals}} /><span>Pistolas</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="revolver" {{#ifEquals system.equipSlot "revolver"}}checked{{/ifEquals}} /><span>Revólver</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="smg" {{#ifEquals system.equipSlot "smg"}}checked{{/ifEquals}} /><span>Submetralhadoras</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="assault" {{#ifEquals system.equipSlot "assault"}}checked{{/ifEquals}} /><span>Assalto</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shotgun" {{#ifEquals system.equipSlot "shotgun"}}checked{{/ifEquals}} /><span>Escopeta</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="sniper" {{#ifEquals system.equipSlot "sniper"}}checked{{/ifEquals}} /><span>Sniper</span></label>
-          <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="heavyArtillery" {{#ifEquals system.equipSlot "heavyArtillery"}}checked{{/ifEquals}} /><span>Artilharia Pesada</span></label>
+        <div class="twbv-weapon-slot-tabs">
+          <button type="button" class="twbv-weapon-slot-tab" data-slot-tab="blades"><span>Lâminas</span><i class="fas fa-chevron-down"></i></button>
+          <button type="button" class="twbv-weapon-slot-tab" data-slot-tab="great"><span>Armas Grandes</span><i class="fas fa-chevron-down"></i></button>
+          <button type="button" class="twbv-weapon-slot-tab" data-slot-tab="string"><span>Armas de Corda</span><i class="fas fa-chevron-down"></i></button>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="chainWeapons" {{#ifEquals system.equipSlot "chainWeapons"}}checked{{/ifEquals}} /><span>Armas Flexíveis</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="pistol" {{#ifEquals system.equipSlot "pistol"}}checked{{/ifEquals}} /><span>Pistolas</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="revolver" {{#ifEquals system.equipSlot "revolver"}}checked{{/ifEquals}} /><span>Revólver</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="smg" {{#ifEquals system.equipSlot "smg"}}checked{{/ifEquals}} /><span>Submetralhadoras</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="assault" {{#ifEquals system.equipSlot "assault"}}checked{{/ifEquals}} /><span>Assalto</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shotgun" {{#ifEquals system.equipSlot "shotgun"}}checked{{/ifEquals}} /><span>Escopeta</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="sniper" {{#ifEquals system.equipSlot "sniper"}}checked{{/ifEquals}} /><span>Sniper</span></label>
+          <label class="twbv-weapon-slot-option twbv-weapon-slot-direct"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="heavyArtillery" {{#ifEquals system.equipSlot "heavyArtillery"}}checked{{/ifEquals}} /><span>Artilharia Pesada</span></label>
+        </div>
+        <div class="twbv-weapon-slot-subpanels">
+          <div class="twbv-weapon-slot-subpanel" data-slot-panel="blades">
+            <span class="twbv-weapon-slot-subpanel-title">Lâminas</span>
+            <div class="twbv-weapon-slot-suboptions">
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="shortBlade" {{#ifEquals system.equipSlot "shortBlade"}}checked{{/ifEquals}} /><span>Curta</span></label>
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="longBlade" {{#ifEquals system.equipSlot "longBlade"}}checked{{/ifEquals}} /><span>Longa</span></label>
+            </div>
+          </div>
+          <div class="twbv-weapon-slot-subpanel" data-slot-panel="great">
+            <span class="twbv-weapon-slot-subpanel-title">Armas Grandes</span>
+            <div class="twbv-weapon-slot-suboptions">
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="greatBlunt" {{#ifEquals system.equipSlot "greatBlunt"}}checked{{/ifEquals}} /><span>Contusiva</span></label>
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="greatPiercing" {{#ifEquals system.equipSlot "greatPiercing"}}checked{{/ifEquals}} /><span>Perfurante</span></label>
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="greatSlashing" {{#ifEquals system.equipSlot "greatSlashing"}}checked{{/ifEquals}} /><span>Cortante</span></label>
+            </div>
+          </div>
+          <div class="twbv-weapon-slot-subpanel" data-slot-panel="string">
+            <span class="twbv-weapon-slot-subpanel-title">Armas de Corda</span>
+            <div class="twbv-weapon-slot-suboptions">
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="bow" {{#ifEquals system.equipSlot "bow"}}checked{{/ifEquals}} /><span>Arcos</span></label>
+              <label class="twbv-weapon-slot-option"><input type="radio" name="twbv-weapon-slot-radio" class="twbv-weapon-slot-check" value="crossbow" {{#ifEquals system.equipSlot "crossbow"}}checked{{/ifEquals}} /><span>Bestas</span></label>
+            </div>
+          </div>
         </div>
       </div>
       <input type="hidden" name="system.equipSlot" value="{{system.equipSlot}}" />
@@ -155,10 +180,11 @@
           <h2>Munição</h2>
           <div class="twbv-weapon-zone-actions">
             <button type="button" class="twbv-weapon-pick-ammo" title="Escolher munição ou carregador"><i class="fas fa-list"></i> Escolher</button>
-            <button type="button" class="twbv-weapon-reload-magazine" title="Recarregar arma"><i class="fas fa-rotate"></i> Recarregar</button>
+            <button type="button" class="twbv-weapon-reload-magazine" title="Trocar pente/carregador"><i class="fas fa-rotate"></i> Trocar pente</button>
+            <button type="button" class="twbv-weapon-unload-magazine" title="Remover pente/carregador"><i class="fas fa-eject"></i> Remover pente</button>
           </div>
         </div>
-        <p>Escolha um carregador/pente/cilindro carregado para alimentar a arma. Caixas ficam guardadas na ficha para carregar esses itens.</p>
+        <p>Escolha um pente/carregador/cilindro para acoplar na arma. Ao trocar ou remover, o pente atual volta para o inventário com a munição restante.</p>
         <div class="twbv-weapon-grid">
           <label>
             Nome da munição

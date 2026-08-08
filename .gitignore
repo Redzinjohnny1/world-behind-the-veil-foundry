@@ -1,0 +1,20 @@
+# Arquivos temporarios e resultados locais
+.tmp/
+tmp/
+output/
+*.tmp
+*~lock~
+
+# Backups devem ficar em D:/MesasFoundry/Data/Data/BACKUPS
+backups/
+*.zip
+
+# Configuracao local do editor
+*.code-workspace
+
+# Arquivos locais do sistema operacional
+Thumbs.db
+.DS_Store
+
+# Travas temporarias dos bancos de compendios do Foundry
+packs/**/LOCK

@@ -18,17 +18,37 @@
         <label>Dado inicial<input type="number" name="system.dado" value="{{system.dado}}" min="4" max="12" step="2" /></label>
         {{else}}
         {{#if isPowerItem}}
-        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou referencia" /></label>
-        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pre-requisito, tier ou condicao" /></label>
+        <label>Fonte
+          <select name="system.fonte">
+            {{#each powerSourceOptions as |source|}}
+            <option value="{{source.id}}" {{#ifEquals ../system.fonte source.id}}selected{{/ifEquals}}>{{source.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Manifesta&ccedil;&atilde;o
+          <select name="system.manifestacao">
+            <option value="">Nenhuma</option>
+            {{#each powerManifestationOptions as |manifestation|}}
+            <option value="{{manifestation.id}}" {{#ifEquals ../system.manifestacao manifestation.id}}selected{{/ifEquals}}>{{manifestation.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        {{else}}
+        {{#ifEquals item.type "vantagem"}}
+        <label>Tier<input type="text" name="system.tier" value="{{system.tier}}" placeholder="Novato, Experiente..." /></label>
+        <label class="twbv-advantage-prereq-field">Pr&eacute;-requisitos<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Cria&ccedil;&atilde;o de personagem; Destreza d8+" /></label>
         {{else}}
         <label>Categoria<input type="text" name="system.category" value="{{displayCategory}}" placeholder="Categoria" /></label>
         <label>Tags<input type="text" name="system.tags" value="{{system.tags}}" placeholder="tags" /></label>
+        {{/ifEquals}}
         {{/if}}
         {{/if}}
       </div>
     </div>
   </header>
 
+  {{#ifEquals item.type "vantagem"}}
+  {{else}}
   <section class="twbv-item-summary">
     {{#if isTraitItem}}
     {{#if isSkillItem}}
@@ -38,15 +58,22 @@
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
     {{else}}
     {{#if isPowerItem}}
-    <article><span>Mana</span><strong>{{system.manaCost}}</strong></article>
-    <article><span>Dano</span><strong>{{#if system.damage}}{{system.damage}}{{else}}-{{/if}}</strong></article>
-    <article><span>&Aacute;rea</span><strong>{{#if powerAreaLabel}}{{powerAreaLabel}}{{else}}-{{/if}}</strong></article>
+    <article><span>Mana</span><strong>{{system.custoBaseMana}} / {{system.custoFinalMana}}</strong></article>
+    <article><span>Fonte</span><strong>{{#if powerSourceMeta}}{{powerSourceMeta.label}}{{else}}-{{/if}}</strong></article>
+    <article><span>Manifesta&ccedil;&atilde;o</span><strong>{{#if powerManifestationMeta}}{{powerManifestationMeta.label}}{{else}}-{{/if}}</strong></article>
+    <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{else}}
+    {{#ifEquals item.type "vantagem"}}
+    <article><span>Tier</span><strong>{{#if system.tier}}{{system.tier}}{{else}}-{{/if}}</strong></article>
+    <article><span>Pr&eacute;-requisitos</span><strong>{{#if system.requirements}}{{system.requirements}}{{else}}-{{/if}}</strong></article>
+    <article><span>Ponto de V&eacute;u</span><strong>{{#if system.veilUse}}Possui uso{{else}}-{{/if}}</strong></article>
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
     {{else}}
     <article><span>Fonte</span><strong>{{#if system.source}}{{system.source}}{{else}}-{{/if}}</strong></article>
     <article><span>Categoria</span><strong>{{#if system.category}}{{system.category}}{{else}}-{{/if}}</strong></article>
     <article><span>Requisito</span><strong>{{#if system.requirements}}{{system.requirements}}{{else}}-{{/if}}</strong></article>
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
+    {{/ifEquals}}
     {{/if}}
     {{/if}}
     {{else}}
@@ -56,16 +83,20 @@
     <article><span>Status</span><strong>{{#if system.active}}Ativo{{else}}Inativo{{/if}}</strong></article>
     {{/if}}
   </section>
+  {{/ifEquals}}
 
   <nav class="sheet-tabs tabs twbv-item-tabs" data-group="primary">
     <a class="item" data-tab="general">Geral</a>
+    {{#ifEquals item.type "vantagem"}}
+    {{else}}
     <a class="item" data-tab="description">Descri&ccedil;&atilde;o</a>
+    {{/ifEquals}}
     <a class="item" data-tab="effects">Efeitos</a>
   </nav>
 
   <section class="sheet-body twbv-item-body">
     <div class="tab twbv-item-panel {{#if isPowerItem}}twbv-power-general-panel{{/if}}" data-group="primary" data-tab="general">
-      <h2>{{#if isTraitItem}}Dados{{else}}Controle{{/if}}</h2>
+      <h2>{{#ifEquals item.type "vantagem"}}Descri&ccedil;&atilde;o{{else}}{{#if isTraitItem}}Dados{{else}}Controle{{/if}}{{/ifEquals}}</h2>
       <div class="twbv-item-grid">
         {{#if isTraitItem}}
         {{#if isSkillItem}}
@@ -82,12 +113,8 @@
         <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
         <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
         {{else}}
-        <input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" />
-        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" /></label>
-        <input type="text" name="system.requirement" value="{{system.requirement}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" />
-        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" /></label>
         {{#if isPowerItem}}
-        <label>Per&iacute;cia da rolagem
+        <label>Per&iacute;cia
           {{#if skillOptions.length}}
           <select name="system.skill">
             <option value="">Nenhuma</option>
@@ -99,35 +126,69 @@
           <input type="text" name="system.skill" value="{{system.skill}}" placeholder="Nome da per&iacute;cia" />
           {{/if}}
         </label>
-        <label>Custo de Mana<input type="number" name="system.manaCost" value="{{system.manaCost}}" min="0" step="1" /></label>
-        <label>Dano da magia<input type="text" name="system.damage" value="{{system.damage}}" placeholder="Ex: 2d6, 3d8+2" /></label>
-        <label>Tipo de dano<input type="text" name="system.damageType" value="{{system.damageType}}" placeholder="Fogo, corte, sombra..." /></label>
-        <label class="twbv-power-area-field">&Aacute;rea de efeito
-          <select name="system.areaEffect">
-            {{#each powerAreaOptions as |area|}}
-            <option value="{{area.value}}" {{#ifEquals ../powerAreaValue area.value}}selected{{/ifEquals}}>{{area.label}}</option>
+        <label>Custo<input type="number" name="system.custoBaseMana" value="{{system.custoBaseMana}}" min="0" step="1" /></label>
+        <label>Tempo de Ativa&ccedil;&atilde;o
+          <select name="system.ativacao" data-custom-toggle="ativacao">
+            {{#each powerActivationOptions as |option|}}
+            <option value="{{option.id}}" {{#ifEquals ../system.ativacao option.id}}selected{{/ifEquals}}>{{option.label}}</option>
             {{/each}}
           </select>
-          <button type="button" class="twbv-power-area-preview"><i class="fas fa-ruler-combined"></i> Pr&eacute;via</button>
         </label>
+        <label class="twbv-power-custom-field twbv-power-wide-field" data-custom-field="ativacao">Ativa&ccedil;&atilde;o customizada<input type="text" name="system.ativacaoCustom" value="{{system.ativacaoCustom}}" placeholder="Descreva o tempo de ativa&ccedil;&atilde;o" /></label>
+        <label>Limite
+          <select name="system.limite" data-custom-toggle="limite">
+            {{#each powerLimitOptions as |option|}}
+            <option value="{{option.id}}" {{#ifEquals ../system.limite option.id}}selected{{/ifEquals}}>{{option.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label class="twbv-power-custom-field twbv-power-wide-field" data-custom-field="limite">Limite customizado<input type="text" name="system.limiteCustom" value="{{system.limiteCustom}}" placeholder="Ex: uma vez por alvo" /></label>
+        <label>Alvo<input type="text" name="system.alvo" value="{{system.alvo}}" placeholder="Ex: uma criatura, criaturas escolhidas, um ponto no espa&ccedil;o..." /></label>
+        <label>Molde Padr&atilde;o
+          <select name="system.moldePadrao">
+            {{#each powerDefaultMoldOptions as |option|}}
+            <option value="{{option.id}}" {{#ifEquals ../system.moldePadrao option.id}}selected{{/ifEquals}}>{{option.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Dano base<input type="text" name="system.damage" value="{{system.damage}}" placeholder="Ex: 2d6, 3d8+2" /></label>
+        <label>Tipo de Dura&ccedil;&atilde;o
+          <select name="system.duracaoConfig.tipo" data-custom-toggle="duracao">
+            {{#each powerDurationTypeOptions as |option|}}
+            <option value="{{option.id}}" {{#ifEquals ../system.duracaoConfig.tipo option.id}}selected{{/ifEquals}}>{{option.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Valor base<input type="number" name="system.duracaoConfig.valorBase" value="{{system.duracaoConfig.valorBase}}" min="0" step="1" /></label>
+        <label>Unidade
+          <select name="system.duracaoConfig.unidade">
+            {{#each powerDurationUnitOptions as |option|}}
+            <option value="{{option.id}}" {{#ifEquals ../system.duracaoConfig.unidade option.id}}selected{{/ifEquals}}>{{option.label}}</option>
+            {{/each}}
+          </select>
+        </label>
+        <label>Dura&ccedil;&atilde;o m&aacute;xima<input type="number" name="system.duracaoConfig.maximo" value="{{system.duracaoConfig.maximo}}" min="0" step="1" /></label>
+        <label class="twbv-power-custom-field twbv-power-wide-field" data-custom-field="duracao">Dura&ccedil;&atilde;o customizada<input type="text" name="system.duracaoConfig.custom" value="{{system.duracaoConfig.custom}}" placeholder="Texto livre quando a dura&ccedil;&atilde;o for customizada" /></label>
+        <label>Manuten&ccedil;&atilde;o<input type="number" name="system.manutencaoMana" value="{{system.manutencaoMana}}" min="0" step="1" placeholder="Mana" /></label>
+        <label class="twbv-power-wide-field">Teste<input type="text" name="system.teste" value="{{system.teste}}" placeholder="Ex: F&eacute; contra Resist&ecirc;ncia &agrave; Magia" /></label>
+        <label class="twbv-power-wide-field">Resist&ecirc;ncia inicial<input type="text" name="system.resistenciaInicial" value="{{system.resistenciaInicial}}" placeholder="Ex: O alvo resiste com @Atletismo" /></label>
+        <label class="twbv-power-wide-field">Resist&ecirc;ncia secund&aacute;ria<input type="text" name="system.resistenciaSecundaria" value="{{system.resistenciaSecundaria}}" placeholder="Ex: No in&iacute;cio do turno, rola @Constitui&ccedil;&atilde;o" /></label>
+        <label>Risco<input type="text" name="system.risco" value="{{system.risco}}" placeholder="Ruptura, Mancha, Sobrecarga..." /></label>
+        {{else}}
+        {{#ifEquals item.type "vantagem"}}
+        <label class="twbv-advantage-rule-field">Descri&ccedil;&atilde;o / Efeito<textarea name="system.effect" rows="9" placeholder="Escreva aqui tudo que a vantagem faz.">{{#if system.effect}}{{system.effect}}{{else}}{{system.effectsSummary}}{{/if}}</textarea></label>
+        <label class="twbv-advantage-rule-field">Uso com Ponto de V&eacute;u<textarea name="system.veilUse" rows="5" placeholder="Efeito pago com Ponto de V&eacute;u, se existir.">{{system.veilUse}}</textarea></label>
+        {{else}}
+        <input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" />
+        <label>Fonte<input type="text" name="system.source" value="{{system.source}}" placeholder="Livro, origem ou refer&ecirc;ncia" /></label>
+        <input type="text" name="system.requirement" value="{{system.requirement}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" />
+        <label>Requisito/Tier<input type="text" name="system.requirements" value="{{system.requirements}}" placeholder="Pr&eacute;-requisito, tier ou condi&ccedil;&atilde;o" /></label>
+        {{/ifEquals}}
         {{/if}}
         {{#ifEquals item.type "desvantagem"}}<label>Severidade<input type="text" name="system.severity" value="{{system.severity}}" placeholder="Menor, Maior..." /></label>{{/ifEquals}}
         <label class="twbv-item-check"><input type="checkbox" name="system.active" {{checked system.active}} /> Ativo</label>
         {{#if isPowerItem}}
         <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
-        <section class="twbv-power-arcane-panel">
-          <input type="hidden" name="system.arcaneAbility.enabled" value="{{#if system.arcaneAbility.enabled}}true{{else}}false{{/if}}" />
-          <input type="hidden" class="twbv-power-arcane-value" name="system.arcaneAbility.skill" value="{{system.arcaneAbility.skill}}" />
-          <span class="twbv-power-arcane-title">Habilidade Arcana</span>
-          <div class="twbv-power-arcane-options">
-            {{#each arcaneAbilityOptions as |ability|}}
-            <label class="twbv-power-arcane-option {{#ifEquals ../system.arcaneAbility.skill ability.name}}is-selected{{/ifEquals}}" data-arcane-skill="{{ability.name}}">
-              <input type="checkbox" class="twbv-power-arcane-choice" value="{{ability.name}}" {{#ifEquals ../system.arcaneAbility.skill ability.name}}checked{{/ifEquals}} />
-              <span>{{ability.name}}</span>
-            </label>
-            {{/each}}
-          </div>
-        </section>
         {{else}}
         <label class="twbv-item-check"><input type="checkbox" name="system.favorite" {{checked system.favorite}} /> Favorito</label>
         {{/if}}
@@ -307,8 +368,8 @@
       <section class="twbv-power-effect-builder">
         <header>
           <div>
-            <strong>Molde no lan&ccedil;amento</strong>
-            <span>Configure aqui quais ajustes aparecem quando este poder for lan&ccedil;ado.</span>
+            <strong>Moldes do Poder</strong>
+            <span>Defina quais formas este Poder aceita e quanto cada ajuste custa.</span>
           </div>
           <div class="twbv-power-effect-adders">
             <button type="button" class="twbv-power-effect-add" data-effect-type="damage"><i class="fas fa-plus"></i> Dano</button>
@@ -321,7 +382,50 @@
             <button type="button" class="twbv-power-effect-add" data-effect-type="custom"><i class="fas fa-plus"></i> Custom</button>
           </div>
         </header>
-        <section class="twbv-power-mold-grid twbv-power-sheet-preset" data-base-damage="{{system.damage}}" data-base-area="{{powerAreaValue}}" data-base-mana="{{system.manaCost}}">
+        <section class="twbv-power-structure-grid">
+          <label class="twbv-item-check"><input type="checkbox" name="system.moldavel" {{checked system.moldavel}} /> Mold&aacute;vel</label>
+          <label>Molde atual
+            <select name="system.moldeAtual">
+              {{#each powerMoldOptions as |mold|}}
+              <option value="{{mold.id}}" {{#ifEquals ../system.moldeAtual mold.id}}selected{{/ifEquals}}>{{mold.label}}</option>
+              {{/each}}
+            </select>
+          </label>
+          <label>N&iacute;vel do molde<input type="number" name="system.nivelMoldeAtual" value="{{system.nivelMoldeAtual}}" min="0" step="1" /></label>
+          <label>Mana do molde<input type="number" name="system.custoMoldeAtual" value="{{system.custoMoldeAtual}}" min="0" step="1" disabled /></label>
+        </section>
+        <section class="twbv-power-mold-allowed">
+          {{#each powerMoldOptions as |mold|}}
+          <label class="twbv-power-mold-toggle">
+            <input type="checkbox" name="twbvPowerMoldAllowed" value="{{mold.id}}" {{checked mold.checked}} />
+            <span>{{mold.label}}</span>
+          </label>
+          {{/each}}
+        </section>
+        <section class="twbv-power-mold-costs">
+          {{#each powerMoldOptions as |mold|}}
+          <article class="twbv-power-mold-cost">
+            <h3>{{mold.label}}</h3>
+            {{#ifEquals mold.id "alvo"}}
+            <label>Base<input type="number" name="system.custosMolde.alvo.custoBase" value="{{../system.custosMolde.alvo.custoBase}}" min="0" step="1" /></label>
+            <label>Alvo extra<input type="number" name="system.custosMolde.alvo.custoPorAlvoExtra" value="{{../system.custosMolde.alvo.custoPorAlvoExtra}}" min="0" step="1" /></label>
+            {{else}}{{#ifEquals mold.id "toque"}}
+            <label>Alcance 6<input type="number" name="system.custosMolde.toque.custoParaAlcance6" value="{{../system.custosMolde.toque.custoParaAlcance6}}" min="0" step="1" /></label>
+            <label class="twbv-item-check"><input type="checkbox" name="system.custosMolde.toque.permiteAlcance6" {{checked ../system.custosMolde.toque.permiteAlcance6}} /> Permite alcance 6</label>
+            {{else}}{{#ifEquals mold.id "glifo"}}
+            <label>Base<input type="number" name="system.custosMolde.glifo.custoBase" value="{{../system.custosMolde.glifo.custoBase}}" min="0" step="1" /></label>
+            <label>Aumento<input type="number" name="system.custosMolde.glifo.custoPorAumento" value="{{../system.custosMolde.glifo.custoPorAumento}}" min="0" step="1" /></label>
+            <label>Max<input type="number" name="system.custosMolde.glifo.maxAumentos" value="{{../system.custosMolde.glifo.maxAumentos}}" min="0" max="3" step="1" /></label>
+            <label>Pessoa extra<input type="number" name="system.custosMolde.glifo.custoPorPessoaExtra" value="{{../system.custosMolde.glifo.custoPorPessoaExtra}}" min="0" step="1" /></label>
+            {{else}}
+            <label>Base<input type="number" name="system.custosMolde.{{mold.id}}.custoBase" value="{{lookup (lookup ../system.custosMolde mold.id) "custoBase"}}" min="0" step="1" /></label>
+            <label>Aumento<input type="number" name="system.custosMolde.{{mold.id}}.custoPorAumento" value="{{lookup (lookup ../system.custosMolde mold.id) "custoPorAumento"}}" min="0" step="1" /></label>
+            <label>Max<input type="number" name="system.custosMolde.{{mold.id}}.maxAumentos" value="{{lookup (lookup ../system.custosMolde mold.id) "maxAumentos"}}" min="0" max="2" step="1" /></label>
+            {{/ifEquals}}{{/ifEquals}}{{/ifEquals}}
+          </article>
+          {{/each}}
+        </section>
+        <section class="twbv-power-mold-grid twbv-power-sheet-preset" data-base-damage="{{system.damage}}" data-base-area="{{powerAreaValue}}" data-base-mana="{{system.custoBaseMana}}">
           <article class="twbv-power-mold-card twbv-power-mold-card--damage">
             <header>
               <i class="fas fa-bolt"></i>
@@ -348,13 +452,11 @@
             <button type="button" class="twbv-power-area-toggle" data-sheet-area-toggle><i class="fas fa-th-large"></i> Escolher &aacute;rea</button>
             <div class="twbv-power-area-picker" data-sheet-area-picker hidden>
               <div class="twbv-power-area-options">
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="sphere-1"><i class="fas fa-dot-circle"></i><span>Explos&atilde;o</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="cone-3"><i class="fas fa-play"></i><span>Cone</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="line-6"><i class="fas fa-minus"></i><span>Linha</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="glyph-1"><i class="fas fa-draw-polygon"></i><span>Glifo</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="aura-1"><i class="fas fa-sun"></i><span>Aura</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="touch"><i class="fas fa-hand-sparkles"></i><span>Toque</span></button>
-                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="target"><i class="fas fa-crosshairs"></i><span>Alvo</span></button>
+                {{#each powerMoldOptions as |mold|}}
+                {{#if mold.checked}}
+                <button type="button" class="twbv-power-area-choice" data-sheet-area-preset="{{mold.areaPreset}}"><i class="fas fa-ruler-combined"></i><span>{{mold.label}}</span></button>
+                {{/if}}
+                {{/each}}
               </div>
             </div>
             <input type="hidden" name="twbvPreset.areaPreset" value="{{system.castPreset.areaPreset}}" data-sheet-area-value />
@@ -371,6 +473,21 @@
               </div>
             </div>
             <footer><span><i class="fas fa-tint"></i> Mana da &aacute;rea</span><strong data-sheet-area-cost>0</strong></footer>
+            <div class="twbv-power-target-inline" data-sheet-ignore-allies>
+              <header>
+                <i class="fas fa-user-shield"></i>
+                <div>
+                  <span>Ignorar Aliados</span>
+                  <strong data-sheet-ignored-allies-output>{{system.castPreset.ignoredAllies}} aliado(s)</strong>
+                </div>
+              </header>
+              <div class="twbv-power-mold-controls">
+                <button type="button" class="twbv-mold-step twbv-mold-step--minus" data-sheet-preset-step="ignoredAllies" data-step="-1" title="Ignorar menos aliados"><i class="fas fa-minus"></i></button>
+                <input type="number" name="twbvPreset.ignoredAllies" value="{{system.castPreset.ignoredAllies}}" min="0" step="1" />
+                <button type="button" class="twbv-mold-step twbv-mold-step--plus" data-sheet-preset-step="ignoredAllies" data-step="1" title="Ignorar mais aliados"><i class="fas fa-plus"></i></button>
+              </div>
+              <footer><span><i class="fas fa-tint"></i> 1 Mana por aliado</span><strong data-sheet-ignored-allies-cost>{{system.castPreset.ignoredAllies}}</strong></footer>
+            </div>
             <div class="twbv-power-target-inline" data-sheet-target-adjust>
               <header>
                 <i class="fas fa-crosshairs"></i>
@@ -387,10 +504,39 @@
               <footer><span><i class="fas fa-tint"></i> Mana de alvos</span><strong data-sheet-target-cost>0</strong></footer>
             </div>
           </article>
+          <article class="twbv-power-mold-card twbv-power-mold-card--penetration">
+            <header>
+              <i class="fas fa-shield-halved"></i>
+              <div>
+                <span>Penetra&ccedil;&atilde;o de Armadura</span>
+                <strong data-sheet-armor-penetration-output>{{system.castPreset.armorPenetration}} PA</strong>
+              </div>
+            </header>
+            <div class="twbv-power-mold-controls">
+              <button type="button" class="twbv-mold-step twbv-mold-step--minus" data-sheet-preset-step="armorPenetration" data-step="-2" title="Diminuir penetra&ccedil;&atilde;o"><i class="fas fa-minus"></i></button>
+              <input type="number" name="twbvPreset.armorPenetration" value="{{system.castPreset.armorPenetration}}" min="0" max="6" step="2" />
+              <button type="button" class="twbv-mold-step twbv-mold-step--plus" data-sheet-preset-step="armorPenetration" data-step="2" title="Aumentar penetra&ccedil;&atilde;o"><i class="fas fa-plus"></i></button>
+            </div>
+            <footer><span><i class="fas fa-tint"></i> 1 Mana por 2 PA</span><strong data-sheet-armor-penetration-cost>0</strong></footer>
+          </article>
+          <article class="twbv-power-mold-card twbv-power-mold-card--siege">
+            <header>
+              <i class="fas fa-dungeon"></i>
+              <div>
+                <span>Magia de Cerco</span>
+                <strong>Dano em estruturas</strong>
+              </div>
+            </header>
+            <label class="twbv-item-check">
+              <input type="checkbox" name="twbvPreset.siege" {{checked system.castPreset.siege}} />
+              Permitir dano em estruturas
+            </label>
+            <footer><span><i class="fas fa-tint"></i> Custo adicional</span><strong>2</strong></footer>
+          </article>
         </section>
         <section class="twbv-power-effect-final">
           <article class="twbv-power-mana-card twbv-power-mana-card--current"><i class="fas fa-gem"></i><span>Mana atual</span><strong>{{actorManaCurrent}}</strong></article>
-          <article class="twbv-power-mana-card twbv-power-mana-card--cost"><i class="fas fa-fire"></i><span>Mana gasta</span><strong data-sheet-total-cost>{{system.manaCost}}</strong></article>
+          <article class="twbv-power-mana-card twbv-power-mana-card--cost"><i class="fas fa-fire"></i><span>Mana gasta</span><strong data-sheet-total-cost>{{system.custoFinalMana}}</strong></article>
           <button type="button" class="twbv-power-preview-grid" data-sheet-preview-grid><i class="fas fa-ruler-combined"></i> Pr&eacute;via do grid</button>
         </section>
         <div class="twbv-power-effect-list">
@@ -425,21 +571,82 @@
         </label>
         <label>B&ocirc;nus para acertar<input type="text" name="system.modifier" value="{{system.modifier}}" placeholder="+1" /></label>
         <label>Dano extra<input type="text" name="system.damage" value="{{system.damage}}" placeholder="+1d6" /></label>
-        <label>Amplia&ccedil;&atilde;o<input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="+1d6" /></label>
+        <label>Amplia&ccedil;&atilde;o<input type="text" name="system.damageRaise" value="{{system.damageRaise}}" placeholder="Automático: menor dado" /></label>
         <label>AP<input type="number" name="system.ap" value="{{system.ap}}" step="1" /></label>
       </div>
       {{/ifEquals}}
+      {{#ifEquals item.type "vantagem"}}
+      {{else}}
       <label class="twbv-item-notes">Resumo de efeitos<textarea name="system.effectsSummary" rows="7">{{system.effectsSummary}}</textarea></label>
+      {{/ifEquals}}
       {{/if}}
     </div>
 
+    {{#ifEquals item.type "vantagem"}}
+    {{else}}
     <div class="tab twbv-item-panel {{#if isPowerItem}}twbv-power-description-panel{{/if}}" data-group="primary" data-tab="description">
       <h2>Descri&ccedil;&atilde;o</h2>
       {{#if isTraitItem}}
+      {{#if isPowerItem}}
+      <section class="twbv-power-description-builder">
+        <header>
+          <strong>Descri&ccedil;&otilde;es do Poder</strong>
+          <button type="button" class="twbv-power-description-add" title="Adicionar descri&ccedil;&atilde;o"><i class="fas fa-plus"></i></button>
+        </header>
+        <div class="twbv-power-description-blocks">
+          {{#each powerDescriptionBlocks as |block index|}}
+          <article class="twbv-power-description-block" data-index="{{index}}">
+            <label>Defesa / Resist&ecirc;ncia
+              <span class="twbv-power-description-select-row">
+                <select name="system.descricoes.{{index}}.defesa">
+                  <option value="">Nenhuma</option>
+                  {{#each ../powerDefenseOptions as |defense|}}
+                  <option value="{{defense.id}}" {{#ifEquals block.defesa defense.id}}selected{{/ifEquals}}>{{defense.label}}</option>
+                  {{/each}}
+                </select>
+                <button type="button" class="twbv-power-description-remove" data-index="{{index}}" title="Remover descri&ccedil;&atilde;o"><i class="fas fa-trash"></i></button>
+              </span>
+            </label>
+            <textarea name="system.descricoes.{{index}}.texto" rows="5" placeholder="Descreva esta parte do Poder...">{{block.texto}}</textarea>
+          </article>
+          {{/each}}
+        </div>
+        <label class="twbv-item-description">Observa&ccedil;&otilde;es do Mestre<textarea name="system.observacoesMestre" rows="5">{{system.observacoesMestre}}</textarea></label>
+      </section>
+      <section class="twbv-power-enhancement-builder">
+        <header>
+          <strong>Aprimoramentos Permitidos</strong>
+          <button type="button" class="twbv-power-enhancement-add" title="Adicionar aprimoramento"><i class="fas fa-plus"></i></button>
+        </header>
+        <div class="twbv-power-enhancement-list">
+          {{#each powerEnhancements as |enhancement index|}}
+          <article class="twbv-power-enhancement-row" data-index="{{index}}">
+            <label>Nome<input type="text" name="system.aprimoramentos.{{index}}.nome" value="{{enhancement.nome}}" placeholder="Ex: Aumento de Dura&ccedil;&atilde;o" /></label>
+            <label>Custo em Mana<input type="number" name="system.aprimoramentos.{{index}}.custoMana" value="{{enhancement.custoMana}}" min="0" step="1" /></label>
+            <label>Limite m&aacute;ximo<input type="text" name="system.aprimoramentos.{{index}}.limiteMaximo" value="{{enhancement.limiteMaximo}}" placeholder="Ex: x3, 4 horas, raio 3" /></label>
+            <label>Tipo de c&aacute;lculo
+              <select name="system.aprimoramentos.{{index}}.tipoCalculo" data-custom-toggle="aprimoramento-{{index}}">
+                {{#each ../powerEnhancementCalcOptions as |option|}}
+                <option value="{{option.id}}" {{#ifEquals enhancement.tipoCalculo option.id}}selected{{/ifEquals}}>{{option.label}}</option>
+                {{/each}}
+              </select>
+            </label>
+            <label class="twbv-power-custom-field" data-custom-field="aprimoramento-{{index}}">C&aacute;lculo customizado<input type="text" name="system.aprimoramentos.{{index}}.tipoCalculoCustom" value="{{enhancement.tipoCalculoCustom}}" placeholder="Explique a regra customizada" /></label>
+            <label class="twbv-power-enhancement-description">Descri&ccedil;&atilde;o<textarea name="system.aprimoramentos.{{index}}.descricao" rows="3" placeholder="Como este aprimoramento funciona...">{{enhancement.descricao}}</textarea></label>
+            <button type="button" class="twbv-power-enhancement-remove" data-index="{{index}}" title="Remover aprimoramento"><i class="fas fa-trash"></i></button>
+          </article>
+          {{else}}
+          <p class="twbv-tab-empty">Nenhum aprimoramento permitido cadastrado.</p>
+          {{/each}}
+        </div>
+      </section>
+      {{else}}
       <label class="twbv-item-description">Descri&ccedil;&atilde;o<textarea name="system.description" rows="9">{{system.description}}</textarea></label>
+      {{/if}}
       {{else}}
       <label class="twbv-item-description">{{editor system.description target="system.description" button=true owner=owner editable=editable}}</label>
       {{/if}}
     </div>
+    {{/ifEquals}}
   </section>
 </form>

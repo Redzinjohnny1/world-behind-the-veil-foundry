@@ -1,46 +1,303 @@
 [
   {
-    "_id": "atalhos-mana-eco",
-    "name": "Atalho: Mana e Eco (Shift)",
+    "_id": "ManualSistema001",
+    "name": "Manual do Sistema — O Mundo Por Trás do Véu",
     "type": "base",
-    "img": "icons/sundries/scrolls/scroll-bound-blue.webp",
+    "img": "icons/sundries/books/book-embossed-gold-red.webp",
     "system": {},
     "ownership": {
-      "default": 0
+      "default": 2
     },
-    "flags": {},
+    "flags": {
+      "world-behind-the-veil": {
+        "officialManual": true,
+        "manualVersion": 1
+      }
+    },
     "folder": null,
     "sort": 0,
     "_stats": {
       "systemId": "world-behind-the-veil",
-      "systemVersion": "0.1.0",
-      "coreVersion": "13.350",
+      "systemVersion": "0.1.47",
+      "coreVersion": "14",
       "createdTime": null,
       "modifiedTime": null,
       "lastModifiedBy": ""
     },
     "pages": [
       {
-        "_id": "page-mana-eco",
-        "name": "Uso rápido de recursos",
+        "_id": "ManualIndice0001",
+        "name": "Como usar este manual",
         "type": "text",
-        "title": {
-          "show": true,
-          "level": 1
-        },
+        "title": { "show": true, "level": 1 },
         "text": {
           "format": 1,
-          "content": "<h2>Atalhos de Recursos</h2><p><strong>MANA</strong>: clique no nome <em>MANA</em> para reduzir 1 ponto de Mana.</p><p><strong>SHIFT + clique em MANA</strong>: adiciona 1 ponto de Mana.</p><p><strong>SHIFT + clique em ECO</strong>: adiciona 1 ponto de Eco.</p><p>Obs.: a Mana respeita apenas limite mínimo 0 (sem limite máximo).</p>"
+          "content": "<h1>Manual do Sistema</h1><p>Este livro explica as ferramentas e automações de <strong>O Mundo Por Trás do Véu</strong> dentro do Foundry VTT.</p><p>Use a lista de páginas para ir diretamente ao assunto desejado. Cada página informa quem utiliza a ferramenta, onde encontrá-la e como ela funciona.</p><blockquote><p>O manual acompanha o sistema. Funcionalidades novas só entram aqui depois de estarem prontas para uso.</p></blockquote><h2>Assuntos</h2><ul><li>Criação e configuração de personagens;</li><li>Rolagens, Eco e Pontos de Véu;</li><li>Iniciativa, adiamento e interrupção;</li><li>Movimento, Corrida e Terreno Difícil;</li><li>Combate, Pressão, Alcance e Cobertura;</li><li>Mira e Defesa;</li><li>Dano, Condições e Morrendo;</li><li>Poderes, áreas, resistências e concentração;</li><li>Pontos de Drama e modificadores globais.</li></ul>"
         },
-        "image": {},
-        "video": {},
-        "src": null,
-        "system": {},
-        "ownership": {
-          "default": -1
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 0
+      },
+      {
+        "_id": "ManualFicha00001",
+        "name": "Ficha e criação de personagem",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Ficha e criação</h1><h2>Criar um Ator</h2><ol><li>Abra o diretório de Atores.</li><li>Clique em <strong>Criar Ator</strong>.</li><li>Escolha o Tipo: <strong>Desperto</strong>, <strong>Semi-Desperto</strong> ou <strong>Sombra</strong>. Desperto é o padrão.</li><li>Escolha a disposição inicial do token: Amigável, Neutro, Hostil ou Secreto.</li></ol><p>O tipo escolhido configura a ficha e ainda pode ser alterado pela engrenagem <strong>Configuração</strong>.</p><h2>Nome do token</h2><p>Por padrão, o Prototype Token recebe o mesmo nome do personagem. Se o nome do token for alterado manualmente nas configurações, o sistema preserva a personalização.</p><h2>Visibilidade</h2><p>Tokens de personagens com dono jogador exibem o nome para todos. Para NPCs, o Mestre decide a exibição.</p><h2>Sem Perícia</h2><p>Todas as fichas possuem <strong>SEM PERÍCIA</strong>. Quando uma automação pede uma perícia que o personagem não possui, a ficha rola <strong>d4−2</strong>.</p>"
         },
-        "flags": {},
-        "sort": 0
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 100
+      },
+      {
+        "_id": "ManualRolagen001",
+        "name": "Rolagens, Eco e Véu",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Rolagens</h1><p>Clique em um Atributo, Perícia, arma ou botão de teste para criar a rolagem. O cartão mostra dados, bônus automáticos, modificadores globais, dificuldade e ampliações.</p><h2>Modificadores</h2><p>O botão de ajuste do cartão permite escolher modificadores situacionais e informar um bônus manual. Bônus automáticos, como Pressão, Corrida, Mira, Alcance e Cobertura, aparecem no modificador global do cartão quando aplicáveis.</p><h2>Eco</h2><p>O Eco é calculado separadamente para cada dado. Para receber 1 Ponto de Véu por Eco, é necessário obter <strong>três Ecos consecutivos no mesmo dado</strong>.</p><h2>Rerrolar com Véu</h2><p>Use o botão <strong>Véu</strong> ou <strong>Rerrolar gastando 1 Ponto de Véu</strong> no cartão ou na janela de teste. O ponto é gasto pelo ator vinculado à rolagem.</p><h2>Falha crítica</h2><p>Quando a combinação da rolagem gera uma Falha Crítica, o cartão anuncia o resultado e as automações relacionadas são executadas.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 200
+      },
+      {
+        "_id": "ManualIniciativ1",
+        "name": "Iniciativa, adiar e interromper",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Iniciativa</h1><p>Ao iniciar o combate, o sistema distribui as cartas e organiza a rodada. A iniciativa começa pelo primeiro combatente da ordem.</p><h2>Cartas extras</h2><p>O controle de saque extra abre uma mão acumulável. É possível sacar várias cartas, arrastá-las para um combatente ou selecionar uma carta e um destinatário e confirmar. Os saques são anunciados no chat e apresentados aos demais jogadores.</p><h2>Coringa e Ponto de Véu</h2><p>Sempre que um <strong>Coringa</strong> for atribuído a um combatente, todos os aliados desse combatente recebem <strong>1 Ponto de Véu</strong>. A regra vale para o saque normal, carta extra, arraste, seleção ou atribuição manual.</p><h2>Rodada Surpresa</h2><p>Antes de iniciar o combate, adicione todos os envolvidos ao rastreador. Resolva Furtividade contra Percepção e clique em <strong>Iniciar Rodada Surpresa</strong>, junto do botão normal de iniciar combate. Marque somente os emboscadores que permaneceram ocultos e não foram percebidos por nenhum inimigo.</p><p>Somente os marcados recebem cartas e turnos nessa rodada. Os demais ficam <strong>À Mercê</strong>: não podem agir, mover-se, reagir, interromper nem realizar Ataques de Oportunidade, e ataques contra eles recebem <strong>+4 no acerto e +4 no dano</strong>. Quando o último participante encerra o turno, o sistema descarta as cartas da surpresa, distribui novas cartas para todos e inicia a Rodada 1 normal.</p><p>Se nenhum emboscador permanecer oculto, use <strong>Iniciar Combate</strong> normalmente.</p><h2>Início do turno</h2><p>O sistema registra e marca a posição onde o combatente começou o turno. Esse ponto permanece até a passagem da vez.</p><h2>Retornar ao início</h2><p>No menu do combatente, use <strong>Limpar movimentação</strong>. O token retorna ao ponto inicial do turno, o histórico é limpo e Corrida e eventos de movimento daquele trajeto são reiniciados.</p><h2>Adiar</h2><p>Clique na seta para baixo ao lado do combatente. Ela permanece acesa indicando a ação atrasada. Clique novamente para escolher depois de qual personagem que ainda não agiu o turno será retomado.</p><h2>Interromper</h2><p>Na janela de ação atrasada, escolha <strong>Interromper</strong>. Os dois participantes fazem o teste de Destreza e o resultado informa quem age primeiro.</p><h2>Aviso de turno</h2><p>O sistema pode tocar um aviso para o jogador um turno antes e no próprio turno. Som e ativação ficam nas configurações do sistema.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 300
+      },
+      {
+        "_id": "ManualJoker00001",
+        "name": "Coringa e Pontos de Véu",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Coringa e Pontos de Véu</h1><p>Quando um <strong>Coringa</strong> é atribuído a um personagem <strong>Desperto</strong>, cada aliado Desperto recebe <strong>1 Ponto de Véu</strong>.</p><p><strong>Sombras e Semi-Despertos não geram Pontos de Véu</strong> para seus aliados ao receber um Coringa. Eles também não recebem essa recompensa quando um aliado Desperto recebe o Coringa.</p><p>A regra vale para iniciativa normal, cartas extras, arraste, seleção e atribuição manual.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 350
+      },
+      {
+        "_id": "ManualMoviment01",
+        "name": "Movimento e Corrida",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Movimento</h1><p>Durante o combate, o combatente atual só pode percorrer a quantidade de quadrados indicada em <strong>Mov.</strong> na ficha. O sistema conta o trajeto completo e impede trechos que ultrapassem o limite.</p><p>O movimento gasto e os ajustes permanecem registrados após atualizar a página. No começo do próximo turno, o limite é renovado.</p><h2>Levantar-se</h2><p>Durante a iniciativa, remover a condição <strong>Caído</strong> custa <strong>2q de movimento</strong>. O personagem só pode se levantar no próprio turno e precisa possuir os 2q restantes. O custo entra no contador de movimento e permanece após F5. Fora de combate, Caído pode ser removido livremente.</p><h2>Ativar ou desativar o limite</h2><p>O Mestre pode abrir <strong>Configurações do Sistema</strong> e marcar ou desmarcar <strong>Limitar movimento por turno</strong>.</p><h2>Corrida</h2><ol><li>Abra a ficha.</li><li>Clique no dado ao lado de <strong>Mov.</strong>.</li><li>O sistema rola somente o dado de Atletismo, sem Eco.</li></ol><p>O resultado aumenta o movimento disponível naquele turno. Corrida aplica <strong>−2 nas ações da rodada</strong>. Quando as exigências da regra são cumpridas, o personagem também recebe temporariamente a defesa de Corrida contra ataques.</p><p>Ao limpar a movimentação e retornar ao início do turno, a Corrida daquele trajeto também é removida.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 400
+      },
+      {
+        "_id": "ManualTerreno001",
+        "name": "Terreno Difícil",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Terreno Difícil</h1><p>Dentro de uma área de Terreno Difícil, cada quadrado percorrido custa <strong>2q de movimento</strong>.</p><h2>Como marcar</h2><ol><li>Como Mestre, abra a ferramenta <strong>Regiões</strong> pelo ícone quadriculado da barra esquerda.</li><li>Desenhe a Região sobre o terreno desejado.</li><li>Dê duplo clique dentro da Região.</li><li>Na configuração, marque <strong>Terreno difícil</strong>.</li><li>Salve a Região.</li></ol><p>O sistema calcula somente a parte do trajeto que passa dentro da Região. O custo adicional participa do limite do turno e permanece registrado após F5.</p><p>Para remover, abra novamente a Região e desmarque <strong>Terreno difícil</strong>.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 500
+      },
+      {
+        "_id": "ManualOportuni01",
+        "name": "Ataque de Oportunidade",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Ataque de Oportunidade</h1><p>A automação funciona somente em combate. Quando um token sai voluntariamente do alcance de um inimigo, o movimento é pausado e a janela aparece para quem controla o possível atacante.</p><p>Rodear o inimigo sem sair do alcance não provoca o ataque.</p><h2>Resolver</h2><ul><li>Clique na arma corpo a corpo equipada para criar o cartão de ataque normal no chat; ou</li><li>Clique em <strong>Recusar</strong> ou feche a janela para continuar o movimento.</li></ul><p>O ataque usa a arma que estiver equipada nas mãos. Personagens incapazes de agir não podem executar Ataques de Oportunidade.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 600
+      },
+      {
+        "_id": "ManualPressao001",
+        "name": "Pressão",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Pressão</h1><p>Pressão é calculada automaticamente em ataques corpo a corpo.</p><p>Quando dois ou mais aliados do atacante ameaçam o mesmo alvo, os atacantes recebem <strong>+1 para cada personagem além do primeiro</strong>, até o máximo de +4.</p><ul><li>2 inimigos adjacentes ao alvo: +1;</li><li>3 inimigos: +2;</li><li>4 inimigos: +3;</li><li>5 ou mais: +4.</li></ul><p>O bônus aparece nos modificadores globais do cartão e é atualizado quando os tokens se movem.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 700
+      },
+      {
+        "_id": "ManualAlcance001",
+        "name": "Alvos e alcance de armas",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Alvos e alcance</h1><h2>Marcar um alvo</h2><p>Use a ferramenta Target ou pressione <strong>T</strong> sobre o token. É possível manter vários alvos marcados.</p><h2>Alcance da arma</h2><p>Armas à distância usam os três valores escritos no formato <strong>x/x/x</strong>. Por exemplo, 8/18/54 define as três faixas da arma.</p><p>Ao atacar um alvo marcado, o sistema mede a distância, identifica a faixa e aplica a penalidade correta. A distância e o modificador aparecem no cartão e são atualizados conforme atacante ou alvo se movem.</p><p>Ataques à distância são comparados automaticamente com o Desviar do alvo selecionado.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 800
+      },
+      {
+        "_id": "ManualCobertur01",
+        "name": "Cobertura",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Cobertura</h1><ol><li>Selecione o token atacante.</li><li>Marque um ou mais alvos com Target.</li><li>Clique no ícone de mira que aparece sobre o alvo.</li></ol><p>O sistema traça linhas visíveis do atacante até o alvo, incluindo a linha central, e analisa paredes, portas e tokens atravessados. Para vários alvos, cada um recebe sua própria verificação.</p><p>A janela <strong>Verificar Cobertura</strong> apresenta a sugestão em tempo real. O Mestre pode confirmar outro resultado:</p><ul><li>Sem Cobertura;</li><li>Cobertura Leve: −1;</li><li>Cobertura Média: −2;</li><li>Cobertura Pesada: −4;</li><li>Cobertura Total: ataque direto impossível.</li></ul><p>A janela pode ser movida e reaparece na última posição escolhida pelo usuário. Clicar novamente no ícone encerra a verificação e remove as linhas, sem retirar o Target.</p><p>Linhas e marcações respeitam visão dinâmica: se o alvo deixa de ser percebido ou fica bloqueado, o rastreamento visual é encerrado.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 900
+      },
+      {
+        "_id": "ManualMira000001",
+        "name": "Mira",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Mira</h1><p>Mirar usa uma ação e concede <strong>+2 no próximo ataque contra o alvo escolhido</strong>.</p><h2>Como usar</h2><ol><li>No turno do personagem, marque exatamente um alvo que ele perceba claramente.</li><li>Sem ter se movido, corrido ou realizado outra ação, aplique a condição <strong>Mira</strong>.</li><li>Faça o ataque contra o mesmo alvo.</li></ol><p>O bônus entra automaticamente e a Mira termina depois do primeiro ataque.</p><h2>Perda da Mira</h2><p>A condição é encerrada se o personagem se mover, correr, perder o alvo de vista, entrar em combate corpo a corpo, ficar Abalado, sofrer dano, for empurrado, cair, for agarrado ou realizar outra ação que quebre a preparação.</p><p>Mira não é a mesma coisa que Concentração de Poder.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1000
+      },
+      {
+        "_id": "ManualDefesa0001",
+        "name": "Defesa",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Defesa</h1><p>Um personagem pode dedicar todo o turno a se proteger. A condição <strong>Defesa</strong> usa as duas ações do turno e concede <strong>+4 em Aparar</strong> e <strong>+1 em Desviar</strong> até o início do próximo turno.</p><h2>Como usar</h2><p>No turno do personagem, abra as Condições do token e clique em <strong>Defesa</strong>. A condição fica acesa no quadro enquanto estiver ativa.</p><p>Se o personagem já tiver realizado uma ação ou ação bônus no turno, o sistema impede o uso de Defesa. Depois de ativá-la, ele não pode executar outra ação naquele turno.</p><p>A condição e seus bônus são removidos automaticamente no início do próximo turno do personagem.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1100
+      },
+      {
+        "_id": "ManualDanoCond01",
+        "name": "Dano e Condições",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Dano e Condições</h1><h2>Resolver no alvo</h2><p>Depois de rolar o dano, marque o alvo e clique em <strong>Resolver no alvo</strong>. O sistema compara dano, Resistência, Armadura e PA, aplica os Ferimentos e adiciona as Condições produzidas pelo resultado.</p><p>As Condições aparecem na ficha, ficam acesas no seletor e usam o ícone correspondente diretamente no token. Condições diferentes podem ficar ativas ao mesmo tempo e seus bônus e penalidades são somados.</p><h2>Duração e recuperação</h2><p>Clique com o botão direito em uma Condição ativa, na ficha ou na HUD do token, para definir a duração em rodadas. Use 0 para duração indefinida. O contador fica no mesmo ícone e diminui no início do turno; ao chegar a zero, a Condição termina.</p><p>A mesma janela permite definir o Atributo indicado pela origem e rolar a recuperação. Caído, Defesa, Mira, Concentração e Morrendo mantêm suas regras próprias.</p><h2>Abalado</h2><p>Em combate, o personagem testa Intuição no início do próprio turno para sair de Abalado. Enquanto estiver Abalado, não pode agir.</p><h2>Atordoado</h2><p>O personagem não pode se mover, correr, agir, realizar ações menores, reações ou Ataques de Oportunidade. Ele fica Vulnerável: ataques contra ele recebem +2 para acertar e +2 no dano.</p><p>No final do turno, faz o teste de Atributo determinado pela origem. Falha mantém Atordoado; sucesso remove Atordoado e aplica Abalado; ampliação remove Atordoado sem aplicar Abalado.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1200
+      },
+      {
+        "_id": "ManualMorrendo01",
+        "name": "Morrendo e estabilização",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Morrendo</h1><p>Ao alcançar um Ferimento acima do limite, o personagem entra automaticamente em <strong>Morrendo</strong>. Uma janela flutuante permanece disponível enquanto o estado não for resolvido.</p><h2>Teste de Vigor</h2><p>O dono da ficha usa <strong>Rolar Vigor</strong>. Se a ficha não tiver dono, o Mestre assume a rolagem. Em combate, o teste é solicitado no início do turno; fora de combate, não existe a limitação de uma rolagem por turno.</p><p>Com 3 sucessos, a vítima sobrevive e é estabilizada. Com 2 falhas, morre.</p><h2>Prestar Medicina</h2><p>Outro personagem selecionado pode clicar em <strong>Prestar Medicina</strong>. A própria vítima não pode prestar ajuda a si mesma. Outros personagens também podem tentar.</p><ul><li>Sucesso: adiciona 1 sucesso;</li><li>Ampliação: adiciona 2 sucessos;</li><li>2 ampliações: estabiliza imediatamente;</li><li>Falha crítica: piora o estado e exige um sucesso da vítima para evitar a morte.</li></ul><p>Quando a vítima é estabilizada, a janela informa que é seguro fechá-la e não volta a aparecer após F5. Se continuar Morrendo, ela reaparece após atualizar a página.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1300
+      },
+      {
+        "_id": "ManualPoderes001",
+        "name": "Poderes e Livro de Poderes",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Poderes</h1><h2>Adicionar à ficha</h2><ol><li>Abra a aba <strong>Poderes</strong> da ficha.</li><li>Clique no ícone de livro ao lado de <strong>+ Poder</strong>.</li><li>Use os filtros de estágio e procure o Poder.</li><li>Clique no botão de baixar.</li></ol><p>O Poder é adicionado diretamente à ficha, sem criar uma cópia solta no diretório de Itens.</p><h2>Usar um Poder</h2><p>Clique no Poder da ficha, escolha Fonte, moldes e demais opções permitidas e confirme. O cartão mostra custo básico, gasto total, Mana restante, teste, dano, área, descrição e resistências.</p><h2>Molde de área</h2><p>Quando o Poder possui área, clique em <strong>Revelar área</strong>, posicione o molde e confirme a área. As resistências só são solicitadas depois da confirmação.</p><h2>Controle de Magias</h2><p>Use <strong>Controle de Magias</strong> na barra esquerda para visualizar os Poderes ativos. O Mestre pode encerrar qualquer efeito; jogadores podem remover os próprios Poderes.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1400
+      },
+      {
+        "_id": "ManualResiste001",
+        "name": "Resistências e efeitos negativos",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Resistências</h1><p>O cartão de um Poder informa a Perícia ou o Atributo usado na resistência inicial e secundária.</p><h2>Teste resistido geral</h2><p>Abra <strong>Tokens</strong> na barra esquerda e clique em <strong>Teste Resistido</strong>. O token controlado entra como atacante e o primeiro Target como defensor, mas ambos podem ser trocados. Escolha a Perícia ou o Atributo de cada participante e clique em <strong>Rolar os dois testes</strong>. A janela e o chat anunciam o vencedor; em empate, a defesa vence.</p><h2>Áreas</h2><p>Depois que a área é confirmada, cada criatura atingida recebe uma janela própria com:</p><ul><li>Nome do Poder e do conjurador;</li><li>Teste exigido;</li><li>Botão para rolar diretamente;</li><li>Resultado na própria janela;</li><li>Botão para rerrolar gastando 1 Ponto de Véu.</li></ul><p>Se a criatura não tiver a Perícia, rola Sem Perícia, d4−2. O efeito negativo só deve ser aplicado depois da resolução do teste.</p><h2>Painel de efeitos negativos</h2><p>Mestre e jogadores veem o painel sutil com os efeitos ativos e sua duração. Jogadores podem abrir as informações de todos, mas só podem rolar resistências dos próprios tokens. O Mestre administra duração, aplicação e encerramento.</p><p>Quando o efeito já está no personagem, testes posteriores usam o Atributo indicado pela origem, e não repetem automaticamente a Perícia da resistência inicial.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1500
+      },
+      {
+        "_id": "ManualConcent001",
+        "name": "Concentração e duração de Poderes",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Concentração</h1><p>Cada Poder sustentado adiciona um nível à condição <strong>Concentração</strong>. O mesmo ícone recebe um contador em vez de criar vários ícones iguais.</p><p>Para cada Poder sustentado, o personagem sofre <strong>−1 ao usar outros Poderes sustentados</strong>. O modificador é recalculado conforme Poderes são iniciados ou encerrados.</p><h2>Duração</h2><p>No controle do efeito, o Mestre encontra botões <strong>+</strong> e <strong>−</strong> para aumentar ou reduzir sua duração. O aumento acrescenta novamente a duração básica configurada no Poder.</p><h2>Manutenção</h2><p>Poderes sustentados são acompanhados pelo Controle de Magias. Use o painel para verificar rodadas restantes, conjurador e alvos e para encerrar o efeito quando necessário.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1600
+      },
+      {
+        "_id": "ManualDrama00001",
+        "name": "Pontos de Drama do Mestre",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Pontos de Drama</h1><p>O marcador de Drama fica visível na mesa. Cada usuário pode arrastá-lo; o sistema salva sua posição individualmente.</p><h2>Ganhar Drama</h2><p>Falhas Críticas geradas pelas rolagens do sistema podem conceder Drama automaticamente ao Mestre. O marcador pulsa, o chat anuncia o ganho e, se configurado, o tema de Drama é tocado.</p><h2>Ajuste manual</h2><p>O Mestre usa os botões <strong>+</strong> e <strong>−</strong> para corrigir o total.</p><h2>Gastar Drama</h2><p>Clique em <strong>Gastar Drama</strong>, descreva a complicação e confirme. O sistema reduz o recurso, apresenta a intervenção dramática e executa a distribuição configurada.</p><h2>Conceder Véu</h2><p>No mesmo marcador, o Mestre pode clicar em <strong>Conceder Véu</strong>. Uma janela apresenta todos os personagens aliados elegíveis; marque quem deve receber a recompensa e confirme para acrescentar 1 Ponto de Véu a cada escolhido.</p><p>Somente personagens <strong>Despertos</strong> e com disposição <strong>Amigável</strong> aparecem nessa seleção. Sombras, Semi-Despertos, Neutros e Hostis não recebem essa recompensa.</p><h2>Som</h2><p>Ativação, arquivo e volume ficam nas configurações do sistema.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1700
+      },
+      {
+        "_id": "ManualModGlobal1",
+        "name": "Modificadores globais",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Modificadores globais</h1><p>Use a ferramenta de Modificadores Globais para registrar circunstâncias que não podem ser detectadas automaticamente, como escuridão especial, efeitos da cena, clima ou regras temporárias.</p><ol><li>Crie o modificador.</li><li>Informe nome e valor.</li><li>Escolha em quais tipos de rolagem ele se aplica.</li><li>Ative ou desative conforme a cena exigir.</li></ol><p>Os cartões mostram o total global e seus detalhes. Modificadores automáticos do sistema aparecem junto aos manuais, mas são identificados pela origem.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1800
+      },
+      {
+        "_id": "ManualConfig0001",
+        "name": "Configurações do sistema",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Configurações do sistema</h1><p>Abra <strong>Configurações do Jogo → Configurar Opções → Configurações do Sistema</strong>. Opções mundiais são controladas pelo Mestre; opções pessoais afetam somente o usuário que as alterou.</p><h2>Movimento</h2><p><strong>Limitar movimento por turno:</strong> impede que o combatente atual ultrapasse seu Movimento disponível; Corrida aumenta esse limite.</p><h2>Iniciativa</h2><ul><li><strong>Usar cartas animadas:</strong> alterna a aparência oficial animada do baralho.</li><li><strong>Som ao embaralhar / sacar:</strong> ativa o áudio correspondente.</li><li><strong>Arquivo e volume:</strong> permitem trocar cada som e ajustar sua intensidade.</li><li><strong>Aviso do meu turno:</strong> opção pessoal que avisa um turno antes e no começo do próprio turno.</li></ul><h2>Pontos de Véu</h2><p>As opções de ganho e gasto permitem ativar o som, escolher o arquivo, ajustar o volume e selecionar o modelo visual apresentado.</p><h2>Pontos de Drama</h2><p>O Mestre pode ativar a música de Drama, escolher o arquivo e regular o volume.</p><h2>Registros no chat</h2><p>Em <strong>Registros no Chat → Configurar registros</strong>, o Mestre escolhe quais categorias de acontecimentos serão publicadas e se fichas NPC ou sem jogador também aparecerão.</p><blockquote><p>Sempre que uma nova configuração do sistema for adicionada, sua explicação também será incluída nesta página.</p></blockquote>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 1900
+      },
+      {
+        "_id": "ManualChase00001",
+        "name": "Perseguições",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h1>Perseguições</h1><p>A antiga aba Posicionáveis foi transformada em <strong>Perseguições</strong>. Ela abre um painel compartilhado com participantes, distância, obstáculo atual, propostas e reserva narrativa.</p><h2>Persistência</h2><p>Uma perseguição ativa é gravada em tempo real no mundo e recebe uma cópia local de segurança do Mestre. Recarregar o Foundry ou fechar a interface não encerra a cena: o painel reaparece automaticamente após F5. Somente o botão <strong>Encerrar</strong>, disponível ao Mestre, apaga a perseguição ativa.</p><h2>Começar</h2><ol><li>Abra Perseguições na barra lateral.</li><li>Escolha perseguição a pé, de veículos ou mista.</li><li>Defina o ambiente inicial.</li><li>Marque ao menos um Perseguidor e um Perseguido entre os tokens da cena.</li><li>Clique em Iniciar perseguição.</li></ol><h2>Linha de distância</h2><p>A trilha possui as faixas Escapou, Longa, Média, Curta, Contato e Alcançado. Resultados melhores dos perseguidores aproximam os lados; resultados melhores dos perseguidos aumentam a distância. O marcador mostra a situação em tempo real.</p><h2>Resultados da rodada</h2><p>O Mestre registra o desempenho de cada participante com os botões + e −. Use 1 para sucesso ou falha e 2 para uma vantagem ou consequência mais forte. Ao resolver a rodada, o sistema compara os totais dos dois lados, move a distância, avança a rodada e registra o resumo no chat.</p><h2>Roleta inteligente</h2><p>O gerador não sorteia acontecimentos isolados. Cada proposta conhece o ambiente atual e o ambiente ao qual conduz. Aceitar uma entrada num prédio faz as próximas propostas partirem de interiores, escadas, saídas, shafts ou telhados coerentes. Cada base recebe variações de clima, multidão, perigo, escolhas morais e mudanças de rota, formando centenas de combinações.</p><h2>Propostas e reserva</h2><p><strong>Aceitar cena</strong> transforma a proposta no obstáculo atual. <strong>Reservar</strong> guarda uma ideia para ser usada mais tarde sem alterar o contexto atual. O Mestre pode sortear várias opções, usar uma reservada ou removê-la. <strong>Criar obstáculo</strong> permite escrever uma cena própria, escolher o próximo ambiente, os testes sugeridos e a dificuldade.</p><h2>Princípio de condução</h2><p>Os obstáculos são ferramentas narrativas, não limitações. O Mestre pode aceitar outras abordagens e testes coerentes. A perseguição termina quando alguém alcança o alvo, o fugitivo escapa ou a ficção determinar outro desfecho.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 2000
+      }
+    ]
+  },
+  {
+    "_id": "AtalhosManaEco01",
+    "name": "Atalho: Mana e Eco (Shift)",
+    "type": "base",
+    "img": "icons/sundries/scrolls/scroll-bound-blue.webp",
+    "system": {},
+    "ownership": { "default": 2 },
+    "flags": {},
+    "folder": null,
+    "sort": 100,
+    "_stats": {
+      "systemId": "world-behind-the-veil",
+      "systemVersion": "0.1.47",
+      "coreVersion": "14",
+      "createdTime": null,
+      "modifiedTime": null,
+      "lastModifiedBy": ""
+    },
+    "pages": [
+      {
+        "_id": "PaginaManaEco001",
+        "name": "Uso rápido de recursos",
+        "type": "text",
+        "title": { "show": true, "level": 1 },
+        "text": {
+          "format": 1,
+          "content": "<h2>Atalhos de Recursos</h2><p><strong>MANA</strong>: clique no nome MANA para reduzir 1 ponto.</p><p><strong>SHIFT + clique em MANA</strong>: adiciona 1 ponto de Mana.</p><p><strong>SHIFT + clique em ECO</strong>: adiciona 1 ponto de Eco.</p>"
+        },
+        "image": {}, "video": {}, "src": null, "system": {}, "ownership": { "default": -1 }, "flags": {}, "sort": 0
       }
     ]
   }

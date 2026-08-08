@@ -3,7 +3,7 @@
     "_id": "19cfc7d52cbc1170",
     "name": "Arcanismo",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/arcanismo/arcanismo-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/arcanismo-icon-1.png",
     "system": {
       "active": true,
       "description": "Arcanismo representa o estudo estruturado da magia. É a Perícia usada por personagens que compreendem o sobrenatural como uma linguagem, uma ciência oculta ou uma arte antiga capaz de alterar a realidade.\nArcanistas não dependem apenas de instinto ou devoção. Eles estudam símbolos, fórmulas, círculos, grimórios, palavras de poder, padrões místicos e teorias mágicas. Para eles, a magia pode ser observada, decifrada, organizada e reproduzida por meio de conhecimento e disciplina.\nUm personagem usa o Arcanismo para reconhecer efeitos mágicos, interpretar runas, compreender tradições arcanas, analisar fenômenos místicos e conjurar magias ligadas ao caminho dos Arcanistas.",
@@ -39,7 +39,7 @@
     "_id": "c7cc5cfdb6db380a",
     "name": "Arremessar",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/arremessar/arremessar-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/arremessar-icon-1.png",
     "system": {
       "active": true,
       "description": "Arremessar mede a capacidade do personagem de lançar objetos com precisão, controle e intenção. Essa Perícia cobre facas de arremesso, granadas, pedras, frascos, ferramentas, armas improvisadas e qualquer outro objeto lançado contra um alvo ou ponto específico.\nUm personagem usa Arremessar para atingir inimigos, lançar explosivos em uma área, jogar um item para um aliado, acertar um mecanismo à distância ou improvisar um ataque com algo encontrado no ambiente.\nNormalmente, Arremessar usa Destreza, pois depende de mira e coordenação. Porém, se o personagem tentar lançar algo muito pesado, o Mestre pode permitir o uso de Força no lugar de Destreza.",
@@ -75,7 +75,7 @@
     "_id": "aed976e35bf30179",
     "name": "Atletismo",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/atletismo/atletismo-style-3.png",
+    "img": "systems/world-behind-the-veil/assets/skills/atletismo-style-3.png",
     "system": {
       "active": true,
       "description": "Atletismo representa o preparo físico, o controle corporal e a capacidade do personagem de usar o próprio corpo em situações de esforço, movimento ou risco. Essa Perícia cobre correr, saltar, escalar, nadar, se equilibrar, empurrar, puxar, carregar peso, atravessar obstáculos e realizar ações físicas intensas.\nAtletismo pode usar Força quando a ação depende de potência, explosão muscular, resistência física ou impacto direto. Também pode usar Destreza quando a ação exige equilíbrio, agilidade, precisão corporal, velocidade ou movimentos mais técnicos.\nO Atributo usado deve acompanhar a forma como o personagem age na cena. Um personagem tentando escalar um muro apenas com força bruta pode usar Força; outro tentando subir rapidamente usando impulso, apoio e agilidade pode usar Destreza.",
@@ -111,7 +111,7 @@
     "_id": "089102eea53da19e",
     "name": "Botânica",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/botanica/botanica-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/botanica-icon-1.png",
     "system": {
       "active": true,
       "description": "Botânica representa o conhecimento do personagem sobre plantas, ervas, fungos, raízes, venenos naturais, toxinas vegetais e curas tradicionais. Essa Perícia pode ser usada para reconhecer espécies, preparar remédios naturais, identificar substâncias perigosas, encontrar ingredientes raros ou improvisar tratamentos quando a medicina moderna não está disponível.\nEm campanhas com poderes ligados à natureza, Botânica também pode servir como base para o Druidismo, representando uma magia primitiva conectada aos ciclos naturais, ao crescimento, à decomposição, aos venenos, às raízes e às forças antigas da terra.\nUm personagem usa Botânica quando precisa compreender, manipular ou extrair poder da vida vegetal e dos elementos naturais ligados a ela.",
@@ -147,7 +147,7 @@
     "_id": "5e64e84b6e79b683",
     "name": "Ciências",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/ciencias/ciencias-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/ciencias-icon-1.png",
     "system": {
       "active": true,
       "description": "Ciências representa o conhecimento científico do personagem e sua capacidade de compreender fenômenos por meio de análise, lógica, experimentação e método. Essa Perícia cobre áreas como física, química, biologia, engenharia teórica, tecnologia experimental e estudos científicos aplicados.\nUm personagem usa Ciências para analisar substâncias, compreender reações químicas, interpretar dados laboratoriais, estudar anomalias físicas, reconhecer padrões científicos e lidar com situações que exigem conhecimento técnico avançado.\nEm campanhas com poderes baseados em Dispositivos, Ciências também pode ser usada para criar, operar ou compreender aparelhos incomuns, invenções experimentais, equipamentos anômalos e tecnologias que ultrapassam o entendimento comum.",
@@ -183,7 +183,7 @@
     "_id": "2b70b831f8016559",
     "name": "Conhecimento Acadêmico",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-academico/conhecimento-academico-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-academico-icon-1.png",
     "system": {
       "active": true,
       "description": "Conhecimento Acadêmico representa estudo formal, pesquisa teórica e domínio de áreas ligadas à educação, história, cultura, filosofia, literatura, arqueologia, antropologia, política, linguística e outros campos de conhecimento intelectual.\nUm personagem usa Conhecimento Acadêmico para lembrar informações estudadas, interpretar textos antigos, reconhecer referências históricas, compreender sociedades, analisar documentos, entender teorias complexas ou acessar saberes que normalmente exigem formação, leitura ou pesquisa aprofundada.\nEssa Perícia não representa apenas saber coisas. Ela mostra a capacidade do personagem de organizar conhecimento, cruzar informações e transformar estudo em compreensão útil durante a história.",
@@ -219,7 +219,7 @@
     "_id": "2ece5183a0b588e0",
     "name": "Conhecimento Comum",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-comum/conhecimento-comum-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-comum-icon-1.png",
     "system": {
       "active": true,
       "description": "Conhecimento Comum representa aquilo que o personagem sabe sobre o mundo ao seu redor: cultura geral, notícias, costumes, lugares conhecidos, eventos recentes, figuras públicas, rumores populares e informações que circulam entre pessoas comuns.\nUm personagem usa Conhecimento Comum para lembrar detalhes do cotidiano, reconhecer referências culturais, entender hábitos de uma região, identificar informações básicas sobre uma cidade, organização ou acontecimento, e perceber quando algo foge do que seria considerado normal.\nEssa Perícia não representa estudo profundo. Ela mostra o quanto o personagem está conectado ao mundo comum antes que o Véu comece a distorcer tudo ao redor.",
@@ -255,7 +255,7 @@
     "_id": "1bb394a0eadfaf6c",
     "name": "Conhecimento Criminal",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-criminal/conhecimento-criminal-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-criminal-icon-1.png",
     "system": {
       "active": true,
       "description": "Conhecimento Criminal representa o entendimento do personagem sobre o submundo, crimes, gangues, contrabando, tráfico, mercado negro, códigos criminosos, organizações ilegais e padrões de atividade criminosa.\nUm personagem usa Conhecimento Criminal para reconhecer símbolos de facções, entender a lógica de uma operação ilegal, identificar rotas de contrabando, interpretar mensagens codificadas do submundo ou perceber quando uma cena segue o padrão de um grupo criminoso específico.\nEssa perícia não significa necessariamente que o personagem seja criminoso. Ele pode ter aprendido isso como policial, investigador, jornalista, agente de campo, ex-membro de uma organização ou alguém que sobreviveu tempo demais nas ruas.",
@@ -291,7 +291,7 @@
     "_id": "26ee6104f39c9e06",
     "name": "Conhecimento de Batalha",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-de-batalha/conhecimento-de-batalha-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/conhecimento-de-batalha-icon-1.png",
     "system": {
       "active": true,
       "description": "Conhecimento de Batalha representa a capacidade do personagem de compreender combate, tática, estratégia, formações, emboscadas, cobertura, avanço, recuo e leitura de campo. Essa perícia não mede o quanto ele luta bem com as próprias mãos, mas o quanto entende a lógica de um confronto.\nUm personagem usa Conhecimento de Batalha para reconhecer uma formação inimiga, prever uma emboscada, avaliar uma posição defensiva, identificar vantagens no terreno, entender movimentações militares ou perceber quando uma cena está prestes a se transformar em combate.\nEssa Perícia é especialmente útil para soldados, comandantes, agentes táticos, mercenários, estrategistas e personagens acostumados a sobreviver em zonas de conflito.",
@@ -327,7 +327,7 @@
     "_id": "03731914a9b42638",
     "name": "Coragem",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/coragem/coragem-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/coragem-icon-1.png",
     "system": {
       "active": true,
       "description": "Coragem representa a firmeza emocional do personagem diante do medo, da pressão e do perigo. Ela mede sua capacidade de manter a postura quando ameaçado, resistir a intimidações, encarar horrores, suportar terror psicológico e continuar agindo mesmo quando seu instinto manda recuar.\nCoragem não significa ausência de medo. Um personagem corajoso ainda sente medo, hesita e reconhece o perigo. A diferença é que ele consegue agir apesar disso.\nUm personagem usa Coragem para resistir a ameaças diretas, interrogatórios violentos, presença aterradora, pressão psicológica, cenas traumáticas e manifestações do Véu que tentam quebrar sua vontade.\nQuando alguém tenta intimidar um alvo, a resistência inicial é feita com um Teste Resistido de Intimidação contra Coragem. A Intimidação representa a força da ameaça; a Coragem representa a capacidade do alvo de não se curvar diante dela.\nSe o personagem falhar, ele fica intimidado. Depois que o medo já tomou conta, a resistência deixa de ser um confronto entre Perícias e passa a ser uma tentativa de recuperar o controle de si mesmo. Ao tentar resistir ao medo depois de já estar afetado, o personagem realiza um Teste de Intuição, normalmente contra CD 4. Essa dificuldade pode variar de acordo com a intensidade da cena, a natureza da ameaça e as condições em que o personagem se encontra.",
@@ -363,7 +363,7 @@
     "_id": "8190b1eb92f2c3be",
     "name": "Dirigir",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/dirigir/dirigir-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/dirigir-icon-1.png",
     "system": {
       "active": true,
       "description": "Dirigir representa a capacidade do personagem de controlar veículos terrestres em situações comuns ou perigosas. Essa Perícia cobre carros, motos, caminhões, vans, veículos blindados leves e outros meios de transporte conduzidos por terra.\nUm personagem usa Dirigir para realizar perseguições, escapar em alta velocidade, controlar um veículo sob pressão, fazer manobras arriscadas, evitar obstáculos, dirigir em terreno difícil ou manter o controle durante uma situação de combate.\nDirigir não é o mesmo que pilotar. Veículos terrestres usam Dirigir; aeronaves, veículos especiais e máquinas de controle mais complexo geralmente usam Pilotar.",
@@ -399,7 +399,7 @@
     "_id": "705e1fa571a79f19",
     "name": "Eletrônica",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/eletronica/eletronica-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/eletronica-icon-1.png",
     "system": {
       "active": true,
       "description": "Eletrônica representa o conhecimento do personagem sobre circuitos, sensores, painéis, sistemas elétricos, rastreadores, rádios, detonadores, alarmes, fechaduras digitais e dispositivos técnicos que dependem de componentes eletrônicos.\nUm personagem usa Eletrônica para reconhecer circuitos, reparar equipamentos, entender sistemas de segurança, identificar falhas, modificar dispositivos ou lidar com mecanismos que não podem ser resolvidos apenas com força ou improviso.\nEm algumas situações, Eletrônica pode funcionar como Perícia de apoio. Uma porta eletrônica, por exemplo, ainda pode ser burlada com ladinagem, mas compreender seu circuito, travas e sensores pode exigir Eletrônica antes da tentativa principal.",
@@ -435,7 +435,7 @@
     "_id": "578208c63a54f4f8",
     "name": "Fé",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/fe/fe-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/fe-icon-1.png",
     "system": {
       "active": true,
       "description": "Fé representa a capacidade do personagem de manifestar poderes através de crença, devoção ou ligação espiritual com algo maior. Esse poder pode vir de uma divindade, entidade, ideal, força sagrada, promessa, juramento ou qualquer coisa na qual o personagem acredita com intensidade suficiente para tocar o impossível.\nPersonagens que usam Fé não dominam o poder como uma fórmula e não o tratam como simples técnica. Eles canalizam aquilo em que acreditam. Sua convicção se torna ponte, escudo, arma ou milagre.\nEm campanhas onde a fé pode conjurar magia, essa Perícia é usada por personagens como padres, sacerdotes, profetas, monges, xamãs, devotos ou qualquer outro conjurador cuja fonte de poder venha da crença. Para esses personagens, a magia não nasce do estudo arcano, de pactos ocultos ou de um dom inato, mas da força espiritual que os conecta àquilo que veneram.\nUm personagem usa Fé para conjurar poderes ligados à devoção, reconhecer manifestações sagradas ou profanas, resistir a forças que tentam quebrar sua crença e agir quando sua vontade espiritual é colocada à prova.",
@@ -471,7 +471,7 @@
     "_id": "73c9ad6277d8469b",
     "name": "Intimidação",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/intimidacao/intimidacao-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/intimidacao-icon-1.png",
     "system": {
       "active": true,
       "description": "Intimidação representa a capacidade do personagem de impor medo, pressão ou autoridade sobre outra pessoa. Essa Perícia cobre ameaças, presença agressiva, interrogatórios duros, demonstrações de força, postura dominante e qualquer tentativa de fazer alguém recuar, obedecer ou revelar algo por medo das consequências.\nUm personagem usa Intimidação quando tenta quebrar a confiança de um inimigo, pressionar uma testemunha, fazer um criminoso falar, afastar alguém de seu caminho ou impor sua presença em uma situação tensa.\nDiferente de Lábia, que convence, engana ou conduz pela conversa, Intimidação vence pela pressão. Ela não precisa ser apenas violência explícita: às vezes, um olhar frio, uma frase bem colocada ou o silêncio certo bastam para lembrar alguém de que resistir pode ser uma péssima escolha.\nPara intimidar um alvo, role um Teste Resistido de Intimidação contra Coragem.\nFora de combate, circunstâncias negativas da cena podem impor penalidades ao alvo, como estar amarrado, cercado, desarmado, ferido, sendo torturado ou em posição claramente vulnerável.\nEm combate, um personagem não pode intimidar outro livremente, a menos que possua uma Vantagem que permita isso ou que o alvo esteja em uma situação completamente desfavorável, a critério do Mestre. Durante o combate, a adrenalina, o caos e o instinto de sobrevivência ajudam o personagem a se manter funcional; por isso, penalidades circunstanciais normalmente não entram na resistência inicial, salvo em situações extremas.\nSe o alvo falhar no Teste Resistido, ele fica intimidado.\nUm personagem intimidado sofre -2 em qualquer rolagem feita contra o intimidador. Se o Teste de Intimidação conseguir uma Ampliação, essa penalidade aumenta para -4.\nEssa penalidade pode aumentar se o alvo estiver em uma situação especialmente desfavorável. O Mestre define o quanto essas circunstâncias agravam a pressão da cena.\nSe o personagem intimidado tentar fazer algo para se safar, mas que não afete diretamente o intimidador, a penalidade total é reduzida pela metade. Ele ainda está com medo, mas não está confrontando diretamente a fonte do medo.\nEm cenas de interpretação, um personagem permanece intimidado por até 1 minuto depois que o intimidador sai de sua linha de visão, ou até que a situação deixe de fazer sentido.\nEm combate, depois que o personagem já está intimidado, ele pode tentar se recompor no final do seu próximo turno com um Teste de Intuição, normalmente contra CD 4. Se for bem-sucedido, o efeito da Intimidação é encerrado.\nSe um personagem falhar em dois Testes de Intimidação por Ampliação contra o mesmo intimidador dentro da mesma cena, ele fica aterrorizado. Um personagem aterrorizado não consegue agir diretamente contra o intimidador. Sua intenção principal passa a ser fugir, se esconder, se render ou se afastar da fonte do medo. Em situações extremas, o Mestre pode narrar uma perda total de controle emocional, de acordo com o tom da mesa.",
@@ -507,7 +507,7 @@
     "_id": "98cc74a18c2505d3",
     "name": "Investigação",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/investigacao/investigacao-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/investigacao-icon-1.png",
     "system": {
       "active": true,
       "description": "Investigação representa a capacidade do personagem de analisar pistas, reconstruir acontecimentos e encontrar sentido onde outras pessoas enxergam apenas caos. Essa Perícia cobre cenas de crime, documentos, padrões, rastros, contradições, arquivos, testemunhos e detalhes que podem revelar o que realmente aconteceu.\nUm personagem usa Investigação quando precisa examinar um local, conectar informações, encontrar evidências, perceber inconsistências em uma história ou compreender a lógica por trás de um mistério.\nInvestigação não é apenas procurar algo escondido. Ela representa método, paciência e raciocínio. Em um mundo onde o Véu distorce a verdade, saber fazer as perguntas certas pode ser tão importante quanto encontrar a resposta.",
@@ -543,7 +543,7 @@
     "_id": "4b62d2f9a5b2947c",
     "name": "Jutsu",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/jutsu/jutsu-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/jutsu-icon-1.png",
     "system": {
       "active": true,
       "description": "Jutsu representa técnicas místicas canalizadas através de ninjutsus, selos, disciplina, tradição e controle preciso de energia. Essa Perícia é usada por personagens que manifestam poderes por meio de práticas ligadas a artes ninja, escolas secretas, linhagens ocultas ou treinamentos esotéricos.\nJutsu pode usar Destreza quando o estilo do personagem depende de velocidade, selos manuais, postura, precisão corporal e execução rápida. Também pode usar Inteligência quando o estilo é mais técnico, estudado, ritualístico ou baseado em fórmulas, códigos, tradições e conhecimento secreto.\nUm personagem usa Jutsu para conjurar técnicas sobrenaturais ligadas ao seu caminho, executar ninjutsus, reconhecer tradições similares e manipular poderes através de disciplina física ou compreensão técnica. O Atributo usado deve refletir o estilo escolhido pelo jogador e aprovado pelo Mestre.",
@@ -579,7 +579,7 @@
     "_id": "72989033c3499a2b",
     "name": "Lábia",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/labia/labia-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/labia-icon-1.png",
     "system": {
       "active": true,
       "description": "Lábia representa a capacidade do personagem de conduzir uma conversa para onde deseja. Essa Perícia cobre convencer, negociar, seduzir, blefar, mentir, omitir informações, suavizar conflitos e manipular uma situação por meio da palavra.\nUm personagem usa Lábia quando tenta mudar a opinião de alguém, esconder suas verdadeiras intenções, conseguir acesso a um lugar, negociar um acordo, distrair uma pessoa ou fazer com que outro personagem acredite em algo conveniente.\nLábia não é apenas carisma. Ela envolve leitura social, timing, presença, escolha das palavras e a capacidade de entender o que o outro quer ouvir. Em um mundo onde a verdade pode ser perigosa, saber falar pode ser tão útil quanto saber lutar.",
@@ -615,7 +615,7 @@
     "_id": "f33d28805909c8a8",
     "name": "Ladinagem",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/ladinagem/ladinagem-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/ladinagem-icon-1.png",
     "system": {
       "active": true,
       "description": "Ladinagem representa a capacidade do personagem de abrir, burlar, manipular ou contornar mecanismos e dispositivos. Essa Perícia cobre fechaduras, cofres, travas, armadilhas simples, mecanismos delicados, entradas forçadas discretas e sistemas que exigem precisão manual.\nUm personagem usa Ladinagem para destrancar portas, abrir compartimentos, desarmar mecanismos, manipular ferramentas finas, esconder pequenos objetos ou contornar obstáculos físicos sem destruí-los.\nQuando o dispositivo envolve circuitos, sensores, painéis digitais ou sistemas eletrônicos, o Mestre pode exigir Eletrônica como Perícia de apoio. Nesse caso, Ladinagem continua sendo a ação principal, mas o personagem precisa compreender o sistema antes de tentar burlá-lo com segurança.",
@@ -651,7 +651,7 @@
     "_id": "f8665fe2b4b154c5",
     "name": "Lutar",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/lutar/lutar-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/lutar-icon-1.png",
     "system": {
       "active": true,
       "description": "Lutar representa a capacidade do personagem de combater corpo a corpo, com ou sem armas. Essa Perícia cobre socos, chutes, agarrões, quedas, bloqueios, facas, espadas, bastões, armas improvisadas e qualquer confronto direto em curta distância.\nLutar pode usar Força quando o estilo do personagem depende de brutalidade, impacto, armas pesadas, agarrões ou domínio físico. Também pode usar Destreza quando o estilo é mais técnico, ágil, preciso ou baseado em velocidade e controle corporal.\nUm personagem usa Lutar para atacar em combate corpo a corpo, desarmar, agarrar, empurrar, derrubar ou se defender em confrontos próximos. O Atributo usado deve refletir o estilo de luta do personagem e a forma como ele age na cena.",
@@ -687,7 +687,7 @@
     "_id": "74b6d6fec4a2590d",
     "name": "Mecânica",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/mecanica/mecanica-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/mecanica-icon-1.png",
     "system": {
       "active": true,
       "description": "Mecânica representa o conhecimento do personagem sobre máquinas, motores, engrenagens, sistemas físicos, peças, estruturas e equipamentos que funcionam por força mecânica. Essa Perícia cobre consertos, manutenção, análise de falhas, improvisos técnicos e manipulação de mecanismos complexos.\nUm personagem usa Mecânica para reparar veículos, entender motores, consertar equipamentos, desmontar máquinas, identificar problemas estruturais ou improvisar soluções usando peças e ferramentas disponíveis.\nEm algumas situações, Mecânica pode funcionar como Perícia de apoio. Um cofre industrial, uma trava hidráulica ou um mecanismo pesado ainda pode exigir Ladinagem como ação principal, mas compreender seu funcionamento pode depender de Mecânica antes da tentativa.",
@@ -723,7 +723,7 @@
     "_id": "8745df3f72ea2a3e",
     "name": "Medicina",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/medicina/medicina-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/medicina-icon-1.png",
     "system": {
       "active": true,
       "description": "Medicina representa a prática médica direta. Essa Perícia cobre primeiros socorros, diagnóstico clínico, estabilização de feridos, cirurgias, tratamento de doenças, procedimentos de emergência e cuidados prolongados.\nUm personagem usa Medicina quando precisa salvar uma vida, tratar ferimentos, remover projáteis, conter sangramentos, realizar uma cirurgia, identificar sintomas ou manter alguém vivo em condições críticas.\nMedicina não é apenas conhecimento teórico sobre o corpo. Ela representa técnica aplicada sob pressão, mãos firmes, tomada de decisão e a capacidade de agir quando cada segundo pode decidir se alguém sobrevive ou não.",
@@ -759,7 +759,7 @@
     "_id": "6b8f7503c78ad7eb",
     "name": "Navegar",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/navegar/navegar-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/navegar-icon-1.png",
     "system": {
       "active": true,
       "description": "Navegar representa a capacidade do personagem de se orientar, traçar rotas e conduzir deslocamentos através de mapas, bússolas, GPS, estrelas, terreno, marcos naturais, mapas náuticos ou sistemas de navegação.\nUm personagem usa Navegar para encontrar caminhos, evitar se perder, planejar viagens, interpretar mapas, seguir coordenadas, atravessar regiões desconhecidas, lidar com correntes, reconhecer rotas marítimas e conduzir um grupo por rotas terrestres, marítimas ou aéreas.\nEssa Perícia também é usada para conduzir veículos aquáticos, como barcos, lanchas, botes, navios, jet skis e outros meios de transporte sobre a água.\nNavegar não é o mesmo que Dirigir ou Pilotar. Dirigir controla veículos terrestres. Pilotar controla aeronaves ou veículos especiais. Navegar determina para onde ir, como chegar, como não desaparecer no caminho e como se mover com segurança sobre a água.",
@@ -795,7 +795,7 @@
     "_id": "2af500d14ca9efb6",
     "name": "Ocultismo",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/ocultismo/ocultismo-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/ocultismo-icon-1.png",
     "system": {
       "active": true,
       "description": "Ocultismo representa o conhecimento do personagem sobre o Véu, rituais, símbolos proibidos, entidades sobrenaturais, bruxaria, maldições, pactos, presságios e artes ocultas. Essa Perícia é usada por personagens que estudam ou praticam aquilo que existe além da compreensão comum.\nUm personagem usa Ocultismo para reconhecer marcas ritualísticas, interpretar fenômenos sobrenaturais, compreender entidades, identificar sinais do Véu, realizar práticas ocultas e conjurar poderes ligados ao caminho dos Bruxos.\nDiferente de Arcanismo, que trata a magia como estudo estruturado, Ocultismo lida com o proibido, o instintivo, o simbólico e o perigoso. É o conhecimento daqueles que sabem que algumas verdades não deveriam ser abertas.",
@@ -831,7 +831,7 @@
     "_id": "8a5a18a354245d73",
     "name": "Percepção",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/percepcao/percepcao-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/percepcao-icon-1.png",
     "system": {
       "active": true,
       "description": "Percepção representa a capacidade do personagem de notar detalhes, ameaças, movimentos, sons, cheiros, alterações no ambiente e sinais de que algo está fora do lugar. Essa Perícia mede atenção, instinto e sensibilidade ao que acontece ao redor.\nUm personagem usa Percepção para perceber inimigos escondidos, encontrar pistas visíveis, notar uma emboscada, ouvir passos distantes, sentir uma presença estranha ou captar pequenos detalhes antes que seja tarde demais.\nPercepção não é investigação profunda. Ela mostra o que o personagem consegue notar no momento. Investigação interpreta e conecta pistas; Percepção percebe que elas estão ali.",
@@ -867,7 +867,7 @@
     "_id": "63c904559993935c",
     "name": "Performance",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/performance/performance-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/performance-icon-1.png",
     "system": {
       "active": true,
       "description": "Performance representa a capacidade do personagem de se expressar diante de outras pessoas, prender atenção, interpretar papéis e transformar presença em espetáculo. Essa Perícia cobre atuação, música, dança, canto, discurso, apresentação pública, improviso cênico e qualquer situação em que o personagem precise usar expressão artística ou presença dramática.\nUm personagem usa Performance para distrair uma multidão, fingir emoções, atuar como outra pessoa, manter uma plateia envolvida, conduzir uma apresentação ou sustentar uma imagem convincente diante de observadores.\nPerformance não é apenas talento artístico. Ela envolve controle emocional, presença de palco, leitura do público e a capacidade de fazer os outros acreditarem no momento que o personagem está criando.",
@@ -903,7 +903,7 @@
     "_id": "a762983a33e9aab2",
     "name": "Pilotar",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/pilotar/pilotar-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/pilotar-icon-1.png",
     "system": {
       "active": true,
       "description": "Pilotar representa a capacidade do personagem de controlar aeronaves, veículos especiais e máquinas que exigem coordenação avançada. Essa Perícia cobre aviões, helicópteros, drones complexos, veículos experimentais, aeronaves militares e outros meios de transporte que não se encaixam em condução terrestre comum.\nUm personagem usa Pilotar para decolar, pousar, realizar manobras arriscadas, escapar de perseguições aéreas, controlar uma aeronave danificada ou operar veículos incomuns sob pressão.\nPilotar não é o mesmo que Dirigir ou Navegar. Dirigir controla veículos terrestres. Navegar orienta deslocamentos e também conduz veículos aquáticos. Pilotar lida com máquinas mais complexas, especialmente aquelas que exigem domínio de voo, altitude, estabilidade e resposta rápida.",
@@ -939,7 +939,7 @@
     "_id": "0fa405389960d4e3",
     "name": "Poder Inato",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/poder-inato/poder-inato-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/poder-inato-icon-1.png",
     "system": {
       "active": true,
       "description": "Poder Inato representa uma força sobrenatural que nasce dentro do personagem, desperta nele ou passa a fazer parte de sua existência sem depender de estudo formal, pacto ou devoção. Essa Perícia cobre dons naturais, marcas do Véu, heranças ocultas, mutações sobrenaturais, traumas impossíveis, sonhos recorrentes ou qualquer origem que tenha transformado o personagem em um canal vivo de poder.\nUm personagem usa Poder Inato para manifestar habilidades sobrenaturais ligadas ao seu dom, controlar efeitos que surgem de dentro de si, resistir à instabilidade da própria natureza e compreender os limites daquilo que se tornou.\nDiferente de Arcanismo, Ocultismo ou Fé, o Poder Inato não precisa ser aprendido como teoria, ritual ou crença. Ele simplesmente existe no personagem. A questão não é descobrir como receber o poder, mas aprender a sobreviver ao que já está dentro dele.",
@@ -975,7 +975,7 @@
     "_id": "ce5f76e626cddfb9",
     "name": "Psiônico",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/psionico/psionico-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/psionico-icon-1.png",
     "system": {
       "active": true,
       "description": "Psiônico representa a ligação extrema entre corpo e mente. Essa Perícia é usada por personagens capazes de manifestar poder mental através de esforço físico, tensão muscular, disciplina corporal e concentração intensa.\nO psionismo não é apenas pensamento. Para esses personagens, a mente precisa de uma âncora no corpo. Cada manifestação exige presença física, controle da respiração, dor, impulso, resistência e força interna. O poder nasce da união entre vontade e carne.\nUm personagem usa Psiônico para mover objetos, projetar força mental, romper barreiras invisíveis, afetar matéria, resistir a pressões psíquicas ou manipular o mundo através de uma mente fortalecida pelo próprio corpo.\nPor isso, Psiônico usa Força. Não porque o personagem empurra o mundo apenas com os músculos, mas porque seu corpo é o canal que sustenta a pressão da mente sobre a realidade.",
@@ -1011,7 +1011,7 @@
     "_id": "0b41270a91d180d2",
     "name": "Sobrevivência",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/sobrevivencia/sobrevivencia-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/sobrevivencia-icon-1.png",
     "system": {
       "active": true,
       "description": "Sobrevivência representa a capacidade do personagem de resistir, se adaptar e continuar vivo em ambientes hostis. Essa Perícia cobre rastrear, caçar, encontrar abrigo, localizar água, reconhecer perigos naturais, seguir pegadas, montar acampamento e lidar com situações fora da segurança urbana.\nUm personagem usa Sobrevivência quando precisa atravessar uma floresta, se orientar em território selvagem, encontrar alimento, evitar predadores, rastrear uma criatura ou suportar condições difíceis longe de recursos comuns.\nSobrevivência não é apenas conhecer a natureza. Ela envolve instinto, paciência, leitura do ambiente e a capacidade de perceber sinais sutis antes que o perigo se revele.",
@@ -1047,7 +1047,7 @@
     "_id": "b70405be57806a0e",
     "name": "Tecnologia",
     "type": "pericia",
-    "img": "systems/world-behind-the-veil/assets/skills/tecnologia/tecnologia-icon-1.png",
+    "img": "systems/world-behind-the-veil/assets/skills/tecnologia-icon-1.png",
     "system": {
       "active": true,
       "description": "Tecnologia representa o conhecimento do personagem sobre computadores, redes, sistemas digitais, softwares, bancos de dados, segurança virtual e dispositivos modernos. Essa Perícia cobre invasão digital, análise de sistemas, programação, rastreamento de dados, recuperação de arquivos e manipulação de informações eletrônicas.\nUm personagem usa Tecnologia para acessar computadores, quebrar senhas, investigar arquivos digitais, rastrear sinais, invadir sistemas, proteger dados ou compreender estruturas tecnológicas complexas.\nDiferente de Eletrônica, que lida com circuitos, sensores e componentes físicos, Tecnologia lida principalmente com sistemas digitais, informação e controle lógico. Em muitos casos, as duas Perícias podem se complementar.",
@@ -1078,5 +1078,97 @@
       "modifiedTime": null,
       "lastModifiedBy": ""
     }
+  },
+  {
+    "_id": "4a71c8e293d5f601",
+    "name": "Artilharia Pesada",
+    "type": "pericia",
+    "img": "systems/world-behind-the-veil/assets/skills/artilharia-pesada-icon-1.png",
+    "system": {
+      "active": true,
+      "description": "Artilharia Pesada representa o conhecimento necessário para operar armamentos de grande porte, peças de artilharia, morteiros, canhões, lançadores pesados e sistemas de tiro que exigem cálculo, preparação e coordenação.\nUm personagem usa Artilharia Pesada para identificar o armamento adequado, calcular trajetória e distância, preparar munição, ajustar mecanismos de disparo, coordenar uma equipe de tiro e atingir alvos com armas pesadas.\nEssa Perícia usa Inteligência porque precisão com artilharia depende principalmente de conhecimento técnico, leitura do campo de batalha e cálculo cuidadoso.",
+      "effectsSummary": "",
+      "atributo": "inteligencia",
+      "dado": 4,
+      "bonus": 0,
+      "descricao": "Artilharia Pesada representa o conhecimento necessário para operar armamentos de grande porte, peças de artilharia, morteiros, canhões, lançadores pesados e sistemas de tiro que exigem cálculo, preparação e coordenação.\nUm personagem usa Artilharia Pesada para identificar o armamento adequado, calcular trajetória e distância, preparar munição, ajustar mecanismos de disparo, coordenar uma equipe de tiro e atingir alvos com armas pesadas.\nEssa Perícia usa Inteligência porque precisão com artilharia depende principalmente de conhecimento técnico, leitura do campo de batalha e cálculo cuidadoso.",
+      "source": "PERÍCIAS E DESCRIÇÕES",
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": { "default": 2 },
+    "flags": { "world-behind-the-veil": { "attributeText": "Inteligência" } },
+    "sort": 225000,
+    "_stats": { "systemId": "world-behind-the-veil", "systemVersion": "0.1.0", "coreVersion": "13.350", "createdTime": null, "modifiedTime": null, "lastModifiedBy": "" }
+  },
+  {
+    "_id": "7bd290e4c1a6385f",
+    "name": "Atirar",
+    "type": "pericia",
+    "img": "systems/world-behind-the-veil/assets/skills/atirar-icon-1.png",
+    "system": {
+      "active": true,
+      "description": "Atirar representa a capacidade de usar armas de disparo com precisão e controle. Essa Perícia cobre pistolas, revólveres, rifles, escopetas, submetralhadoras, arcos, bestas e outras armas que exigem pontaria direta.\nUm personagem usa Atirar para acertar um alvo, controlar recuo, disparar sob pressão, escolher o momento certo do tiro e manusear uma arma à distância em combate.\nAtirar usa Destreza porque depende de coordenação, reflexos, estabilidade e precisão corporal.",
+      "effectsSummary": "",
+      "atributo": "destreza",
+      "dado": 4,
+      "bonus": 0,
+      "descricao": "Atirar representa a capacidade de usar armas de disparo com precisão e controle. Essa Perícia cobre pistolas, revólveres, rifles, escopetas, submetralhadoras, arcos, bestas e outras armas que exigem pontaria direta.\nUm personagem usa Atirar para acertar um alvo, controlar recuo, disparar sob pressão, escolher o momento certo do tiro e manusear uma arma à distância em combate.\nAtirar usa Destreza porque depende de coordenação, reflexos, estabilidade e precisão corporal.",
+      "source": "PERÍCIAS E DESCRIÇÕES",
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": { "default": 2 },
+    "flags": { "world-behind-the-veil": { "attributeText": "Destreza" } },
+    "sort": 250000,
+    "_stats": { "systemId": "world-behind-the-veil", "systemVersion": "0.1.0", "coreVersion": "13.350", "createdTime": null, "modifiedTime": null, "lastModifiedBy": "" }
+  },
+  {
+    "_id": "9e63b102fa47d8c5",
+    "name": "Cozinhar",
+    "type": "pericia",
+    "img": "systems/world-behind-the-veil/assets/skills/cozinhar-icon-1.png",
+    "system": {
+      "active": true,
+      "description": "Cozinhar representa a capacidade de preparar alimentos, reconhecer ingredientes, equilibrar sabores, conservar provisões e organizar uma cozinha mesmo sob condições difíceis.\nUm personagem usa Cozinhar para produzir uma refeição, improvisar com poucos recursos, identificar alimento estragado, planejar um cardápio, impressionar convidados ou alimentar um grupo com segurança.\nNormalmente Cozinhar usa Destreza. O Mestre pode permitir Influência ao criar uma apresentação capaz de encantar pessoas, ou Intuição ao improvisar sabores, avaliar ingredientes e perceber o ponto correto do preparo.",
+      "effectsSummary": "Pode usar Destreza, Influência ou Intuição conforme a abordagem.",
+      "atributo": "destreza",
+      "dado": 4,
+      "bonus": 0,
+      "descricao": "Cozinhar representa a capacidade de preparar alimentos, reconhecer ingredientes, equilibrar sabores, conservar provisões e organizar uma cozinha mesmo sob condições difíceis.\nUm personagem usa Cozinhar para produzir uma refeição, improvisar com poucos recursos, identificar alimento estragado, planejar um cardápio, impressionar convidados ou alimentar um grupo com segurança.\nNormalmente Cozinhar usa Destreza. O Mestre pode permitir Influência ao criar uma apresentação capaz de encantar pessoas, ou Intuição ao improvisar sabores, avaliar ingredientes e perceber o ponto correto do preparo.",
+      "source": "PERÍCIAS E DESCRIÇÕES",
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": { "default": 2 },
+    "flags": { "world-behind-the-veil": { "attributeText": "Destreza, Influência ou Intuição" } },
+    "sort": 1050000,
+    "_stats": { "systemId": "world-behind-the-veil", "systemVersion": "0.1.0", "coreVersion": "13.350", "createdTime": null, "modifiedTime": null, "lastModifiedBy": "" }
+  },
+  {
+    "_id": "c5f81472a0963bed",
+    "name": "Furtividade",
+    "type": "pericia",
+    "img": "systems/world-behind-the-veil/assets/skills/furtividade-icon-1.png",
+    "system": {
+      "active": true,
+      "description": "Furtividade representa a capacidade de se mover sem ser percebido, ocultar a própria presença e explorar sombras, cobertura, distrações e pontos cegos.\nUm personagem usa Furtividade para se aproximar silenciosamente, esconder-se, atravessar uma área vigiada, seguir alguém sem chamar atenção, preparar uma emboscada ou desaparecer durante uma perseguição.\nFurtividade usa Destreza porque depende de controle corporal, equilíbrio, precisão dos movimentos e reação rápida ao ambiente.",
+      "effectsSummary": "",
+      "atributo": "destreza",
+      "dado": 4,
+      "bonus": 0,
+      "descricao": "Furtividade representa a capacidade de se mover sem ser percebido, ocultar a própria presença e explorar sombras, cobertura, distrações e pontos cegos.\nUm personagem usa Furtividade para se aproximar silenciosamente, esconder-se, atravessar uma área vigiada, seguir alguém sem chamar atenção, preparar uma emboscada ou desaparecer durante uma perseguição.\nFurtividade usa Destreza porque depende de controle corporal, equilíbrio, precisão dos movimentos e reação rápida ao ambiente.",
+      "source": "PERÍCIAS E DESCRIÇÕES",
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": { "default": 2 },
+    "flags": { "world-behind-the-veil": { "attributeText": "Destreza" } },
+    "sort": 1350000,
+    "_stats": { "systemId": "world-behind-the-veil", "systemVersion": "0.1.0", "coreVersion": "13.350", "createdTime": null, "modifiedTime": null, "lastModifiedBy": "" }
   }
 ]

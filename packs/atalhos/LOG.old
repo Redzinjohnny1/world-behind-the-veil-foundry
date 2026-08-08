@@ -1,0 +1,14 @@
+2026/08/07-10:41:07.180 6a4 Recovering log #41
+2026/08/07-10:41:07.183 6a4 Delete type=0 #41
+2026/08/07-10:41:07.183 6a4 Delete type=3 #37
+2026/08/07-14:49:26.541 123c Level-0 table #47: started
+2026/08/07-14:49:26.544 123c Level-0 table #47: 167409 bytes OK
+2026/08/07-14:49:26.545 123c Delete type=0 #45
+2026/08/07-14:49:26.548 123c Manual compaction at level-0 from '!journal!AtalhosManaEco01' @ 72057594037927935 : 1 .. '!journalentries!atalhos-mana-eco' @ 0 : 0; will stop at '!journal.pages!ManualSistema001.ManualTerreno001' @ 2333 : 0
+2026/08/07-14:49:26.548 123c Compacting 1@0 + 1@1 files
+2026/08/07-14:49:26.550 123c Generated table #48@0: 26 keys, 22149 bytes
+2026/08/07-14:49:26.550 123c Compacted 1@0 + 1@1 files => 22149 bytes
+2026/08/07-14:49:26.550 123c compacted to: files[ 0 1 0 0 0 0 0 ]
+2026/08/07-14:49:26.550 123c Delete type=2 #43
+2026/08/07-14:49:26.550 123c Delete type=2 #47
+2026/08/07-14:49:26.552 123c Manual compaction at level-0 from '!journal.pages!ManualSistema001.ManualTerreno001' @ 2333 : 0 .. '!journalentries!atalhos-mana-eco' @ 0 : 0; will stop at (end)

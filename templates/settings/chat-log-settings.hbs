@@ -1,0 +1,40 @@
+<form class="twbv-chat-log-settings">
+  <header>
+    <i class="fas fa-message"></i>
+    <div>
+      <h2>Registros no Chat</h2>
+      <p>Escolha quais acontecimentos do sistema devem ser publicados no chat.</p>
+    </div>
+  </header>
+
+  <div class="twbv-chat-log-actions">
+    <button type="button" data-chat-log-action="all"><i class="fas fa-check-double"></i> Marcar tudo</button>
+    <button type="button" data-chat-log-action="none"><i class="fas fa-xmark"></i> Desmarcar tudo</button>
+  </div>
+
+  <label class="twbv-chat-log-option twbv-chat-log-option--npc">
+    <input type="checkbox" name="includeUnownedActors" {{checked includeUnownedActors}} />
+    <i class="fas fa-user-secret"></i>
+    <span>
+      <strong>Mostrar fichas NPC/sem jogador</strong>
+      <small>Permite registros de fichas que não possuem nenhum jogador como Proprietário. Desativado por padrão.</small>
+    </span>
+  </label>
+
+  <section class="twbv-chat-log-grid">
+    {{#each categories as |category|}}
+    <label class="twbv-chat-log-option">
+      <input type="checkbox" name="{{category.id}}" {{checked category.enabled}} />
+      <i class="{{category.icon}}"></i>
+      <span>
+        <strong>{{category.label}}</strong>
+        <small>{{category.hint}}</small>
+      </span>
+    </label>
+    {{/each}}
+  </section>
+
+  <footer>
+    <button type="submit"><i class="fas fa-floppy-disk"></i> Salvar configurações</button>
+  </footer>
+</form>

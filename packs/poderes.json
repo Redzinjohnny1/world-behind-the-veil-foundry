@@ -1,0 +1,1810 @@
+[
+  {
+    "_id": "6e0e21cbcd2ef294",
+    "name": "Mandamento Divino",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Mandamento Divino impõe uma bênção ou condenação espiritual sobre uma criatura.\nAo usar este Poder, o personagem escolhe entre Bênção ou Condenação.\nBênção: o alvo recebe +1 em Resistência à Magia e em testes para resistir a medo, controle mental, possessão, corrupção, maldição ou influência espiritual.\nCondenação: o alvo sofre −1 em Resistência à Magia e nos mesmos testes.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nMandamento Divino não obriga obediência. Ele altera o peso espiritual sobre a criatura, tornando-a mais firme ou mais vulnerável diante de forças sobrenaturais.",
+      "effectsSummary": "Mandamento Divino impõe uma bênção ou condenação espiritual sobre uma criatura.\nAo usar este Poder, o personagem escolhe entre Bênção ou Condenação.\nBênção: o alvo recebe +1 em Resistência à Magia e em testes para resistir a medo, controle mental, possessão, corrupção, maldição ou influência espiritual.\nCondenação: o alvo sofre −1 em Resistência à Magia e nos mesmos testes.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nMandamento Divino não obriga obediência. Ele altera o peso espiritual sobre a criatura, tornando-a mais firme ou mais vulnerável diante de forças sobrenaturais.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Divino",
+      "fonte": "Divino",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Fé",
+      "pericia": "Fé",
+      "ativacao": "acao_menor",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "uma criatura",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Mana",
+      "teste": "Fé contra Resistência à Magia",
+      "defesa": "Resistência à Magia",
+      "resistenciaInicial": "Resistência à Magia",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Fé contra Resistência à Magia",
+          "texto": "Mandamento Divino impõe uma bênção ou condenação espiritual sobre uma criatura.\nAo usar este Poder, o personagem escolhe entre Bênção ou Condenação.\nBênção: o alvo recebe +1 em Resistência à Magia e em testes para resistir a medo, controle mental, possessão, corrupção, maldição ou influência espiritual.\nCondenação: o alvo sofre −1 em Resistência à Magia e nos mesmos testes.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nMandamento Divino não obriga obediência. Ele altera o peso espiritual sobre a criatura, tornando-a mais firme ou mais vulnerável diante de forças sobrenaturais."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana por criatura adicional. O conjurador escolhe separadamente se cada alvo recebe Bênção ou Condenação."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para x2, totalizando 6 rodadas. +2 Mana para x3, totalizando 9 rodadas."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "95b6598b563be897",
+    "name": "Elo Psíquico",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Elo Psíquico cria uma conexão mental temporária entre criaturas escolhidas pelo conjurador.\nO conjurador não precisa fazer parte do Elo.\nTodas as criaturas conectadas pelo mesmo Elo podem conversar entre si por pensamentos, imagens, emoções simples e sensações.\nIdeias simples podem ser compreendidas mesmo sem idioma compartilhado, mas mensagens complexas ainda dependem de contexto.\nElo Psíquico não lê pensamentos, não revela intenções e não arranca memórias. Memórias só podem ser compartilhadas voluntariamente.\nSe uma criatura aceitar o Elo, ela é conectada sem resistência. Se resistir, o conjurador testa Psiônico contra a Resistência à Magia dela.",
+      "effectsSummary": "Elo Psíquico cria uma conexão mental temporária entre criaturas escolhidas pelo conjurador.\nO conjurador não precisa fazer parte do Elo.\nTodas as criaturas conectadas pelo mesmo Elo podem conversar entre si por pensamentos, imagens, emoções simples e sensações.\nIdeias simples podem ser compreendidas mesmo sem idioma compartilhado, mas mensagens complexas ainda dependem de contexto.\nElo Psíquico não lê pensamentos, não revela intenções e não arranca memórias. Memórias só podem ser compartilhadas voluntariamente.\nSe uma criatura aceitar o Elo, ela é conectada sem resistência. Se resistir, o conjurador testa Psiônico contra a Resistência à Magia dela.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Psiquismo",
+      "fonte": "Psiquismo",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Psiônico",
+      "pericia": "Psiônico",
+      "ativacao": "acao_menor",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "criaturas escolhidas pelo conjurador",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "custom",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": "1 hora, até o máximo de 4 horas"
+      },
+      "duracao": "1 hora, até o máximo de 4 horas",
+      "manutencaoMana": "—",
+      "teste": "Psiônico; contra Resistência à Magia se uma criatura resistir",
+      "defesa": "Resistência à Magia se uma criatura resistir",
+      "resistenciaInicial": "Resistência à Magia se a criatura não aceitar o Elo",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Psiônico; contra Resistência à Magia se uma criatura resistir",
+          "texto": "Elo Psíquico cria uma conexão mental temporária entre criaturas escolhidas pelo conjurador.\nO conjurador não precisa fazer parte do Elo.\nTodas as criaturas conectadas pelo mesmo Elo podem conversar entre si por pensamentos, imagens, emoções simples e sensações.\nIdeias simples podem ser compreendidas mesmo sem idioma compartilhado, mas mensagens complexas ainda dependem de contexto.\nElo Psíquico não lê pensamentos, não revela intenções e não arranca memórias. Memórias só podem ser compartilhadas voluntariamente.\nSe uma criatura aceitar o Elo, ela é conectada sem resistência. Se resistir, o conjurador testa Psiônico contra a Resistência à Magia dela."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana por criatura conectada."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para aumentar a duração em +1 hora, até o máximo de 4 horas totais."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "01e6b94235387a07",
+    "name": "Controle de Fluxo",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Controle de Fluxo permite acelerar ou travar a circulação interna de energia de uma criatura.\nAo usar este Poder, o personagem escolhe entre Impulso ou Bloqueio.\nImpulso: o alvo recebe +1 quadrado de Deslocamento e +1 em testes de Atletismo ligados a movimento, salto, corrida, escalada, equilíbrio ou fuga de agarrões.\nBloqueio: o alvo sofre −1 quadrado de Deslocamento e −1 nesses mesmos testes.\nCom uma ampliação, o efeito aumenta para +2 ou −2.\nControle de Fluxo não concede movimento extra imediato. Ele altera a eficiência corporal da criatura enquanto o Poder durar.",
+      "effectsSummary": "Controle de Fluxo permite acelerar ou travar a circulação interna de energia de uma criatura.\nAo usar este Poder, o personagem escolhe entre Impulso ou Bloqueio.\nImpulso: o alvo recebe +1 quadrado de Deslocamento e +1 em testes de Atletismo ligados a movimento, salto, corrida, escalada, equilíbrio ou fuga de agarrões.\nBloqueio: o alvo sofre −1 quadrado de Deslocamento e −1 nesses mesmos testes.\nCom uma ampliação, o efeito aumenta para +2 ou −2.\nControle de Fluxo não concede movimento extra imediato. Ele altera a eficiência corporal da criatura enquanto o Poder durar.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Jutsu",
+      "fonte": "Jutsu",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Jutsu",
+      "pericia": "Jutsu",
+      "ativacao": "acao_menor",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "uma criatura",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Mana",
+      "teste": "Jutsu; contra Resistência à Magia se o alvo resistir",
+      "defesa": "Resistência à Magia se o alvo resistir",
+      "resistenciaInicial": "Resistência à Magia se o alvo resistir",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Jutsu; contra Resistência à Magia se o alvo resistir",
+          "texto": "Controle de Fluxo permite acelerar ou travar a circulação interna de energia de uma criatura.\nAo usar este Poder, o personagem escolhe entre Impulso ou Bloqueio.\nImpulso: o alvo recebe +1 quadrado de Deslocamento e +1 em testes de Atletismo ligados a movimento, salto, corrida, escalada, equilíbrio ou fuga de agarrões.\nBloqueio: o alvo sofre −1 quadrado de Deslocamento e −1 nesses mesmos testes.\nCom uma ampliação, o efeito aumenta para +2 ou −2.\nControle de Fluxo não concede movimento extra imediato. Ele altera a eficiência corporal da criatura enquanto o Poder durar."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana por criatura adicional. O conjurador escolhe separadamente se cada alvo recebe Impulso ou Bloqueio."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para x2, totalizando 6 rodadas. +2 Mana para x3, totalizando 9 rodadas."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "962a15c6c0e0ef7d",
+    "name": "Selo de Pacto",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Selo de Pacto impõe ou oferece uma cláusula sobrenatural a uma criatura.\nAo usar este Poder, o bruxo escolhe entre Favor ou Maldição.\nFavor: o alvo aceita uma cláusula simples e recebe +1 em um tipo de teste ligado a ela, como proteger alguém, fugir, mentir, resistir a medo, atacar um alvo específico ou cumprir uma ordem acordada.\nMaldição: o alvo sofre −1 em um tipo de teste ligado à cláusula imposta, como atacar certa criatura, fugir, mentir, usar Poderes, resistir a medo ou quebrar uma promessa.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nA cláusula deve ser clara, curta e possível de aplicar em jogo.",
+      "effectsSummary": "Selo de Pacto impõe ou oferece uma cláusula sobrenatural a uma criatura.\nAo usar este Poder, o bruxo escolhe entre Favor ou Maldição.\nFavor: o alvo aceita uma cláusula simples e recebe +1 em um tipo de teste ligado a ela, como proteger alguém, fugir, mentir, resistir a medo, atacar um alvo específico ou cumprir uma ordem acordada.\nMaldição: o alvo sofre −1 em um tipo de teste ligado à cláusula imposta, como atacar certa criatura, fugir, mentir, usar Poderes, resistir a medo ou quebrar uma promessa.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nA cláusula deve ser clara, curta e possível de aplicar em jogo.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Bruxaria (Pacto)",
+      "fonte": "Bruxaria (Pacto)",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Ocultismo",
+      "pericia": "Ocultismo",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "uma criatura",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Mana",
+      "teste": "Ocultismo contra Resistência à Magia",
+      "defesa": "Resistência à Magia",
+      "resistenciaInicial": "Resistência à Magia",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Ocultismo contra Resistência à Magia",
+          "texto": "Selo de Pacto impõe ou oferece uma cláusula sobrenatural a uma criatura.\nAo usar este Poder, o bruxo escolhe entre Favor ou Maldição.\nFavor: o alvo aceita uma cláusula simples e recebe +1 em um tipo de teste ligado a ela, como proteger alguém, fugir, mentir, resistir a medo, atacar um alvo específico ou cumprir uma ordem acordada.\nMaldição: o alvo sofre −1 em um tipo de teste ligado à cláusula imposta, como atacar certa criatura, fugir, mentir, usar Poderes, resistir a medo ou quebrar uma promessa.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.\nA cláusula deve ser clara, curta e possível de aplicar em jogo."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana por criatura adicional. O bruxo escolhe separadamente se cada alvo recebe Favor ou Maldição."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para x2, totalizando 6 rodadas. +2 Mana para x3, totalizando 9 rodadas."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "f87c3b883d7786cd",
+    "name": "Raízes do Domínio",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Raízes do Domínio faz a natureza tomar uma área.\nAo usar este Poder, o personagem escolhe entre Florescer ou Emaranhar.\nFlorescer: a área se torna terreno favorável para criaturas escolhidas pelo conjurador. Essas criaturas ignoram penalidades de terreno difícil causadas pelo Poder e recebem +1 em Atletismo para atravessar, escalar, saltar, equilibrar-se ou resistir a efeitos que empurrem, derrubem ou prendam enquanto estiverem na área.\nEmaranhar: a área se torna terreno difícil para criaturas afetadas. Além disso, essas criaturas sofrem −1 nos mesmos testes enquanto estiverem na área.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.",
+      "effectsSummary": "Raízes do Domínio faz a natureza tomar uma área.\nAo usar este Poder, o personagem escolhe entre Florescer ou Emaranhar.\nFlorescer: a área se torna terreno favorável para criaturas escolhidas pelo conjurador. Essas criaturas ignoram penalidades de terreno difícil causadas pelo Poder e recebem +1 em Atletismo para atravessar, escalar, saltar, equilibrar-se ou resistir a efeitos que empurrem, derrubem ou prendam enquanto estiverem na área.\nEmaranhar: a área se torna terreno difícil para criaturas afetadas. Além disso, essas criaturas sofrem −1 nos mesmos testes enquanto estiverem na área.\nCom uma ampliação, o bônus ou penalidade aumenta para 2.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Druidismo",
+      "fonte": "Druidismo",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Botânica",
+      "pericia": "Botânica",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "um ponto no solo ou superfície natural dentro do alcance de Inteligência do conjurador",
+      "moldePadrao": "explosao",
+      "moldeAtual": "explosao",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Mana",
+      "teste": "Botânica; criaturas afetadas resistem com Atletismo",
+      "defesa": "",
+      "resistenciaInicial": "As criaturas afetadas resistem com @Atletismo",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Botânica; criaturas afetadas resistem com Atletismo",
+          "texto": "Raízes do Domínio faz a natureza tomar uma área.\nAo usar este Poder, o personagem escolhe entre Florescer ou Emaranhar.\nFlorescer: a área se torna terreno favorável para criaturas escolhidas pelo conjurador. Essas criaturas ignoram penalidades de terreno difícil causadas pelo Poder e recebem +1 em Atletismo para atravessar, escalar, saltar, equilibrar-se ou resistir a efeitos que empurrem, derrubem ou prendam enquanto estiverem na área.\nEmaranhar: a área se torna terreno difícil para criaturas afetadas. Além disso, essas criaturas sofrem −1 nos mesmos testes enquanto estiverem na área.\nCom uma ampliação, o bônus ou penalidade aumenta para 2."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Área",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para aumentar o raio da Explosão para 2 quadrados. +2 Mana para aumentar o raio para 3 quadrados."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para x2, totalizando 6 rodadas. +2 Mana para x3, totalizando 9 rodadas."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "explosao"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "explosao",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "2382cb52a2007aad",
+    "name": "Assistente Autômato",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Assistente Autômato permite que o personagem transfira sua consciência para o próprio Protótipo Autônomo.\nEnquanto o Poder estiver ativo, o personagem percebe o mundo através do Protótipo e controla suas ações diretamente.\nDurante esse tempo, o corpo verdadeiro do personagem fica inconsciente, imóvel e indefeso.\nO personagem pode usar suas próprias Perícias através do Protótipo, desde que a tarefa faça sentido para a estrutura, ferramentas e sensores dele.\nPerícias baseadas em Força ou Destreza não podem ser usadas dessa forma. O Protótipo usa suas próprias limitações físicas.\nEnquanto a consciência do personagem está no Protótipo, ele deixa de agir como uma Sombra comum. Ele continua usando as estatísticas físicas do Protótipo, mas as decisões, Perícias mentais e escolhas são do próprio personagem.\nSe o Protótipo for destruído, desativado, perder sinal ou ficar fora do alcance permitido enquanto o personagem estiver conectado a ele, o Poder termina imediatamente e o personagem fica Abalado.\nO personagem pode encerrar Assistente Autômato a qualquer momento.",
+      "effectsSummary": "Assistente Autômato permite que o personagem transfira sua consciência para o próprio Protótipo Autônomo.\nEnquanto o Poder estiver ativo, o personagem percebe o mundo através do Protótipo e controla suas ações diretamente.\nDurante esse tempo, o corpo verdadeiro do personagem fica inconsciente, imóvel e indefeso.\nO personagem pode usar suas próprias Perícias através do Protótipo, desde que a tarefa faça sentido para a estrutura, ferramentas e sensores dele.\nPerícias baseadas em Força ou Destreza não podem ser usadas dessa forma. O Protótipo usa suas próprias limitações físicas.\nEnquanto a consciência do personagem está no Protótipo, ele deixa de agir como uma Sombra comum. Ele continua usando as estatísticas físicas do Protótipo, mas as decisões, Perícias mentais e escolhas são do próprio personagem.\nSe o Protótipo for destruído, desativado, perder sinal ou ficar fora do alcance permitido enquanto o personagem estiver conectado a ele, o Poder termina imediatamente e o personagem fica Abalado.\nO personagem pode encerrar Assistente Autômato a qualquer momento.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Bugigangas / Tecnomagia",
+      "fonte": "Bugigangas / Tecnomagia",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Ciências",
+      "pericia": "Ciências",
+      "ativacao": "custom",
+      "ativacaoCustom": "1 minuto",
+      "limite": "custom",
+      "limiteCustom": "um Protótipo controlado dessa forma por vez",
+      "alvo": "Protótipo Autônomo do conjurador",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "custom",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": "5 minutos"
+      },
+      "duracao": "5 minutos",
+      "manutencaoMana": "—",
+      "teste": "Ciências; outras Perícias podem ser usadas conforme a tarefa",
+      "defesa": "",
+      "resistenciaInicial": "",
+      "resistenciaSecundaria": "",
+      "manaCost": 3,
+      "manaBase": 3,
+      "manaGasta": 0,
+      "custoBaseMana": 3,
+      "custoFinalMana": 3,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Ciências; outras Perícias podem ser usadas conforme a tarefa",
+          "texto": "Assistente Autômato permite que o personagem transfira sua consciência para o próprio Protótipo Autônomo.\nEnquanto o Poder estiver ativo, o personagem percebe o mundo através do Protótipo e controla suas ações diretamente.\nDurante esse tempo, o corpo verdadeiro do personagem fica inconsciente, imóvel e indefeso.\nO personagem pode usar suas próprias Perícias através do Protótipo, desde que a tarefa faça sentido para a estrutura, ferramentas e sensores dele.\nPerícias baseadas em Força ou Destreza não podem ser usadas dessa forma. O Protótipo usa suas próprias limitações físicas.\nEnquanto a consciência do personagem está no Protótipo, ele deixa de agir como uma Sombra comum. Ele continua usando as estatísticas físicas do Protótipo, mas as decisões, Perícias mentais e escolhas são do próprio personagem.\nSe o Protótipo for destruído, desativado, perder sinal ou ficar fora do alcance permitido enquanto o personagem estiver conectado a ele, o Poder termina imediatamente e o personagem fica Abalado.\nO personagem pode encerrar Assistente Autômato a qualquer momento."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Mana para aumentar a duração em +5 minutos, até o máximo de 20 minutos totais."
+        },
+        {
+          "nome": "Retorno Seguro",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para proteger a mente do personagem contra uma desconexão violenta. Se o Protótipo for destruído, desativado ou perder sinal durante o Poder, o personagem retorna ao corpo sem ficar Abalado."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "18851420941e0b6a",
+    "name": "Quebra-Feitiços",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Quebra-Feitiços desmonta a estrutura de um Poder ativo.\nO arcanista escolhe um Poder ativo, sustentado ou recém-conjurado ainda presente na cena e testa Arcanismo contra a Perícia de Poder usada pelo conjurador original.\nSe o conjurador original estiver ausente, for desconhecido ou não houver rolagem disponível, o Mestre define a oposição pela Perícia provável, intensidade do efeito ou CD apropriada.\nCom sucesso, Quebra-Feitiços remove 1 estágio do Poder.\nCada ampliação remove +1 estágio adicional.\nO custo base de 2 Mana remove o primeiro estágio. Cada estágio além do primeiro custa +1 Mana.\nUm estágio é uma camada ativa do Poder, como Aumento de Área, Aumento de Dano, Aumento de Duração, Alvos Adicionais, Molde ampliado ou outro aprimoramento ativo.\nSe o Poder não possui estágios adicionais, o efeito base conta como único estágio e pode ser encerrado com sucesso.",
+      "effectsSummary": "Quebra-Feitiços desmonta a estrutura de um Poder ativo.\nO arcanista escolhe um Poder ativo, sustentado ou recém-conjurado ainda presente na cena e testa Arcanismo contra a Perícia de Poder usada pelo conjurador original.\nSe o conjurador original estiver ausente, for desconhecido ou não houver rolagem disponível, o Mestre define a oposição pela Perícia provável, intensidade do efeito ou CD apropriada.\nCom sucesso, Quebra-Feitiços remove 1 estágio do Poder.\nCada ampliação remove +1 estágio adicional.\nO custo base de 2 Mana remove o primeiro estágio. Cada estágio além do primeiro custa +1 Mana.\nUm estágio é uma camada ativa do Poder, como Aumento de Área, Aumento de Dano, Aumento de Duração, Alvos Adicionais, Molde ampliado ou outro aprimoramento ativo.\nSe o Poder não possui estágios adicionais, o efeito base conta como único estágio e pode ser encerrado com sucesso.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Arcano",
+      "fonte": "Arcano",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Arcanismo",
+      "pericia": "Arcanismo",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "um Poder ativo, sustentado ou recém-conjurado ainda presente na cena",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "instantanea",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Instantânea",
+      "manutencaoMana": "—",
+      "teste": "Arcanismo contra a Perícia de Poder usada pelo conjurador original",
+      "defesa": "a Perícia de Poder usada pelo conjurador original",
+      "resistenciaInicial": "O conjurador original resiste com a Perícia de Poder usada na conjuração",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Arcanismo contra a Perícia de Poder usada pelo conjurador original",
+          "texto": "Quebra-Feitiços desmonta a estrutura de um Poder ativo.\nO arcanista escolhe um Poder ativo, sustentado ou recém-conjurado ainda presente na cena e testa Arcanismo contra a Perícia de Poder usada pelo conjurador original.\nSe o conjurador original estiver ausente, for desconhecido ou não houver rolagem disponível, o Mestre define a oposição pela Perícia provável, intensidade do efeito ou CD apropriada.\nCom sucesso, Quebra-Feitiços remove 1 estágio do Poder.\nCada ampliação remove +1 estágio adicional.\nO custo base de 2 Mana remove o primeiro estágio. Cada estágio além do primeiro custa +1 Mana.\nUm estágio é uma camada ativa do Poder, como Aumento de Área, Aumento de Dano, Aumento de Duração, Alvos Adicionais, Molde ampliado ou outro aprimoramento ativo.\nSe o Poder não possui estágios adicionais, o efeito base conta como único estágio e pode ser encerrado com sucesso."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Estágios Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana por estágio adicional além do primeiro. Cada estágio adicional ainda exige uma ampliação no teste."
+        },
+        {
+          "nome": "Quebra Ampla",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Mana para afetar todos os estágios removíveis de um mesmo Poder ligados ao mesmo Molde ou à mesma área, desde que o teste tenha sucessos e ampliações suficientes."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "d6ffe35490d19c22",
+    "name": "Roubar a Cena",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "Roubar a Cena transforma a performance do artista no centro da atenção.\nO artista escolhe criaturas dentro da Explosão que consigam perceber sua performance.\nCada criatura escolhida disputa Coragem contra a Performance do artista.\nSe o artista vencer, a criatura fica Cativada pela Cena enquanto puder perceber a performance.\nUma criatura Cativada pela Cena não pode fazer Ataques de Oportunidade contra criaturas diferentes do artista e não conta para gerar Pressão contra ele.\nSe a criatura deixar de perceber a performance ou o Poder terminar, o efeito acaba imediatamente.",
+      "effectsSummary": "Roubar a Cena transforma a performance do artista no centro da atenção.\nO artista escolhe criaturas dentro da Explosão que consigam perceber sua performance.\nCada criatura escolhida disputa Coragem contra a Performance do artista.\nSe o artista vencer, a criatura fica Cativada pela Cena enquanto puder perceber a performance.\nUma criatura Cativada pela Cena não pode fazer Ataques de Oportunidade contra criaturas diferentes do artista e não conta para gerar Pressão contra ele.\nSe a criatura deixar de perceber a performance ou o Poder terminar, o efeito acaba imediatamente.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Artes Místicas",
+      "fonte": "Artes Místicas",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Performance",
+      "pericia": "Performance",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por rodada",
+      "alvo": "criaturas escolhidas na área que consigam perceber a performance",
+      "alcance": "Inteligência em quadrados",
+      "moldePadrao": "explosao",
+      "moldeAtual": "explosao",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Mana",
+      "teste": "Performance contra Coragem",
+      "defesa": "Coragem",
+      "resistenciaInicial": "Cada criatura escolhida resiste com @Coragem",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Performance contra Coragem",
+          "texto": "Roubar a Cena transforma a performance do artista no centro da atenção.\nO artista escolhe criaturas dentro da Explosão que consigam perceber sua performance.\nCada criatura escolhida disputa Coragem contra a Performance do artista.\nSe o artista vencer, a criatura fica Cativada pela Cena enquanto puder perceber a performance.\nUma criatura Cativada pela Cena não pode fazer Ataques de Oportunidade contra criaturas diferentes do artista e não conta para gerar Pressão contra ele.\nSe a criatura deixar de perceber a performance ou o Poder terminar, o efeito acaba imediatamente."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Área",
+          "custoMana": 1,
+          "limiteMaximo": "2",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para aumentar a Explosão em +1 quadrado por lado. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Mana para x2, totalizando 6 rodadas. +2 Mana para x3, totalizando 9 rodadas."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "explosao"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "sphere-4x4",
+      "castPreset": {
+        "damageSteps": 0,
+        "targetSteps": 0,
+        "areaPreset": "sphere-4x4",
+        "areaSize": 4,
+        "ignoredAllies": 0,
+        "armorPenetration": 0,
+        "siege": false
+      },
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "3601f7c8cb95c5fb",
+    "name": "Rajada",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem lança uma descarga direta contra um alvo. Se acertar, causa 2d6 de dano. Com ampliação, causa +1d6 de dano.",
+      "effectsSummary": "O personagem lança uma descarga direta contra um alvo. Se acertar, causa 2d6 de dano. Com ampliação, causa +1d6 de dano.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "1 criatura ou objeto. Alcance: Inteligência x2 em quadrados",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "instantanea",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Instantânea",
+      "manutencaoMana": "—",
+      "teste": "Perícia da Fonte contra Esquiva",
+      "defesa": "Esquiva",
+      "resistenciaInicial": "Esquiva",
+      "resistenciaSecundaria": "",
+      "manaCost": 1,
+      "manaBase": 1,
+      "manaGasta": 0,
+      "custoBaseMana": 1,
+      "custoFinalMana": 1,
+      "damage": "2d6",
+      "danoBase": "2d6",
+      "danoEscolhido": "2d6",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte contra Esquiva",
+          "texto": "O personagem lança uma descarga direta contra um alvo. Se acertar, causa 2d6 de dano. Com ampliação, causa +1d6 de dano."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Dano",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana para aumentar o dano em +1d6. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Alvo Adicional",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana por alvo adicional. Cada alvo exige um teste separado. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Alcance Estendido",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para dobrar o alcance do Poder."
+        },
+        {
+          "nome": "Rajada Precisa",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana para ignorar até 2 pontos de penalidade por cobertura do alvo."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "f9aaa5cc10c8a9bb",
+    "name": "Deflagração",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem libera uma descarga em área a partir de um ponto dentro do alcance. Se tiver sucesso, criaturas e objetos na área sofrem 2d6 de dano. Com ampliação, causa +1d6 de dano.",
+      "effectsSummary": "O personagem libera uma descarga em área a partir de um ponto dentro do alcance. Se tiver sucesso, criaturas e objetos na área sofrem 2d6 de dano. Com ampliação, causa +1d6 de dano.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "1 ponto. Alcance: Inteligência em quadrados",
+      "moldePadrao": "explosao",
+      "moldeAtual": "explosao",
+      "duracaoConfig": {
+        "tipo": "instantanea",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Instantânea",
+      "manutencaoMana": "—",
+      "teste": "Perícia da Fonte contra CD 4",
+      "defesa": "CD 4",
+      "resistenciaInicial": "CD 4",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "2d6",
+      "danoBase": "2d6",
+      "danoEscolhido": "2d6",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte contra CD 4",
+          "texto": "O personagem libera uma descarga em área a partir de um ponto dentro do alcance. Se tiver sucesso, criaturas e objetos na área sofrem 2d6 de dano. Com ampliação, causa +1d6 de dano."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Dano",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana para aumentar o dano em +1d6. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Aumento de Área",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para aumentar o raio da Explosão em +1 quadrado. Pode ser usado no máximo 2 vezes, até raio 3."
+        },
+        {
+          "nome": "Alcance Estendido",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para dobrar o alcance usado para posicionar a Explosão."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "explosao"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "explosao",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "fc54d52d16a93e80",
+    "name": "Proteção",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem protege uma criatura. Enquanto o Poder durar, o alvo recebe +1 em Resistência. Com ampliação, o bônus aumenta para +2.",
+      "effectsSummary": "O personagem protege uma criatura. Enquanto o Poder durar, o alvo recebe +1 em Resistência. Com ampliação, o bônus aumenta para +2.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "1 criatura. Alcance: Inteligência em quadrados",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Ponto de Mana",
+      "teste": "Perícia da Fonte apenas para verificar Falha Crítica",
+      "defesa": "",
+      "resistenciaInicial": "",
+      "resistenciaSecundaria": "",
+      "manaCost": 1,
+      "manaBase": 1,
+      "manaGasta": 0,
+      "custoBaseMana": 1,
+      "custoFinalMana": 1,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte apenas para verificar Falha Crítica",
+          "texto": "O personagem protege uma criatura. Enquanto o Poder durar, o alvo recebe +1 em Resistência. Com ampliação, o bônus aumenta para +2."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana por criatura adicional. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para x2, totalizando 6 rodadas. +2 Pontos de Mana para x3, totalizando 9 rodadas."
+        },
+        {
+          "nome": "Aumento de Armadura",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para aumentar o bônus de Resistência em +1. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Proteção Espiritual",
+          "custoMana": 0,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "o conjurador pode trocar até 2 pontos do bônus de Resistência concedido pela conjuração por bônus em Resistência à Magia.\nEssa troca só pode afetar o bônus original do Poder, incluindo ampliação. Ela não pode trocar pontos extras recebidos por Aumento de Armadura.\nExemplo: se Proteção conceder +2 por ampliação, o conjurador pode deixar o bônus como +1 Resistência e +1 Resistência à Magia, ou como +2 Resistência à Magia."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "7bdfe47538a85c82",
+    "name": "Muralha",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem cria uma barreira de até 3 quadrados em linha reta. Cada quadrado bloqueia movimento e dificulta linha de visão, conforme a forma do efeito permitir.\nCada quadrado da Muralha possui Resistência 6 e suporta 1 Ferimento. Se um quadrado sofrer mais Ferimentos do que suporta, aquele trecho é destruído.\nCom ampliação, a Muralha recebe +2 Resistência.",
+      "effectsSummary": "O personagem cria uma barreira de até 3 quadrados em linha reta. Cada quadrado bloqueia movimento e dificulta linha de visão, conforme a forma do efeito permitir.\nCada quadrado da Muralha possui Resistência 6 e suporta 1 Ferimento. Se um quadrado sofrer mais Ferimentos do que suporta, aquele trecho é destruído.\nCom ampliação, a Muralha recebe +2 Resistência.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "uma linha de até 3 quadrados. Alcance: 6 quadrados",
+      "moldePadrao": "linha",
+      "moldeAtual": "linha",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Ponto de Mana",
+      "teste": "Perícia da Fonte contra CD 4",
+      "defesa": "CD 4",
+      "resistenciaInicial": "CD 4",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte contra CD 4",
+          "texto": "O personagem cria uma barreira de até 3 quadrados em linha reta. Cada quadrado bloqueia movimento e dificulta linha de visão, conforme a forma do efeito permitir.\nCada quadrado da Muralha possui Resistência 6 e suporta 1 Ferimento. Se um quadrado sofrer mais Ferimentos do que suporta, aquele trecho é destruído.\nCom ampliação, a Muralha recebe +2 Resistência."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Extensão",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para aumentar a Muralha em +2 quadrados. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Muralha Reforçada",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para conceder +2 Resistência a todos os quadrados da Muralha. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para x2, totalizando 6 rodadas. +2 Pontos de Mana para x3, totalizando 9 rodadas."
+        },
+        {
+          "nome": "Muralha Opaca",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para bloquear completamente a linha de visão através da Muralha."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "linha"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "linha",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "d25d024a95644160",
+    "name": "Repulsão",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem força o alvo para longe. Se vencer, empurra o alvo 2 quadrados em uma direção escolhida.\nCom ampliação, o alvo fica Caído ou é empurrado +2 quadrados.",
+      "effectsSummary": "O personagem força o alvo para longe. Se vencer, empurra o alvo 2 quadrados em uma direção escolhida.\nCom ampliação, o alvo fica Caído ou é empurrado +2 quadrados.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "1 criatura ou objeto. Alcance: Inteligência em quadrados",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "instantanea",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Instantânea",
+      "manutencaoMana": "—",
+      "teste": "Perícia da Fonte resistida por Atletismo",
+      "defesa": "",
+      "resistenciaInicial": "O alvo resiste com @Atletismo",
+      "resistenciaSecundaria": "",
+      "manaCost": 1,
+      "manaBase": 1,
+      "manaGasta": 0,
+      "custoBaseMana": 1,
+      "custoFinalMana": 1,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte resistida por Atletismo",
+          "texto": "O personagem força o alvo para longe. Se vencer, empurra o alvo 2 quadrados em uma direção escolhida.\nCom ampliação, o alvo fica Caído ou é empurrado +2 quadrados."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Força Ampliada",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para empurrar +2 quadrados. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Alvo Adicional",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana por alvo adicional. Cada alvo exige um teste separado. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Alcance Estendido",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para dobrar o alcance do Poder."
+        },
+        {
+          "nome": "Arremesso Violento",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Ponto de Mana para causar 1d6 de dano se o alvo for empurrado contra uma superfície sólida ou obstáculo resistente. Pode ser usado no máximo 3 vezes, causando até 3d6 de dano.\nO dano só é aplicado se o deslocamento for interrompido por algo resistente o bastante para causar impacto."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "24df4082c1e0deac",
+    "name": "Conter",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem restringe o movimento do alvo. Se vencer, o alvo sofre −2 quadrados de Deslocamento e não pode correr.\nCom ampliação, o alvo também fica Preso.\nUma criatura Presa não pode se deslocar voluntariamente, mas ainda pode agir. No turno dela, pode testar Força contra a CD de Resistência Posterior do conjurador para encerrar o efeito sobre si.",
+      "effectsSummary": "O personagem restringe o movimento do alvo. Se vencer, o alvo sofre −2 quadrados de Deslocamento e não pode correr.\nCom ampliação, o alvo também fica Preso.\nUma criatura Presa não pode se deslocar voluntariamente, mas ainda pode agir. No turno dela, pode testar Força contra a CD de Resistência Posterior do conjurador para encerrar o efeito sobre si.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "none",
+      "limiteCustom": "",
+      "alvo": "1 criatura. Alcance: Inteligência em quadrados",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Ponto de Mana",
+      "teste": "Perícia da Fonte resistida por Atletismo",
+      "defesa": "",
+      "resistenciaInicial": "O alvo resiste com @Atletismo",
+      "resistenciaSecundaria": "No próprio turno, o alvo rola @Força para encerrar o efeito",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte resistida por Atletismo",
+          "texto": "O personagem restringe o movimento do alvo. Se vencer, o alvo sofre −2 quadrados de Deslocamento e não pode correr.\nCom ampliação, o alvo também fica Preso.\nUma criatura Presa não pode se deslocar voluntariamente, mas ainda pode agir. No turno dela, pode testar Força contra a CD de Resistência Posterior do conjurador para encerrar o efeito sobre si."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana por criatura adicional. Cada alvo exige um teste separado. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para x2, totalizando 6 rodadas. +2 Pontos de Mana para x3, totalizando 9 rodadas."
+        },
+        {
+          "nome": "Contenção Reforçada",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para aumentar em +1 a CD dos testes de Força feitos para escapar deste Poder. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Aperto Progressivo",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana. Enquanto estiver Preso, o alvo sofre −1 em testes físicos que envolvam movimento corporal amplo, como correr, saltar, escalar, se equilibrar, escapar, avançar ou se reposicionar."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "601679903fb4a1e4",
+    "name": "Cura",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem fecha feridas e força a recuperação do alvo.\nRole 2d6. Para cada sucesso completo de 4 no resultado, o alvo remove 1 Ferimento.\nCom ampliação no teste de ativação, o alvo também deixa de ficar Abalado, se estiver Abalado.\nCura não regenera membros perdidos e não remove doenças, venenos, maldições, corrupção, necrose sobrenatural ou condições persistentes, a menos que um Molde permita isso.",
+      "effectsSummary": "O personagem fecha feridas e força a recuperação do alvo.\nRole 2d6. Para cada sucesso completo de 4 no resultado, o alvo remove 1 Ferimento.\nCom ampliação no teste de ativação, o alvo também deixa de ficar Abalado, se estiver Abalado.\nCura não regenera membros perdidos e não remove doenças, venenos, maldições, corrupção, necrose sobrenatural ou condições persistentes, a menos que um Molde permita isso.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "uma vez por alvo por rodada",
+      "alvo": "1 criatura viva. Alcance: Toque",
+      "moldePadrao": "toque",
+      "moldeAtual": "toque",
+      "duracaoConfig": {
+        "tipo": "instantanea",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Instantânea",
+      "manutencaoMana": "—",
+      "teste": "Perícia da Fonte apenas para verificar Falha Crítica",
+      "defesa": "",
+      "resistenciaInicial": "",
+      "resistenciaSecundaria": "",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "2d6",
+      "danoBase": "2d6",
+      "danoEscolhido": "2d6",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte apenas para verificar Falha Crítica",
+          "texto": "O personagem fecha feridas e força a recuperação do alvo.\nRole 2d6. Para cada sucesso completo de 4 no resultado, o alvo remove 1 Ferimento.\nCom ampliação no teste de ativação, o alvo também deixa de ficar Abalado, se estiver Abalado.\nCura não regenera membros perdidos e não remove doenças, venenos, maldições, corrupção, necrose sobrenatural ou condições persistentes, a menos que um Molde permita isso."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Cura Ampliada",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana para rolar +1d6 na cura. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Alcance Seguro",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para mudar o Alcance para Inteligência em quadrados."
+        },
+        {
+          "nome": "Purificar Corpo",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana para remover um veneno, doença comum ou contaminação física simples, em vez de remover Ferimento."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "toque"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "toque",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "5936458381370cb8",
+    "name": "Impulso de Movimento",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem impulsiona o movimento do alvo.\nEnquanto o Poder durar, o alvo recebe +2 quadrados de Deslocamento.\nCom ampliação, o alvo também recebe +1 em Esquiva enquanto estiver consciente e puder se mover.",
+      "effectsSummary": "O personagem impulsiona o movimento do alvo.\nEnquanto o Poder durar, o alvo recebe +2 quadrados de Deslocamento.\nCom ampliação, o alvo também recebe +1 em Esquiva enquanto estiver consciente e puder se mover.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "não acumula com outro Impulso de Movimento",
+      "alvo": "1 criatura. Alcance: Inteligência em quadrados",
+      "moldePadrao": "alvo",
+      "moldeAtual": "alvo",
+      "duracaoConfig": {
+        "tipo": "sustentada",
+        "valorBase": 3,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": ""
+      },
+      "duracao": "Sustentada (3 rodadas)",
+      "manutencaoMana": "1 Ponto de Mana",
+      "teste": "Perícia da Fonte apenas para verificar Falha Crítica",
+      "defesa": "",
+      "resistenciaInicial": "",
+      "resistenciaSecundaria": "",
+      "manaCost": 1,
+      "manaBase": 1,
+      "manaGasta": 0,
+      "custoBaseMana": 1,
+      "custoFinalMana": 1,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte apenas para verificar Falha Crítica",
+          "texto": "O personagem impulsiona o movimento do alvo.\nEnquanto o Poder durar, o alvo recebe +2 quadrados de Deslocamento.\nCom ampliação, o alvo também recebe +1 em Esquiva enquanto estiver consciente e puder se mover."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Alvos Adicionais",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana por criatura adicional. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para x2. +2 Pontos de Mana para x3."
+        },
+        {
+          "nome": "Impulso Imediato",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para o alvo se mover até metade do Deslocamento imediatamente, sem gerar Ataque de Oportunidade."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "alvo"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "alvo",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  },
+  {
+    "_id": "487560f4c489cf1b",
+    "name": "Ocultação",
+    "type": "poder",
+    "img": "icons/svg/explosion.svg",
+    "system": {
+      "active": true,
+      "description": "O personagem cria uma cobertura discreta ao redor de si.\nEnquanto estiverem na Aura, o conjurador e aliados escolhidos não chamam atenção por presença passiva, ruídos baixos, vultos, respiração, passos leves ou movimentos cuidadosos.\nPara perceber diretamente uma criatura ocultada, o observador testa Notar contra a CD do Poder.\nOcultação não deixa invisível. O efeito falha contra ações chamativas, como atacar, gritar, correr em campo aberto ou usar um Poder ofensivo.",
+      "effectsSummary": "O personagem cria uma cobertura discreta ao redor de si.\nEnquanto estiverem na Aura, o conjurador e aliados escolhidos não chamam atenção por presença passiva, ruídos baixos, vultos, respiração, passos leves ou movimentos cuidadosos.\nPara perceber diretamente uma criatura ocultada, o observador testa Notar contra a CD do Poder.\nOcultação não deixa invisível. O efeito falha contra ações chamativas, como atacar, gritar, correr em campo aberto ou usar um Poder ofensivo.",
+      "initiative": {
+        "modifier": 0,
+        "source": ""
+      },
+      "tier": "Novato",
+      "severity": "",
+      "itemKind": "poder",
+      "category": "Novato",
+      "source": "Qualquer Fonte compatível",
+      "fonte": "Qualquer Fonte compatível",
+      "requisitoTier": "Novato",
+      "requirements": "",
+      "skill": "Perícia da Fonte",
+      "pericia": "Perícia da Fonte",
+      "ativacao": "uma_acao",
+      "ativacaoCustom": "",
+      "limite": "custom",
+      "limiteCustom": "não acumula com outra Ocultação",
+      "alvo": "conjurador e aliados na Aura. Alcance: Aura, raio de 2 quadrados",
+      "moldePadrao": "aura",
+      "moldeAtual": "aura",
+      "duracaoConfig": {
+        "tipo": "custom",
+        "valorBase": 0,
+        "unidade": "rodadas",
+        "maximo": 0,
+        "custom": "5 minutos"
+      },
+      "duracao": "5 minutos",
+      "manutencaoMana": "—",
+      "teste": "Perícia da Fonte; o resultado define a CD para Notar",
+      "defesa": "",
+      "resistenciaInicial": "",
+      "resistenciaSecundaria": "O observador rola @Percepção para notar a criatura ocultada",
+      "manaCost": 2,
+      "manaBase": 2,
+      "manaGasta": 0,
+      "custoBaseMana": 2,
+      "custoFinalMana": 2,
+      "damage": "",
+      "danoBase": "",
+      "danoEscolhido": "",
+      "damageType": "",
+      "tipoDano": "",
+      "status": "",
+      "descricoes": [
+        {
+          "defesa": "Perícia da Fonte; o resultado define a CD para Notar",
+          "texto": "O personagem cria uma cobertura discreta ao redor de si.\nEnquanto estiverem na Aura, o conjurador e aliados escolhidos não chamam atenção por presença passiva, ruídos baixos, vultos, respiração, passos leves ou movimentos cuidadosos.\nPara perceber diretamente uma criatura ocultada, o observador testa Notar contra a CD do Poder.\nOcultação não deixa invisível. O efeito falha contra ações chamativas, como atacar, gritar, correr em campo aberto ou usar um Poder ofensivo."
+        }
+      ],
+      "aprimoramentos": [
+        {
+          "nome": "Aumento de Área",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para aumentar o raio da Aura em +1 quadrado. Pode ser usado no máximo 2 vezes."
+        },
+        {
+          "nome": "Aumento de Duração",
+          "custoMana": 1,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+1 Ponto de Mana para +5 minutos. Pode ser usado no máximo 3 vezes."
+        },
+        {
+          "nome": "Apagar Rastros",
+          "custoMana": 2,
+          "limiteMaximo": "",
+          "tipoCalculo": "flat",
+          "descricao": "+2 Pontos de Mana. A Aura também abafa pegadas, cheiro, calor, marcas leves e sinais simples de passagem. Para seguir esses rastros, o perseguidor testa Sobrevivência contra a CD do Poder."
+        }
+      ],
+      "moldavel": false,
+      "moldesPermitidos": [
+        "aura"
+      ],
+      "nivelMoldeAtual": 0,
+      "custoMoldeAtual": 0,
+      "risco": "",
+      "observacoesMestre": "",
+      "areaEffect": "aura",
+      "spellEffects": [],
+      "favorite": false
+    },
+    "effects": [],
+    "folder": null,
+    "ownership": {
+      "default": 2
+    },
+    "flags": {
+      "world-behind-the-veil": {
+        "officialPower": true,
+        "category": "Novato"
+      }
+    }
+  }
+]

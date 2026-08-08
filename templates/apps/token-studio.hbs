@@ -1,0 +1,51 @@
+<div class="twbv-token-studio">
+  <header class="twbv-token-studio__header">
+    <div><span>FERRAMENTA DO SISTEMA</span><h1>Ateli&ecirc; do V&eacute;u</h1><p>{{actor.name}}</p></div>
+    <div class="twbv-token-studio__targets">
+      <button type="button" class="is-active" data-studio-target="portrait"><i class="fas fa-image-portrait"></i> Retrato</button>
+      <button type="button" data-studio-target="token"><i class="fas fa-circle-user"></i> Token</button>
+    </div>
+  </header>
+  <main class="twbv-token-studio__body">
+    <aside class="twbv-token-studio__sources">
+      <h2>Imagem</h2>
+      <button type="button" data-studio-source="file"><i class="fas fa-upload"></i><span>Computador<small>PNG, JPG ou WebP</small></span></button>
+      <button type="button" data-studio-source="foundry"><i class="fas fa-folder-open"></i><span>Foundry<small>Arquivos do mundo</small></span></button>
+      <button type="button" data-studio-source="album"><i class="fas fa-images"></i><span>&Aacute;lbum<small>Fotos do personagem</small></span></button>
+      <button type="button" data-studio-source="url"><i class="fas fa-link"></i><span>Endere&ccedil;o web<small>URL direta</small></span></button>
+      <button type="button" data-studio-source="portrait"><i class="fas fa-user"></i><span>Retrato atual</span></button>
+      <button type="button" data-studio-source="token"><i class="fas fa-chess-pawn"></i><span>Token atual</span></button>
+      <div class="twbv-token-studio__paste"><i class="fas fa-paste"></i><strong>Ctrl+V</strong><span>Cole uma imagem a qualquer momento</span></div>
+    </aside>
+    <section class="twbv-token-studio__workspace">
+      <div class="twbv-token-studio__canvas-card"><span>RETRATO</span><canvas width="800" height="800" data-studio-canvas="portrait"></canvas></div>
+      <div class="twbv-token-studio__canvas-card twbv-token-studio__canvas-card--token"><span>TOKEN</span><canvas width="512" height="512" data-studio-canvas="token"></canvas></div>
+      <p><i class="fas fa-hand"></i> Arraste para posicionar &bull; use a roda para ampliar</p>
+      <section class="twbv-token-studio__history"><header><i class="fas fa-clock-rotate-left"></i> Imagens recentes desta ficha</header><div data-studio-history></div></section>
+    </section>
+    <aside class="twbv-token-studio__controls">
+      <h2>Ajustes</h2>
+      <label>Zoom<input type="range" min="0.05" max="8" step="0.01" data-studio-control="zoom"></label>
+      <label>Tamanho visual no quadrado<input type="range" min="0.70" max="1" step="0.01" data-studio-control="frameScale"></label>
+      <label>Rota&ccedil;&atilde;o<input type="range" min="-180" max="180" step="1" data-studio-control="rotation"></label>
+      <div class="twbv-token-studio__quick">
+        <button type="button" data-studio-action="fit" title="Ajustar"><i class="fas fa-expand"></i></button>
+        <button type="button" data-studio-action="rotate-left" title="Girar para esquerda"><i class="fas fa-rotate-left"></i></button>
+        <button type="button" data-studio-action="rotate-right" title="Girar para direita"><i class="fas fa-rotate-right"></i></button>
+        <button type="button" data-studio-action="mirror" title="Espelhar"><i class="fas fa-left-right"></i></button>
+        <button type="button" data-studio-action="clear-image" title="Remover imagem desta área"><i class="fas fa-trash"></i></button>
+      </div>
+      <label class="twbv-token-studio__check"><input type="checkbox" data-studio-control="frame"> Aplicar moldura</label>
+      <h2>Molduras</h2>
+      <button type="button" class="twbv-token-studio__gallery-button" data-studio-action="gallery"><i class="fas fa-th-large"></i><span>Galeria de Tokens<small>Ver as 60 molduras</small></span></button>
+    </aside>
+  </main>
+  <footer class="twbv-token-studio__footer">
+    <div>
+      <label><input type="checkbox" name="studioUpdatePortrait" checked> Retrato do ator</label>
+      <label><input type="checkbox" name="studioUpdatePrototype" checked> Token prot&oacute;tipo</label>
+      <label><input type="checkbox" name="studioUpdateScene"> Tokens na cena</label>
+    </div>
+    <button type="button" data-studio-action="save" {{#unless canUpload}}disabled{{/unless}}><i class="fas fa-wand-magic-sparkles"></i> Criar e aplicar</button>
+  </footer>
+</div>

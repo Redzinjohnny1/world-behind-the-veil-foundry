@@ -2,12 +2,12 @@
   "id": "world-behind-the-veil",
   "title": "The World Behind the Veil",
   "description": "Sistema customizado para Foundry VTT - The World Behind the Veil",
-  "version": "0.1.15",
+  "version": "0.1.47",
   "background": "systems/world-behind-the-veil/assets/background/login-background.png",
   "compatibility": {
     "minimum": "13",
-    "verified": "13",
-    "maximum": "13"
+    "verified": "14",
+    "maximum": "14"
   },
   "authors": [
     {
@@ -15,7 +15,8 @@
     }
   ],
   "esmodules": [
-    "scripts/twbv-system.js"
+    "scripts/twbv-system.js",
+    "scripts/twbv-token-studio.js"
   ],
   "styles": [
     "styles/twbv-system.css"
@@ -39,7 +40,7 @@
       "name": "atalhos",
       "label": "ATALHOS",
       "type": "JournalEntry",
-      "path": "packs/atalhos.json",
+      "path": "packs/atalhos",
       "system": "world-behind-the-veil",
       "ownership": {
         "PLAYER": "OBSERVER",
@@ -67,6 +68,28 @@
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
       }
+    },
+    {
+      "name": "vantagens",
+      "label": "Vantagens",
+      "type": "Item",
+      "path": "packs/vantagens",
+      "system": "world-behind-the-veil",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "poderes",
+      "label": "Poderes",
+      "type": "Item",
+      "path": "packs/poderes",
+      "system": "world-behind-the-veil",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
     }
   ],
   "packFolders": [
@@ -76,7 +99,9 @@
       "packs": [
         "atalhos",
         "pericias",
-        "desvantagens"
+        "desvantagens",
+        "vantagens",
+        "poderes"
       ],
       "color": "#5b3f8f"
     }

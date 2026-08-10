@@ -6583,6 +6583,7 @@ body.auth {
   display: flex;
   flex-direction: column;
   padding: 0 !important;
+  height: auto !important;
 }
 .window-app.wbtv-custom-item-dialog .dialog-content,
 .window-app.wbtv-custom-item-dialog form.twbv-custom-item-dialog {
@@ -6593,6 +6594,7 @@ body.auth {
   border-radius: 14px;
   box-shadow: 0 0 14px rgba(217, 183, 117, 0.24), 0 0 24px rgba(149, 96, 224, 0.38), 0 14px 32px rgba(0, 0, 0, 0.55);
   background: radial-gradient(circle at 12% 0%, rgba(122, 84, 188, 0.25), transparent 52%), linear-gradient(165deg, rgba(12, 8, 21, 0.98), rgba(6, 4, 12, 0.99)) !important;
+  height: auto !important;
 }
 .window-app.wbtv-custom-item-dialog,
 .window-app.wbtv-custom-item-dialog .app,
